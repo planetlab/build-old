@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.35.2.2 2004/08/05 19:09:01 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.35.2.3 2004/08/05 19:13:03 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -73,8 +73,8 @@ ALL += kernel
 #
 
 plkmod-CVSROOT := pup-silk@cvs.planet-lab.org:/cvs
-plkmod-INITIAL := plkmod-2_0_6-1
-plkmod-TAG := plkmod-2_0_6-1
+plkmod-INITIAL := plkmod-2_0_6-2
+plkmod-TAG := plkmod-2_0_6-2
 plkmod-MODULE := sys-v3
 plkmod-SPEC := sys-v3/rpm/plkmod.spec
 plkmod-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
@@ -450,8 +450,8 @@ watchdog-SPEC := watchdog/watchdog.spec
 #
 
 sidewinder-CVSROOT := pup-sidewinder@cvs.planet-lab.org:/cvs
-sidewinder-INITIAL := Node-Manager-0-4-24
-sidewinder-TAG := Node-Manager-0-4-24
+sidewinder-INITIAL := Node-Manager-0-5-10
+sidewinder-TAG := Node-Manager-0-5-10
 sidewinder-MODULE := sidewinder
 sidewinder-SPEC := sidewinder/sidewinder.spec
 ALL += sidewinder
