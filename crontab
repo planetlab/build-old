@@ -3,13 +3,13 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.9 2004/09/27 14:56:09 mlhuang Exp $
+# $Id: crontab,v 1.10 2004/12/09 06:34:18 mlhuang Exp $
 #
 
 SHELL=/bin/bash
 MAILTO=build@lists.planet-lab.org
 
-CVSROOT=:pserver:anon@build.planet-lab.org:/cvs
+CVSROOT=:pserver:anon@cvs.planet-lab.org:/cvs
 MODULE=build
 
 #

@@ -4,11 +4,11 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.22 2004/12/07 22:41:56 mlhuang Exp $
+# $Id: build.sh,v 1.23 2005/01/11 17:04:27 mlhuang Exp $
 #
 
 # Set defaults
-CVSROOT=:pserver:anon@build.planet-lab.org:/cvs
+CVSROOT=:pserver:anon@cvs.planet-lab.org:/cvs
 CVS_RSH=ssh
 MODULE=build
 TAG=HEAD
