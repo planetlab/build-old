@@ -115,6 +115,30 @@
   </group>
 
   <group>
+    <id>alpha</id>
+    <name>PlanetLab Alpha</name>    
+    <uservisible>true</uservisible>
+    <description></description>
+    <grouplist/>
+    <packagelist>
+      <packagereq type="mandatory">portmap</packagereq>
+      <packagereq type="mandatory">nfs-utils</packagereq>
+    </packagelist>
+  </group>
+  
+  <group>
+    <id>beta</id>
+    <name>PlanetLab Beta</name>    
+    <uservisible>true</uservisible>
+    <description></description>
+    <grouplist/>
+    <packagelist>
+      <packagereq type="mandatory">portmap</packagereq>
+      <packagereq type="mandatory">nfs-utils</packagereq>
+    </packagelist>
+  </group>
+  
+  <group>
     <id>vserver</id>
     <name>VServer</name>
     <uservisible>true</uservisible>
