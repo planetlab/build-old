@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.19 2004/04/12 17:22:07 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.20 2004/04/12 17:52:34 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -295,7 +295,7 @@ ALL += blacklist
 #
 
 httpd-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-httpd-INITIAL := HTTPD_2_0_46
+httpd-INITIAL := HEAD
 httpd-TAG := HEAD
 httpd-MODULE := httpd
 httpd-SPEC := httpd/httpd.spec
