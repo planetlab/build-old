@@ -3,15 +3,14 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.4 2004/08/31 15:29:53 mlh-pl_rpm Exp $
+# $Id: crontab,v 1.5 2004/09/18 19:18:49 mlh-pl_rpm Exp $
 #
 
 SHELL=/bin/bash
 MAILTO=build@lists.planet-lab.org
 
-CVSROOT=bui-pl_rpm@cvs.planet-lab.org:/cvs
-CVS_RSH=ssh
-MODULE=rpm
+CVSROOT=:pserver:anon@build.planet-lab.org:/cvs
+MODULE=build
 
 #
 # minute hour day-of-month month day-of-week

@@ -4,13 +4,13 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.10 2004/08/18 16:16:56 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.11 2004/08/31 14:39:42 mlh-pl_rpm Exp $
 #
 
 # Set defaults
-CVSROOT=bui-pl_rpm@cvs.planet-lab.org:/cvs
+CVSROOT=:pserver:anon@build.planet-lab.org:/cvs
 CVS_RSH=ssh
-MODULE=rpm
+MODULE=build
 TAG=HEAD
 BASE=$PWD
 
