@@ -1,6 +1,6 @@
 Copyright (c) 2003  The Trustees of Princeton University (Trustees).
 
-$Id$
+$Id: README,v 1.1 2004/04/09 20:12:22 mlh-pl_rpm Exp $
 
 Here are some general guidelines for writing spec files.
 
@@ -14,7 +14,7 @@ Here are some general guidelines for writing spec files.
 
 * Always define BuildRoot based in %{_tmppath}.
 
-* In the %install step, always install files based in $RPM_BUILD_DIR.
+* In the %install step, always install files based in $RPM_BUILD_ROOT.
 
 * Don't be overly restrictive with Requires or BuildRequires tags. RPM
   is already pretty smart about analyzing your package for necessary
