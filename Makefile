@@ -58,8 +58,8 @@ all:
 #
 
 # Default tags
-INITIAL := planetlab-3_0-rc13
-TAG := planetlab-3_0-rc13
+INITIAL := planetlab-3_0-rc14
+TAG := planetlab-3_0-rc14
 
 #
 # kernel
