@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.39 2004/08/13 18:25:11 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.40 2004/08/13 20:31:21 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -466,6 +466,17 @@ sidewinder-TAG := HEAD
 sidewinder-MODULE := sidewinder
 sidewinder-SPEC := sidewinder/sidewinder.spec
 ALL += sidewinder
+
+#
+# pl_sshd
+#
+
+pl_sshd-CVSROOT := pup-pl_sshd@cvs.planet-lab.org:/cvs
+pl_sshd-INITIAL := HEAD
+pl_sshd-TAG := HEAD
+pl_sshd-MODULE := pl_sshd
+pl_sshd-SPEC := pl_sshd/pl_sshd.spec
+ALL += pl_sshd
 
 ifeq ($(findstring $(package),$(ALL)),)
 
