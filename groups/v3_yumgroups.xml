@@ -102,7 +102,6 @@
       <packagereq type="mandatory">vnet</packagereq>
       <packagereq type="mandatory">PlanetLabID</packagereq>
       <packagereq type="mandatory">autofs</packagereq>
-      <packagereq type="mandatory">PlanetLabKeys</packagereq>
       <packagereq type="mandatory">planetlab_sudo</packagereq>
       <packagereq type="mandatory">pl_sshd</packagereq>
       <packagereq type="mandatory">BWLimit</packagereq>
@@ -131,6 +130,7 @@
 
       <packagereq type="mandatory">curl</packagereq>
       <packagereq type="mandatory">perl</packagereq>
+      <packagereq type="mandatory">PlanetLabKeys</packagereq>
     </packagelist>
   </group>
 
