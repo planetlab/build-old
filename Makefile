@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.29 2004/04/16 19:26:11 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.30 2004/04/16 19:36:24 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -63,7 +63,7 @@ all:
 
 kernel-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
 kernel-INITIAL := linux-2_4_22
-kernel-TAG := HEAD
+kernel-TAG := linux-2_4_22-7_planetlab
 kernel-MODULE := linux-2.4
 kernel-SPEC := linux-2.4/scripts/kernel-planetlab.spec
 ALL += kernel
@@ -73,8 +73,8 @@ ALL += kernel
 #
 
 plkmod-CVSROOT := pup-silk@cvs.planet-lab.org:/cvs
-plkmod-INITIAL := HEAD
-plkmod-TAG := HEAD
+plkmod-INITIAL := plkmod-2_0_4
+plkmod-TAG := plkmod-2_0_4
 plkmod-MODULE := sys-v3
 plkmod-SPEC := sys-v3/rpm/plkmod.spec
 plkmod-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
@@ -89,7 +89,7 @@ plkmod: kernel
 
 vdk-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
 vdk-INITIAL := vdk_918
-vdk-TAG := HEAD
+vdk-TAG := vtune_driver-918-7_planetlab
 vdk-MODULE := vdk
 vdk-SPEC := vdk/vtune_driver.spec
 vdk-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
@@ -107,7 +107,7 @@ ltt-INITIAL := HEAD
 ltt-TAG := HEAD
 ltt-MODULE := ltt
 ltt-SPEC := ltt/ltt.spec
-ALL += ltt
+#ALL += ltt
 
 #
 # lkcdutils
@@ -115,7 +115,7 @@ ALL += ltt
 
 lkcdutils-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
 lkcdutils-INITIAL := lkcdutils-4_1
-lkcdutils-TAG := HEAD
+lkcdutils-TAG := lkcdutils-4_1-5_planetlab
 lkcdutils-MODULE := lkcdutils
 lkcdutils-SPEC := lkcdutils/spec/lkcdutils.spec
 ALL += lkcdutils
@@ -132,7 +132,7 @@ vserver-INITIAL := vserver-0_29
 vserver-TAG := HEAD
 vserver-MODULE := vserver
 vserver-SPEC := vserver/vserver.spec
-ALL += vserver
+#ALL += vserver
 
 #
 # vserver-init
@@ -143,15 +143,15 @@ vserver-init-INITIAL := HEAD
 vserver-init-TAG := HEAD
 vserver-init-MODULE := vserver-init
 vserver-init-SPEC := vserver-init/vserver-init.spec
-ALL += vserver-init
+#ALL += vserver-init
 
 #
 # vserver-cache
 #
 
 vserver-cache-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
-vserver-cache-INITIAL := HEAD
-vserver-cache-TAG := HEAD
+vserver-cache-INITIAL := vserver-cache-0_1_0-2_planetlab
+vserver-cache-TAG := vserver-cache-0_1_0-2_planetlab
 vserver-cache-MODULE := vserver-cache
 vserver-cache-SPEC := vserver-cache/vserver-cache.spec
 ALL += vserver-cache
@@ -165,15 +165,15 @@ vserver-quota-INITIAL := HEAD
 vserver-quota-TAG := HEAD
 vserver-quota-MODULE := vserver-quota
 vserver-quota-SPEC := vserver-quota/vserver-quota.spec
-ALL += vserver-quota
+#ALL += vserver-quota
 
 #
 # vserver-util
 #
 
 vserver-util-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
-vserver-util-INITIAL := HEAD
-vserver-util-TAG := HEAD
+vserver-util-INITIAL := vserver-util-0_19_5-5_planetlab
+vserver-util-TAG := vserver-util-0_19_5-5_planetlab
 vserver-util-MODULE := vserver-util
 vserver-util-SPEC := vserver-util/vserver-util-planetlab.spec
 ALL += vserver-util
@@ -187,7 +187,7 @@ vr-tools-INITIAL := HEAD
 vr-tools-TAG := HEAD
 vr-tools-MODULE := vr-tools
 vr-tools-SPEC := vr-tools/vr-tools.spec
-ALL += vr-tools
+#ALL += vr-tools
 
 #
 # vsh
@@ -195,7 +195,7 @@ ALL += vr-tools
 
 vsh-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
 vsh-INITIAL := bash-2_05
-vsh-TAG := HEAD
+vsh-TAG := vsh-2_05_2-5_planetlab
 vsh-MODULE := vsh
 vsh-SPEC := vsh/vsh-planetlab.spec
 ALL += vsh
@@ -212,7 +212,7 @@ e2fsprogs-INITIAL := e2fsprogs-1_33
 e2fsprogs-TAG := HEAD
 e2fsprogs-MODULE := e2fsprogs
 e2fsprogs-SPEC := e2fsprogs/e2fsprogs.spec
-ALL += e2fsprogs
+#ALL += e2fsprogs
 
 #
 # initscripts
@@ -223,7 +223,7 @@ initscripts-INITIAL := initscripts-7_14
 initscripts-TAG := HEAD
 initscripts-MODULE := initscripts
 initscripts-SPEC := initscripts/initscripts.spec
-ALL += initscripts
+#ALL += initscripts
 
 #
 # cq-tools
@@ -234,7 +234,7 @@ cq-tools-INITIAL := HEAD
 cq-tools-TAG := HEAD
 cq-tools-MODULE := cq-tools
 cq-tools-SPEC := cq-tools/cq-tools.spec
-ALL += cq-tools
+#ALL += cq-tools
 
 #
 # yum
@@ -245,7 +245,7 @@ yum-INITIAL := YUM_2_0_3
 yum-TAG := HEAD
 yum-MODULE := yum
 yum-SPEC := yum/yum.spec
-ALL += yum
+#ALL += yum
 
 #
 # ksymoops
@@ -256,7 +256,7 @@ ksymoops-INITIAL := ksymoops-2_4_9
 ksymoops-TAG := HEAD
 ksymoops-MODULE := ksymoops
 ksymoops-SPEC := ksymoops/ksymoops.spec
-ALL += ksymoops
+#ALL += ksymoops
 
 #
 # PlanetLabAccounts
@@ -267,7 +267,7 @@ PlanetLabAccounts-INITIAL := HEAD
 PlanetLabAccounts-TAG := HEAD
 PlanetLabAccounts-MODULE := PlanetLabAccounts
 PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
-ALL += PlanetLabAccounts
+#ALL += PlanetLabAccounts
 
 #
 # MAKEDEV
@@ -278,7 +278,7 @@ MAKEDEV-INITIAL := MAKEDEV_3_2_2
 MAKEDEV-TAG := HEAD
 MAKEDEV-MODULE := MAKEDEV
 MAKEDEV-SPEC := MAKEDEV/MAKEDEV.spec
-ALL += MAKEDEV
+#ALL += MAKEDEV
 
 #
 # NodeUpdate
@@ -289,7 +289,7 @@ NodeUpdate-INITIAL := HEAD
 NodeUpdate-TAG := HEAD
 NodeUpdate-MODULE := NodeUpdate
 NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
-ALL += NodeUpdate
+#ALL += NodeUpdate
 
 #
 # PlanetLabConf
@@ -300,7 +300,7 @@ PlanetLabConf-INITIAL := HEAD
 PlanetLabConf-TAG := HEAD
 PlanetLabConf-MODULE := PlanetLabConf
 PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
-ALL += PlanetLabConf
+#ALL += PlanetLabConf
 
 #
 # PlanetLabKeys
@@ -311,7 +311,7 @@ PlanetLabKeys-INITIAL := HEAD
 PlanetLabKeys-TAG := HEAD
 PlanetLabKeys-MODULE := PlanetLabKeys
 PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
-ALL += PlanetLabKeys
+#ALL += PlanetLabKeys
 
 #
 # BWLimit
@@ -322,7 +322,7 @@ BWLimit-INITIAL := HEAD
 BWLimit-TAG := HEAD
 BWLimit-MODULE := BWLimit
 BWLimit-SPEC := BWLimit/BWLimit.spec
-ALL += BWLimit
+#ALL += BWLimit
 
 #
 # perl-IO-Stty
@@ -333,7 +333,7 @@ perl-IO-Stty-INITIAL := PERL-IO-STTY_0_2
 perl-IO-Stty-TAG := HEAD
 perl-IO-Stty-MODULE := perl-IO-Stty
 perl-IO-Stty-SPEC := perl-IO-Stty/perl-IO-Stty.spec
-ALL += perl-IO-Stty
+#ALL += perl-IO-Stty
 
 #
 # ipod
@@ -344,7 +344,7 @@ ipod-INITIAL := HEAD
 ipod-TAG := HEAD
 ipod-MODULE := ipod
 ipod-SPEC := ipod/ipod.spec
-ALL += ipod
+#ALL += ipod
 
 #
 # sudo
@@ -355,7 +355,7 @@ sudo-INITIAL := HEAD
 sudo-TAG := HEAD
 sudo-MODULE := sudo
 sudo-SPEC := sudo/planetlab_sudo.spec
-ALL += sudo
+#ALL += sudo
 
 #
 # blacklist
@@ -366,7 +366,7 @@ blacklist-INITIAL := HEAD
 blacklist-TAG := HEAD
 blacklist-MODULE := blacklist
 blacklist-SPEC := blacklist/PlanetLab-blacklist.spec
-ALL += blacklist
+#ALL += blacklist
 
 #
 # httpd
@@ -377,7 +377,7 @@ httpd-INITIAL := HEAD
 httpd-TAG := HEAD
 httpd-MODULE := httpd
 httpd-SPEC := httpd/httpd.spec
-ALL += httpd
+#ALL += httpd
 
 #
 # BootServerRequest
@@ -388,7 +388,7 @@ BootServerRequest-INITIAL := HEAD
 BootServerRequest-TAG := HEAD
 BootServerRequest-MODULE := BootServerRequest
 BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
-ALL += BootServerRequest
+#ALL += BootServerRequest
 
 #
 # PlanetLabID
@@ -399,7 +399,7 @@ PlanetLabID-INITIAL := HEAD
 PlanetLabID-TAG := HEAD
 PlanetLabID-MODULE := PlanetLabID
 PlanetLabID-SPEC := PlanetLabID/PlanetLabID.spec
-ALL += PlanetLabID
+#ALL += PlanetLabID
 
 ifeq ($(findstring $(package),$(ALL)),)
 
