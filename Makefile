@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.7 2004/04/09 22:17:31 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.8 2004/04/12 13:24:25 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -165,6 +165,17 @@ PlanetLabAccounts-TAG := PLANETLABACCOUNTS_0_3_R_2
 PlanetLabAccounts-MODULE := PlanetLabAccounts
 PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
 ALL += PlanetLabAccounts
+
+#
+# MAKEDEV
+#
+
+MAKEDEV-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+MAKEDEV-INITIAL := MAKEDEV_3_2_2
+MAKEDEV-TAG := MAKEDEV_3_2_2_PL_6
+MAKEDEV-MODULE := MAKEDEV
+MAKEDEV-SPEC := MAKEDEV/MAKEDEV.spec
+ALL += MAKEDEV
 
 ifeq ($(findstring $(package),$(ALL)),)
 
