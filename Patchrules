@@ -1,0 +1,32 @@
+#!/bin/sh
+#
+# Hack to generate patch rules for make < 3.80
+#
+# Copyright (c) 2003  The Trustees of Princeton University (Trustees).
+# 
+# $Id$
+#
+
+while read PatchSet n ; do
+
+[ "$PatchSet" != "PatchSet" ] && continue;
+
+cat <<EOF
+# In case the spec file did not explicitly list the PatchSet
+ifeq (\$(origin Patch${n}),undefined)
+Patch${n} := \$(Source0)-${n}.patch.bz2
+endif
+
+# Get rid of URL
+Patch${n} := \$(notdir \$(Patch${n}))
+
+# Add patch to the list of sources
+SOURCES += SOURCES/\$(Patch${n})
+
+# Generate uncompressed patch
+SOURCES/\$(patsubst %.gz,%,\$(patsubst %.bz2,%,\$(Patch${n}))):
+	mkdir -p SOURCES
+	cvsps --cvs-direct --root \$(CVSROOT) -g -s ${n} \$(MODULE) > \$@
+EOF
+
+done
