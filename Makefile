@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.5 2004/04/09 19:07:58 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.6 2004/04/09 19:22:24 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -130,6 +130,9 @@ vsh-MODULE := vsh
 vsh-SPEC := vsh/vsh-planetlab.spec
 ALL += vsh
 
+# Build kernel-planetlab first so we can bootstrap off of its build
+vsh: kernel-planetlab
+
 #
 # yum
 #
@@ -141,9 +144,16 @@ yum-MODULE := yum
 yum-SPEC := yum/yum.spec
 ALL += yum
 
+#
+# ksymoops
+#
 
-# Build kernel-planetlab first so we can bootstrap off of its build
-vsh: kernel-planetlab
+ksymoops-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+ksymoops-INITIAL := ksymoops-2_4_9
+ksymoops-TAG := HEAD
+ksymoops-MODULE := ksymoops
+ksymoops-SPEC := ksymoops/ksymoops.spec
+ALL += ksymoops
 
 ifeq ($(findstring $(package),$(ALL)),)
 
