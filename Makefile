@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.15 2004/04/12 15:27:30 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.16 2004/04/12 15:30:14 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -256,6 +256,17 @@ perl-IO-Stty-TAG := HEAD
 perl-IO-Stty-MODULE := perl-IO-Stty
 perl-IO-Stty-SPEC := perl-IO-Stty/perl-IO-Stty.spec
 ALL += perl-IO-Stty
+
+#
+# ipod
+#
+
+ipod-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+ipod-INITIAL := HEAD
+ipod-TAG := HEAD
+ipod-MODULE := ipod
+ipod-SPEC := ipod/ipod.spec
+ALL += ipod
 
 ifeq ($(findstring $(package),$(ALL)),)
 
