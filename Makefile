@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.33 2004/06/03 18:23:43 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.34 2004/07/20 14:26:16 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -444,6 +444,17 @@ watchdog-TAG := HEAD
 watchdog-MODULE := watchdog
 watchdog-SPEC := watchdog/watchdog.spec
 ALL += watchdog
+
+#
+# Node Manager
+#
+
+sidewinder-CVSROOT := pup-sidewinder@cvs.planet-lab.org:/cvs
+sidewinder-INITIAL := HEAD
+sidewinder-TAG := HEAD
+sidewinder-MODULE := sidewinder
+sidewinder-SPEC := sidewinder/sidewinder.spec
+ALL += sidewinder
 
 ifeq ($(findstring $(package),$(ALL)),)
 
