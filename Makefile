@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.27 2004/04/14 18:08:47 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.28 2004/04/16 19:12:48 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -155,6 +155,17 @@ vserver-cache-TAG := HEAD
 vserver-cache-MODULE := vserver-cache
 vserver-cache-SPEC := vserver-cache/vserver-cache.spec
 ALL += vserver-cache
+
+#
+# vserver-quota
+#
+
+vserver-quota-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-quota-INITIAL := HEAD
+vserver-quota-TAG := HEAD
+vserver-quota-MODULE := vserver-quota
+vserver-quota-SPEC := vserver-quota/vserver-quota.spec
+ALL += vserver-quota
 
 #
 # vr-tools
