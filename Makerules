@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.9 2004/08/11 21:41:16 mlh-pl_rpm Exp $
+# $Id: Makerules,v 1.10 2004/08/12 21:21:31 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -175,12 +175,12 @@ all: RPMS/$(ARCH)/$(NVR).$(ARCH).rpm SRPMS/$(NVR).src.rpm
 # Build RPM
 RPMS/$(ARCH)/$(NVR).$(ARCH).rpm: SPECS/$(notdir $(SPEC)) $(SOURCES) .rpmmacros
 	mkdir -p BUILD RPMS
-	rpmbuild $(RPMFLAGS) -bb $<
+	$(RPMBUILD) $(RPMFLAGS) -bb $<
 
 # Build SRPM
 SRPMS/$(NVR).src.rpm: SPECS/$(notdir $(SPEC)) $(SOURCES) .rpmmacros
 	mkdir -p SRPMS
-	rpmbuild $(RPMFLAGS) -bs $<
+	$(RPMBUILD) $(RPMFLAGS) -bs $<
 
 # Base rpmbuild in the current directory
 .rpmmacros:
