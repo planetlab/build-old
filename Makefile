@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.57 2004/11/17 20:54:21 mlhuang Exp $
+# $Id: Makefile,v 1.58 2004/12/08 16:25:56 mlhuang Exp $
 #
 
 # Default target
@@ -58,8 +58,8 @@ all:
 #
 
 # Default tags
-INITIAL := planetlab-3_0-rc6
-TAG := planetlab-3_0-rc6
+INITIAL := HEAD
+TAG := HEAD
 
 #
 # kernel
@@ -279,9 +279,6 @@ pl_mom-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 pl_mom-MODULE := pl_mom
 pl_mom-SPEC := pl_mom/pl_mom.spec
 ALL += pl_mom
-
-# XXX For debugging
-ALL := pl_mom
 
 ifeq ($(findstring $(package),$(ALL)),)
 
