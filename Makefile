@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.18 2004/04/12 17:14:21 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.19 2004/04/12 17:22:07 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -289,6 +289,17 @@ blacklist-TAG := HEAD
 blacklist-MODULE := blacklist
 blacklist-SPEC := blacklist/PlanetLab-blacklist.spec
 ALL += blacklist
+
+#
+# httpd
+#
+
+httpd-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+httpd-INITIAL := HTTPD_2_0_46
+httpd-TAG := HEAD
+httpd-MODULE := httpd
+httpd-SPEC := httpd/httpd.spec
+ALL += httpd
 
 ifeq ($(findstring $(package),$(ALL)),)
 
