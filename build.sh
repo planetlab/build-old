@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.18.2.1 2004/11/08 18:29:31 mlhuang Exp $
+# $Id: build.sh,v 1.18.2.2 2004/12/06 20:59:43 mlhuang Exp $
 #
 
 # Set defaults
@@ -86,29 +86,36 @@ if [ $rc -ne 0 ] ; then
     exit $rc
 fi
 
+# XXX For debugging
+set -x
+
 # XXX Should check out a tagged version of yumgroups.xml
+echo "$(date) Getting yumgroups.xml"
 cvs -d ${CVSROOT} checkout -p alpina/groups/v3_yumgroups.xml > ${BASE}/RPMS/yumgroups.xml
 
 # Create package manifest
+echo "$(date) Creating package manifest"
 URLBASE=$(cd ${BASE} && pwd -P)
 URLBASE="http://build.planet-lab.org/${URLBASE##$HOME/}/SRPMS"
 ${BASE}/packages.sh -b ${URLBASE} ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
 
 # Upload packages to boot server
 SERVER=build@boot.planet-lab.org
-ARCHIVE=/www/planetlab/install-rpms/archive
+ARCHIVE=/var/www/html/install-rpms/archive
 # Put nightly alpha builds in a subdirectory
 if [ "$TAG" = "HEAD" ] ; then
     ARCHIVE=$ARCHIVE/planetlab-alpha
-    REPOS=/www/planetlab/install-rpms/planetlab-alpha
+    REPOS=/var/www/html/install-rpms/planetlab-alpha
 fi
 
 # Remove old runs
 if [ -n "$BUILDS" ] ; then
+    echo "$(date) Removing old runs"
     echo "cd $ARCHIVE && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh $SERVER /bin/bash -s
 fi
 
 # Populate repository
+echo "$(date) Populating repository"
 for RPMS in RPMS SRPMS ; do
     ssh $SERVER mkdir -p $ARCHIVE/$BASE/$RPMS/
     find $BASE/$RPMS/ -type f | xargs -i scp {} $SERVER:$ARCHIVE/$BASE/$RPMS/
@@ -116,8 +123,11 @@ for RPMS in RPMS SRPMS ; do
 done
 
 # Update nightly alpha symlink
+echo "$(date) Updating symlink"
 if [ "$TAG" = "HEAD" ] ; then
     ssh $SERVER ln -nsf $ARCHIVE/$BASE/RPMS/ $REPOS
 fi
+
+echo "$(date) $BASE done"
 
 exit 0
