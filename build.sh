@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.15 2004/10/04 22:29:19 mlhuang Exp $
+# $Id: build.sh,v 1.16 2004/10/05 01:44:36 mlhuang Exp $
 #
 
 # Set defaults
@@ -88,7 +88,14 @@ if [ $rc -ne 0 ] ; then
     if [ -n "$MAILTO" ] ; then
 	tail -100 ${BASE}/log | mail -s "Failures for ${BASE}" $MAILTO
     fi
-elif [ -n "$BUILDS" ] ; then
+    exit $rc
+fi
+
+# Create package manifest
+${BASE}/packages.sh ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
+
+# Usually only the nightly build specifies -x
+if [ -n "$BUILDS" ] ; then
     # Remove old nightly runs
     echo "cd ${ALPHA_ROOT} && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh ${ALPHA_BOOT} /bin/bash -s
     # Update alpha node repository
@@ -100,3 +107,5 @@ elif [ -n "$BUILDS" ] ; then
     # Update symlink
     ssh ${ALPHA_BOOT} ln -nsf ${ALPHA_ROOT}/${BASE}/RPMS/ ${ALPHA_RPMS}
 fi
+
+exit 0
