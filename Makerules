@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.5 2004/04/09 19:37:19 alk-pl_rpm Exp $
+# $Id: Makerules,v 1.6 2004/04/12 19:56:02 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -163,8 +163,9 @@ endif
 # Build
 #
 
-NVR := $(shell rpmquery $(RPMFLAGS) $(if $(DATE),--define "date $(DATE)") --specfile SPECS/$(notdir $(SPEC)).in 2>/dev/null | head -1)
-ARCH := $(shell rpm $(RPMFLAGS) --showrc | sed -ne 's/^build arch[	 ]*:[	 ]*\(.*\)/\1/p')
+RPMFLAGS += $(if $(DATE),--define "date $(DATE)")
+NVR := $(shell rpmquery $(RPMFLAGS) --specfile SPECS/$(notdir $(SPEC)).in 2>/dev/null | head -1)
+ARCH := $(shell rpmquery $(RPMFLAGS) --queryformat '%{ARCH}\n' --specfile SPECS/$(notdir $(SPEC)).in 2>/dev/null | head -1)
 
 all: RPMS/$(ARCH)/$(NVR).$(ARCH).rpm SRPMS/$(NVR).src.rpm
 
