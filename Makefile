@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.60 2005/01/10 20:39:42 mlhuang Exp $
+# $Id: Makefile,v 1.61 2005/03/29 20:28:42 mlhuang Exp $
 #
 
 # Default target
@@ -290,6 +290,15 @@ iptables-SPEC := iptables/iptables.spec
 ALL += iptables
 
 iptables: kernel
+
+#
+# kexec-tools
+#
+
+kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+kexec-tools-MODULE := kexec-tools
+kexec-tools-SPEC := kexec-tools/kexec-tools.spec
+ALL += kexec-tools
 
 ifeq ($(findstring $(package),$(ALL)),)
 
