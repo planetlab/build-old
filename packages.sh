@@ -6,7 +6,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id$
+# $Id: packages.sh,v 1.1 2004/10/27 04:36:49 mlhuang Exp $
 #
 
 xml_escape_pcdata() {
@@ -44,7 +44,7 @@ TAGS=$(rpm --querytags)
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- $Id$ -->
+<!-- \$Id: packages.sh,v 1.1 2004/10/27 04:36:49 mlhuang Exp $ -->
 <!-- Generated at $(date) in $PWD on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
