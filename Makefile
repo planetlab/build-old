@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.31 2004/05/18 17:45:09 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.32 2004/05/19 12:35:11 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -422,6 +422,17 @@ traceroute-TAG := HEAD
 traceroute-MODULE := traceroute
 traceroute-SPEC := traceroute/traceroute.spec
 ALL += traceroute
+
+#
+# net-tools
+#
+
+net-tools-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+net-tools-INITIAL := net-tools-1_60
+net-tools-TAG := HEAD
+net-tools-MODULE := net-tools
+net-tools-SPEC := net-tools/RPM/net-tools.spec
+ALL += net-tools
 
 ifeq ($(findstring $(package),$(ALL)),)
 
