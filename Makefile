@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.47 2004/10/04 22:29:18 mlhuang Exp $
+# $Id: Makefile,v 1.48 2004/10/05 14:58:49 mlhuang Exp $
 #
 
 # Default target
@@ -62,7 +62,7 @@ all:
 # kernel
 #
 
-kernel-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+kernel-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 kernel-INITIAL := HEAD
 kernel-TAG := HEAD
 kernel-MODULE := linux-2.6
@@ -73,7 +73,7 @@ ALL += kernel
 # vnet
 #
 
-vnet-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+vnet-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 vnet-INITIAL := HEAD
 vnet-TAG := HEAD
 vnet-MODULE := vnet
@@ -88,7 +88,7 @@ vnet: kernel
 # vsh
 #
 
-vsh-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+vsh-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 vsh-INITIAL := HEAD
 vsh-TAG := HEAD
 vsh-MODULE := trampoline
@@ -102,7 +102,7 @@ vsh: kernel
 # util-vserver
 #
 
-util-vserver-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+util-vserver-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 util-vserver-INITIAL := HEAD
 util-vserver-TAG := HEAD
 util-vserver-MODULE := util-vserver
@@ -116,23 +116,18 @@ util-vserver: kernel
 # vserver-reference
 #
 
-vserver-reference-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 vserver-reference-INITIAL := HEAD
 vserver-reference-TAG := HEAD
 vserver-reference-MODULE := vserver-reference
 vserver-reference-SPEC := vserver-reference/vserver-reference.spec
-# Package must be built as root
-vserver-reference-RPMBUILD := sudo rpmbuild
 ALL += vserver-reference
-
-# Build these first so that the reference copies are not stale
-vserver-reference: yum pycurl PlanetLabKeys
 
 #
 # lkcdutils
 #
 
-lkcdutils-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+lkcdutils-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 lkcdutils-INITIAL := HEAD
 lkcdutils-TAG := HEAD
 lkcdutils-MODULE := lkcdutils
@@ -146,7 +141,7 @@ lkcdutils: kernel
 # yum
 #
 
-yum-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+yum-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 yum-INITIAL := HEAD
 yum-TAG := HEAD
 yum-MODULE := yum
@@ -157,7 +152,7 @@ ALL += yum
 # ksymoops
 #
 
-ksymoops-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+ksymoops-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 ksymoops-INITIAL := ksymoops-2_4_9
 ksymoops-TAG := HEAD
 ksymoops-MODULE := ksymoops
@@ -168,7 +163,7 @@ ALL += ksymoops
 # PlanetLabAccounts
 #
 
-PlanetLabAccounts-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+PlanetLabAccounts-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 PlanetLabAccounts-INITIAL := HEAD
 PlanetLabAccounts-TAG := HEAD
 PlanetLabAccounts-MODULE := PlanetLabAccounts
@@ -179,7 +174,7 @@ ALL += PlanetLabAccounts
 # NodeUpdate
 #
 
-NodeUpdate-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+NodeUpdate-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 NodeUpdate-INITIAL := HEAD
 NodeUpdate-TAG := HEAD
 NodeUpdate-MODULE := NodeUpdate
@@ -190,7 +185,7 @@ ALL += NodeUpdate
 # PlanetLabConf
 #
 
-PlanetLabConf-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+PlanetLabConf-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 PlanetLabConf-INITIAL := HEAD
 PlanetLabConf-TAG := HEAD
 PlanetLabConf-MODULE := PlanetLabConf
@@ -201,7 +196,7 @@ ALL += PlanetLabConf
 # PlanetLabKeys
 #
 
-PlanetLabKeys-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+PlanetLabKeys-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 PlanetLabKeys-INITIAL := HEAD
 PlanetLabKeys-TAG := HEAD
 PlanetLabKeys-MODULE := PlanetLabKeys
@@ -212,7 +207,7 @@ ALL += PlanetLabKeys
 # BWLimit
 #
 
-BWLimit-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+BWLimit-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 BWLimit-INITIAL := HEAD
 BWLimit-TAG := HEAD
 BWLimit-MODULE := BWLimit
@@ -223,7 +218,7 @@ ALL += BWLimit
 # ipod
 #
 
-ipod-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+ipod-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 ipod-INITIAL := HEAD
 ipod-TAG := HEAD
 ipod-MODULE := ipod
@@ -234,7 +229,7 @@ ALL += ipod
 # sudo
 #
 
-sudo-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+sudo-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 sudo-INITIAL := HEAD
 sudo-TAG := HEAD
 sudo-MODULE := sudo
@@ -245,7 +240,7 @@ ALL += sudo
 # pycurl
 #
 
-pycurl-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+pycurl-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 pycurl-INITIAL := HEAD
 pycurl-TAG := HEAD
 pycurl-MODULE := pycurl
@@ -256,7 +251,7 @@ ALL += pycurl
 # BootServerRequest
 #
 
-BootServerRequest-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+BootServerRequest-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 BootServerRequest-INITIAL := HEAD
 BootServerRequest-TAG := HEAD
 BootServerRequest-MODULE := BootServerRequest
@@ -267,7 +262,7 @@ ALL += BootServerRequest
 # PlanetLabID
 #
 
-PlanetLabID-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+PlanetLabID-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 PlanetLabID-INITIAL := HEAD
 PlanetLabID-TAG := HEAD
 PlanetLabID-MODULE := PlanetLabID
@@ -278,7 +273,7 @@ ALL += PlanetLabID
 # Node Manager
 #
 
-sidewinder-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+sidewinder-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 sidewinder-INITIAL := HEAD
 sidewinder-TAG := HEAD
 sidewinder-MODULE := sidewinder
@@ -289,12 +284,34 @@ ALL += sidewinder
 # pl_sshd
 #
 
-pl_sshd-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+pl_sshd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 pl_sshd-INITIAL := HEAD
 pl_sshd-TAG := HEAD
 pl_sshd-MODULE := pl_sshd
 pl_sshd-SPEC := pl_sshd/pl_sshd.spec
 ALL += pl_sshd
+
+#
+# ulogd
+#
+
+ulogd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+ulogd-INITIAL := HEAD
+ulogd-TAG := HEAD
+ulogd-MODULE := netflow/ulogd
+ulogd-SPEC := netflow/ulogd/ulogd.spec
+ALL += ulogd
+
+#
+# netflow and netsummary
+#
+
+netflow-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+netflow-INITIAL := HEAD
+netflow-TAG := HEAD
+netflow-MODULE := netflow netsummary
+netflow-SPEC := netflow/netflow.spec
+ALL += netflow
 
 ifeq ($(findstring $(package),$(ALL)),)
 
