@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.1 2004/05/21 18:29:33 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.2 2004/05/21 18:34:10 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -24,6 +24,7 @@ while getopts "d:r:" opt ; do
 	    ;;
 	*)
 	    echo "usage: `basename $0` [-d $CVSROOT] [-r $TAG]"
+	    exit 1
 	    ;;
     esac
 done
