@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.21 2004/04/12 18:13:11 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.22 2004/04/12 19:56:58 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -45,6 +45,7 @@ all:
 # MODULE: CVS module name to use
 # SPEC: RPM spec file template
 # RPMFLAGS: Miscellaneous RPM flags
+# CVS_RSH: If not ssh
 # ALL: default targets
 #
 # If INITIAL is different than TAG, PatchSets will be generated
@@ -179,6 +180,17 @@ initscripts-TAG := HEAD
 initscripts-MODULE := initscripts
 initscripts-SPEC := initscripts/initscripts.spec
 ALL += initscripts
+
+#
+# cq-tools
+#
+
+cq-tools-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+cq-tools-INITIAL := HEAD
+cq-tools-TAG := HEAD
+cq-tools-MODULE := cq-tools
+cq-tools-SPEC := cq-tools/cq-tools.spec
+ALL += cq-tools
 
 #
 # yum
@@ -356,5 +368,3 @@ CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 include Makerules
 
 endif
-
-.PHONY: clean
