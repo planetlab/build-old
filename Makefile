@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.30.2.1 2004/04/26 17:17:39 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.30.2.2 2004/04/26 18:05:47 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -73,8 +73,8 @@ ALL += kernel
 #
 
 plkmod-CVSROOT := pup-silk@cvs.planet-lab.org:/cvs
-plkmod-INITIAL := plkmod-2_0_4
-plkmod-TAG := plkmod-2_0_4
+plkmod-INITIAL := plkmod-2_0_3
+plkmod-TAG := plkmod-2_0_3
 plkmod-MODULE := sys-v3
 plkmod-SPEC := sys-v3/rpm/plkmod.spec
 plkmod-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
