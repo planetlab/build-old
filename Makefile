@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.16 2004/04/12 15:30:14 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.17 2004/04/12 17:08:10 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -267,6 +267,17 @@ ipod-TAG := HEAD
 ipod-MODULE := ipod
 ipod-SPEC := ipod/ipod.spec
 ALL += ipod
+
+#
+# sudo
+#
+
+sudo-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+sudo-INITIAL := HEAD
+sudo-TAG := HEAD
+sudo-MODULE := sudo
+sudo-SPEC := sudo/planetlab_sudo.spec
+ALL += sudo
 
 ifeq ($(findstring $(package),$(ALL)),)
 
