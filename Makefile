@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.55 2004/10/26 21:48:13 mlhuang Exp $
+# $Id: Makefile,v 1.56 2004/11/04 18:35:45 mlhuang Exp $
 #
 
 # Default target
@@ -270,6 +270,15 @@ netflow-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 netflow-MODULE := netflow netsummary
 netflow-SPEC := netflow/netflow.spec
 ALL += netflow
+
+#
+# PlanetLab Mom: Cleans up your mess
+#
+
+pl_mom-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+pl_mom-MODULE := pl_mom
+pl_mom-SPEC := pl_mom/pl_mom.spec
+ALL += pl_mom
 
 ifeq ($(findstring $(package),$(ALL)),)
 
