@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.43 2004/09/17 18:37:49 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.44 2004/09/18 19:49:42 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -102,7 +102,7 @@ vsh: kernel
 # util-vserver
 #
 
-util-vserver-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+util-vserver-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 util-vserver-INITIAL := HEAD
 util-vserver-TAG := HEAD
 util-vserver-MODULE := util-vserver
@@ -154,7 +154,7 @@ ALL += yum
 # ksymoops
 #
 
-ksymoops-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+ksymoops-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 ksymoops-INITIAL := ksymoops-2_4_9
 ksymoops-TAG := HEAD
 ksymoops-MODULE := ksymoops
