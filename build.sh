@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.9 2004/08/17 15:39:19 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.10 2004/08/18 16:16:56 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -12,6 +12,7 @@ CVSROOT=bui-pl_rpm@cvs.planet-lab.org:/cvs
 CVS_RSH=ssh
 MODULE=rpm
 TAG=HEAD
+BASE=$PWD
 
 # Alpha node repository
 ALPHA_BOOT=build@boot.planet-lab.org
@@ -22,7 +23,7 @@ ALPHA_RPMS=/www/planetlab/install-rpms/planetlab-alpha
 export CVS_RSH
 
 # Get options
-while getopts "d:r:" opt ; do
+while getopts "d:r:m:b:x:h" opt ; do
     case $opt in
 	d)
 	    CVSROOT=$OPTARG
@@ -30,12 +31,35 @@ while getopts "d:r:" opt ; do
 	r)
 	    TAG=$OPTARG
 	    ;;
-	*)
-	    echo "usage: `basename $0` [-d $CVSROOT] [-r $TAG]"
+	m)
+	    MAILTO=$OPTARG
+	    ;;
+	b)
+	    BASE=$OPTARG
+	    ;;
+	x)
+	    BUILDS=$OPTARG
+	    ;;
+	h|*)
+	    echo "usage: `basename $0` [OPTION]..."
+	    echo "	-d directory	CVS repository root (default $CVSROOT)"
+	    echo "	-r revision	CVS revision to checkout (default $TAG)"
+	    echo "	-m address	Notify recipient of failures (default: none)"
+	    echo "	-b base		Run operations in specified base directory (default $BASE)"
+	    echo "	-x N		Remove all but the last N runs from the base directory (default: none)"
 	    exit 1
 	    ;;
     esac
 done
+
+# Base operations in specified directory
+mkdir -p $BASE
+cd $BASE || exit $?
+
+# Remove old runs
+if [ -n "$BUILDS" ] ; then
+    ls -t | sed -n ${BUILDS}~1p | xargs rm -rf
+fi
 
 # Create a unique build base
 BASE=${TAG/HEAD/`date +%Y.%m.%d`}
@@ -50,26 +74,37 @@ while ! mkdir ${BASE}${i} 2>/dev/null ; do
 done
 BASE=${BASE}${i}
 
-# Build
-(
+# Redirect output from here
+exec &>${BASE}/log
+
 # XXX Hack to store the pup key as well as the bui key
 eval `ssh-agent`
 for i in `grep -l "BEGIN.*PRIVATE KEY" $HOME/.ssh/*` ; do
     SSH_ASKPASS=/bin/false ssh-add $i
 done
 
+# Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
 make -C ${BASE}
-) >${BASE}/log 2>&1
 
 if [ $? -ne 0 ] ; then
+    # Notify recipient of failure or just dump to stdout
+    if [ -n "$MAILTO" ] ; then
+	NOTIFY="mail -s 'Failures for ${BASE}' $MAILTO"
+    else
+	NOTIFY=cat
+    fi
+    (
     # Dump log
     if [ -f ${BASE}/log ] ; then
 	tail -100 ${BASE}/log
     else
 	echo "Error $?"
     fi
-elif [ "$TAG" = "HEAD" ] ; then
+    ) | eval $NOTIFY
+elif [ -n "$BUILDS" ] ; then
+    # Remove old nightly runs
+    echo "cd ${ALPHA_ROOT} && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh ${ALPHA_BOOT} sh -s
     # Update alpha node repository
     for i in RPMS SRPMS ; do
 	ssh ${ALPHA_BOOT} mkdir -p ${ALPHA_ROOT}/${BASE}/${i}
