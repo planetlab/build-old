@@ -32,8 +32,11 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.1.1.1 2004/04/07 21:13:51 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.2 2004/04/08 21:09:02 mlh-pl_rpm Exp $
 #
+
+# Default target
+all:
 
 #
 # CVSROOT: CVSROOT to use
@@ -112,7 +115,7 @@ all: $(ALL)
 
 # Recurse
 $(ALL):
-	$(MAKE) package=$@ all
+	$(MAKE) package=$@
 
 .PHONY: all $(ALL)
 
