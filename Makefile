@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.6 2004/04/09 19:22:24 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.7 2004/04/09 22:17:31 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -154,6 +154,17 @@ ksymoops-TAG := HEAD
 ksymoops-MODULE := ksymoops
 ksymoops-SPEC := ksymoops/ksymoops.spec
 ALL += ksymoops
+
+#
+# PlanetLabAccounts
+#
+
+PlanetLabAccounts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabAccounts-INITIAL := PLANETLABACCOUNTS_0_3_R_2
+PlanetLabAccounts-TAG := PLANETLABACCOUNTS_0_3_R_2
+PlanetLabAccounts-MODULE := PlanetLabAccounts
+PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
+ALL += PlanetLabAccounts
 
 ifeq ($(findstring $(package),$(ALL)),)
 
