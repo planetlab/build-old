@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.56 2004/11/04 18:35:45 mlhuang Exp $
+# $Id: Makefile,v 1.60 2005/01/10 20:39:42 mlhuang Exp $
 #
 
 # Default target
@@ -263,11 +263,11 @@ ALL += ulogd
 ulogd: kernel proper
 
 #
-# netflow and netsummary
+# netflow
 #
 
 netflow-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-netflow-MODULE := netflow netsummary
+netflow-MODULE := netflow
 netflow-SPEC := netflow/netflow.spec
 ALL += netflow
 
