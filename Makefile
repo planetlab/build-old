@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.46 2004/10/04 22:04:42 mlhuang Exp $
+# $Id: Makefile,v 1.47 2004/10/04 22:29:18 mlhuang Exp $
 #
 
 # Default target
@@ -124,6 +124,9 @@ vserver-reference-SPEC := vserver-reference/vserver-reference.spec
 # Package must be built as root
 vserver-reference-RPMBUILD := sudo rpmbuild
 ALL += vserver-reference
+
+# Build these first so that the reference copies are not stale
+vserver-reference: yum pycurl PlanetLabKeys
 
 #
 # lkcdutils
