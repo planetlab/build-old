@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.30 2004/04/16 19:36:24 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.30.2.1 2004/04/26 17:17:39 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -384,11 +384,11 @@ httpd-SPEC := httpd/httpd.spec
 #
 
 BootServerRequest-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-BootServerRequest-INITIAL := HEAD
-BootServerRequest-TAG := HEAD
+BootServerRequest-INITIAL := BOOTSERVERREQUEST_0_3_R4
+BootServerRequest-TAG := BOOTSERVERREQUEST_0_3_R4
 BootServerRequest-MODULE := BootServerRequest
 BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
-#ALL += BootServerRequest
+ALL += BootServerRequest
 
 #
 # PlanetLabID
