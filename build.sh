@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.18 2004/10/30 16:01:03 mlhuang Exp $
+# $Id: build.sh,v 1.19 2004/11/08 18:28:13 mlhuang Exp $
 #
 
 # Set defaults
@@ -13,11 +13,6 @@ CVS_RSH=ssh
 MODULE=build
 TAG=HEAD
 BASE=$PWD
-
-# Alpha node repository
-ALPHA_BOOT=build@boot.planet-lab.org
-ALPHA_ROOT=/www/planetlab/install-rpms/archive/planetlab-alpha
-ALPHA_RPMS=/www/planetlab/install-rpms/planetlab-alpha
 
 # Export certain variables
 export CVS_RSH
@@ -91,23 +86,38 @@ if [ $rc -ne 0 ] ; then
     exit $rc
 fi
 
+# XXX Should check out a tagged version of yumgroups.xml
+cvs -d ${CVSROOT} checkout -p alpina/groups/v3_yumgroups.xml > ${BASE}/RPMS/yumgroups.xml
+
 # Create package manifest
 URLBASE=$(cd ${BASE} && pwd -P)
 URLBASE="http://build.planet-lab.org/${URLBASE##$HOME/}/SRPMS"
 ${BASE}/packages.sh -b ${URLBASE} ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
 
-# Usually only the nightly build specifies -x
+# Upload packages to boot server
+SERVER=build@boot.planet-lab.org
+ARCHIVE=/www/planetlab/install-rpms/archive
+# Put nightly alpha builds in a subdirectory
+if [ "$TAG" = "HEAD" ] ; then
+    ARCHIVE=$ARCHIVE/planetlab-alpha
+    REPOS=/www/planetlab/install-rpms/planetlab-alpha
+fi
+
+# Remove old runs
 if [ -n "$BUILDS" ] ; then
-    # Remove old nightly runs
-    echo "cd ${ALPHA_ROOT} && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh ${ALPHA_BOOT} /bin/bash -s
-    # Update alpha node repository
-    for i in RPMS SRPMS ; do
-	ssh ${ALPHA_BOOT} mkdir -p ${ALPHA_ROOT}/${BASE}/${i}
-	find ${BASE}/${i} -type f | xargs -i scp {} ${ALPHA_BOOT}:${ALPHA_ROOT}/${BASE}/${i}
-	ssh ${ALPHA_BOOT} yum-arch ${ALPHA_ROOT}/${BASE}/${i} >/dev/null
-    done
-    # Update symlink
-    ssh ${ALPHA_BOOT} ln -nsf ${ALPHA_ROOT}/${BASE}/RPMS/ ${ALPHA_RPMS}
+    echo "cd $ARCHIVE && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh $SERVER /bin/bash -s
+fi
+
+# Populate repository
+for RPMS in RPMS SRPMS ; do
+    ssh $SERVER mkdir -p $ARCHIVE/$BASE/$RPMS/
+    find $BASE/$RPMS/ -type f | xargs -i scp {} $SERVER:$ARCHIVE/$BASE/$RPMS/
+    ssh $SERVER yum-arch $ARCHIVE/$BASE/$RPMS/ >/dev/null
+done
+
+# Update nightly alpha symlink
+if [ "$TAG" = "HEAD" ] ; then
+    ssh $SERVER ln -nsf $ARCHIVE/$BASE/RPMS/ $REPOS
 fi
 
 exit 0
