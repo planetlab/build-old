@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.19 2004/11/08 18:28:13 mlhuang Exp $
+# $Id: build.sh,v 1.20 2004/12/01 03:23:48 mlhuang Exp $
 #
 
 # Set defaults
@@ -85,6 +85,9 @@ if [ $rc -ne 0 ] ; then
     fi
     exit $rc
 fi
+
+# XXX For debugging
+set -x
 
 # XXX Should check out a tagged version of yumgroups.xml
 cvs -d ${CVSROOT} checkout -p alpina/groups/v3_yumgroups.xml > ${BASE}/RPMS/yumgroups.xml
