@@ -6,7 +6,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id: packages.sh,v 1.1 2004/10/27 04:36:49 mlhuang Exp $
+# $Id: packages.sh,v 1.2 2004/10/27 04:47:02 mlhuang Exp $
 #
 
 xml_escape_pcdata() {
@@ -44,8 +44,8 @@ TAGS=$(rpm --querytags)
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- \$Id: packages.sh,v 1.1 2004/10/27 04:36:49 mlhuang Exp $ -->
-<!-- Generated at $(date) in $PWD on $HOSTNAME by $USER -->
+<!-- \$Id: packages.sh,v 1.2 2004/10/27 04:47:02 mlhuang Exp $ -->
+<!-- Generated at $(date) in $(cd ${1-.} && pwd -P) on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
   <!ELEMENT PACKAGE (#PCDATA)>
@@ -53,11 +53,15 @@ cat <<EOF
 EOF
 
 # List each tag as an attribute
+QUERYFORMAT=
 for tag in $TAGS ; do
 
 cat <<EOF
   $tag CDATA #REQUIRED
 EOF
+
+    # Build up QUERYFORMAT for later use
+    QUERYFORMAT="$QUERYFORMAT  $tag=@QUOTE@%{$tag}@QUOTE@\n"
 
 done
 
@@ -75,13 +79,7 @@ cat <<EOF
   <PACKAGE
 EOF
 
-    # Use @QUOTE@ instead of " to prevent it from being escaped
-    QUERYFORMAT=
-    for tag in $TAGS ; do
-	QUERYFORMAT="$QUERYFORMAT  $tag=@QUOTE@%{$tag}@QUOTE@\n"
-    done
-
-    # Print the tags
+    # Print the tags (@QUOTE@ prevents escaping of syntax)
     rpmquery --queryformat "$QUERYFORMAT" -p $rpm | xml_escape_cdata | sed -e 's/@QUOTE@/"/g'
 
 # Print the name of the RPM
