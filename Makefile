@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.24 2004/04/13 22:16:32 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.25 2004/04/14 15:36:52 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -345,6 +345,17 @@ BootServerRequest-TAG := HEAD
 BootServerRequest-MODULE := BootServerRequest
 BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
 ALL += BootServerRequest
+
+#
+# PlanetLabID
+#
+
+PlanetLabID-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabID-INITIAL := HEAD
+PlanetLabID-TAG := HEAD
+PlanetLabID-MODULE := PlanetLabID
+PlanetLabID-SPEC := PlanetLabID/PlanetLabID.spec
+ALL += PlanetLabID
 
 ifeq ($(findstring $(package),$(ALL)),)
 
