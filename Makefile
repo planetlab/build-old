@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.13 2004/04/12 14:34:48 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.14 2004/04/12 14:52:05 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -231,6 +231,17 @@ BWLimit-TAG := HEAD
 BWLimit-MODULE := BWLimit
 BWLimit-SPEC := BWLimit/BWLimit.spec
 ALL += BWLimit
+
+#
+# perl-IO-Stty
+#
+
+perl-IO-Stty-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+perl-IO-Stty-INITIAL := PERL-IO-STTY_0_2
+perl-IO-Stty-TAG := HEAD
+perl-IO-Stty-MODULE := perl-IO-Stty
+perl-IO-Stty-SPEC := perl-IO-Stty/perl-IO-Stty.spec
+ALL += perl-IO-Stty
 
 ifeq ($(findstring $(package),$(ALL)),)
 
