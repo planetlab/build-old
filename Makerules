@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.7 2004/04/14 18:05:30 mlh-pl_rpm Exp $
+# $Id: Makerules,v 1.8 2004/08/11 20:47:48 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -48,7 +48,8 @@ MK := SPECS/$(patsubst %.spec,%.mk,$(notdir $(SPEC)))
 $(MK): SPECS/$(notdir $(SPEC)).in
         # Substitute '$' for '%' and 'name := value' for '%define name value' or 'name: value'
 	sed -n \
-	-e 's/%\([[:alnum:]]*\)/$${\1}/g' \
+	-e 's/%{/$${/g' \
+	-e 's/%\([[:alnum:]]\+\)/$${\1}/g' \
 	-e 's/^$${define}[	 ]*\([^	 ]*\)[	 ]*\([^	 ]*\)/\1 := \2/p' \
 	-e 's/^\([^	 ]*\):[	 ]*\([^	 ]*\)/\1 := \2/p' \
 	$< > $@
