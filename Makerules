@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id$
+# $Id: Makerules,v 1.1.1.1 2004/04/07 21:13:51 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -46,7 +46,7 @@ export CVSROOT CVS_RSH
 MK := SPECS/$(patsubst %.spec,%.mk,$(notdir $(SPEC)))
 
 $(MK): SPECS/$(notdir $(SPEC)).in
-        # Substitute '$' for '%' and '%define name value' or 'name: value' for 'name := value'
+        # Substitute '$' for '%' and 'name := value' for '%define name value' or 'name: value'
 	sed -n \
 	-e 's/%{/$${/g' \
 	-e 's/^%define[	 ]*\([^	 ]*\)[	 ]*\([^	 ]*\)/\1 := \2/p' \
@@ -54,7 +54,7 @@ $(MK): SPECS/$(notdir $(SPEC)).in
 	$< > $@
 ifneq ($(INITIAL),$(TAG))
         # Get list of PatchSets
-	cvsps --root $(CVSROOT) -r $(INITIAL) $(if $(TAG:HEAD=),-r $(TAG)) $(MODULE) | \
+	cvsps --cvs-direct --root $(CVSROOT) -r $(INITIAL) $(if $(TAG:HEAD=),-r $(TAG)) $(MODULE) | \
 	sed -ne 's|^PatchSet[	 ]*\([0-9]*\)|PATCHES += \1|p' >> $@
 endif
 
@@ -108,7 +108,7 @@ SOURCES += SOURCES/$$(Patch$(1))
 # Generate uncompressed patch
 SOURCES/$$(patsubst %.gz,%,$$(patsubst %.bz2,%,$$(Patch$(1)))):
 	mkdir -p SOURCES
-	cvsps --root $(CVSROOT) -g -s $(1) $(MODULE) > $$@
+	cvsps --cvs-direct --root $(CVSROOT) -g -s $(1) $(MODULE) > $$@
 
 endef
 
