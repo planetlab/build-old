@@ -1,8 +1,10 @@
 #!/bin/bash
 #
-# Release build script
+# PlanetLab release build script. Intended to be used by scripts and
+# crontabs to build nightly releases (default). Can also be invoked
+# manually to build a tagged release (-r) in the current directory.
 #
-# $Id: Makerules,v 1.7 2004/04/14 18:05:30 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.1 2004/05/21 18:29:33 mlh-pl_rpm Exp $
 #
 
 # Set defaults
