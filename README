@@ -1,6 +1,6 @@
 Copyright (c) 2003  The Trustees of Princeton University (Trustees).
 
-$Id: README,v 1.1 2004/04/09 20:12:22 mlh-pl_rpm Exp $
+$Id: README,v 1.2 2004/04/14 21:22:09 mlh-pl_rpm Exp $
 
 Here are some general guidelines for writing spec files.
 
@@ -25,10 +25,13 @@ Here are some general guidelines for writing spec files.
 
 Here are some specific guidelines for writing spec files for this setup.
 
-* Explicitly %define %{name}, %{version}, %{release}. You should do this
-  anyway to support older versions of RPM. This Makefile does not
-  implicitly define these variables (based on the Name:, Version:, and
-  Release: tags) as RPM does.
+* Write your spec file as you would normally. It should be an
+  operational spec file on its own.
+
+* Explicitly %define %{name}, %{version}, %{release}, or don't use
+  them. You should do this anyway to support older versions of RPM. This
+  Makefile does not implicitly define these variables (based on the
+  Name:, Version:, and Release: tags) as RPM does.
 
 * Run cvsps(1) manually on your repository, and synchronize the PatchSet
   numbers with any Patch: tags in your spec file that you would like
@@ -39,9 +42,9 @@ Here are some specific guidelines for writing spec files for this setup.
   basename of the Source file (i.e. without .tar[.gz|.bz2]).
 
 * Add %{?date:.%{date}} to your %{release} tag. When executed, this
-  Makefile will define the variable to be the current date in YY.MM.DD
-  form. This will help automated nightly upgrades. Tagged releases
-  will not define this variable.
+  Makefile will define the variable to be the current date in YYYY.MM.DD
+  form. This will help automated nightly upgrades. Tagged releases will
+  not define this variable.
 
 * Unless you have a very good reason not to, use the following tags:
 
