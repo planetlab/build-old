@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.26 2004/04/14 16:44:52 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.27 2004/04/14 18:08:47 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -144,6 +144,17 @@ vserver-init-TAG := HEAD
 vserver-init-MODULE := vserver-init
 vserver-init-SPEC := vserver-init/vserver-init.spec
 ALL += vserver-init
+
+#
+# vserver-cache
+#
+
+vserver-cache-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-cache-INITIAL := HEAD
+vserver-cache-TAG := HEAD
+vserver-cache-MODULE := vserver-cache
+vserver-cache-SPEC := vserver-cache/vserver-cache.spec
+ALL += vserver-cache
 
 #
 # vr-tools
