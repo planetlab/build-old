@@ -3,7 +3,7 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.1 2004/03/10 03:31:55 mlhuang Exp $
+# $Id: crontab,v 1.1 2004/05/21 18:41:05 mlh-pl_rpm Exp $
 #
 
 SHELL=/bin/bash
@@ -18,7 +18,7 @@ MODULE=rpm
 #
 
 # install new crontab
-0 0 * * *	cvs -d $CVSROOT checkout -p $MODULE/crontab | crontab -
+0 0 * * *	cvs -d $CVSROOT checkout -p $MODULE/crontab 2>/dev/null | crontab -
 
 # nightly build
-17 5 * * *	cvs -d $CVSROOT checkout -p $MODULE/build.sh | $SHELL -s
+17 5 * * *	cvs -d $CVSROOT checkout -p $MODULE/build.sh 2>/dev/null | $SHELL -s
