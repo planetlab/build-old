@@ -92,7 +92,6 @@
       <packagereq type="mandatory">tar</packagereq>
 
       <packagereq type="mandatory">util-vserver</packagereq>
-      <packagereq type="mandatory">vsh</packagereq>
       <packagereq type="mandatory">sidewinder</packagereq>
       <packagereq type="mandatory">NodeUpdate</packagereq>
       <packagereq type="mandatory">PLBootServerRequest</packagereq>
@@ -109,6 +108,9 @@
       <packagereq type="mandatory">ksymoops</packagereq>
       <packagereq type="mandatory">lkcdutils</packagereq>
       <packagereq type="mandatory">vserver-reference</packagereq>
+      <packagereq type="mandatory">proper</packagereq>
+      <packagereq type="mandatory">ulogd</packagereq>
+      <packagereq type="mandatory">netflow</packagereq>
     </packagelist>
   </group>
 
