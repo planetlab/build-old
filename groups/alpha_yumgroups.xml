@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+<comps>
+
+  <group>
+    <id>PlanetLab</id>
+    <name>PlanetLab</name>    
+    <uservisible>true</uservisible>
+    <description></description>
+    <grouplist/>
+    <packagelist>
+      <packagereq type="mandatory">yum</packagereq>
+      <packagereq type="mandatory">linux</packagereq>
+      <packagereq type="mandatory">vserver</packagereq>
+      <packagereq type="mandatory">vserver-init</packagereq>
+      <packagereq type="mandatory">vserver-util</packagereq>
+      <packagereq type="mandatory">vserver-cache</packagereq>
+      <packagereq type="mandatory">vsh</packagereq>
+      <packagereq type="mandatory">sidewinder</packagereq>
+      <packagereq type="mandatory">PLBootServerRequest</packagereq>
+      <packagereq type="mandatory">PlanetLabConf</packagereq>
+      <packagereq type="mandatory">pycurl</packagereq>
+      <packagereq type="mandatory">plkmod</packagereq>
+      <packagereq type="mandatory">PlanetLab-blacklist</packagereq>
+      <packagereq type="mandatory">PlanetLabID</packagereq>
+      <packagereq type="mandatory">perl-IO-Tty</packagereq>
+      <packagereq type="mandatory">perl-IO-Stty</packagereq>
+      <packagereq type="mandatory">ipod</packagereq>
+      <packagereq type="mandatory">vr-tools</packagereq>
+      <packagereq type="mandatory">cq-tools</packagereq>
+      <packagereq type="mandatory">e2fsprogs</packagereq>
+      <packagereq type="mandatory">autofs</packagereq>
+      <packagereq type="mandatory">NodeUpdate</packagereq>
+      <packagereq type="mandatory">pl_sshd</packagereq>
+      <packagereq type="mandatory">httpd</packagereq>
+      <packagereq type="mandatory">ltt</packagereq>
+      <packagereq type="mandatory">lkcdutils</packagereq>
+      <packagereq type="mandatory">vtune_driver</packagereq>
+      <packagereq type="mandatory">PlanetLabKeys</packagereq>  
+      <packagereq type="mandatory">planetlab_sudo</packagereq>  
+      <packagereq type="mandatory">ksymoops</packagereq>
+      <packagereq type="mandatory">sanetop</packagereq>
+      <packagereq type="mandatory">BWLimit</packagereq>
+      <packagereq type="mandatory">perl-libxml-perl</packagereq>
+      <packagereq type="mandatory">perl-libxml-enno</packagereq>
+      <packagereq type="mandatory">perl-Frontier-RPC</packagereq>
+  </packagelist>
+  </group>
+
+  
+  <group>
+    <id>vserverbase</id>
+    <name>VServer Base</name>
+    <uservisible>true</uservisible>
+    <description></description>
+    <packagelist>
+      <packagereq type="mandatory">vserver-util</packagereq>
+      <packagereq type="mandatory">vserver</packagereq>
+
+      <packagereq type="mandatory">authconfig</packagereq>
+      <packagereq type="mandatory">basesystem</packagereq>
+      <packagereq type="mandatory">bash</packagereq>
+      <packagereq type="mandatory">coreutils</packagereq>
+      <packagereq type="mandatory">curl</packagereq>
+      <packagereq type="mandatory">e2fsprogs</packagereq>
+      <packagereq type="mandatory">efibootmgr</packagereq>
+      <packagereq type="mandatory">filesystem</packagereq>
+      <packagereq type="mandatory">glibc</packagereq>
+      <packagereq type="mandatory">initscripts</packagereq>
+      <packagereq type="mandatory">iproute</packagereq>
+      <packagereq type="mandatory">iputils</packagereq>
+      <packagereq type="mandatory">libgcc</packagereq>
+      <packagereq type="mandatory">libtermcap</packagereq>
+      <packagereq type="mandatory">losetup</packagereq>
+      <packagereq type="mandatory">passwd</packagereq>
+      <packagereq type="mandatory">procps</packagereq>
+      <packagereq type="mandatory">readline</packagereq>
+      <packagereq type="mandatory">redhat-release</packagereq>
+      <packagereq type="mandatory">rootfiles</packagereq>
+      <packagereq type="mandatory">rpm</packagereq>
+      <packagereq type="mandatory">setup</packagereq>
+      <packagereq type="mandatory">sysklogd</packagereq>
+      <packagereq type="mandatory">SysVinit</packagereq>
+      <packagereq type="mandatory">termcap</packagereq>
+      <packagereq type="mandatory">util-linux</packagereq>
+      <packagereq type="mandatory">vim-minimal</packagereq>
+      <packagereq type="mandatory">shadow-utils</packagereq>
+      <packagereq type="default">anacron</packagereq>
+      <packagereq type="mandatory">at</packagereq>
+      <packagereq type="mandatory">bzip2</packagereq>
+      <packagereq type="mandatory">crontabs</packagereq>
+      <packagereq type="mandatory">cyrus-sasl-plain</packagereq>
+      <packagereq type="mandatory">diffutils</packagereq>
+      <packagereq type="default">finger</packagereq>
+      <packagereq type="mandatory">mailcap</packagereq>
+      <packagereq type="default">mtools</packagereq>
+      <packagereq type="default">openssh-clients</packagereq>
+      <packagereq type="default">pam_krb5</packagereq>
+      <packagereq type="default">pam_smb</packagereq>
+      <packagereq type="optional">pidentd</packagereq>
+      <packagereq type="mandatory">pinfo</packagereq>
+      <packagereq type="default">rdate</packagereq>
+      <packagereq type="default">rsh</packagereq>
+      <packagereq type="mandatory">rsync</packagereq>
+      <packagereq type="mandatory">slocate</packagereq>
+      <packagereq type="default">sudo</packagereq>
+      <packagereq type="default">tcp_wrappers</packagereq>
+      <packagereq type="mandatory">telnet</packagereq>
+      <packagereq type="mandatory">traceroute</packagereq>
+      <packagereq type="mandatory">time</packagereq>
+      <packagereq type="default">openssh-server</packagereq>
+      <packagereq type="mandatory">unzip</packagereq>
+      <packagereq type="mandatory">vim-common</packagereq>
+      <packagereq type="mandatory">vixie-cron</packagereq>
+      <packagereq type="mandatory">zip</packagereq>
+      <packagereq type="mandatory">tar</packagereq>
+      <packagereq type="mandatory">wget</packagereq>
+      <packagereq type="mandatory">logrotate</packagereq>
+      <packagereq type="mandatory">gzip</packagereq>
+    </packagelist>
+  </group>
+
+</comps>
+
