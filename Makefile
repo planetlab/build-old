@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.55.2.4 2004/11/15 18:06:56 mlhuang Exp $
+# $Id$
 #
 
 # Default target
@@ -58,8 +58,8 @@ all:
 #
 
 # Default tags
-INITIAL := planetlab-3_0-rc4
-TAG := planetlab-3_0-rc4
+INITIAL := planetlab-3_0-rc5
+TAG := planetlab-3_0-rc5
 
 #
 # kernel
