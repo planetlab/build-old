@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.44 2004/09/18 19:49:42 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.45 2004/09/22 04:09:26 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -143,7 +143,7 @@ lkcdutils: kernel
 # yum
 #
 
-yum-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+yum-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 yum-INITIAL := HEAD
 yum-TAG := HEAD
 yum-MODULE := yum
@@ -165,7 +165,7 @@ ALL += ksymoops
 # PlanetLabAccounts
 #
 
-PlanetLabAccounts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabAccounts-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 PlanetLabAccounts-INITIAL := HEAD
 PlanetLabAccounts-TAG := HEAD
 PlanetLabAccounts-MODULE := PlanetLabAccounts
@@ -176,7 +176,7 @@ ALL += PlanetLabAccounts
 # NodeUpdate
 #
 
-NodeUpdate-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+NodeUpdate-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 NodeUpdate-INITIAL := HEAD
 NodeUpdate-TAG := HEAD
 NodeUpdate-MODULE := NodeUpdate
@@ -187,7 +187,7 @@ ALL += NodeUpdate
 # PlanetLabConf
 #
 
-PlanetLabConf-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabConf-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 PlanetLabConf-INITIAL := HEAD
 PlanetLabConf-TAG := HEAD
 PlanetLabConf-MODULE := PlanetLabConf
@@ -198,7 +198,7 @@ ALL += PlanetLabConf
 # PlanetLabKeys
 #
 
-PlanetLabKeys-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabKeys-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 PlanetLabKeys-INITIAL := HEAD
 PlanetLabKeys-TAG := HEAD
 PlanetLabKeys-MODULE := PlanetLabKeys
@@ -209,7 +209,7 @@ ALL += PlanetLabKeys
 # BWLimit
 #
 
-BWLimit-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+BWLimit-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 BWLimit-INITIAL := HEAD
 BWLimit-TAG := HEAD
 BWLimit-MODULE := BWLimit
@@ -220,7 +220,7 @@ ALL += BWLimit
 # ipod
 #
 
-ipod-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+ipod-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 ipod-INITIAL := HEAD
 ipod-TAG := HEAD
 ipod-MODULE := ipod
@@ -231,7 +231,7 @@ ALL += ipod
 # sudo
 #
 
-sudo-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+sudo-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 sudo-INITIAL := HEAD
 sudo-TAG := HEAD
 sudo-MODULE := sudo
@@ -242,7 +242,7 @@ ALL += sudo
 # pycurl
 #
 
-pycurl-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+pycurl-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 pycurl-INITIAL := HEAD
 pycurl-TAG := HEAD
 pycurl-MODULE := pycurl
@@ -253,7 +253,7 @@ ALL += pycurl
 # BootServerRequest
 #
 
-BootServerRequest-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+BootServerRequest-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 BootServerRequest-INITIAL := HEAD
 BootServerRequest-TAG := HEAD
 BootServerRequest-MODULE := BootServerRequest
@@ -264,7 +264,7 @@ ALL += BootServerRequest
 # PlanetLabID
 #
 
-PlanetLabID-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabID-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 PlanetLabID-INITIAL := HEAD
 PlanetLabID-TAG := HEAD
 PlanetLabID-MODULE := PlanetLabID
