@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.2 2004/05/21 18:34:10 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.3 2004/05/26 18:44:50 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -12,6 +12,9 @@ CVSROOT=pup-pl_rpm@cvs.planet-lab.org:/cvs
 CVS_RSH=ssh
 MODULE=rpm
 TAG=HEAD
+
+# Export certain variables
+export CVS_RSH
 
 # Get options
 while getopts "d:r:" opt ; do
