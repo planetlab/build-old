@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.3 2004/05/26 18:44:50 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.4 2004/05/26 18:50:15 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -45,9 +45,17 @@ while ! mkdir ${BASE}${i} 2>/dev/null ; do
 done
 BASE=${BASE}${i}
 
-# Redirect both stdout and stderr to log file
-exec &>${BASE}/log
-
 # Build
+(
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
 make -C ${BASE}
+) >${BASE}/log 2>&1
+
+# Dump log
+if [ $? -ne 0 ] ; then
+    if [ -f ${BASE}/log ] ; then
+	tail -100 ${BASE}/log
+    else
+	echo "Error $?"
+    fi
+fi
