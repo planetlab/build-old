@@ -1,0 +1,24 @@
+#
+# crontab(5) for build
+#
+# TMP=/tmp EDITOR=emacs crontab crontab
+#
+# $Id: crontab,v 1.1 2004/03/10 03:31:55 mlhuang Exp $
+#
+
+SHELL=/bin/bash
+MAILTO=server-msgs@planet-lab.org
+
+CVSROOT=pup-pl_rpm@cvs.planet-lab.org:/cvs
+CVS_RSH=ssh
+MODULE=rpm
+
+#
+# minute hour day-of-month month day-of-week
+#
+
+# install new crontab
+0 0 * * *	cvs -d $CVSROOT checkout -p $MODULE/crontab | crontab -
+
+# nightly build
+17 5 * * *	cvs -d $CVSROOT checkout -p $MODULE/build.sh | $SHELL -s
