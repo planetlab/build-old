@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.49 2004/10/11 04:26:22 mlhuang Exp $
+# $Id: Makefile,v 1.50 2004/10/11 19:18:13 mlhuang Exp $
 #
 
 # Default target
@@ -83,20 +83,6 @@ ALL += vnet
 
 # Build kernel first so we can bootstrap off of its build
 vnet: kernel
-
-#
-# vsh
-#
-
-vsh-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-vsh-INITIAL := HEAD
-vsh-TAG := HEAD
-vsh-MODULE := trampoline
-vsh-SPEC := trampoline/vsh.spec
-ALL += vsh
-
-# Build kernel first so we can bootstrap off of its build
-vsh: kernel
 
 #
 # util-vserver
@@ -290,6 +276,17 @@ pl_sshd-TAG := HEAD
 pl_sshd-MODULE := pl_sshd
 pl_sshd-SPEC := pl_sshd/pl_sshd.spec
 ALL += pl_sshd
+
+#
+# Resource Management Tools
+#
+
+resman-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+resman-INITIAL := HEAD
+resman-TAG := HEAD
+resman-MODULE := resman
+resman-SPEC := resman/resman.spec
+ALL += resman
 
 #
 # ulogd
