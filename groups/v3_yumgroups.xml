@@ -109,6 +109,7 @@
       <packagereq type="mandatory">vserver-reference</packagereq>
       <packagereq type="mandatory">proper</packagereq>
       <packagereq type="mandatory">netflow-init</packagereq>
+      <packagereq type="mandatory">resman</packagereq>
     </packagelist>
   </group>
 
