@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.48 2004/10/05 14:58:49 mlhuang Exp $
+# $Id: Makefile,v 1.49 2004/10/11 04:26:22 mlhuang Exp $
 #
 
 # Default target
@@ -298,8 +298,8 @@ ALL += pl_sshd
 ulogd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 ulogd-INITIAL := HEAD
 ulogd-TAG := HEAD
-ulogd-MODULE := netflow/ulogd
-ulogd-SPEC := netflow/ulogd/ulogd.spec
+ulogd-MODULE := ulogd
+ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
 
 #
