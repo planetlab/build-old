@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.17 2004/04/12 17:08:10 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.18 2004/04/12 17:14:21 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -278,6 +278,17 @@ sudo-TAG := HEAD
 sudo-MODULE := sudo
 sudo-SPEC := sudo/planetlab_sudo.spec
 ALL += sudo
+
+#
+# blacklist
+#
+
+blacklist-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+blacklist-INITIAL := HEAD
+blacklist-TAG := HEAD
+blacklist-MODULE := blacklist
+blacklist-SPEC := blacklist/PlanetLab-blacklist.spec
+ALL += blacklist
 
 ifeq ($(findstring $(package),$(ALL)),)
 
