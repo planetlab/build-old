@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.22 2004/04/12 19:56:58 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.23 2004/04/12 20:17:55 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -58,15 +58,15 @@ all:
 #
 
 #
-# kernel-planetlab
+# kernel
 #
 
-kernel-planetlab-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
-kernel-planetlab-INITIAL := linux-2_4_22
-kernel-planetlab-TAG := HEAD
-kernel-planetlab-MODULE := linux-2.4
-kernel-planetlab-SPEC := linux-2.4/scripts/kernel-planetlab.spec
-ALL += kernel-planetlab
+kernel-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+kernel-INITIAL := linux-2_4_22
+kernel-TAG := HEAD
+kernel-MODULE := linux-2.4
+kernel-SPEC := linux-2.4/scripts/kernel-planetlab.spec
+ALL += kernel
 
 #
 # plkmod
@@ -77,11 +77,11 @@ plkmod-INITIAL := HEAD
 plkmod-TAG := HEAD
 plkmod-MODULE := sys-v3
 plkmod-SPEC := sys-v3/rpm/plkmod.spec
-plkmod-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-planetlab-SPEC)) | head -1)"
+plkmod-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
 ALL += plkmod
 
-# Build kernel-planetlab first so we can bootstrap off of its build
-plkmod: kernel-planetlab
+# Build kernel first so we can bootstrap off of its build
+plkmod: kernel
 
 #
 # vdk
@@ -92,11 +92,11 @@ vdk-INITIAL := vdk_918
 vdk-TAG := HEAD
 vdk-MODULE := vdk
 vdk-SPEC := vdk/vtune_driver.spec
-vdk-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-planetlab-SPEC)) | head -1)"
+vdk-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
 ALL += vdk
 
-# Build kernel-planetlab first so we can bootstrap off of its build
-vdk: kernel-planetlab
+# Build kernel first so we can bootstrap off of its build
+vdk: kernel
 
 #
 # lkcdutils
@@ -109,8 +109,8 @@ lkcdutils-MODULE := lkcdutils
 lkcdutils-SPEC := lkcdutils/spec/lkcdutils.spec
 ALL += lkcdutils
 
-# Build kernel-planetlab first so we can bootstrap off of its build
-lkcdutils: kernel-planetlab
+# Build kernel first so we can bootstrap off of its build
+lkcdutils: kernel
 
 #
 # vserver
@@ -156,8 +156,8 @@ vsh-MODULE := vsh
 vsh-SPEC := vsh/vsh-planetlab.spec
 ALL += vsh
 
-# Build kernel-planetlab first so we can bootstrap off of its build
-vsh: kernel-planetlab
+# Build kernel first so we can bootstrap off of its build
+vsh: kernel
 
 #
 # e2fsprogs
@@ -352,7 +352,7 @@ $(foreach package,$(ALL),$(package)-clean): %-clean:
 clean:
 	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros .cvsps
 
-.PHONY: all $(ALL) clean
+.PHONY: all $(ALL) $(foreach package,$(ALL),$(package)-clean) clean
 
 else
 
