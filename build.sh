@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.8 2004/08/16 14:31:09 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.9 2004/08/17 15:39:19 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -50,14 +50,14 @@ while ! mkdir ${BASE}${i} 2>/dev/null ; do
 done
 BASE=${BASE}${i}
 
+# Build
+(
 # XXX Hack to store the pup key as well as the bui key
 eval `ssh-agent`
 for i in `grep -l "BEGIN.*PRIVATE KEY" $HOME/.ssh/*` ; do
     SSH_ASKPASS=/bin/false ssh-add $i
 done
 
-# Build
-(
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
 make -C ${BASE}
 ) >${BASE}/log 2>&1
