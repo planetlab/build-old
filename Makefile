@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.34 2004/07/20 14:26:16 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.35 2004/08/04 18:02:07 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -61,7 +61,7 @@ all:
 # kernel
 #
 
-kernel-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+kernel-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 kernel-INITIAL := linux-2_4_22
 kernel-TAG := HEAD
 kernel-MODULE := linux-2.4
@@ -72,7 +72,7 @@ ALL += kernel
 # plkmod
 #
 
-plkmod-CVSROOT := pup-silk@cvs.planet-lab.org:/cvs
+plkmod-CVSROOT := bui-silk@cvs.planet-lab.org:/cvs
 plkmod-INITIAL := HEAD
 plkmod-TAG := HEAD
 plkmod-MODULE := sys-v3
@@ -87,7 +87,7 @@ plkmod: kernel
 # vdk
 #
 
-vdk-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vdk-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vdk-INITIAL := vdk_918
 vdk-TAG := HEAD
 vdk-MODULE := vdk
@@ -102,7 +102,7 @@ vdk: kernel
 # ltt
 #
 
-ltt-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+ltt-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 ltt-INITIAL := HEAD
 ltt-TAG := HEAD
 ltt-MODULE := ltt
@@ -113,7 +113,7 @@ ALL += ltt
 # lkcdutils
 #
 
-lkcdutils-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+lkcdutils-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 lkcdutils-INITIAL := lkcdutils-4_1
 lkcdutils-TAG := HEAD
 lkcdutils-MODULE := lkcdutils
@@ -127,7 +127,7 @@ lkcdutils: kernel
 # vserver
 #
 
-vserver-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vserver-INITIAL := vserver-0_29
 vserver-TAG := HEAD
 vserver-MODULE := vserver
@@ -138,7 +138,7 @@ ALL += vserver
 # vserver-init
 #
 
-vserver-init-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-init-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vserver-init-INITIAL := HEAD
 vserver-init-TAG := HEAD
 vserver-init-MODULE := vserver-init
@@ -149,7 +149,7 @@ ALL += vserver-init
 # vserver-cache
 #
 
-vserver-cache-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-cache-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vserver-cache-INITIAL := HEAD
 vserver-cache-TAG := HEAD
 vserver-cache-MODULE := vserver-cache
@@ -160,7 +160,7 @@ ALL += vserver-cache
 # vserver-quota
 #
 
-vserver-quota-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-quota-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vserver-quota-INITIAL := HEAD
 vserver-quota-TAG := HEAD
 vserver-quota-MODULE := vserver-quota
@@ -171,7 +171,7 @@ ALL += vserver-quota
 # vserver-util
 #
 
-vserver-util-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-util-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vserver-util-INITIAL := HEAD
 vserver-util-TAG := HEAD
 vserver-util-MODULE := vserver-util
@@ -182,7 +182,7 @@ ALL += vserver-util
 # vr-tools
 #
 
-vr-tools-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vr-tools-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vr-tools-INITIAL := HEAD
 vr-tools-TAG := HEAD
 vr-tools-MODULE := vr-tools
@@ -193,7 +193,7 @@ ALL += vr-tools
 # vsh
 #
 
-vsh-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vsh-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 vsh-INITIAL := bash-2_05
 vsh-TAG := HEAD
 vsh-MODULE := vsh
@@ -207,7 +207,7 @@ vsh: kernel
 # e2fsprogs
 #
 
-e2fsprogs-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+e2fsprogs-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 e2fsprogs-INITIAL := e2fsprogs-1_33
 e2fsprogs-TAG := HEAD
 e2fsprogs-MODULE := e2fsprogs
@@ -218,7 +218,7 @@ ALL += e2fsprogs
 # initscripts
 #
 
-initscripts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+initscripts-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 initscripts-INITIAL := initscripts-7_14
 initscripts-TAG := HEAD
 initscripts-MODULE := initscripts
@@ -229,7 +229,7 @@ ALL += initscripts
 # cq-tools
 #
 
-cq-tools-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+cq-tools-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 cq-tools-INITIAL := HEAD
 cq-tools-TAG := HEAD
 cq-tools-MODULE := cq-tools
@@ -240,7 +240,7 @@ ALL += cq-tools
 # yum
 #
 
-yum-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+yum-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 yum-INITIAL := YUM_2_0_3
 yum-TAG := HEAD
 yum-MODULE := yum
@@ -251,7 +251,7 @@ ALL += yum
 # ksymoops
 #
 
-ksymoops-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+ksymoops-CVSROOT := bui-pl_kernel@cvs.planet-lab.org:/cvs
 ksymoops-INITIAL := ksymoops-2_4_9
 ksymoops-TAG := HEAD
 ksymoops-MODULE := ksymoops
@@ -262,7 +262,7 @@ ALL += ksymoops
 # PlanetLabAccounts
 #
 
-PlanetLabAccounts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabAccounts-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 PlanetLabAccounts-INITIAL := HEAD
 PlanetLabAccounts-TAG := HEAD
 PlanetLabAccounts-MODULE := PlanetLabAccounts
@@ -273,7 +273,7 @@ ALL += PlanetLabAccounts
 # MAKEDEV
 #
 
-MAKEDEV-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+MAKEDEV-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 MAKEDEV-INITIAL := MAKEDEV_3_2_2
 MAKEDEV-TAG := HEAD
 MAKEDEV-MODULE := MAKEDEV
@@ -284,7 +284,7 @@ ALL += MAKEDEV
 # NodeUpdate
 #
 
-NodeUpdate-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+NodeUpdate-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 NodeUpdate-INITIAL := HEAD
 NodeUpdate-TAG := HEAD
 NodeUpdate-MODULE := NodeUpdate
@@ -295,7 +295,7 @@ ALL += NodeUpdate
 # PlanetLabConf
 #
 
-PlanetLabConf-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabConf-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 PlanetLabConf-INITIAL := HEAD
 PlanetLabConf-TAG := HEAD
 PlanetLabConf-MODULE := PlanetLabConf
@@ -306,7 +306,7 @@ ALL += PlanetLabConf
 # PlanetLabKeys
 #
 
-PlanetLabKeys-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabKeys-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 PlanetLabKeys-INITIAL := HEAD
 PlanetLabKeys-TAG := HEAD
 PlanetLabKeys-MODULE := PlanetLabKeys
@@ -317,7 +317,7 @@ ALL += PlanetLabKeys
 # BWLimit
 #
 
-BWLimit-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+BWLimit-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 BWLimit-INITIAL := HEAD
 BWLimit-TAG := HEAD
 BWLimit-MODULE := BWLimit
@@ -328,7 +328,7 @@ ALL += BWLimit
 # perl-IO-Stty
 #
 
-perl-IO-Stty-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+perl-IO-Stty-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 perl-IO-Stty-INITIAL := PERL-IO-STTY_0_2
 perl-IO-Stty-TAG := HEAD
 perl-IO-Stty-MODULE := perl-IO-Stty
@@ -339,7 +339,7 @@ ALL += perl-IO-Stty
 # ipod
 #
 
-ipod-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+ipod-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 ipod-INITIAL := HEAD
 ipod-TAG := HEAD
 ipod-MODULE := ipod
@@ -350,7 +350,7 @@ ALL += ipod
 # sudo
 #
 
-sudo-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+sudo-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 sudo-INITIAL := HEAD
 sudo-TAG := HEAD
 sudo-MODULE := sudo
@@ -361,7 +361,7 @@ ALL += sudo
 # blacklist
 #
 
-blacklist-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+blacklist-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 blacklist-INITIAL := HEAD
 blacklist-TAG := HEAD
 blacklist-MODULE := blacklist
@@ -372,7 +372,7 @@ ALL += blacklist
 # httpd
 #
 
-httpd-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+httpd-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 httpd-INITIAL := HEAD
 httpd-TAG := HEAD
 httpd-MODULE := httpd
@@ -383,7 +383,7 @@ ALL += httpd
 # BootServerRequest
 #
 
-BootServerRequest-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+BootServerRequest-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 BootServerRequest-INITIAL := HEAD
 BootServerRequest-TAG := HEAD
 BootServerRequest-MODULE := BootServerRequest
@@ -394,7 +394,7 @@ ALL += BootServerRequest
 # PlanetLabID
 #
 
-PlanetLabID-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabID-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 PlanetLabID-INITIAL := HEAD
 PlanetLabID-TAG := HEAD
 PlanetLabID-MODULE := PlanetLabID
@@ -405,7 +405,7 @@ ALL += PlanetLabID
 # iputils
 #
 
-iputils-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+iputils-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 iputils-INITIAL := HEAD
 iputils-TAG := HEAD
 iputils-MODULE := iputils
@@ -416,7 +416,7 @@ ALL += iputils
 # traceroute
 #
 
-traceroute-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+traceroute-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 traceroute-INITIAL := HEAD
 traceroute-TAG := HEAD
 traceroute-MODULE := traceroute
@@ -427,7 +427,7 @@ ALL += traceroute
 # net-tools
 #
 
-net-tools-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+net-tools-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 net-tools-INITIAL := net-tools-1_60
 net-tools-TAG := HEAD
 net-tools-MODULE := net-tools
@@ -438,7 +438,7 @@ ALL += net-tools
 # watchdog
 #
 
-watchdog-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+watchdog-CVSROOT := bui-node_pkgs@cvs.planet-lab.org:/cvs
 watchdog-INITIAL := watchdog-5_2
 watchdog-TAG := HEAD
 watchdog-MODULE := watchdog
@@ -449,7 +449,7 @@ ALL += watchdog
 # Node Manager
 #
 
-sidewinder-CVSROOT := pup-sidewinder@cvs.planet-lab.org:/cvs
+sidewinder-CVSROOT := bui-sidewinder@cvs.planet-lab.org:/cvs
 sidewinder-INITIAL := HEAD
 sidewinder-TAG := HEAD
 sidewinder-MODULE := sidewinder
