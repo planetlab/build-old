@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.36 2004/08/05 22:43:22 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.38 2004/08/13 18:19:04 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -241,7 +241,7 @@ ALL += cq-tools
 #
 
 yum-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-yum-INITIAL := YUM_2_0_3
+yum-INITIAL := HEAD
 yum-TAG := HEAD
 yum-MODULE := yum
 yum-SPEC := yum/yum.spec
