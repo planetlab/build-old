@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.4 2004/04/09 01:36:55 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.5 2004/04/09 19:07:58 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -129,6 +129,18 @@ vsh-TAG := HEAD
 vsh-MODULE := vsh
 vsh-SPEC := vsh/vsh-planetlab.spec
 ALL += vsh
+
+#
+# yum
+#
+
+yum-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+yum-INITIAL := YUM_2_0_3
+yum-TAG := YUM_2_0_3_PL_7
+yum-MODULE := yum
+yum-SPEC := yum/yum.spec
+ALL += yum
+
 
 # Build kernel-planetlab first so we can bootstrap off of its build
 vsh: kernel-planetlab
