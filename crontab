@@ -3,7 +3,7 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.10 2004/12/09 06:34:18 mlhuang Exp $
+# $Id: crontab,v 1.11 2005/02/14 15:09:07 mlhuang Exp $
 #
 
 SHELL=/bin/bash
@@ -20,4 +20,4 @@ MODULE=build
 0 0 * * *	cvs -d $CVSROOT checkout -p $MODULE/crontab 2>/dev/null | crontab -
 
 # nightly build
-17 5 * * *	echo "SCRIPT=\$(mktemp /tmp/build.sh.XXXXXX) ; cvs -d $CVSROOT checkout -p $MODULE/build.sh >\$SCRIPT 2>/dev/null && $SHELL \$SCRIPT -b \$HOME/build/nightly -m $MAILTO -x 7 ; rm -f \$SCRIPT" | sudo /usr/sbin/chroot /export0/fedora su - build >/dev/null 2>&1
+17 5 * * *	cvs -d $CVSROOT checkout -p $MODULE/build.sh 2>/dev/null | $SHELL -s -- -b $HOME/build/nightly -m $MAILTO -x 7
