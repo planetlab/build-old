@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.2 2004/04/07 22:37:50 mlh-pl_rpm Exp $
+# $Id: Makerules,v 1.3 2004/04/08 21:08:47 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -56,6 +56,11 @@ ifneq ($(INITIAL),$(TAG))
         # Get list of PatchSets
 	cvsps --cvs-direct --root $(CVSROOT) -r $(INITIAL) $(if $(TAG:HEAD=),-r $(TAG)) $(MODULE) | \
 	sed -ne 's|^PatchSet[	 ]*\([0-9]*\)|PATCHES += \1|p' >> $@
+ifeq ($(shell echo $(MAKE_VERSION) | awk '{ print ($$1 < 3.80) }'),1)
+        # make-3.80 can use $(eval) instead (see below)
+	cvsps --cvs-direct --root $(CVSROOT) -r $(INITIAL) $(if $(TAG:HEAD=),-r $(TAG)) $(MODULE) | \
+	sh Patchrules >> $@
+endif
 endif
 
 SPECS/$(notdir $(SPEC)).in:
@@ -69,7 +74,7 @@ include $(MK)
 #
 
 # Get rid of URL
-Source0 := $(notdir $(Source0))
+Source0 := $(notdir $(if $(Source),$(Source),$(Source0)))
 
 # Add tarball to the list of sources
 SOURCES += SOURCES/$(Source0)
@@ -102,11 +107,11 @@ define PATCH_template
 
 # In case the spec file did not explicitly list the PatchSet
 ifeq ($$(origin Patch$(1)),undefined)
-Patch$(1) := $(1).patch.bz2
+Patch$(1) := $$(Source0)-$(1).patch.bz2
 endif
 
 # Get rid of URL
-Patch$(1) := $(notdir $$(Patch$(1)))
+Patch$(1) := $$(notdir $$(Patch$(1)))
 
 # Add patch to the list of sources
 SOURCES += SOURCES/$$(Patch$(1))
@@ -114,7 +119,7 @@ SOURCES += SOURCES/$$(Patch$(1))
 # Generate uncompressed patch
 SOURCES/$$(patsubst %.gz,%,$$(patsubst %.bz2,%,$$(Patch$(1)))):
 	mkdir -p SOURCES
-	cvsps --cvs-direct --root $(CVSROOT) -g -s $(1) $(MODULE) > $$@
+	cvsps --cvs-direct --root $$(CVSROOT) -g -s $(1) $$(MODULE) > $$@
 
 endef
 
@@ -126,7 +131,7 @@ endef
 %.gz: %
 	gzip -c $< > $@
 
-# Generate rules to generate patches
+# Generate rules to generate patches (make-3.80 and above expands this)
 $(foreach n,$(PATCHES),$(eval $(call PATCH_template,$(n))))
 
 #
