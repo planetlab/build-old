@@ -6,7 +6,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id: packages.sh,v 1.2 2004/10/27 04:47:02 mlhuang Exp $
+# $Id: packages.sh,v 1.3 2004/10/27 19:38:36 mlhuang Exp $
 #
 
 xml_escape_pcdata() {
@@ -39,12 +39,13 @@ xml_escape_cdata() {
 	-e 's/>/\&gt;/g'
 }
 
-# All supported tags
-TAGS=$(rpm --querytags)
+# XXX rpmquery version 4.3.1 crashes if too large of a queryformat is passed
+#TAGS=$(rpm --querytags)
+TAGS="NAME VERSION RELEASE URL BUILDTIME DESCRIPTION"
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- \$Id: packages.sh,v 1.2 2004/10/27 04:47:02 mlhuang Exp $ -->
+<!-- \$Id: packages.sh,v 1.3 2004/10/27 19:38:36 mlhuang Exp $ -->
 <!-- Generated at $(date) in $(cd ${1-.} && pwd -P) on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
