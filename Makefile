@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.30.2.2 2004/04/26 18:05:47 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.30.2.3 2004/04/26 19:58:51 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -172,8 +172,8 @@ vserver-quota-SPEC := vserver-quota/vserver-quota.spec
 #
 
 vserver-util-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
-vserver-util-INITIAL := vserver-util-0_19_5-5_planetlab
-vserver-util-TAG := vserver-util-0_19_5-5_planetlab
+vserver-util-INITIAL := vserver-util-0_19_5-6_planetlab
+vserver-util-TAG := vserver-util-0_19_5-6_planetlab
 vserver-util-MODULE := vserver-util
 vserver-util-SPEC := vserver-util/vserver-util-planetlab.spec
 ALL += vserver-util
