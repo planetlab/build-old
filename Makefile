@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.2 2004/04/08 21:09:02 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.3 2004/04/08 21:22:45 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -107,6 +107,17 @@ vserver-TAG := HEAD
 vserver-MODULE := vserver
 vserver-SPEC := vserver/vserver.spec
 ALL += vserver
+
+#
+# vserver-init
+#
+
+vserver-init-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-init-INITIAL := vserver-init-2_3
+vserver-init-TAG := HEAD
+vserver-init-MODULE := vserver-init
+vserver-init-SPEC := vserver-init/vserver-init.spec
+ALL += vserver-init
 
 ifeq ($(findstring $(package),$(ALL)),)
 
