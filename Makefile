@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.9 2004/04/12 13:40:41 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.10 2004/04/12 14:03:16 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -187,6 +187,17 @@ NodeUpdate-TAG := NODEUPDATE_0_2_R_3
 NodeUpdate-MODULE := NodeUpdate
 NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
 ALL += NodeUpdate
+
+#
+# PlanetLabConf
+#
+
+PlanetLabConf-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabConf-INITIAL := PLANETLABCONF_0_1_R_12
+PlanetLabConf-TAG := PLANETLABCONF_0_1_R_12
+PlanetLabConf-MODULE := PlanetLabConf
+PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
+ALL += PlanetLabConf
 
 ifeq ($(findstring $(package),$(ALL)),)
 
