@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id$
+# $Id: Makefile,v 1.1.1.1 2004/04/07 21:13:51 mlh-pl_rpm Exp $
 #
 
 #
@@ -93,6 +93,17 @@ ALL += vdk
 
 # Build kernel-planetlab first so we can bootstrap off of its build
 vdk: kernel-planetlab
+
+#
+# vserver
+#
+
+vserver-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-INITIAL := vserver-0_29
+vserver-TAG := HEAD
+vserver-MODULE := vserver
+vserver-SPEC := vserver/vserver.spec
+ALL += vserver
 
 ifeq ($(findstring $(package),$(ALL)),)
 
