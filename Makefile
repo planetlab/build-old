@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.35.2.3 2004/08/05 19:13:03 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.35.2.4 2004/08/18 16:24:09 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -63,7 +63,7 @@ all:
 
 kernel-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
 kernel-INITIAL := linux-2_4_22
-kernel-TAG := linux-2_4_22-10_planetlab
+kernel-TAG := linux-2_4_22-11_planetlab
 kernel-MODULE := linux-2.4
 kernel-SPEC := linux-2.4/scripts/kernel-planetlab.spec
 ALL += kernel
@@ -454,7 +454,7 @@ sidewinder-INITIAL := Node-Manager-0-5-10
 sidewinder-TAG := Node-Manager-0-5-10
 sidewinder-MODULE := sidewinder
 sidewinder-SPEC := sidewinder/sidewinder.spec
-ALL += sidewinder
+#ALL += sidewinder
 
 ifeq ($(findstring $(package),$(ALL)),)
 
