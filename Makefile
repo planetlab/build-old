@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.38 2004/08/13 18:19:04 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.39 2004/08/13 18:25:11 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -378,6 +378,17 @@ httpd-TAG := HEAD
 httpd-MODULE := httpd
 httpd-SPEC := httpd/httpd.spec
 ALL += httpd
+
+#
+# pycurl
+#
+
+pycurl-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+pycurl-INITIAL := HEAD
+pycurl-TAG := HEAD
+pycurl-MODULE := pycurl
+pycurl-SPEC := pycurl/pycurl.spec
+ALL += pycurl
 
 #
 # BootServerRequest
