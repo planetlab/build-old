@@ -4,7 +4,7 @@
 #
 # Copyright (c) 2003  The Trustees of Princeton University (Trustees).
 # 
-# $Id$
+# $Id: Patchrules,v 1.1 2004/04/09 19:24:00 mlh-pl_rpm Exp $
 #
 
 while read PatchSet n ; do
@@ -14,7 +14,7 @@ while read PatchSet n ; do
 cat <<EOF
 # In case the spec file did not explicitly list the PatchSet
 ifeq (\$(origin Patch${n}),undefined)
-Patch${n} := \$(Source0)-${n}.patch.bz2
+Patch${n} := \$(package)-${n}.patch.bz2
 endif
 
 # Get rid of URL

@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.3 2004/04/08 21:08:47 mlh-pl_rpm Exp $
+# $Id: Makerules,v 1.4 2004/04/09 19:06:27 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -107,7 +107,7 @@ define PATCH_template
 
 # In case the spec file did not explicitly list the PatchSet
 ifeq ($$(origin Patch$(1)),undefined)
-Patch$(1) := $$(Source0)-$(1).patch.bz2
+Patch$(1) := $$(package)-$(1).patch.bz2
 endif
 
 # Get rid of URL
