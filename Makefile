@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.54 2004/10/26 20:05:30 mlhuang Exp $
+# $Id: Makefile,v 1.55 2004/10/26 21:48:13 mlhuang Exp $
 #
 
 # Default target
@@ -41,8 +41,8 @@ all:
 #
 # CVSROOT: CVSROOT to use
 # INITIAL: CVS tag to use for Source0 tarball
-# TAG: CVS tag to patch to
-# MODULE: CVS module name to use
+# TAG: CVS tag to patch to (if not HEAD)
+# MODULE: CVS module name to use (if not HEAD)
 # SPEC: RPM spec file template
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
@@ -57,13 +57,15 @@ all:
 # spec file are generated automatically.
 #
 
+# Default tags
+INITIAL := HEAD
+TAG := HEAD
+
 #
 # kernel
 #
 
 kernel-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-kernel-INITIAL := HEAD
-kernel-TAG := HEAD
 kernel-MODULE := linux-2.6
 kernel-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
 ALL += kernel
@@ -73,8 +75,6 @@ ALL += kernel
 #
 
 vnet-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-vnet-INITIAL := HEAD
-vnet-TAG := HEAD
 vnet-MODULE := vnet
 vnet-SPEC := vnet/vnet.spec
 ALL += vnet
@@ -87,8 +87,6 @@ vnet: kernel
 #
 
 util-vserver-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-util-vserver-INITIAL := HEAD
-util-vserver-TAG := HEAD
 util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
 ALL += util-vserver
@@ -101,8 +99,6 @@ util-vserver: kernel
 #
 
 vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-vserver-reference-INITIAL := HEAD
-vserver-reference-TAG := HEAD
 vserver-reference-MODULE := vserver-reference
 vserver-reference-SPEC := vserver-reference/vserver-reference.spec
 ALL += vserver-reference
@@ -112,8 +108,6 @@ ALL += vserver-reference
 #
 
 lkcdutils-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-lkcdutils-INITIAL := HEAD
-lkcdutils-TAG := HEAD
 lkcdutils-MODULE := lkcdutils
 lkcdutils-SPEC := lkcdutils/spec/lkcdutils.spec
 ALL += lkcdutils
@@ -126,8 +120,6 @@ lkcdutils: kernel
 #
 
 yum-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-yum-INITIAL := HEAD
-yum-TAG := HEAD
 yum-MODULE := yum
 yum-SPEC := yum/yum.spec
 ALL += yum
@@ -138,7 +130,6 @@ ALL += yum
 
 ksymoops-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 ksymoops-INITIAL := ksymoops-2_4_9
-ksymoops-TAG := HEAD
 ksymoops-MODULE := ksymoops
 ksymoops-SPEC := ksymoops/ksymoops.spec
 ALL += ksymoops
@@ -148,8 +139,6 @@ ALL += ksymoops
 #
 
 PlanetLabAccounts-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-PlanetLabAccounts-INITIAL := HEAD
-PlanetLabAccounts-TAG := HEAD
 PlanetLabAccounts-MODULE := PlanetLabAccounts
 PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
 ALL += PlanetLabAccounts
@@ -159,8 +148,6 @@ ALL += PlanetLabAccounts
 #
 
 NodeUpdate-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-NodeUpdate-INITIAL := HEAD
-NodeUpdate-TAG := HEAD
 NodeUpdate-MODULE := NodeUpdate
 NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
 ALL += NodeUpdate
@@ -170,8 +157,6 @@ ALL += NodeUpdate
 #
 
 PlanetLabConf-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-PlanetLabConf-INITIAL := HEAD
-PlanetLabConf-TAG := HEAD
 PlanetLabConf-MODULE := PlanetLabConf
 PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
 ALL += PlanetLabConf
@@ -181,8 +166,6 @@ ALL += PlanetLabConf
 #
 
 PlanetLabKeys-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-PlanetLabKeys-INITIAL := HEAD
-PlanetLabKeys-TAG := HEAD
 PlanetLabKeys-MODULE := PlanetLabKeys
 PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
 ALL += PlanetLabKeys
@@ -192,8 +175,6 @@ ALL += PlanetLabKeys
 #
 
 ipod-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-ipod-INITIAL := HEAD
-ipod-TAG := HEAD
 ipod-MODULE := ipod
 ipod-SPEC := ipod/ipod.spec
 ALL += ipod
@@ -203,8 +184,6 @@ ALL += ipod
 #
 
 sudo-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-sudo-INITIAL := HEAD
-sudo-TAG := HEAD
 sudo-MODULE := sudo
 sudo-SPEC := sudo/planetlab_sudo.spec
 ALL += sudo
@@ -214,8 +193,6 @@ ALL += sudo
 #
 
 pycurl-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-pycurl-INITIAL := HEAD
-pycurl-TAG := HEAD
 pycurl-MODULE := pycurl
 pycurl-SPEC := pycurl/pycurl.spec
 ALL += pycurl
@@ -225,8 +202,6 @@ ALL += pycurl
 #
 
 BootServerRequest-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-BootServerRequest-INITIAL := HEAD
-BootServerRequest-TAG := HEAD
 BootServerRequest-MODULE := BootServerRequest
 BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
 ALL += BootServerRequest
@@ -236,8 +211,6 @@ ALL += BootServerRequest
 #
 
 PlanetLabID-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-PlanetLabID-INITIAL := HEAD
-PlanetLabID-TAG := HEAD
 PlanetLabID-MODULE := PlanetLabID
 PlanetLabID-SPEC := PlanetLabID/PlanetLabID.spec
 ALL += PlanetLabID
@@ -247,8 +220,6 @@ ALL += PlanetLabID
 #
 
 sidewinder-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-sidewinder-INITIAL := HEAD
-sidewinder-TAG := HEAD
 sidewinder-MODULE := sidewinder
 sidewinder-SPEC := sidewinder/sidewinder.spec
 ALL += sidewinder
@@ -258,8 +229,6 @@ ALL += sidewinder
 #
 
 pl_sshd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-pl_sshd-INITIAL := HEAD
-pl_sshd-TAG := HEAD
 pl_sshd-MODULE := pl_sshd
 pl_sshd-SPEC := pl_sshd/pl_sshd.spec
 ALL += pl_sshd
@@ -269,8 +238,6 @@ ALL += pl_sshd
 #
 
 resman-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
-resman-INITIAL := HEAD
-resman-TAG := HEAD
 resman-MODULE := resman
 resman-SPEC := resman/resman.spec
 ALL += resman
@@ -280,8 +247,6 @@ ALL += resman
 #
 
 proper-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-proper-INITIAL := HEAD
-proper-TAG := HEAD
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
 ALL += proper
@@ -291,8 +256,6 @@ ALL += proper
 #
 
 ulogd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-ulogd-INITIAL := HEAD
-ulogd-TAG := HEAD
 ulogd-MODULE := ulogd
 ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
@@ -304,8 +267,6 @@ ulogd: kernel proper
 #
 
 netflow-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-netflow-INITIAL := HEAD
-netflow-TAG := HEAD
 netflow-MODULE := netflow netsummary
 netflow-SPEC := netflow/netflow.spec
 ALL += netflow
@@ -333,8 +294,8 @@ else
 
 # Define variables for Makerules
 CVSROOT := $($(package)-CVSROOT)
-INITIAL := $($(package)-INITIAL)
-TAG := $($(package)-TAG)
+INITIAL := $(if $($(package)-INITIAL),$($(package)-INITIAL),$(INITIAL))
+TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $($(package)-RPMFLAGS)
