@@ -3,8 +3,8 @@
 <comps>
 
   <group>
-    <id>planetlab-devbox</id>
-    <name>planetlab-devbox</name>
+    <id>planetlab-alpha-devbox</id>
+    <name>planetlab-alpha-devbox</name>
     <default>true</default>
     <description>PlanetLab Desktop Node Packages</description>
     <uservisible>true</uservisible>
