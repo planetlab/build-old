@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.25 2004/04/14 15:36:52 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.26 2004/04/14 16:44:52 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -97,6 +97,17 @@ ALL += vdk
 
 # Build kernel first so we can bootstrap off of its build
 vdk: kernel
+
+#
+# ltt
+#
+
+ltt-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+ltt-INITIAL := HEAD
+ltt-TAG := HEAD
+ltt-MODULE := ltt
+ltt-SPEC := ltt/ltt.spec
+ALL += ltt
 
 #
 # lkcdutils
