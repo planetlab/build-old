@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.41 2004/08/25 19:09:42 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.42 2004/09/17 18:32:37 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -65,7 +65,7 @@ kernel-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 kernel-INITIAL := HEAD
 kernel-TAG := HEAD
 kernel-MODULE := linux-2.6
-kernel-SPEC := linux-2.6/scripts/kernel-planetlab.spec
+kernel-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
 ALL += kernel
 
 #
