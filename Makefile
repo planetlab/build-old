@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.52 2004/10/13 15:29:23 mlhuang Exp $
+# $Id: Makefile,v 1.53 2004/10/26 20:04:43 mlhuang Exp $
 #
 
 # Default target
@@ -299,7 +299,7 @@ ulogd-MODULE := ulogd
 ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
 
-#ulogd: kernel proper
+ulogd: kernel proper
 
 #
 # netflow and netsummary
