@@ -123,14 +123,28 @@
       <packagereq type="mandatory">coreutils</packagereq>
       <packagereq type="mandatory">iputils</packagereq>
 
+      <packagereq type="mandatory">bzip2</packagereq>
+      <packagereq type="mandatory">crontabs</packagereq>
+      <packagereq type="default">diffutils</packagereq>
+      <packagereq type="mandatory">logrotate</packagereq>
       <packagereq type="default">openssh-clients</packagereq>
+      <packagereq type="mandatory">passwd</packagereq>
+      <packagereq type="default">rsh</packagereq>
       <packagereq type="default">rsync</packagereq>
       <packagereq type="default">sudo</packagereq>
+      <packagereq type="mandatory">telnet</packagereq>
       <packagereq type="mandatory">traceroute</packagereq>
+      <packagereq type="mandatory">time</packagereq>
+      <packagereq type="default">vixie-cron</packagereq>
+      <packagereq type="default">wget</packagereq>
       <packagereq type="default">yum</packagereq>
 
       <packagereq type="mandatory">curl</packagereq>
+      <packagereq type="mandatory">gzip</packagereq>
       <packagereq type="mandatory">perl</packagereq>
+      <packagereq type="mandatory">python</packagereq>
+      <packagereq type="mandatory">tar</packagereq>
+
       <packagereq type="mandatory">PlanetLabKeys</packagereq>
     </packagelist>
   </group>
