@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.53 2004/10/26 20:04:43 mlhuang Exp $
+# $Id: Makefile,v 1.54 2004/10/26 20:05:30 mlhuang Exp $
 #
 
 # Default target
@@ -44,7 +44,6 @@ all:
 # TAG: CVS tag to patch to
 # MODULE: CVS module name to use
 # SPEC: RPM spec file template
-# RPMBUILD: If not rpmbuild
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
 # ALL: default targets
@@ -78,7 +77,6 @@ vnet-INITIAL := HEAD
 vnet-TAG := HEAD
 vnet-MODULE := vnet
 vnet-SPEC := vnet/vnet.spec
-vnet-RPMFLAGS := --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
 ALL += vnet
 
 # Build kernel first so we can bootstrap off of its build
@@ -340,7 +338,6 @@ TAG := $($(package)-TAG)
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $($(package)-RPMFLAGS)
-RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),rpmbuild)
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 
 include Makerules
