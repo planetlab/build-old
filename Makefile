@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.42 2004/09/17 18:32:37 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.43 2004/09/17 18:37:49 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -44,6 +44,7 @@ all:
 # TAG: CVS tag to patch to
 # MODULE: CVS module name to use
 # SPEC: RPM spec file template
+# RPMBUILD: If not rpmbuild
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
 # ALL: default targets
@@ -110,6 +111,19 @@ ALL += util-vserver
 
 # Build kernel first so we can bootstrap off of its build
 util-vserver: kernel
+
+#
+# vserver-reference
+#
+
+vserver-reference-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
+vserver-reference-INITIAL := HEAD
+vserver-reference-TAG := HEAD
+vserver-reference-MODULE := vserver-reference
+vserver-reference-SPEC := vserver-reference/vserver-reference.spec
+# Package must be built as root
+vserver-reference-RPMBUILD := sudo rpmbuild
+ALL += vserver-reference
 
 #
 # lkcdutils
@@ -307,6 +321,7 @@ TAG := $($(package)-TAG)
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $($(package)-RPMFLAGS)
+RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),rpmbuild)
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 
 include Makerules
