@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.11 2004/09/18 19:50:02 mlh-pl_rpm Exp $
+# $Id$
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -81,7 +81,10 @@ Source0 := $(notdir $(if $(Source),$(Source),$(Source0)))
 SOURCES += SOURCES/$(Source0)
 
 # Get rid of .tar.bz2 or .tar.gz or .tgz
-Base0 := $(basename $(basename $(Source0)))
+Base0 := $(Source0:.tgz=)
+Base0 := $(Base0:.bz2=)
+Base0 := $(Base0:.gz=)
+Base0 := $(Base0:.tar=)
 
 # Export module
 SOURCES/$(Base0):
