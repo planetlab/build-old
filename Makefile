@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.29 2004/04/16 19:26:11 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.30 2004/04/16 19:36:24 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -400,6 +400,18 @@ PlanetLabID-TAG := HEAD
 PlanetLabID-MODULE := PlanetLabID
 PlanetLabID-SPEC := PlanetLabID/PlanetLabID.spec
 ALL += PlanetLabID
+
+#
+# iputils
+#
+
+iputils-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+iputils-INITIAL := HEAD
+iputils-TAG := HEAD
+iputils-MODULE := iputils
+iputils-SPEC := iputils/iputils.spec
+ALL += iputils
+
 
 ifeq ($(findstring $(package),$(ALL)),)
 
