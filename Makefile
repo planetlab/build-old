@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.3 2004/04/08 21:22:45 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.4 2004/04/09 01:36:55 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -113,11 +113,25 @@ ALL += vserver
 #
 
 vserver-init-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
-vserver-init-INITIAL := vserver-init-2_3
+vserver-init-INITIAL := HEAD
 vserver-init-TAG := HEAD
 vserver-init-MODULE := vserver-init
 vserver-init-SPEC := vserver-init/vserver-init.spec
 ALL += vserver-init
+
+#
+# vsh
+#
+
+vsh-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vsh-INITIAL := bash-2_05
+vsh-TAG := HEAD
+vsh-MODULE := vsh
+vsh-SPEC := vsh/vsh-planetlab.spec
+ALL += vsh
+
+# Build kernel-planetlab first so we can bootstrap off of its build
+vsh: kernel-planetlab
 
 ifeq ($(findstring $(package),$(ALL)),)
 
