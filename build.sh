@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.11 2004/08/31 14:39:42 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.12 2004/09/22 15:21:18 mlhuang Exp $
 #
 
 # Set defaults
@@ -75,6 +75,7 @@ done
 BASE=${BASE}${i}
 
 # Redirect output from here
+exec 2>&1
 exec &>${BASE}/log
 
 # XXX Hack to store the pup key as well as the bui key
