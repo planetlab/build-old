@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.1.1.1 2004/04/07 21:13:51 mlh-pl_rpm Exp $
+# $Id: Makerules,v 1.2 2004/04/07 22:37:50 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -68,6 +68,9 @@ include $(MK)
 # Generate tarball
 #
 
+# Get rid of URL
+Source0 := $(notdir $(Source0))
+
 # Add tarball to the list of sources
 SOURCES += SOURCES/$(Source0)
 
@@ -101,6 +104,9 @@ define PATCH_template
 ifeq ($$(origin Patch$(1)),undefined)
 Patch$(1) := $(1).patch.bz2
 endif
+
+# Get rid of URL
+Patch$(1) := $(notdir $$(Patch$(1)))
 
 # Add patch to the list of sources
 SOURCES += SOURCES/$$(Patch$(1))
