@@ -132,7 +132,206 @@ vserver-INITIAL := vserver-0_29
 vserver-TAG := HEAD
 vserver-MODULE := vserver
 vserver-SPEC := vserver/vserver.spec
-ALL += v
+ALL += vserver
+
+#
+# vserver-init
+#
+
+vserver-init-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-init-INITIAL := HEAD
+vserver-init-TAG := HEAD
+vserver-init-MODULE := vserver-init
+vserver-init-SPEC := vserver-init/vserver-init.spec
+ALL += vserver-init
+
+#
+# vserver-cache
+#
+
+vserver-cache-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-cache-INITIAL := HEAD
+vserver-cache-TAG := HEAD
+vserver-cache-MODULE := vserver-cache
+vserver-cache-SPEC := vserver-cache/vserver-cache.spec
+ALL += vserver-cache
+
+#
+# vserver-quota
+#
+
+vserver-quota-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-quota-INITIAL := HEAD
+vserver-quota-TAG := HEAD
+vserver-quota-MODULE := vserver-quota
+vserver-quota-SPEC := vserver-quota/vserver-quota.spec
+ALL += vserver-quota
+
+#
+# vserver-util
+#
+
+vserver-util-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vserver-util-INITIAL := HEAD
+vserver-util-TAG := HEAD
+vserver-util-MODULE := vserver-util
+vserver-util-SPEC := vserver-util/vserver-util-planetlab.spec
+ALL += vserver-util
+
+#
+# vr-tools
+#
+
+vr-tools-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vr-tools-INITIAL := HEAD
+vr-tools-TAG := HEAD
+vr-tools-MODULE := vr-tools
+vr-tools-SPEC := vr-tools/vr-tools.spec
+ALL += vr-tools
+
+#
+# vsh
+#
+
+vsh-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+vsh-INITIAL := bash-2_05
+vsh-TAG := HEAD
+vsh-MODULE := vsh
+vsh-SPEC := vsh/vsh-planetlab.spec
+ALL += vsh
+
+# Build kernel first so we can bootstrap off of its build
+vsh: kernel
+
+#
+# e2fsprogs
+#
+
+e2fsprogs-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+e2fsprogs-INITIAL := e2fsprogs-1_33
+e2fsprogs-TAG := HEAD
+e2fsprogs-MODULE := e2fsprogs
+e2fsprogs-SPEC := e2fsprogs/e2fsprogs.spec
+ALL += e2fsprogs
+
+#
+# initscripts
+#
+
+initscripts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+initscripts-INITIAL := initscripts-7_14
+initscripts-TAG := HEAD
+initscripts-MODULE := initscripts
+initscripts-SPEC := initscripts/initscripts.spec
+ALL += initscripts
+
+#
+# cq-tools
+#
+
+cq-tools-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+cq-tools-INITIAL := HEAD
+cq-tools-TAG := HEAD
+cq-tools-MODULE := cq-tools
+cq-tools-SPEC := cq-tools/cq-tools.spec
+ALL += cq-tools
+
+#
+# yum
+#
+
+yum-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+yum-INITIAL := YUM_2_0_3
+yum-TAG := HEAD
+yum-MODULE := yum
+yum-SPEC := yum/yum.spec
+ALL += yum
+
+#
+# ksymoops
+#
+
+ksymoops-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+ksymoops-INITIAL := ksymoops-2_4_9
+ksymoops-TAG := HEAD
+ksymoops-MODULE := ksymoops
+ksymoops-SPEC := ksymoops/ksymoops.spec
+ALL += ksymoops
+
+#
+# PlanetLabAccounts
+#
+
+PlanetLabAccounts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabAccounts-INITIAL := HEAD
+PlanetLabAccounts-TAG := HEAD
+PlanetLabAccounts-MODULE := PlanetLabAccounts
+PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
+ALL += PlanetLabAccounts
+
+#
+# MAKEDEV
+#
+
+MAKEDEV-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+MAKEDEV-INITIAL := MAKEDEV_3_2_2
+MAKEDEV-TAG := HEAD
+MAKEDEV-MODULE := MAKEDEV
+MAKEDEV-SPEC := MAKEDEV/MAKEDEV.spec
+ALL += MAKEDEV
+
+#
+# NodeUpdate
+#
+
+NodeUpdate-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+NodeUpdate-INITIAL := HEAD
+NodeUpdate-TAG := HEAD
+NodeUpdate-MODULE := NodeUpdate
+NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
+ALL += NodeUpdate
+
+#
+# PlanetLabConf
+#
+
+PlanetLabConf-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabConf-INITIAL := HEAD
+PlanetLabConf-TAG := HEAD
+PlanetLabConf-MODULE := PlanetLabConf
+PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
+ALL += PlanetLabConf
+
+#
+# PlanetLabKeys
+#
+
+PlanetLabKeys-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+PlanetLabKeys-INITIAL := HEAD
+PlanetLabKeys-TAG := HEAD
+PlanetLabKeys-MODULE := PlanetLabKeys
+PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
+ALL += PlanetLabKeys
+
+#
+# BWLimit
+#
+
+BWLimit-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+BWLimit-INITIAL := HEAD
+BWLimit-TAG := HEAD
+BWLimit-MODULE := BWLimit
+BWLimit-SPEC := BWLimit/BWLimit.spec
+ALL += BWLimit
+
+#
+# perl-IO-Stty
+#
+
+perl-IO-Stty-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+perl-IO-Stty-INITIAL := PERL-IO-STTY_0_2
+perl-IO-Stty-TAG := HEAD
+perl-IO-Stty-MODULE := perl-IO-Stty
 perl-IO-Stty-SPEC := perl-IO-Stty/perl-IO-Stty.spec
 ALL += perl-IO-Stty
 
