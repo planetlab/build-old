@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.17 2004/10/27 19:39:45 mlhuang Exp $
+# $Id: build.sh,v 1.18 2004/10/30 16:01:03 mlhuang Exp $
 #
 
 # Set defaults
@@ -92,7 +92,9 @@ if [ $rc -ne 0 ] ; then
 fi
 
 # Create package manifest
-${BASE}/packages.sh -b "http://build.planet-lab.org/${BASE##$HOME/}/SRPMS" ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
+URLBASE=$(cd ${BASE} && pwd -P)
+URLBASE="http://build.planet-lab.org/${URLBASE##$HOME/}/SRPMS"
+${BASE}/packages.sh -b ${URLBASE} ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
 
 # Usually only the nightly build specifies -x
 if [ -n "$BUILDS" ] ; then
