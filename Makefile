@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.35.2.1 2004/08/04 19:18:01 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.35.2.2 2004/08/05 19:09:01 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -89,11 +89,11 @@ plkmod: kernel
 
 vdk-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
 vdk-INITIAL := vdk_918
-vdk-TAG := HEAD
+vdk-TAG := vtune_driver-918-10_planetlab
 vdk-MODULE := vdk
 vdk-SPEC := vdk/vtune_driver.spec
 vdk-RPMFLAGS = --define "kernelver $(shell rpmquery --queryformat '%{VERSION}-%{RELEASE}\n' --specfile SPECS/$(notdir $(kernel-SPEC)) | head -1)"
-#ALL += vdk
+ALL += vdk
 
 # Build kernel first so we can bootstrap off of its build
 vdk: kernel
