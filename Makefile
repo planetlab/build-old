@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.8 2004/04/12 13:24:25 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.9 2004/04/12 13:40:41 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -176,6 +176,17 @@ MAKEDEV-TAG := MAKEDEV_3_2_2_PL_6
 MAKEDEV-MODULE := MAKEDEV
 MAKEDEV-SPEC := MAKEDEV/MAKEDEV.spec
 ALL += MAKEDEV
+
+#
+# NodeUpdate
+#
+
+NodeUpdate-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+NodeUpdate-INITIAL := NODEUPDATE_0_2_R_3
+NodeUpdate-TAG := NODEUPDATE_0_2_R_3
+NodeUpdate-MODULE := NodeUpdate
+NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
+ALL += NodeUpdate
 
 ifeq ($(findstring $(package),$(ALL)),)
 
