@@ -108,7 +108,7 @@
       <packagereq type="mandatory">lkcdutils</packagereq>
       <packagereq type="mandatory">vserver-reference</packagereq>
       <packagereq type="mandatory">proper</packagereq>
-      <packagereq type="mandatory">netflow</packagereq>
+      <packagereq type="mandatory">netflow-init</packagereq>
     </packagelist>
   </group>
 
