@@ -1,10 +1,10 @@
-#!/usr/bin/ssh-agent /bin/bash
+#!/bin/bash
 #
 # PlanetLab release build script. Intended to be used by scripts and
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.7 2004/08/09 15:13:59 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.8 2004/08/16 14:31:09 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -51,6 +51,7 @@ done
 BASE=${BASE}${i}
 
 # XXX Hack to store the pup key as well as the bui key
+eval `ssh-agent`
 for i in `grep -l "BEGIN.*PRIVATE KEY" $HOME/.ssh/*` ; do
     SSH_ASKPASS=/bin/false ssh-add $i
 done
@@ -78,3 +79,6 @@ elif [ "$TAG" = "HEAD" ] ; then
     # Update symlink
     ssh ${ALPHA_BOOT} ln -nsf ${ALPHA_ROOT}/${BASE}/RPMS/ ${ALPHA_RPMS}
 fi
+
+# Kill the current agent
+ssh-agent -k
