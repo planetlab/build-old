@@ -3,7 +3,7 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.5 2004/09/18 19:18:49 mlh-pl_rpm Exp $
+# $Id: crontab,v 1.6 2004/09/22 15:21:18 mlhuang Exp $
 #
 
 SHELL=/bin/bash
@@ -20,4 +20,4 @@ MODULE=build
 0 0 * * *	cvs -d $CVSROOT checkout -p $MODULE/crontab 2>/dev/null | crontab -
 
 # nightly build
-17 5 * * *	sudo /usr/sbin/chroot /export0/fedora su - build /bin/sh -c "cvs -d $CVSROOT checkout -p $MODULE/build.sh 2>/dev/null | $SHELL -s -- -b $HOME/build/nightly -m $MAILTO -x 7"
+17 5 * * *	sudo /usr/sbin/chroot /export0/fedora su - build /bin/sh -c "cvs -d $CVSROOT checkout -p $MODULE/build.sh 2>/dev/null | $SHELL -s -- -b $HOME/build/nightly -m $MAILTO -x 7" 2>/dev/null
