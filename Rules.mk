@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makerules,v 1.8 2004/08/11 20:47:48 mlh-pl_rpm Exp $
+# $Id: Makerules,v 1.9 2004/08/11 21:41:16 mlh-pl_rpm Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -164,7 +164,9 @@ endif
 # Build
 #
 
-RPMFLAGS += $(if $(DATE),--define "date $(DATE)")
+ifeq ($(TAG),HEAD)
+RPMFLAGS += --define "date $(DATE)"
+endif
 NVR := $(shell rpmquery $(RPMFLAGS) --specfile SPECS/$(notdir $(SPEC)).in 2>/dev/null | head -1)
 ARCH := $(shell rpmquery $(RPMFLAGS) --queryformat '%{ARCH}\n' --specfile SPECS/$(notdir $(SPEC)).in 2>/dev/null | head -1)
 
