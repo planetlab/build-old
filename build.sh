@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.5 2004/06/09 14:46:04 mlh-pl_rpm Exp $
+# $Id: build.sh,v 1.6 2004/08/05 22:43:51 mlh-pl_rpm Exp $
 #
 
 # Set defaults
@@ -68,7 +68,7 @@ elif [ "$TAG" = "HEAD" ] ; then
     for i in RPMS SRPMS ; do
 	ssh ${ALPHA_BOOT} mkdir -p ${ALPHA_ROOT}/${BASE}/${i}
 	find ${BASE}/${i} -type f | xargs -i scp {} ${ALPHA_BOOT}:${ALPHA_ROOT}/${BASE}/${i}
-	ssh ${ALPHA_BOOT} yum-arch ${ALPHA_ROOT}/${BASE}/${i}
+	ssh ${ALPHA_BOOT} yum-arch ${ALPHA_ROOT}/${BASE}/${i} >/dev/null
     done
     # Update symlink
     ssh ${ALPHA_BOOT} ln -nsf ${ALPHA_ROOT}/${BASE}/RPMS/ ${ALPHA_RPMS}
