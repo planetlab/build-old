@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id$
+# $Id: Makefile,v 1.55.2.10 2005/01/19 21:20:59 mlhuang Exp $
 #
 
 # Default target
@@ -58,8 +58,8 @@ all:
 #
 
 # Default tags
-INITIAL := planetlab-3_0-rc9
-TAG := planetlab-3_0-rc9
+INITIAL := planetlab-3_0-rc10
+TAG := planetlab-3_0-rc10
 
 #
 # kernel
@@ -279,6 +279,17 @@ pl_mom-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 pl_mom-MODULE := pl_mom
 pl_mom-SPEC := pl_mom/pl_mom.spec
 ALL += pl_mom
+
+#
+# iptables
+#
+
+iptables-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+iptables-MODULE := iptables
+iptables-SPEC := iptables/iptables.spec
+ALL += iptables
+
+iptables: kernel
 
 ifeq ($(findstring $(package),$(ALL)),)
 
