@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.12 2004/04/12 14:31:57 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.13 2004/04/12 14:34:48 mlh-pl_rpm Exp $
 #
 
 # Default target
@@ -150,7 +150,7 @@ vsh: kernel-planetlab
 
 yum-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
 yum-INITIAL := YUM_2_0_3
-yum-TAG := YUM_2_0_3_PL_7
+yum-TAG := HEAD
 yum-MODULE := yum
 yum-SPEC := yum/yum.spec
 ALL += yum
@@ -171,8 +171,8 @@ ALL += ksymoops
 #
 
 PlanetLabAccounts-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-PlanetLabAccounts-INITIAL := PLANETLABACCOUNTS_0_3_R_2
-PlanetLabAccounts-TAG := PLANETLABACCOUNTS_0_3_R_2
+PlanetLabAccounts-INITIAL := HEAD
+PlanetLabAccounts-TAG := HEAD
 PlanetLabAccounts-MODULE := PlanetLabAccounts
 PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
 ALL += PlanetLabAccounts
@@ -183,7 +183,7 @@ ALL += PlanetLabAccounts
 
 MAKEDEV-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
 MAKEDEV-INITIAL := MAKEDEV_3_2_2
-MAKEDEV-TAG := MAKEDEV_3_2_2_PL_6
+MAKEDEV-TAG := HEAD
 MAKEDEV-MODULE := MAKEDEV
 MAKEDEV-SPEC := MAKEDEV/MAKEDEV.spec
 ALL += MAKEDEV
@@ -193,8 +193,8 @@ ALL += MAKEDEV
 #
 
 NodeUpdate-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-NodeUpdate-INITIAL := NODEUPDATE_0_2_R_3
-NodeUpdate-TAG := NODEUPDATE_0_2_R_3
+NodeUpdate-INITIAL := HEAD
+NodeUpdate-TAG := HEAD
 NodeUpdate-MODULE := NodeUpdate
 NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
 ALL += NodeUpdate
@@ -204,8 +204,8 @@ ALL += NodeUpdate
 #
 
 PlanetLabConf-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-PlanetLabConf-INITIAL := PLANETLABCONF_0_1_R_12
-PlanetLabConf-TAG := PLANETLABCONF_0_1_R_12
+PlanetLabConf-INITIAL := HEAD
+PlanetLabConf-TAG := HEAD
 PlanetLabConf-MODULE := PlanetLabConf
 PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
 ALL += PlanetLabConf
@@ -215,11 +215,22 @@ ALL += PlanetLabConf
 #
 
 PlanetLabKeys-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
-PlanetLabKeys-INITIAL := PLANETLABKEYS_0_1_R_3
-PlanetLabKeys-TAG := PLANETLABKEYS_0_1_R_3
+PlanetLabKeys-INITIAL := HEAD
+PlanetLabKeys-TAG := HEAD
 PlanetLabKeys-MODULE := PlanetLabKeys
 PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
 ALL += PlanetLabKeys
+
+#
+# BWLimit
+#
+
+BWLimit-CVSROOT := pup-node_pkgs@cvs.planet-lab.org:/cvs
+BWLimit-INITIAL := HEAD
+BWLimit-TAG := HEAD
+BWLimit-MODULE := BWLimit
+BWLimit-SPEC := BWLimit/BWLimit.spec
+ALL += BWLimit
 
 ifeq ($(findstring $(package),$(ALL)),)
 
