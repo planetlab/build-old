@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.12 2004/09/22 15:21:18 mlhuang Exp $
+# $Id: build.sh,v 1.13 2004/09/25 18:09:59 mlhuang Exp $
 #
 
 # Set defaults
@@ -89,20 +89,10 @@ cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
 make -C ${BASE}
 
 if [ $? -ne 0 ] ; then
-    # Notify recipient of failure or just dump to stdout
+    # Notify recipient of failure
     if [ -n "$MAILTO" ] ; then
-	NOTIFY="mail -s 'Failures for ${BASE}' $MAILTO"
-    else
-	NOTIFY=cat
+	tail -100 ${BASE}/log | mail -s "Failures for ${BASE}" $MAILTO
     fi
-    (
-    # Dump log
-    if [ -f ${BASE}/log ] ; then
-	tail -100 ${BASE}/log
-    else
-	echo "Error $?"
-    fi
-    ) | eval $NOTIFY
 elif [ -n "$BUILDS" ] ; then
     # Remove old nightly runs
     echo "cd ${ALPHA_ROOT} && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh ${ALPHA_BOOT} sh -s
