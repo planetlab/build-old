@@ -3,11 +3,11 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.2 2004/06/09 14:47:06 mlh-pl_rpm Exp $
+# $Id: crontab,v 1.3 2004/08/05 22:45:17 mlh-pl_rpm Exp $
 #
 
 SHELL=/bin/bash
-MAILTO=build@planet-lab.org
+MAILTO=build@lists.planet-lab.org
 
 CVSROOT=bui-pl_rpm@cvs.planet-lab.org:/cvs
 CVS_RSH=ssh
@@ -21,4 +21,4 @@ MODULE=rpm
 0 0 * * *	cvs -d $CVSROOT checkout -p $MODULE/crontab 2>/dev/null | crontab -
 
 # nightly build
-17 5 * * *	cvs -d $CVSROOT checkout -p $MODULE/build.sh 2>/dev/null | $SHELL -s
+17 5 * * *	cvs -d $CVSROOT checkout -p $MODULE/build.sh 2>/dev/null | $SHELL -s -- -b $HOME/build/nightly -m $MAILTO -x 7
