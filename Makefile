@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.50 2004/10/11 19:18:13 mlhuang Exp $
+# $Id: Makefile,v 1.51 2004/10/11 21:19:45 mef Exp $
 #
 
 # Default target
@@ -289,6 +289,17 @@ resman-SPEC := resman/resman.spec
 ALL += resman
 
 #
+# Proper: Privileged Operations Service
+#
+
+proper-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+proper-INITIAL := HEAD
+proper-TAG := HEAD
+proper-MODULE := proper
+proper-SPEC := proper/proper.spec
+ALL += proper
+
+#
 # ulogd
 #
 
@@ -298,6 +309,8 @@ ulogd-TAG := HEAD
 ulogd-MODULE := ulogd
 ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
+
+ulogd: kernel proper
 
 #
 # netflow and netsummary
