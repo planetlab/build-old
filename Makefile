@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.14 2004/04/12 14:52:05 alk-pl_rpm Exp $
+# $Id: Makefile,v 1.15 2004/04/12 15:27:30 alk-pl_rpm Exp $
 #
 
 # Default target
@@ -96,6 +96,20 @@ ALL += vdk
 
 # Build kernel-planetlab first so we can bootstrap off of its build
 vdk: kernel-planetlab
+
+#
+# lkcdutils
+#
+
+lkcdutils-CVSROOT := pup-pl_kernel@cvs.planet-lab.org:/cvs
+lkcdutils-INITIAL := lkcdutils-4_1
+lkcdutils-TAG := HEAD
+lkcdutils-MODULE := lkcdutils
+lkcdutils-SPEC := lkcdutils/spec/lkcdutils.spec
+ALL += lkcdutils
+
+# Build kernel-planetlab first so we can bootstrap off of its build
+lkcdutils: kernel-planetlab
 
 #
 # vserver
