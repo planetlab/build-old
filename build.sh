@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.21 2004/12/06 21:55:21 mlhuang Exp $
+# $Id: build.sh,v 1.22 2004/12/07 22:41:56 mlhuang Exp $
 #
 
 # Set defaults
@@ -101,11 +101,11 @@ ${BASE}/packages.sh -b ${URLBASE} ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
 
 # Upload packages to boot server
 SERVER=build@boot.planet-lab.org
-ARCHIVE=/www/planetlab/install-rpms/archive
+ARCHIVE=/var/www/html/install-rpms/archive
 # Put nightly alpha builds in a subdirectory
 if [ "$TAG" = "HEAD" ] ; then
     ARCHIVE=$ARCHIVE/planetlab-alpha
-    REPOS=/www/planetlab/install-rpms/planetlab-alpha
+    REPOS=/var/www/html/install-rpms/planetlab-alpha
 fi
 
 # Remove old runs
