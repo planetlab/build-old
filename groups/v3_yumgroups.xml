@@ -103,7 +103,6 @@
       <packagereq type="mandatory">autofs</packagereq>
       <packagereq type="mandatory">planetlab_sudo</packagereq>
       <packagereq type="mandatory">pl_sshd</packagereq>
-      <packagereq type="mandatory">BWLimit</packagereq>
       <packagereq type="mandatory">ipod</packagereq>
       <packagereq type="mandatory">ksymoops</packagereq>
       <packagereq type="mandatory">lkcdutils</packagereq>
