@@ -110,6 +110,7 @@
       <packagereq type="mandatory">proper</packagereq>
       <packagereq type="mandatory">netflow-init</packagereq>
       <packagereq type="mandatory">resman</packagereq>
+      <packagereq type="mandatory">pl_mom</packagereq>
     </packagelist>
   </group>
 
