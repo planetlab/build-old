@@ -6,8 +6,26 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id: packages.sh,v 1.3 2004/10/27 19:38:36 mlhuang Exp $
+# $Id: packages.sh,v 1.4 2004/10/28 14:53:05 mlhuang Exp $
 #
+
+# Set defaults
+BASE=
+
+# Get options
+while getopts "b:h" opt ; do
+    case $opt in
+	b)
+	    BASE=$OPTARG
+	    ;;
+	h|*)
+	    echo "usage: `basename $0` [OPTION]..."
+	    echo "	-b base		URL base for packages (default: none)"
+	    exit 1
+	    ;;
+    esac
+done
+shift $(($OPTIND - 1))
 
 xml_escape_pcdata() {
     # & to &amp;
@@ -45,10 +63,13 @@ TAGS="NAME VERSION RELEASE URL BUILDTIME DESCRIPTION"
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- \$Id: packages.sh,v 1.3 2004/10/27 19:38:36 mlhuang Exp $ -->
+<!-- \$Id: packages.sh,v 1.4 2004/10/28 14:53:05 mlhuang Exp $ -->
 <!-- Generated at $(date) in $(cd ${1-.} && pwd -P) on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
+  <!ATTLIST PACKAGES
+  BASE CDATA #REQUIRED
+  >
   <!ELEMENT PACKAGE (#PCDATA)>
   <!ATTLIST PACKAGE
 EOF
@@ -69,7 +90,9 @@ done
 cat <<EOF
   >
 ]>
-<PACKAGES>
+<PACKAGES
+BASE="$BASE"
+>
 EOF
 
 # For every RPM in the current directory
