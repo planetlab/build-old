@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.51 2004/10/11 21:19:45 mef Exp $
+# $Id: Makefile,v 1.52 2004/10/13 15:29:23 mlhuang Exp $
 #
 
 # Default target
@@ -190,17 +190,6 @@ PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
 ALL += PlanetLabKeys
 
 #
-# BWLimit
-#
-
-BWLimit-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-BWLimit-INITIAL := HEAD
-BWLimit-TAG := HEAD
-BWLimit-MODULE := BWLimit
-BWLimit-SPEC := BWLimit/BWLimit.spec
-ALL += BWLimit
-
-#
 # ipod
 #
 
@@ -310,7 +299,7 @@ ulogd-MODULE := ulogd
 ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
 
-ulogd: kernel proper
+#ulogd: kernel proper
 
 #
 # netflow and netsummary
