@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.13 2004/09/25 18:09:59 mlhuang Exp $
+# $Id: build.sh,v 1.14 2004/09/25 18:17:00 mlhuang Exp $
 #
 
 # Set defaults
@@ -78,33 +78,25 @@ BASE=${BASE}${i}
 exec 2>&1
 exec &>${BASE}/log
 
-# XXX Hack to store the pup key as well as the bui key
-eval `ssh-agent`
-for i in `grep -l "BEGIN.*PRIVATE KEY" $HOME/.ssh/*` ; do
-    SSH_ASKPASS=/bin/false ssh-add $i
-done
-
 # Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
 make -C ${BASE}
+rc=$?
 
-if [ $? -ne 0 ] ; then
+if [ $rc -ne 0 ] ; then
     # Notify recipient of failure
     if [ -n "$MAILTO" ] ; then
 	tail -100 ${BASE}/log | mail -s "Failures for ${BASE}" $MAILTO
     fi
 elif [ -n "$BUILDS" ] ; then
     # Remove old nightly runs
-    echo "cd ${ALPHA_ROOT} && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh ${ALPHA_BOOT} sh -s
+    echo "cd ${ALPHA_ROOT} && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh ${ALPHA_BOOT} /bin/bash -s
     # Update alpha node repository
     for i in RPMS SRPMS ; do
 	ssh ${ALPHA_BOOT} mkdir -p ${ALPHA_ROOT}/${BASE}/${i}
 	find ${BASE}/${i} -type f | xargs -i scp {} ${ALPHA_BOOT}:${ALPHA_ROOT}/${BASE}/${i}
-	ssh ${ALPHA_BOOT} yum-arch ${ALPHA_ROOT}/${BASE}/${i} >/dev/null
+	ssh ${ALPHA_BOOT} yum-arch ${ALPHA_ROOT}/${BASE}/${i}
     done
     # Update symlink
     ssh ${ALPHA_BOOT} ln -nsf ${ALPHA_ROOT}/${BASE}/RPMS/ ${ALPHA_RPMS}
 fi
-
-# Kill the current agent
-ssh-agent -k

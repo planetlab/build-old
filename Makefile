@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.45 2004/09/22 04:09:26 mlh-pl_rpm Exp $
+# $Id: Makefile,v 1.46 2004/10/04 22:04:42 mlhuang Exp $
 #
 
 # Default target
@@ -275,7 +275,7 @@ ALL += PlanetLabID
 # Node Manager
 #
 
-sidewinder-CVSROOT := pup-sidewinder@cvs.planet-lab.org:/cvs
+sidewinder-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 sidewinder-INITIAL := HEAD
 sidewinder-TAG := HEAD
 sidewinder-MODULE := sidewinder
@@ -286,7 +286,7 @@ ALL += sidewinder
 # pl_sshd
 #
 
-pl_sshd-CVSROOT := pup-pl_sshd@cvs.planet-lab.org:/cvs
+pl_sshd-CVSROOT := :pserver:anon@build.planet-lab.org:/cvs
 pl_sshd-INITIAL := HEAD
 pl_sshd-TAG := HEAD
 pl_sshd-MODULE := pl_sshd
