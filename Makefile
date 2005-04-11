@@ -58,8 +58,8 @@ all:
 #
 
 # Default tags
-INITIAL := planetlab-3_0-rc14
-TAG := planetlab-3_0-rc14
+INITIAL := planetlab-3_0_1
+TAG := planetlab-3_0_1
 
 #
 # kernel
@@ -263,11 +263,11 @@ ALL += ulogd
 ulogd: kernel proper
 
 #
-# netflow and netsummary
+# netflow
 #
 
 netflow-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-netflow-MODULE := netflow netsummary
+netflow-MODULE := netflow
 netflow-SPEC := netflow/netflow.spec
 ALL += netflow
 
