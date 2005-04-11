@@ -32,7 +32,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# $Id: Makefile,v 1.61 2005/03/29 20:28:42 mlhuang Exp $
+# $Id: Makefile,v 1.62 2005/04/04 17:05:47 alk Exp $
 #
 
 # Default target
@@ -299,6 +299,24 @@ kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 kexec-tools-MODULE := kexec-tools
 kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
+
+#
+# Request Tracker 3
+#
+
+rt3-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+rt3-MODULE := rt3
+rt3-SPEC := rt3/etc/rt.spec
+ALL += rt3
+
+#
+# Mail::SpamAssassin
+#
+
+spamassassin-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+spamassassin-MODULE := spamassassin
+spamassassin-SPEC := spamassassin/spamassassin.spec
+ALL += spamassassin
 
 ifeq ($(findstring $(package),$(ALL)),)
 
