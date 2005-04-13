@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.24 2005/02/14 15:09:07 mlhuang Exp $
+# $Id: build.sh,v 1.25 2005/04/13 14:46:16 mlhuang Exp $
 #
 
 # Set defaults
@@ -15,7 +15,7 @@ TAG=HEAD
 BASE=$PWD
 
 # cron does not set USER?
-[ -z "$USER" ] && USER=$LOGNAME
+[ -z "$USER" ] && export USER=$LOGNAME
 
 # Export certain variables
 export CVS_RSH
