@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.25 2005/04/13 14:46:16 mlhuang Exp $
+# $Id: build.sh,v 1.26 2005/04/13 17:20:30 mlhuang Exp $
 #
 
 # Set defaults
@@ -125,9 +125,11 @@ for RPMS in RPMS SRPMS ; do
     ssh $SERVER yum-arch $ARCHIVE/$BASE/$RPMS/ >/dev/null
 done
 
-# Update nightly alpha symlink
+
+# Update nightly alpha symlink if it does not exist or is broken, or
+# it is Monday
 echo "$(date) Updating symlink"
-if [ "$TAG" = "HEAD" ] ; then
+if [ "$TAG" = "HEAD" ] && ([ ! -e $REPOS ] || [ "$(date +%A)" = "Monday" ]) ; then
     ssh $SERVER ln -nsf $ARCHIVE/$BASE/RPMS/ $REPOS
 fi
 
