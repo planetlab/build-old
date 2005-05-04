@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.63 2005/04/11 14:46:16 mlhuang Exp $
+# $Id: Makefile,v 1.64 2005/05/04 19:14:58 mlhuang Exp $
 #
 
 # Default target
@@ -290,6 +290,16 @@ spamassassin-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 spamassassin-MODULE := spamassassin
 spamassassin-SPEC := spamassassin/spamassassin.spec
 ALL += spamassassin
+
+#
+# PlanetLab Central Server Management
+#
+
+plc-CVSROOT := :ext:cvs.planet-lab.org:/cvs
+plc-MODULE := plc
+plc-SPEC := plc/plc.spec
+# Do not build by default
+# ALL += plc
 
 ifeq ($(findstring $(package),$(ALL)),)
 
