@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.29 2005/05/04 19:13:44 mlhuang Exp $
+# $Id: build.sh,v 1.30 2005/05/04 20:34:59 mlhuang Exp $
 #
 
 # Set defaults
@@ -16,7 +16,7 @@ CVS_RSH=ssh
 MODULE=build
 TAG=HEAD
 BASE=$PWD
-INSTALL=yes
+MAKEFILE=Makefile
 
 # cron does not set USER?
 [ -z "$USER" ] && export USER=$LOGNAME
@@ -25,7 +25,7 @@ INSTALL=yes
 export CVS_RSH
 
 # Get options
-while getopts "d:r:m:nb:x:h" opt ; do
+while getopts "d:r:m:f:b:x:h" opt ; do
     case $opt in
 	d)
 	    CVSROOT=$OPTARG
@@ -36,8 +36,8 @@ while getopts "d:r:m:nb:x:h" opt ; do
 	m)
 	    MAILTO=$OPTARG
 	    ;;
-	n)
-	    INSTALL=no
+	f)
+	    MAKEFILE=$OPTARG
 	    ;;
 	b)
 	    BASE=$OPTARG
@@ -86,10 +86,8 @@ exec &>${BASE}/log
 
 # Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
-make -C ${BASE} $@
-if [ "$INSTALL" = "yes" ] ; then
-    make -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
-fi
+make -f ${MAKEFILE} -C ${BASE} && \
+make -f ${MAKEFILE} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 rc=$?
 
 if [ $rc -ne 0 ] ; then
