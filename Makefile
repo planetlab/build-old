@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.65 2005/05/04 19:57:08 mlhuang Exp $
+# $Id: Makefile,v 1.66 2005/05/04 20:01:59 mlhuang Exp $
 #
 
 # Default target
@@ -302,7 +302,7 @@ plc-SPEC := plc/plc.spec
 # ALL += plc
 PACKAGES += plc
 
-ifeq ($(findstring $(package),$(ALL)),)
+ifeq ($(findstring $(package),$(ALL) $(PACKAGES)),)
 
 # Build all packages
 all: $(ALL)
