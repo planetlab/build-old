@@ -4,7 +4,10 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.27 2005/05/03 18:22:36 mlhuang Exp $
+# Mark Huang <mlhuang@cs.princeton.edu>
+# Copyright (C) 2003-2005 The Trustees of Princeton University
+#
+# $Id: build.sh,v 1.28 2005/05/04 17:43:14 mlhuang Exp $
 #
 
 # Set defaults
@@ -79,6 +82,7 @@ exec &>${BASE}/log
 # Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
 make -C ${BASE}
+make -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 rc=$?
 
 if [ $rc -ne 0 ] ; then
@@ -88,54 +92,5 @@ if [ $rc -ne 0 ] ; then
     fi
     exit $rc
 fi
-
-# XXX For debugging
-set -x
-
-# XXX Should check out a tagged version of yumgroups.xml
-echo "$(date) Getting yumgroups.xml"
-cvs -d ${CVSROOT} checkout -p alpina/groups/v3_yumgroups.xml > ${BASE}/RPMS/yumgroups.xml
-
-# Create package manifest
-echo "$(date) Creating package manifest"
-URLBASE=$(cd ${BASE} && pwd -P)
-URLBASE="http://build.planet-lab.org/${URLBASE##$HOME/}/SRPMS"
-${BASE}/packages.sh -b ${URLBASE} ${BASE}/SRPMS > ${BASE}/SRPMS/packages.xml
-
-# Upload packages to boot server
-SERVER=build@boot.planet-lab.org
-ARCHIVE=/var/www/html/install-rpms/archive
-# Put nightly alpha builds in a subdirectory
-if [ "$TAG" = "HEAD" ] ; then
-    ARCHIVE=$ARCHIVE/planetlab-alpha
-    REPOS=/var/www/html/install-rpms/planetlab-alpha
-fi
-
-# Remove old runs
-if [ -n "$BUILDS" ] ; then
-    echo "$(date) Removing old runs"
-    echo "cd $ARCHIVE && ls -t | sed -n ${BUILDS}~1p | xargs rm -rf" | ssh $SERVER /bin/bash -s
-fi
-
-# Populate repository
-echo "$(date) Populating repository"
-for RPMS in RPMS SRPMS ; do
-    ssh $SERVER mkdir -p $ARCHIVE/$BASE/$RPMS/
-    find $BASE/$RPMS/ -type f | xargs -i scp {} $SERVER:$ARCHIVE/$BASE/$RPMS/
-    ssh $SERVER yum-arch $ARCHIVE/$BASE/$RPMS/ >/dev/null
-done
-
-
-# Update nightly alpha symlink if it does not exist or is broken, or
-# it is Monday
-if [ "$TAG" = "HEAD" ] ; then
-    ssh $SERVER "[ -e $REPOS ] && exit 0 || exit 1"
-    if [ $? -ne 0 ] || [ "$(date +%A)" = "Monday" ] ; then
-	echo "$(date) Updating symlink"
-	ssh $SERVER ln -nsf $ARCHIVE/$BASE/RPMS/ $REPOS
-    fi
-fi
-
-echo "$(date) $BASE done"
 
 exit 0
