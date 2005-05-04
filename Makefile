@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.64 2005/05/04 19:14:58 mlhuang Exp $
+# $Id: Makefile,v 1.65 2005/05/04 19:57:08 mlhuang Exp $
 #
 
 # Default target
@@ -300,6 +300,7 @@ plc-MODULE := plc
 plc-SPEC := plc/plc.spec
 # Do not build by default
 # ALL += plc
+PACKAGES += plc
 
 ifeq ($(findstring $(package),$(ALL)),)
 
@@ -311,7 +312,7 @@ all: $(ALL)
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
 
 # Recurse
-$(ALL):
+$(ALL) $(PACKAGES):
 	$(MAKE) package=$@
 
 # Upload packages to boot server
