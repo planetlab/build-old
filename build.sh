@@ -4,7 +4,7 @@
 # crontabs to build nightly releases (default). Can also be invoked
 # manually to build a tagged release (-r) in the current directory.
 #
-# $Id: build.sh,v 1.26 2005/04/13 17:20:30 mlhuang Exp $
+# $Id: build.sh,v 1.27 2005/05/03 18:22:36 mlhuang Exp $
 #
 
 # Set defaults
@@ -128,9 +128,12 @@ done
 
 # Update nightly alpha symlink if it does not exist or is broken, or
 # it is Monday
-echo "$(date) Updating symlink"
-if [ "$TAG" = "HEAD" ] && ([ ! -e $REPOS ] || [ "$(date +%A)" = "Monday" ]) ; then
-    ssh $SERVER ln -nsf $ARCHIVE/$BASE/RPMS/ $REPOS
+if [ "$TAG" = "HEAD" ] ; then
+    ssh $SERVER "[ -e $REPOS ] && exit 0 || exit 1"
+    if [ $? -ne 0 ] || [ "$(date +%A)" = "Monday" ] ; then
+	echo "$(date) Updating symlink"
+	ssh $SERVER ln -nsf $ARCHIVE/$BASE/RPMS/ $REPOS
+    fi
 fi
 
 echo "$(date) $BASE done"
