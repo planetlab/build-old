@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.28 2005/05/04 17:43:14 mlhuang Exp $
+# $Id: build.sh,v 1.29 2005/05/04 19:13:44 mlhuang Exp $
 #
 
 # Set defaults
@@ -16,6 +16,7 @@ CVS_RSH=ssh
 MODULE=build
 TAG=HEAD
 BASE=$PWD
+INSTALL=yes
 
 # cron does not set USER?
 [ -z "$USER" ] && export USER=$LOGNAME
@@ -24,7 +25,7 @@ BASE=$PWD
 export CVS_RSH
 
 # Get options
-while getopts "d:r:m:b:x:h" opt ; do
+while getopts "d:r:m:nb:x:h" opt ; do
     case $opt in
 	d)
 	    CVSROOT=$OPTARG
@@ -34,6 +35,9 @@ while getopts "d:r:m:b:x:h" opt ; do
 	    ;;
 	m)
 	    MAILTO=$OPTARG
+	    ;;
+	n)
+	    INSTALL=no
 	    ;;
 	b)
 	    BASE=$OPTARG
@@ -52,6 +56,7 @@ while getopts "d:r:m:b:x:h" opt ; do
 	    ;;
     esac
 done
+shift $(($OPTIND - 1))
 
 # Base operations in specified directory
 mkdir -p $BASE
@@ -81,8 +86,10 @@ exec &>${BASE}/log
 
 # Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
-make -C ${BASE}
-make -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
+make -C ${BASE} $@
+if [ "$INSTALL" = "yes" ] ; then
+    make -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
+fi
 rc=$?
 
 if [ $rc -ne 0 ] ; then
