@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.64 2005/05/04 19:14:58 mlhuang Exp $
+# $Id: plc.mk,v 1.1 2005/05/04 21:47:56 mlhuang Exp $
 #
 
 # Default target
@@ -89,6 +89,15 @@ spamassassin-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 spamassassin-MODULE := spamassassin
 spamassassin-SPEC := spamassassin/spamassassin.spec
 ALL += spamassassin
+
+#
+# TWiki
+#
+
+twiki-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+twiki-MODULE := twiki
+twiki-SPEC := twiki/TWiki.spec
+ALL += twiki
 
 ifeq ($(findstring $(package),$(ALL)),)
 
