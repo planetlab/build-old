@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.69 2005/05/04 21:47:39 mlhuang Exp $
+# $Id$
 #
 
 # Default target
@@ -272,6 +272,16 @@ kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 kexec-tools-MODULE := kexec-tools
 kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
+
+#
+# util-python
+#
+util-python-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+util-python-MODULE := util-python
+util-python-SPEC := util-python/util-python.spec
+ALL += util-python
+
+
 
 ifeq ($(findstring $(package),$(ALL)),)
 
