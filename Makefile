@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: Makefile,v 1.69.4.3 2005/06/06 21:08:02 mlhuang Exp $
 #
 
 # Default target
@@ -287,8 +287,7 @@ ifeq ($(findstring $(package),$(ALL)),)
 
 # Build all packages
 all: $(ALL)
-        # XXX Should check out a tagged version of yumgroups.xml
-	cvs -d $(CVSROOT) checkout -p alpina/groups/v3_yumgroups.xml > RPMS/yumgroups.xml
+	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
 

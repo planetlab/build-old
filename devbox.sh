@@ -3,7 +3,7 @@
 # PlanetLab devbox release script. Intended to be used by scripts and
 # crontabs to build nightly releases (default).
 #
-# $Id:$
+# $Id: devbox.sh,v 1.2 2005/06/06 21:53:37 mlhuang Exp $
 #
 
 # Set defaults
@@ -73,7 +73,7 @@ for RELEASE in devbox alpha-devbox beta-devbox ; do
     ssh $SERVER ln -nf ${REPOSITORY}/$BUILT/*.rpm ${REPOSITORY}/${TMPDEVBOXRELEASE}
 
     mkdir -p ${BASE}/${DEVBOXRELEASE}
-    cvs -d ${CVSROOT} checkout -p alpina/groups/${RELEASE}_yumgroups.xml > ${BASE}/${DEVBOXRELEASE}/yumgroups.xml
+    install -D -m 644 groups/${RELEASE}_yumgroups.xml ${BASE}/${DEVBOXRELEASE}/yumgroups.xml
     scp ${BASE}/${DEVBOXRELEASE}/yumgroups.xml ${SERVER}:${REPOSITORY}/${TMPDEVBOXRELEASE}/yumgroups.xml
 
     ssh $SERVER yum-arch ${REPOSITORY}/${TMPDEVBOXRELEASE} >/dev/null
