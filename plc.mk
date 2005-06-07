@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.2.2.2 2005/05/19 18:54:42 mlhuang Exp $
+# $Id$
 #
 
 # Default target
@@ -103,7 +103,7 @@ ifeq ($(findstring $(package),$(ALL)),)
 
 # Build all packages
 all: $(ALL)
-	cvs -d $(CVSROOT) checkout -p alpina/groups/stock_fc2_groups.xml > RPMS/yumgroups.xml
+	install -D -m 644 groups/stock_fc2_groups.xml RPMS/yumgroups.xml
 
 # Recurse
 $(ALL):
