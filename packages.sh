@@ -6,7 +6,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id: packages.sh,v 1.4 2004/10/28 14:53:05 mlhuang Exp $
+# $Id: packages.sh,v 1.5 2004/10/30 15:26:28 mlhuang Exp $
 #
 
 # Set defaults
@@ -29,7 +29,7 @@ shift $(($OPTIND - 1))
 
 xml_escape_pcdata() {
     # & to &amp;
-    # " to \"
+    # " to &quot;
     # ' to &apos;
     # < to &lt;
     # > to &gt;
@@ -63,7 +63,7 @@ TAGS="NAME VERSION RELEASE URL BUILDTIME DESCRIPTION"
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- \$Id: packages.sh,v 1.4 2004/10/28 14:53:05 mlhuang Exp $ -->
+<!-- \$Id: packages.sh,v 1.5 2004/10/30 15:26:28 mlhuang Exp $ -->
 <!-- Generated at $(date) in $(cd ${1-.} && pwd -P) on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
