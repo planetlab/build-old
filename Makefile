@@ -30,8 +30,8 @@ all:
 #
 
 # Default values
-INITIAL := planetlab-3_1-rc3
-TAG := planetlab-3_1-rc3
+INITIAL := planetlab-3_1-rc4
+TAG := planetlab-3_1-rc4
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 
 #
