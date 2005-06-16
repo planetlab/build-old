@@ -95,6 +95,8 @@
       <packagereq type="mandatory">nfs-utils</packagereq>
 
       <packagereq type="mandatory">util-vserver</packagereq>
+      <packagereq type="mandatory">util-vserver-py23</packagereq>
+      <packagereq type="mandatory">util-python</packagereq>
       <packagereq type="mandatory">sidewinder</packagereq>
       <packagereq type="mandatory">NodeUpdate</packagereq>
       <packagereq type="mandatory">PLBootServerRequest</packagereq>
