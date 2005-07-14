@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: plc.mk,v 1.2.2.8 2005/06/28 16:55:21 mlhuang Exp $
 #
 
 # Default target
@@ -128,7 +128,7 @@ ifneq ($(BUILDS),)
 endif
         # Populate repository
 	mkdir -p $(ARCHIVE)/$(BASE)
-	rsync --links --perms --times --group \
+	rsync --delete --links --perms --times --group \
 	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*))) $(ARCHIVE)/$(BASE)/
 	yum-arch $(ARCHIVE)/$(BASE) >/dev/null
 ifeq ($(TAG),HEAD)
