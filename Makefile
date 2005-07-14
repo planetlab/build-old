@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: Makefile,v 1.69.4.7 2005/07/06 21:17:43 mlhuang Exp $
 #
 
 # Default target
@@ -315,10 +315,10 @@ ifneq ($(BUILDS),)
 endif
         # Populate repository
 	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS
-	rsync --links --perms --times --group --compress --rsh=ssh \
+	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*))) $(SERVER):$(ARCHIVE)/$(BASE)/RPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS >/dev/null
-	rsync --links --perms --times --group --compress --rsh=ssh \
+	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(wildcard SRPMS/*) $(SERVER):$(ARCHIVE)/$(BASE)/SRPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
 ifeq ($(TAG),HEAD)
