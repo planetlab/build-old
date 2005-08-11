@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: Makefile,v 1.72 2005/07/14 18:13:15 mlhuang Exp $
 #
 
 # Default target
@@ -280,6 +280,10 @@ util-python-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 util-python-MODULE := util-python
 util-python-SPEC := util-python/util-python.spec
 ALL += util-python
+
+# proper and util-vserver both use scripts in util-python for building
+proper: util-python
+util-vserver: util-python
 
 
 
