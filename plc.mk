@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.3 2005/06/06 21:53:37 mlhuang Exp $
+# $Id: plc.mk,v 1.4 2005/07/14 18:13:43 mlhuang Exp $
 #
 
 # Default target
@@ -51,6 +51,18 @@ proper-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
 ALL += proper
+
+#
+# util-python
+#
+util-python-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+util-python-MODULE := util-python
+util-python-SPEC := util-python/util-python.spec
+ALL += util-python
+
+# proper and util-vserver both use scripts in util-python for building
+proper: util-python
+util-vserver: util-python
 
 #
 # ulogd
