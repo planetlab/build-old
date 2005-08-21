@@ -64,9 +64,6 @@ util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
 ALL += util-vserver
 
-# Build kernel first so we can bootstrap off of its build
-util-vserver: kernel
-
 #
 # vserver-reference
 #
