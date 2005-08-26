@@ -100,7 +100,7 @@
       <packagereq type="mandatory">util-vserver-core</packagereq>
       <packagereq type="mandatory">util-vserver-sysv</packagereq>
       <packagereq type="mandatory">util-vserver-legacy</packagereq>
-      <packagereq type="mandatory">util-vserver-py23</packagereq>
+      <packagereq type="mandatory">util-vserver-python</packagereq>
       <packagereq type="mandatory">util-python</packagereq>
       <packagereq type="mandatory">sidewinder</packagereq>
       <packagereq type="mandatory">NodeUpdate</packagereq>
