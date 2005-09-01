@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.72 2005/07/14 18:13:15 mlhuang Exp $
+# $Id: Makefile,v 1.74 2005/08/21 22:27:22 mlhuang Exp $
 #
 
 # Default target
@@ -16,6 +16,7 @@ all:
 # TAG: CVS tag to patch to (if not HEAD)
 # MODULE: CVS module name to use (if not HEAD)
 # SPEC: RPM spec file template
+# RPMBUILD: If not rpmbuild
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
 # ALL: default targets
@@ -71,7 +72,12 @@ ALL += util-vserver
 vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 vserver-reference-MODULE := vserver-reference
 vserver-reference-SPEC := vserver-reference/vserver-reference.spec
+# Package must be built as root
+vserver-reference-RPMBUILD := sudo rpmbuild
 ALL += vserver-reference
+
+# Reference image requires a dummy kernel and PlanetLabKeys
+vserver-reference: kernel PlanetLabKeys
 
 #
 # lkcdutils
@@ -349,6 +355,7 @@ TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $($(package)-RPMFLAGS)
+RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),rpmbuild)
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 
 include Makerules
