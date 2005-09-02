@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: Makefile,v 1.76 2005/09/02 20:19:37 mlhuang Exp $
 #
 
 # Default target
@@ -297,7 +297,7 @@ bootmanager-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 bootmanager-MODULE := bootmanager
 bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
-ALL += bootmanager
+#ALL += bootmanager
 
 # bootmanager builds the bootstrap package, which includes all the
 # other packages
