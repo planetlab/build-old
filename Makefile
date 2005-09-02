@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.74 2005/08/21 22:27:22 mlhuang Exp $
+# $Id$
 #
 
 # Default target
@@ -279,6 +279,7 @@ ALL += kexec-tools
 #
 # util-python
 #
+
 util-python-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 util-python-MODULE := util-python
 util-python-SPEC := util-python/util-python.spec
@@ -288,7 +289,19 @@ ALL += util-python
 proper: util-python
 util-vserver: util-python
 
+#
+# bootmanager
+#
 
+bootmanager-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+bootmanager-MODULE := bootmanager
+bootmanager-SPEC := bootmanager/bootmanager.spec
+bootmanager-RPMBUILD := sudo rpmbuild
+ALL += bootmanager
+
+# bootmanager builds the bootstrap package, which includes all the
+# other packages
+bootmanager: $(filter-out bootmanager,$(ALL))
 
 ifeq ($(findstring $(package),$(ALL)),)
 
