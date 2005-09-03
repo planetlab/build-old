@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.76 2005/09/02 20:19:37 mlhuang Exp $
+# $Id$
 #
 
 # Default target
@@ -64,20 +64,6 @@ util-vserver-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
 ALL += util-vserver
-
-#
-# vserver-reference
-#
-
-vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-vserver-reference-MODULE := vserver-reference
-vserver-reference-SPEC := vserver-reference/vserver-reference.spec
-# Package must be built as root
-vserver-reference-RPMBUILD := sudo rpmbuild
-ALL += vserver-reference
-
-# Reference image requires a dummy kernel and PlanetLabKeys
-vserver-reference: kernel PlanetLabKeys
 
 #
 # lkcdutils
@@ -290,6 +276,23 @@ proper: util-python
 util-vserver: util-python
 
 #
+# vserver-reference
+#
+
+vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+vserver-reference-MODULE := vserver-reference
+vserver-reference-SPEC := vserver-reference/vserver-reference.spec
+# Package must be built as root
+vserver-reference-RPMBUILD := sudo rpmbuild
+ALL += vserver-reference
+
+# vserver-reference may require current packages
+vserver-reference: $(filter-out vserver-reference,$(ALL))
+
+# ...which should be indexed first
+vserver-reference: RPMS/yumgroups.xml RPMS/headers
+
+#
 # bootmanager
 #
 
@@ -297,19 +300,28 @@ bootmanager-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 bootmanager-MODULE := bootmanager
 bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
-#ALL += bootmanager
+ALL += bootmanager
 
-# bootmanager builds the bootstrap package, which includes all the
-# other packages
+# bootmanager may require current packages
 bootmanager: $(filter-out bootmanager,$(ALL))
+
+# ...which should be indexed first
+bootmanager: RPMS/yumgroups.xml RPMS/headers
 
 ifeq ($(findstring $(package),$(ALL)),)
 
 # Build all packages
 all: $(ALL)
-	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
+        # Generate yum headers
+	$(MAKE) RPMS/yumgroups.xml RPMS/headers
+
+RPMS/yumgroups.xml:
+	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
+
+RPMS/headers:
+	yum-arch RPMS
 
 # Recurse
 $(ALL):
