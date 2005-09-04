@@ -289,8 +289,8 @@ ALL += vserver-reference
 # vserver-reference may require current packages
 vserver-reference: $(filter-out vserver-reference,$(ALL))
 
-# ...which should be indexed first
-vserver-reference: RPMS/yumgroups.xml RPMS/headers
+# ...and the yum manifest
+vserver-reference: RPMS/yumgroups.xml
 
 #
 # bootmanager
@@ -305,8 +305,8 @@ ALL += bootmanager
 # bootmanager may require current packages
 bootmanager: $(filter-out bootmanager,$(ALL))
 
-# ...which should be indexed first
-bootmanager: RPMS/yumgroups.xml RPMS/headers
+# ...and the yum manifest
+bootmanager: RPMS/yumgroups.xml
 
 ifeq ($(findstring $(package),$(ALL)),)
 
@@ -314,18 +314,15 @@ ifeq ($(findstring $(package),$(ALL)),)
 all: $(ALL)
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
-        # Generate yum headers
-	$(MAKE) RPMS/yumgroups.xml RPMS/headers
 
 RPMS/yumgroups.xml:
 	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
 
-RPMS/headers:
-	yum-arch RPMS
-
 # Recurse
 $(ALL):
 	$(MAKE) package=$@
+	yum-arch RPMS
+	yum-arch SRPMS
 
 # Upload packages to boot server
 SERVER := build@boot.planet-lab.org
