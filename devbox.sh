@@ -3,7 +3,7 @@
 # PlanetLab devbox release script. Intended to be used by scripts and
 # crontabs to build nightly releases (default).
 #
-# $Id:$
+# $Id: devbox.sh,v 1.3 2005/08/02 05:36:47 mef Exp $
 #
 
 # Set defaults
@@ -16,6 +16,7 @@ BASE=$PWD
 # Export certain variables
 export CVS_RSH
 
+BASE=
 # Get options
 while getopts "d:r:m:b:x:h" opt ; do
     case $opt in
@@ -45,13 +46,17 @@ while getopts "d:r:m:b:x:h" opt ; do
 done
 
 # Base operations in specified directory
-BASE=`mktemp -d /tmp/DEVBOX.XXXXXX` || { echo $"could not make temp file" >& 2; exit 1; }
-mkdir -p $BASE
+if [ -z "$BASE" ]; then
+	BASE=`mktemp -d /tmp/DEVBOX.XXXXXX` || { echo $"could not make temp file" >& 2; exit 1; }
+	mkdir -p $BASE
+fi
 cd $BASE || exit $?
 
+DAT=`date +%Y.%m.%d`
+DAT="2005.08.01"
 # Redirect output from here
 exec 2>&1
-exec &>${BASE}/log
+exec &>${BASE}/${DAT}/devbox.log
 
 # XXX For debugging
 set -x
@@ -61,7 +66,7 @@ SERVER=build@boot.planet-lab.org
 REPOSITORY=/var/www/html/install-rpms
 
 for RELEASE in devbox alpha-devbox beta-devbox ; do
-    TMPDEVBOXRELEASE=planetlab-${RELEASE}_`date +%Y.%m.%d`_tmp
+    TMPDEVBOXRELEASE=planetlab-${RELEASE}_${DAT}_tmp
     DEVBOXRELEASE=planetlab-${RELEASE}
 
     ssh $SERVER mkdir -p ${REPOSITORY}/${TMPDEVBOXRELEASE}
@@ -72,9 +77,9 @@ for RELEASE in devbox alpha-devbox beta-devbox ; do
     BUILT=$(echo $DEVBOXRELEASE | sed "s,\-devbox,,")
     ssh $SERVER ln -nf ${REPOSITORY}/$BUILT/*.rpm ${REPOSITORY}/${TMPDEVBOXRELEASE}
 
-    mkdir -p ${BASE}/${DEVBOXRELEASE}
-    cvs -d ${CVSROOT} checkout -p alpina/groups/${RELEASE}_yumgroups.xml > ${BASE}/${DEVBOXRELEASE}/yumgroups.xml
-    scp ${BASE}/${DEVBOXRELEASE}/yumgroups.xml ${SERVER}:${REPOSITORY}/${TMPDEVBOXRELEASE}/yumgroups.xml
+    mkdir -p ${BASE}/${DAT}/${DEVBOXRELEASE}
+    install -D -m 644 ${DAT}/groups/${RELEASE}_yumgroups.xml ${BASE}/${DAT}/${DEVBOXRELEASE}/yumgroups.xml
+    scp ${BASE}/${DAT}/${DEVBOXRELEASE}/yumgroups.xml ${SERVER}:${REPOSITORY}/${TMPDEVBOXRELEASE}/yumgroups.xml
 
     ssh $SERVER yum-arch ${REPOSITORY}/${TMPDEVBOXRELEASE} >/dev/null
 
@@ -88,6 +93,6 @@ for RELEASE in devbox alpha-devbox beta-devbox ; do
 done
 
 cd / || exit $?
-rm -rf $BASE
+#rm -rf $BASE
 
 exit 0

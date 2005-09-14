@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.68 2005/05/04 20:35:27 mlhuang Exp $
+# $Id: Makefile,v 1.79 2005/09/04 17:37:36 mlhuang Exp $
 #
 
 # Default target
@@ -16,6 +16,7 @@ all:
 # TAG: CVS tag to patch to (if not HEAD)
 # MODULE: CVS module name to use (if not HEAD)
 # SPEC: RPM spec file template
+# RPMBUILD: If not rpmbuild
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
 # ALL: default targets
@@ -63,18 +64,6 @@ util-vserver-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
 ALL += util-vserver
-
-# Build kernel first so we can bootstrap off of its build
-util-vserver: kernel
-
-#
-# vserver-reference
-#
-
-vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-vserver-reference-MODULE := vserver-reference
-vserver-reference-SPEC := vserver-reference/vserver-reference.spec
-ALL += vserver-reference
 
 #
 # lkcdutils
@@ -273,18 +262,67 @@ kexec-tools-MODULE := kexec-tools
 kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
 
+#
+# util-python
+#
+
+util-python-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+util-python-MODULE := util-python
+util-python-SPEC := util-python/util-python.spec
+ALL += util-python
+
+# proper and util-vserver both use scripts in util-python for building
+proper: util-python
+util-vserver: util-python
+
+#
+# vserver-reference
+#
+
+vserver-reference-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+vserver-reference-MODULE := vserver-reference
+vserver-reference-SPEC := vserver-reference/vserver-reference.spec
+# Package must be built as root
+vserver-reference-RPMBUILD := sudo rpmbuild
+ALL += vserver-reference
+
+# vserver-reference may require current packages
+vserver-reference: $(filter-out vserver-reference,$(ALL))
+
+# ...and the yum manifest
+vserver-reference: RPMS/yumgroups.xml
+
+#
+# bootmanager
+#
+
+bootmanager-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+bootmanager-MODULE := bootmanager
+bootmanager-SPEC := bootmanager/bootmanager.spec
+bootmanager-RPMBUILD := sudo rpmbuild
+ALL += bootmanager
+
+# bootmanager may require current packages
+bootmanager: $(filter-out bootmanager,$(ALL))
+
+# ...and the yum manifest
+bootmanager: RPMS/yumgroups.xml
+
 ifeq ($(findstring $(package),$(ALL)),)
 
 # Build all packages
 all: $(ALL)
-        # XXX Should check out a tagged version of yumgroups.xml
-	cvs -d $(CVSROOT) checkout -p alpina/groups/v3_yumgroups.xml > RPMS/yumgroups.xml
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
+
+RPMS/yumgroups.xml:
+	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
 
 # Recurse
 $(ALL):
 	$(MAKE) package=$@
+	yum-arch RPMS
+	yum-arch SRPMS
 
 # Upload packages to boot server
 SERVER := build@boot.planet-lab.org
@@ -306,10 +344,10 @@ ifneq ($(BUILDS),)
 endif
         # Populate repository
 	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS
-	rsync --links --perms --times --group --compress --rsh=ssh \
+	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*))) $(SERVER):$(ARCHIVE)/$(BASE)/RPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS >/dev/null
-	rsync --links --perms --times --group --compress --rsh=ssh \
+	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(wildcard SRPMS/*) $(SERVER):$(ARCHIVE)/$(BASE)/SRPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
 ifeq ($(TAG),HEAD)
@@ -339,6 +377,7 @@ TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $($(package)-RPMFLAGS)
+RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),rpmbuild)
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 
 include Makerules

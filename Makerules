@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makerules,v 1.15 2005/05/18 15:18:43 mlhuang Exp $
+# $Id: Makerules,v 1.16 2005/09/01 18:58:45 mlhuang Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -151,7 +151,7 @@ all: RPMS/$(ARCH)/$(NVR).$(ARCH).rpm SRPMS/$(NVR).src.rpm
 # Build RPM
 RPMS/$(ARCH)/$(NVR).$(ARCH).rpm: SPECS/$(notdir $(SPEC)) $(SOURCES) .rpmmacros
 	mkdir -p BUILD RPMS
-	rpmbuild $(RPMFLAGS) -bb $<
+	$(RPMBUILD) $(RPMFLAGS) -bb $<
 
 # Build SRPM
 SRPMS/$(NVR).src.rpm: SPECS/$(notdir $(SPEC)) $(SOURCES) .rpmmacros
