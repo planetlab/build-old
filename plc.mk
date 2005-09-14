@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: plc.mk,v 1.2.2.10 2005/07/18 22:17:12 mlhuang Exp $
 #
 
 # Default target
@@ -16,6 +16,7 @@ all:
 # TAG: CVS tag to patch to (if not HEAD)
 # MODULE: CVS module name to use (if not HEAD)
 # SPEC: RPM spec file template
+# RPMBUILD: If not rpmbuild
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
 # ALL: default targets
@@ -30,8 +31,8 @@ all:
 #
 
 # Default values
-INITIAL := plc-0_2-8
-TAG := plc-0_2-8
+INITIAL := plc-0_2-9
+TAG := plc-0_2-9
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 
 #
@@ -51,6 +52,18 @@ proper-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
 ALL += proper
+
+#
+# util-python
+#
+util-python-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+util-python-MODULE := util-python
+util-python-SPEC := util-python/util-python.spec
+ALL += util-python
+
+# proper and util-vserver both use scripts in util-python for building
+proper: util-python
+util-vserver: util-python
 
 #
 # ulogd
@@ -154,6 +167,7 @@ INITIAL := $(if $($(package)-INITIAL),$($(package)-INITIAL),$(INITIAL))
 TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
+RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),rpmbuild)
 RPMFLAGS := $($(package)-RPMFLAGS)
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 
