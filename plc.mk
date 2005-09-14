@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.4 2005/07/14 18:13:43 mlhuang Exp $
+# $Id: plc.mk,v 1.5 2005/08/17 18:25:38 mlhuang Exp $
 #
 
 # Default target
@@ -16,6 +16,7 @@ all:
 # TAG: CVS tag to patch to (if not HEAD)
 # MODULE: CVS module name to use (if not HEAD)
 # SPEC: RPM spec file template
+# RPMBUILD: If not rpmbuild
 # RPMFLAGS: Miscellaneous RPM flags
 # CVS_RSH: If not ssh
 # ALL: default targets
@@ -166,6 +167,7 @@ INITIAL := $(if $($(package)-INITIAL),$($(package)-INITIAL),$(INITIAL))
 TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
+RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),rpmbuild)
 RPMFLAGS := $($(package)-RPMFLAGS)
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),ssh)
 
