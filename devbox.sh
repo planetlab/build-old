@@ -3,7 +3,7 @@
 # PlanetLab devbox release script. Intended to be used by scripts and
 # crontabs to build nightly releases (default).
 #
-# $Id: devbox.sh,v 1.3 2005/08/02 05:36:47 mef Exp $
+# $Id: devbox.sh,v 1.4 2005/09/21 18:57:53 mef Exp $
 #
 
 # Set defaults
@@ -53,7 +53,6 @@ fi
 cd $BASE || exit $?
 
 DAT=`date +%Y.%m.%d`
-DAT="2005.08.01"
 # Redirect output from here
 exec 2>&1
 exec &>${BASE}/${DAT}/devbox.log

@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.2.2.10 2005/07/18 22:17:12 mlhuang Exp $
+# $Id: plc.mk,v 1.2.2.11 2005/09/14 19:28:01 mlhuang Exp $
 #
 
 # Default target
@@ -31,8 +31,8 @@ all:
 #
 
 # Default values
-INITIAL := plc-0_2-9
-TAG := plc-0_2-9
+INITIAL := plc-0_2-10
+TAG := plc-0_2-10
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 
 #
