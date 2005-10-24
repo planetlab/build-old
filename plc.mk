@@ -31,8 +31,8 @@ all:
 #
 
 # Default values
-INITIAL := plc-0_2-11
-TAG := plc-0_2-11
+INITIAL := plc-0_2-12
+TAG := plc-0_2-12
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 
 #
