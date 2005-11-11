@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.79.2.2 2005/10/29 02:21:59 mlhuang Exp $
+# $Id: Makefile,v 1.79.2.3 2005/11/04 20:02:41 mlhuang Exp $
 #
 
 # Default target
@@ -31,8 +31,8 @@ all:
 #
 
 # Default values
-INITIAL := planetlab-3_2-rc3
-TAG := planetlab-3_2-rc3
+INITIAL := planetlab-3_2-rc4
+TAG := planetlab-3_2-rc4
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 
 #
