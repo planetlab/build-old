@@ -162,4 +162,57 @@
     </packagelist>
   </group>
 
+  <group>
+    <id>bootcd</id>
+    <name>BootCD</name>
+    <uservisible>true</uservisible>
+    <description>BootCD Image</description>
+    <packagelist>
+      <packagereq type="mandatory">dhclient</packagereq>
+      <packagereq type="mandatory">bash</packagereq>
+      <packagereq type="mandatory">coreutils</packagereq>
+      <packagereq type="mandatory">iputils</packagereq>
+      <packagereq type="mandatory">kernel</packagereq>
+      <packagereq type="mandatory">bzip2</packagereq>
+      <packagereq type="mandatory">crontabs</packagereq>
+      <packagereq type="default">diffutils</packagereq>
+      <packagereq type="mandatory">logrotate</packagereq>
+      <packagereq type="default">openssh-clients</packagereq>
+      <packagereq type="mandatory">passwd</packagereq>
+      <packagereq type="default">rsh</packagereq>
+      <packagereq type="default">rsync</packagereq>
+      <packagereq type="default">sudo</packagereq>
+      <packagereq type="default">tcpdump</packagereq>
+      <packagereq type="mandatory">telnet</packagereq>
+      <packagereq type="mandatory">traceroute</packagereq>
+      <packagereq type="mandatory">time</packagereq>
+      <packagereq type="default">vixie-cron</packagereq>
+      <packagereq type="default">wget</packagereq>
+      <packagereq type="default">yum</packagereq>
+      <packagereq type="mandatory">curl</packagereq>
+      <packagereq type="mandatory">gzip</packagereq>
+      <packagereq type="mandatory">perl</packagereq>
+      <packagereq type="mandatory">python</packagereq>
+      <packagereq type="mandatory">tar</packagereq>
+      <packagereq type="mandatory">pciutils</packagereq>
+      <packagereq type="mandatory">kbd</packagereq>
+      <packagereq type="mandatory">authconfig</packagereq>
+      <packagereq type="mandatory">hdparm</packagereq>
+      <packagereq type="mandatory">lvm</packagereq>
+      <packagereq type="mandatory">lvm2</packagereq>
+      <packagereq type="mandatory">kexec-tools</packagereq>
+      <packagereq type="mandatory">gnupg</packagereq>
+      <packagereq type="mandatory">nano</packagereq>
+      <packagereq type="mandatory">parted</packagereq>
+      <packagereq type="mandatory">pyparted</packagereq>
+      <packagereq type="mandatory">openssh-server</packagereq>
+      <packagereq type="mandatory">openssh-clients</packagereq>
+      <packagereq type="mandatory">ncftp</packagereq>
+      <packagereq type="mandatory">dosfstools</packagereq>
+      <packagereq type="mandatory">dos2unix</packagereq>
+      <packagereq type="mandatory">bind-utils</packagereq>
+      <packagereq type="mandatory">sharutils</packagereq>
+    </packagelist>
+  </group>
+
 </comps>
