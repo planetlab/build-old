@@ -25,7 +25,6 @@
       <packagereq type="mandatory">kbd</packagereq>
       <packagereq type="mandatory">kernel</packagereq>
       <packagereq type="mandatory">libtermcap</packagereq>
-      <packagereq type="mandatory">losetup</packagereq>
       <packagereq type="mandatory">passwd</packagereq>
       <packagereq type="mandatory">procps</packagereq>
       <packagereq type="mandatory">readline</packagereq>
