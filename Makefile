@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.79.2.4 2005/11/11 19:25:55 mlhuang Exp $
+# $Id$
 #
 
 # Default target
@@ -302,11 +302,27 @@ bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
 ALL += bootmanager
 
-# bootmanager may require current packages
+# bootmanager requires current packages
 bootmanager: $(filter-out bootmanager,$(ALL))
 
 # ...and the yum manifest
 bootmanager: RPMS/yumgroups.xml
+
+#
+# bootcd
+#
+
+bootcd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+bootcd-MODULE := bootcd_v3
+bootcd-SPEC := bootcd_v3/bootcd.spec
+bootcd-RPMBUILD := sudo rpmbuild
+ALL += bootcd
+
+# bootcd requires current packages
+bootcd: $(filter-out bootcd,$(ALL))
+
+# ...and the yum manifest
+bootcd: RPMS/yumgroups.xml
 
 ifeq ($(findstring $(package),$(ALL)),)
 
@@ -364,7 +380,7 @@ $(foreach package,$(ALL),$(package)-clean): %-clean:
 
 # Remove all generated files
 clean:
-	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros .cvsps
+	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros .cvsps tmp
 
 .PHONY: all $(ALL) $(foreach package,$(ALL),$(package)-clean) clean
 
