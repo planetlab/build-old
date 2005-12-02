@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: Makerules,v 1.16 2005/09/01 18:58:45 mlhuang Exp $
 #
 
 # Base cvsps and rpmbuild in the current directory
@@ -126,6 +126,7 @@ ifeq ($(TAG),HEAD)
         # Define date for untagged builds
 	echo "%define date $(DATE)" >> $@
 endif
+	echo "%define pldistro $(PLDISTRO)" >> $@
         # Rewrite patch sections of spec file
 	perl -n -e ' \
 	next if /^Patch.*/; \
@@ -139,6 +140,7 @@ endif
 # Build
 #
 
+RPMFLAGS += --define "pldistro $(PLDISTRO)"
 ifeq ($(TAG),HEAD)
 RPMFLAGS += --define "date $(DATE)"
 endif
