@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.5 2005/08/17 18:25:38 mlhuang Exp $
+# $Id: plc.mk,v 1.6 2005/09/14 19:21:22 mlhuang Exp $
 #
 
 # Default target
@@ -34,6 +34,12 @@ all:
 INITIAL := HEAD
 TAG := HEAD
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+
+# By default, the naming convention for built RPMS is
+# <name>-<version>-<release>.planetlab.<arch>.rpm
+# Set PLDISTRO on the command line to differentiate between downstream
+# variants.
+PLDISTRO := planetlab
 
 #
 # plc
