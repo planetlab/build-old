@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.80 2005/11/21 22:37:15 mlhuang Exp $
+# $Id: Makefile,v 1.81 2005/12/02 18:54:55 mlhuang Exp $
 #
 
 # Default target
@@ -211,6 +211,15 @@ resman-SPEC := resman/resman.spec
 ALL += resman
 
 #
+# libhttpd++: 
+#
+
+libhttpd++-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+libhttpd++-MODULE := libhttpd++
+libhttpd++-SPEC := libhttpd++/libhttpd++.spec
+ALL += libhttpd++
+
+#
 # Proper: Privileged Operations Service
 #
 
@@ -218,6 +227,8 @@ proper-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
 ALL += proper
+
+proper: libhttpd++
 
 #
 # ulogd
