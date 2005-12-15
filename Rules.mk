@@ -4,10 +4,10 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makerules,v 1.16 2005/09/01 18:58:45 mlhuang Exp $
+# $Id: Makerules,v 1.17 2005/12/02 18:55:14 mlhuang Exp $
 #
 
-# Base cvsps and rpmbuild in the current directory
+# Base rpmbuild in the current directory
 export HOME := $(shell pwd)
 export CVSROOT CVS_RSH
 
@@ -25,16 +25,6 @@ $(MK): SPECS/$(notdir $(SPEC)).in
 	-e 's/^$${define}[	 ]*\([^	 ]*\)[	 ]*\([^	 ]*\)/\1 := \2/p' \
 	-e 's/^\([^	 ]*\):[	 ]*\([^	 ]*\)/\1 := \2/p' \
 	$< > $@
-ifneq ($(INITIAL),$(TAG))
-        # Get list of PatchSets
-	cvsps --cvs-direct --root $(CVSROOT) -r $(INITIAL) $(if $(TAG:HEAD=),-r $(TAG)) $(MODULE) | \
-	sed -ne 's|^PatchSet[	 ]*\([0-9]*\)|PATCHES += \1|p' >> $@
-ifeq ($(shell echo $(MAKE_VERSION) | awk '{ print ($$1 < 3.80) }'),1)
-        # make-3.80 can use $(eval) instead (see below)
-	cvsps --cvs-direct --root $(CVSROOT) -r $(INITIAL) $(if $(TAG:HEAD=),-r $(TAG)) $(MODULE) | \
-	sh Patchrules >> $@
-endif
-endif
 
 SPECS/$(notdir $(SPEC)).in:
 	mkdir -p SPECS
@@ -75,30 +65,6 @@ SOURCES/$(Base0).tar.gz SOURCES/$(Base0).tgz: SOURCES/$(Base0)
 SOURCES/$(Base0).tar: SOURCES/$(Base0)
 	tar cpf $@ -C SOURCES $(Base0)
 
-#
-# Generate patches
-#
-
-define PATCH_template
-
-# In case the spec file did not explicitly list the PatchSet
-ifeq ($$(origin Patch$(1)),undefined)
-Patch$(1) := $$(package)-$(1).patch.bz2
-endif
-
-# Get rid of URL
-Patch$(1) := $$(notdir $$(Patch$(1)))
-
-# Add patch to the list of sources
-SOURCES += SOURCES/$$(Patch$(1))
-
-# Generate uncompressed patch
-SOURCES/$$(patsubst %.gz,%,$$(patsubst %.bz2,%,$$(Patch$(1)))):
-	mkdir -p SOURCES
-	cvsps --cvs-direct --root $$(CVSROOT) -g -s $(1) $$(MODULE) > $$@
-
-endef
-
 # bzip2
 %.bz2: %
 	bzip2 -c $< > $@
@@ -106,9 +72,6 @@ endef
 # gzip
 %.gz: %
 	gzip -c $< > $@
-
-# Generate rules to generate patches (make-3.80 and above expands this)
-$(foreach n,$(PATCHES),$(eval $(call PATCH_template,$(n))))
 
 #
 # Generate spec file
@@ -127,14 +90,7 @@ ifeq ($(TAG),HEAD)
 	echo "%define date $(DATE)" >> $@
 endif
 	echo "%define pldistro $(PLDISTRO)" >> $@
-        # Rewrite patch sections of spec file
-	perl -n -e ' \
-	next if /^Patch.*/; \
-	next if /^%patch.*/; \
-	print; \
-	if (/^Source.*/) { $(foreach n,$(PATCHES),print "Patch$(n): $(Patch$(n))\n";) } \
-	if (/^%setup.*/) { $(foreach n,$(PATCHES),print "%patch$(n) -p1\n";) } \
-	' $< >> $@
+	cat $< >> $@
 
 #
 # Build
@@ -173,7 +129,6 @@ clean:
 	SOURCES/$(Base0)* SOURCES/$(package)* \
 	SPECS/$(notdir $(SPEC)).in SPECS/$(notdir $(SPEC)) $(MK) \
 	SRPMS/$(NVR).src.rpm \
-	tmp \
-	.cvsps/$(subst /,#,$(CVSROOT)/$(MODULE))
+	tmp
 
 .PHONY: all clean
