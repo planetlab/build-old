@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.6 2005/09/14 19:21:22 mlhuang Exp $
+# $Id: plc.mk,v 1.7 2005/12/08 22:45:29 mlhuang Exp $
 #
 
 # Default target
@@ -117,6 +117,15 @@ twiki-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 twiki-MODULE := twiki
 twiki-SPEC := twiki/TWiki.spec
 ALL += twiki
+
+#
+# plcapilib
+#
+
+plcapilib-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+plcapilib-MODULE := plcmdline
+plcapilib-SPEC := plcmdline/plcapilib.spec
+ALL += plcapilib
 
 ifeq ($(findstring $(package),$(ALL)),)
 
