@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.81 2005/12/02 18:54:55 mlhuang Exp $
+# $Id: Makefile,v 1.82 2005/12/08 19:56:44 mef Exp $
 #
 
 # Default target
@@ -278,6 +278,15 @@ kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 kexec-tools-MODULE := kexec-tools
 kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
+
+#
+# dhcp
+#
+
+dhcp-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+dhcp-MODULE := dhcp
+dhcp-SPEC := dhcp/dhcp.spec
+ALL += dhcp
 
 #
 # util-python
