@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id$
+# $Id: plc.mk,v 1.2.2.14 2005/10/24 17:38:07 mlhuang Exp $
 #
 
 # Default target
@@ -31,9 +31,15 @@ all:
 #
 
 # Default values
-INITIAL := plc-0_2-12
-TAG := plc-0_2-12
+INITIAL := plc-0_2-13
+TAG := plc-0_2-13
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+
+# By default, the naming convention for built RPMS is
+# <name>-<version>-<release>.planetlab.<arch>.rpm
+# Set PLDISTRO on the command line to differentiate between downstream
+# variants.
+PLDISTRO := planetlab
 
 #
 # plc
@@ -111,6 +117,15 @@ twiki-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 twiki-MODULE := twiki
 twiki-SPEC := twiki/TWiki.spec
 ALL += twiki
+
+#
+# plcapilib
+#
+
+plcapilib-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+plcapilib-MODULE := plcmdline
+plcapilib-SPEC := plcmdline/plcapilib.spec
+ALL += plcapilib
 
 ifeq ($(findstring $(package),$(ALL)),)
 
