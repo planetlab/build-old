@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.79 2005/09/04 17:37:36 mlhuang Exp $
+# $Id: Makefile,v 1.83 2005/12/27 23:19:51 mef Exp $
 #
 
 # Default target
@@ -34,6 +34,12 @@ all:
 INITIAL := HEAD
 TAG := HEAD
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+
+# By default, the naming convention for built RPMS is
+# <name>-<version>-<release>.planetlab.<arch>.rpm
+# Set PLDISTRO on the command line to differentiate between downstream
+# variants.
+PLDISTRO := planetlab
 
 #
 # kernel
@@ -205,6 +211,15 @@ resman-SPEC := resman/resman.spec
 ALL += resman
 
 #
+# libhttpd++: 
+#
+
+libhttpd++-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+libhttpd++-MODULE := libhttpd++
+libhttpd++-SPEC := libhttpd++/libhttpd++.spec
+ALL += libhttpd++
+
+#
 # Proper: Privileged Operations Service
 #
 
@@ -212,6 +227,8 @@ proper-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
 ALL += proper
+
+proper: libhttpd++
 
 #
 # ulogd
@@ -263,6 +280,15 @@ kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
 
 #
+# dhcp
+#
+
+dhcp-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+dhcp-MODULE := dhcp
+dhcp-SPEC := dhcp/dhcp.spec
+ALL += dhcp
+
+#
 # util-python
 #
 
@@ -302,11 +328,27 @@ bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
 ALL += bootmanager
 
-# bootmanager may require current packages
+# bootmanager requires current packages
 bootmanager: $(filter-out bootmanager,$(ALL))
 
 # ...and the yum manifest
 bootmanager: RPMS/yumgroups.xml
+
+#
+# bootcd
+#
+
+bootcd-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+bootcd-MODULE := bootcd_v3
+bootcd-SPEC := bootcd_v3/bootcd.spec
+bootcd-RPMBUILD := sudo rpmbuild
+ALL += bootcd
+
+# bootcd requires current packages
+bootcd: $(filter-out bootcd,$(ALL))
+
+# ...and the yum manifest
+bootcd: RPMS/yumgroups.xml
 
 ifeq ($(findstring $(package),$(ALL)),)
 
@@ -364,7 +406,7 @@ $(foreach package,$(ALL),$(package)-clean): %-clean:
 
 # Remove all generated files
 clean:
-	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros .cvsps
+	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros .cvsps tmp
 
 .PHONY: all $(ALL) $(foreach package,$(ALL),$(package)-clean) clean
 
