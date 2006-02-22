@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.82 2005/12/08 19:56:44 mef Exp $
+# $Id: Makefile,v 1.83 2005/12/27 23:19:51 mef Exp $
 #
 
 # Default target
@@ -267,6 +267,17 @@ iptables-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 iptables-MODULE := iptables
 iptables-SPEC := iptables/iptables.spec
 ALL += iptables
+
+iptables: kernel
+
+#
+# iproute
+#
+
+iproute-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+iproute-MODULE := iproute2
+iproute-SPEC := iproute2/iproute.spec
+ALL += iproute
 
 iptables: kernel
 
