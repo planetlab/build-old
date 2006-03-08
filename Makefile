@@ -4,18 +4,11 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.84 2006/02/22 21:42:37 mlhuang Exp $
+# $Id: Makefile,v 1.85 2006/03/08 21:29:25 mlhuang Exp $
 #
 
 # Default target
 all:
-
-# Default values. If TAG is HEAD, a %{date} variable will be defined
-# in the generated spec file.
-TAG := HEAD
-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-RPMBUILD := rpmbuild
-CVS_RSH := ssh
 
 # By default, the naming convention for built RPMS is
 # <name>-<version>-<release>.<PLDISTRO>.<arch>.rpm
@@ -24,6 +17,9 @@ CVS_RSH := ssh
 PLDISTRO := planetlab
 
 include $(PLDISTRO).mk
+
+RPMBUILD ?= rpmbuild
+CVS_RSH ?= ssh
 
 ifeq ($(findstring $(package),$(ALL)),)
 
@@ -51,7 +47,7 @@ CVSROOT := $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT))
 TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
 SPEC := $($(package)-SPEC)
-RPMFLAGS := $($(package)-RPMFLAGS)
+RPMFLAGS := $(if $($(package)-RPMFLAGS),$($(package)-RPMFLAGS),$(RPMFLAGS))
 RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),$(RPMBUILD))
 CVS_RSH := $(if $($(package)-CVS_RSH),$($(package)-CVS_RSH),$(CVS_RSH))
 
