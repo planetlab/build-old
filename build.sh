@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.30 2005/05/04 20:34:59 mlhuang Exp $
+# $Id: build.sh,v 1.31 2005/05/04 21:47:29 mlhuang Exp $
 #
 
 # Set defaults
@@ -16,7 +16,7 @@ CVS_RSH=ssh
 MODULE=build
 TAG=HEAD
 BASE=$PWD
-MAKEFILE=Makefile
+PLDISTRO=planetlab
 
 # cron does not set USER?
 [ -z "$USER" ] && export USER=$LOGNAME
@@ -37,7 +37,7 @@ while getopts "d:r:m:f:b:x:h" opt ; do
 	    MAILTO=$OPTARG
 	    ;;
 	f)
-	    MAKEFILE=$OPTARG
+	    PLDISTRO="$OPTARG"
 	    ;;
 	b)
 	    BASE=$OPTARG
@@ -50,6 +50,7 @@ while getopts "d:r:m:f:b:x:h" opt ; do
 	    echo "	-d directory	CVS repository root (default $CVSROOT)"
 	    echo "	-r revision	CVS revision to checkout (default $TAG)"
 	    echo "	-m address	Notify recipient of failures (default: none)"
+	    echo "	-f distro	Distribution to build (default: $PLDISTRO)"
 	    echo "	-b base		Run operations in specified base directory (default $BASE)"
 	    echo "	-x N		Remove all but the last N runs from the base directory (default: none)"
 	    exit 1
@@ -86,8 +87,8 @@ exec &>${BASE}/log
 
 # Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
-make -f ${MAKEFILE} -C ${BASE} && \
-make -f ${MAKEFILE} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
+make PLDISTRO=${PLDISTRO} -C ${BASE} && \
+make PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 rc=$?
 
 if [ $rc -ne 0 ] ; then
