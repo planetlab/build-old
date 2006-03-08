@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: rollout.py,v 1.3 2005/06/21 19:12:44 mlhuang Exp $
+ * $Id: parseSpec.c,v 1.1 2006/03/08 21:19:16 mlhuang Exp $
  */
 
 #include <stdio.h>
@@ -68,7 +68,7 @@ main(int argc, char *const argv[])
 
 	/* Parse spec file. The rpmcli functions don't allow you to
 	 * access the Spec structure directly, so we call our own
-	 * version of parseSpec() directly. */
+	 * version of rpmSpecQuery() directly. */
 	spec = rpmspecGet(ts, argv[1]);
 	if (spec && spec->sources) {
 		for (source = spec->sources; source; source = source->next) {
