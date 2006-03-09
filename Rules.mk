@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Makerules,v 1.18 2005/12/15 17:02:07 mlhuang Exp $
+# $Id: Rules.mk,v 1.19 2006/03/08 21:25:46 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -93,10 +93,16 @@ SOURCES/%.tar: SOURCES/%
 
 all: $(RPMS) $(SRPM)
 
-# Build RPM
-$(RPMS): %.rpm: $(SPECFILE) $(SOURCES) .rpmmacros
+# Build RPMS
+$(RPMS): $(SPECFILE) $(SOURCES) .rpmmacros
 	mkdir -p BUILD RPMS
 	$(RPMBUILD) $(RPMFLAGS) -bb $<
+
+# Make the rest of the RPMS depend on the first one since building one
+# builds them all.
+ifneq ($(words $(RPMS)),1)
+$(wordlist 2,$(words $(RPMS)),$(RPMS)): $(firstword $(RPMS))
+endif
 
 # Build SRPM
 $(SRPM): $(SPECFILE) $(SOURCES) .rpmmacros
