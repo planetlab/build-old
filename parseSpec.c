@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: parseSpec.c,v 1.1 2006/03/08 21:19:16 mlhuang Exp $
+ * $Id: parseSpec.c,v 1.2 2006/03/08 21:48:42 mlhuang Exp $
  */
 
 #include <stdio.h>
@@ -55,10 +55,11 @@ main(int argc, char *const argv[])
 {
 	poptContext context;
 	rpmts ts = NULL;
-	QVA_t qva = &rpmQVKArgs;
 	int ec = 0;
 	Spec spec;
 	struct Source *source;
+	Package pkg;
+	const char *name, *version, *release, *arch, *unused;
 
 	/* Parse common options for all rpm modes and executables */
 	context = rpmcliInit(argc, argv, optionsTable);
@@ -70,30 +71,40 @@ main(int argc, char *const argv[])
 	 * access the Spec structure directly, so we call our own
 	 * version of rpmSpecQuery() directly. */
 	spec = rpmspecGet(ts, argv[1]);
-	if (spec && spec->sources) {
-		for (source = spec->sources; source; source = source->next) {
-			char fullSource[PATH_MAX];
-			strncpy(fullSource, source->fullSource, sizeof(fullSource));
-			printf("SOURCES += SOURCES/%s\n", basename(fullSource));
-		}
+	if (!spec)
+		goto done;
+
+	/* Print sources */
+	for (source = spec->sources; source; source = source->next) {
+		char fullSource[PATH_MAX];
+
+		strncpy(fullSource, source->fullSource, sizeof(fullSource));
+		printf("SOURCES += SOURCES/%s\n", basename(fullSource));
 	}
-		
-	/* This is what would popt would do if --specfile were
-	 * specified. */
-	qva->qva_source |= RPMQV_SPECFILE;
-	qva->qva_sourceCount++;
-	qva->qva_mode = 'q';
-	qva->qva_specQuery = rpmspecQuery;
 
 	/* Get SRPM name from name of first package */ 
-	qva->qva_queryFormat = "SRPM := SRPMS/%{name}-%{version}-%{release}.src.rpm\n";
-	if (spec && spec->packages)
-		showQueryPackage(qva, ts, spec->packages->header);
+	pkg = spec->packages;
+	name = version = release = NULL;
+	(void) headerNVR(pkg->header, &name, &version, &release);
+	if (name && version && release)
+		printf("SRPM := SRPMS/%s-%s-%s.src.rpm\n",
+		       name, version, release);
 
-	/* Print all packages */
-	qva->qva_queryFormat = "RPMS += RPMS/%{ARCH}/%{name}-%{version}-%{release}.%{ARCH}.rpm\n";
-	ec = rpmcliQuery(ts, qva, (const char **) &argv[1]);
+	/* Print non-empty packages */
+	for (pkg = spec->packages; pkg != NULL; pkg = pkg->next) {
+		name = version = release = arch = NULL;
+		(void) headerNEVRA(pkg->header, &name, &unused, &version, &release, &arch);
+		if (name && version && release && arch) {
+			if (!pkg->fileList)
+				printf("# Empty\n# ");
+			printf("RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+			       arch, name, version, release, arch);
+		}
+	}
 
+	spec = freeSpec(spec);
+
+ done:
 	ts = rpmtsFree(ts);
 	context = rpmcliFini(context);
 	return ec;
