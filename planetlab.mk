@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Makerules,v 1.18 2005/12/15 17:02:07 mlhuang Exp $
+# $Id: planetlab.mk,v 1.1 2006/03/08 21:45:17 mlhuang Exp $
 #
 
 #
@@ -285,7 +285,7 @@ ALL += vserver-reference
 vserver-reference: $(filter-out vserver-reference,$(ALL))
 
 # ...and the yum manifest
-vserver-reference: RPMS/yumgroups.xml
+vserver-reference: yum
 
 #
 # bootmanager
@@ -300,7 +300,7 @@ ALL += bootmanager
 bootmanager: $(filter-out bootmanager,$(ALL))
 
 # ...and the yum manifest
-bootmanager: RPMS/yumgroups.xml
+bootmanager: yum
 
 #
 # bootcd
@@ -315,7 +315,7 @@ ALL += bootcd
 bootcd: $(filter-out bootcd,$(ALL))
 
 # ...and the yum manifest
-bootcd: RPMS/yumgroups.xml
+bootcd: yum
 
 #
 # Installation rules
@@ -333,6 +333,8 @@ endif
 
 RPMS/yumgroups.xml:
 	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
+
+yum: RPMS/yumgroups.xml
 	yum-arch RPMS
 
 install:
@@ -359,4 +361,4 @@ ifeq ($(TAG),HEAD)
 endif
 endif
 
-.PHONY: install
+.PHONY: yum install
