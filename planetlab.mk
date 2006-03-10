@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.2 2006/03/10 16:56:02 mlhuang Exp $
+# $Id$
 #
 
 #
@@ -345,11 +345,15 @@ endif
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
         # Populate repository
-	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASE)
+	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS
 	rsync --delete --links --perms --times --group --compress --rsh=ssh \
-	    --exclude "*-debuginfo-*.rpm" RPMS SRPMS $(SERVER):$(ARCHIVE)/$(BASE)/
-	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
-	ssh $(SERVER) createrepo $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
+	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*))) $(SERVER):$(ARCHIVE)/$(BASE)/RPMS/
+	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS >/dev/null
+	ssh $(SERVER) createrepo $(ARCHIVE)/$(BASE)/RPMS >/dev/null
+	rsync --delete --links --perms --times --group --compress --rsh=ssh \
+	    $(wildcard SRPMS/*) $(SERVER):$(ARCHIVE)/$(BASE)/SRPMS/
+	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
+	ssh $(SERVER) createrepo $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
 	if ! ssh $(SERVER) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \

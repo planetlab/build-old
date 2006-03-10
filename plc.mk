@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.8 2005/12/22 22:29:37 mlhuang Exp $
+# $Id: plc.mk,v 1.9 2006/03/08 21:45:27 mlhuang Exp $
 #
 
 #
@@ -133,8 +133,8 @@ endif
 	install -D -m 644 groups/stock_fc2_groups.xml RPMS/yumgroups.xml
         # Populate repository
 	mkdir -p $(ARCHIVE)/$(BASE)
-	rsync --delete --links --perms --times --group --exclude "*-debuginfo-*.rpm" \
-	    RPMS $(ARCHIVE)/$(BASE)/
+	rsync --delete --links --perms --times --group \
+	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*))) $(ARCHIVE)/$(BASE)/
 	yum-arch $(ARCHIVE)/$(BASE) >/dev/null
 ifeq ($(TAG),HEAD)
 	ln -nsf $(ARCHIVE)/$(BASE) $(REPOS)
