@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.31 2005/05/04 21:47:29 mlhuang Exp $
+# $Id: build.sh,v 1.32 2006/03/08 21:51:08 mlhuang Exp $
 #
 
 # Set defaults
@@ -94,7 +94,7 @@ rc=$?
 if [ $rc -ne 0 ] ; then
     # Notify recipient of failure
     if [ -n "$MAILTO" ] ; then
-	tail -100 ${BASE}/log | mail -s "Failures for ${BASE}" $MAILTO
+	tail -c 8k ${BASE}/log | mail -s "Failures for ${BASE}" $MAILTO
     fi
     exit $rc
 fi
