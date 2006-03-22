@@ -272,6 +272,14 @@ proper: util-python
 util-vserver: util-python
 
 #
+# plcapilib
+#
+
+plcapilib-MODULE := plcmdline
+plcapilib-SPEC := plcmdline/plcapilib.spec
+ALL += plcapilib
+
+#
 # vserver-reference
 #
 
