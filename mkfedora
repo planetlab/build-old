@@ -1,0 +1,348 @@
+#!/bin/bash
+#
+# Builds a Fedora Core reference image. Requires the build server to
+# host a local yum repository in one of:
+#
+# /usr/share/mirrors/fedora
+# /var/www/html/mirrors/fedora
+#
+# Otherwise, tries using CoBlitz:
+#
+# http://coblitz.planet-lab.org/pub/fedora
+#
+# Mark Huang <mlhuang@cs.princeton.edu>
+# Copyright (C) 2004-2006 The Trustees of Princeton University
+#
+# $Id: build.sh,v 1.2 2005/10/01 18:20:08 mlhuang Exp $
+#
+
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Verbosity
+verbose=0
+
+# Default yum repositories to try
+mirrors=(
+file:///usr/share/mirrors/fedora
+file:///var/www/html/mirrors/fedora
+ftp://smoke.cs.princeton.edu/pub/mirrors/fedora
+ftp://128.112.137.30/pub/mirrors/fedora
+http://coblitz.planet-lab.org/pub/fedora
+ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
+)
+
+# Release and architecture to install
+releasever=2
+basearch=i386
+
+# Yum groups to install
+groups=(
+"Core and Base"
+)
+
+# Packages to install
+packages=()
+
+usage()
+{
+    echo "Usage: mkfedora [OPTION]... [basedir]"
+    echo "	-l url		Fedora mirror location. Defaults to try:"
+    for mirror in "${mirrors[@]}" ; do
+	echo "			$mirror"
+    done
+    echo "	-r release	Fedora release number (default: $releasever)"
+    echo "	-a arch		Fedora architecture (default: $basearch)"
+    echo "	-g group1 -g group2 ..."
+    echo "			Additional yumgroups to install. Defaults:"
+    for group in "${groups[@]}" ; do
+	echo "			$group"
+    done
+    echo "	-p package1 -p package2 ..."
+    echo "			Additional packages to install (default: none)"
+    echo "	-v		Be verbose"
+    echo "	-h		This message"
+    exit 1
+}
+
+# Get options
+while getopts "l:r:a:g:p:vh" opt ; do
+    case $opt in
+	l)
+	    if echo $OPTARG | grep -q -i '^\(file\|http[s]*\)://' ; then
+		mirrors=($OPTARG)
+	    else
+		mirrors=(file://$OPTARG)
+	    fi
+	    ;;
+	r)
+	    releasever=$OPTARG
+	    ;;
+	a)
+	    basearch=$OPTARG
+	    ;;
+	g)
+	    groups[${#groups[*]}]="$OPTARG"
+	    ;;
+	p)
+	    packages[${#packages[*]}]="$OPTARG"
+	    ;;
+	v)
+	    verbose=1
+	    set -x
+	    ;;
+	h|*)
+	    usage
+	    ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+if [ ! -d "$1" ] ; then
+    usage
+fi
+
+vroot=$(cd $1 && pwd -P)
+
+if [ $UID -ne 0 ] ; then
+    echo "Error: You must run this script as root."
+    exit 1
+fi
+
+# Old versions of curl don't understand file:// URLs
+fetch ()
+{
+    url=$1
+    if curl --fail --silent --max-time 60 $url ; then
+	return 0
+    else
+	if [ -f ${url#file://} ] ; then
+	    cat ${url#file://}
+	    return 0
+	fi
+    fi
+    return 1
+}
+
+for mirror in "${mirrors[@]}" ; do
+    baseurl=$mirror/linux/core/$releasever/$basearch/os
+    if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
+	break
+    fi
+    unset baseurl
+done
+
+if [ -z "$baseurl" ] ; then
+    echo "Error: linux/core/$releasever/$basearch/os/repodata/repomd.xml"
+    echo "       could not be found in any of the following locations:"
+    echo
+    for mirror in ${mirrors[@]} ; do
+	echo $mirror
+    done
+    echo
+    usage
+fi
+
+exec 3>&1
+exec 4>&2
+if [ $verbose -eq 0 ] ; then
+    exec 1>/dev/null
+    exec 2>/dev/null
+fi
+
+# Scratch space
+tmp=$(mktemp -d /tmp/mkfedora.XXXXXX)
+
+# Initialize /dev in reference image
+mkdir -p $vroot/dev
+mknod -m 666 $vroot/dev/null c 1 3
+mknod -m 666 $vroot/dev/zero c 1 5
+mknod -m 666 $vroot/dev/full c 1 7
+mknod -m 644 $vroot/dev/random c 1 8
+mknod -m 644 $vroot/dev/urandom c 1 9
+mknod -m 666 $vroot/dev/tty c 5 0
+mknod -m 666 $vroot/dev/ptmx c 5 2
+# For bash command substitution
+ln -nsf ../proc/self/fd $vroot/dev/fd
+# For df and linuxconf
+touch $vroot/dev/hdv1
+
+# Mount /dev/pts in reference image
+mkdir -p $vroot/dev/pts
+mount -t devpts none $vroot/dev/pts
+
+# Mount /dev/shm in reference image
+mkdir -p $vroot/dev/shm
+mount -t tmpfs none $vroot/dev/shm
+
+# Mount /proc in reference image
+mkdir -p $vroot/proc
+mount -t proc none $vroot/proc
+
+cleanup ()
+{
+    umount $vroot/proc
+    umount $vroot/dev/shm
+    umount $vroot/dev/pts
+    rm -rf $tmp
+}
+
+# Clean up before exiting if anything goes wrong
+trap "cleanup; exit 1" ERR
+
+# Create a dummy /etc/fstab in reference image
+mkdir -p $vroot/etc
+cat >$vroot/etc/fstab <<EOF
+# This fake fstab exists only to please df and linuxconf.
+/dev/hdv1	/	ext2	defaults	1 1
+EOF
+cp $vroot/etc/fstab $vroot/etc/mtab
+
+# Prevent all locales from being installed in reference image
+mkdir -p $vroot/etc/rpm
+cat >$vroot/etc/rpm/macros <<EOF
+%_install_langs en_US:en
+%_excludedocs 1
+%__file_context_path /dev/null
+EOF
+
+# Necessary for some scripts
+mkdir -p $vroot/etc/sysconfig
+echo "NETWORKING=yes" > $vroot/etc/sysconfig/network
+
+# Trick rpm and yum, who read the real root /etc/rpm/macros file
+# rather than the one installed in the reference image, despite what
+# you might expect the --root and --installroot options to mean. Both
+# programs always read $HOME/.rpmmacros.
+export HOME=$vroot/tmp
+mkdir -p $vroot/tmp
+cp $vroot/etc/rpm/macros $vroot/tmp/.rpmmacros
+
+# Initialize RPM database in reference image
+mkdir -p $vroot/var/lib/rpm
+rpm --root $vroot --initdb
+rpm --root $vroot --import $baseurl/RPM-GPG-KEY-fedora
+
+# Initialize yum in reference image
+mkdir -p $vroot/var/cache/yum $vroot/var/log
+cat >$vroot/etc/yum.conf <<EOF
+[main]
+cachedir=/var/cache/yum
+debuglevel=2
+logfile=/var/log/yum.log
+pkgpolicy=newest
+distroverpkg=redhat-release
+tolerant=1
+exactarch=1
+retries=20
+obsoletes=1
+gpgcheck=0
+# Prevent yum-2.4 from loading additional repository definitions
+# (e.g., from /etc/yum.repos.d/)
+reposdir=/dev/null
+
+[base]
+name=Fedora Core $releasever - $basearch - base
+baseurl=$baseurl/
+EOF
+
+for optional in core/updates extras ; do
+    if fetch $mirror/linux/$optional/$releasever/$basearch/repodata/repomd.xml ; then
+	cat >>$vroot/etc/yum.conf <<EOF
+
+[$(basename $optional)]
+name=Fedora Core $releasever - $basearch - $(basename $optional)
+baseurl=$mirror/linux/$optional/$releasever/$basearch/
+EOF
+    fi
+done
+
+# If we are being built as part of an automated RPM build, solve the
+# bootstrap problem by including any just built packages in the yum
+# configuration. This cooperates with the PlanetLab build system.
+if [ -n "$RPM_BUILD_DIR" ] ; then
+    RPM_RPMS_DIR=$(cd $(dirname $RPM_BUILD_DIR)/RPMS && pwd -P)
+    yum-arch $RPM_RPMS_DIR || :
+    createrepo $RPM_RPMS_DIR || :
+    # If run under sudo, allow user to delete the headers/ and
+    # repodata/ directories.
+    if [ -n "$SUDO_USER" ] ; then
+	chown -R $SUDO_USER $RPM_RPMS_DIR
+    fi
+    cat >>$vroot/etc/yum.conf <<EOF
+
+[bootstrap]
+name=Bootstrap - $basearch - $RPM_RPMS_DIR/
+baseurl=file://$RPM_RPMS_DIR/
+EOF
+
+    # XXX Build system should generate yumgroups.xml automatically
+fi
+
+# The "Core" and "Base" groups are not uservisible by default in
+# comps.xml, and old (Fedora Core 2) versions of yum will refuse to
+# recognize them explicitly.
+mkdir -p $tmp/corebase
+cat >$tmp/corebase/yumgroups.xml <<EOF
+<?xml version="1.0"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+<comps>
+  <group>
+    <id>corebase</id>
+    <name>Core and Base</name>
+    <default>true</default>
+    <description>Core and Base Packages</description>
+    <uservisible>true</uservisible>
+    <grouplist>
+      <groupreq>core</groupreq>
+      <groupreq>base</groupreq>
+    </grouplist>
+  </group>
+</comps>
+EOF
+
+# yum-2.0.x
+yum-arch $tmp/corebase || :
+# yum-2.4.x
+createrepo -g yumgroups.xml $tmp/corebase || :
+
+cat >>$vroot/etc/yum.conf <<EOF
+
+[corebase]
+name=Core and Base
+baseurl=file://$tmp/corebase/
+EOF
+
+echo -n "* Installing base system..." >&3
+
+# glibc must be specified explicitly for the correct arch to be chosen.
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y install glibc
+
+# Go, baby, go
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
+    groupinstall "${groups[@]}"
+
+echo "done" >&3
+
+if [ ${#packages[*]} -gt 0 ] ; then
+    echo -n "* Installing optional packages..."
+    yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
+	install "${packages[@]}"
+    echo "done"
+fi
+
+# Clean yum cache
+echo -n "* Cleaning up..." >&3
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
+    clean all
+echo "done" >&3
+
+# Clean RPM state
+rm -f $vroot/var/lib/rpm/__db*
+
+# Disable all services in reference image
+chroot $vroot /bin/sh -c "/sbin/chkconfig --list | awk '{ print \$1 }' | xargs -i /sbin/chkconfig {} off"
+
+# Clean up
+cleanup
+
+exit 0
