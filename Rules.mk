@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.20 2006/03/09 16:30:18 mlhuang Exp $
+# $Id: Rules.mk,v 1.21 2006/03/27 16:09:41 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -57,19 +57,19 @@ $(patsubst %.tar,%,$(1))))))
 
 SOURCEDIRS := $(call stripext,$(SOURCES))
 
-SOURCES/$(MODULE):
+SOURCES/$(package):
 	mkdir -p SOURCES
-	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(MODULE) $(MODULE)
+	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE)
 
 # Make a hard-linked copy of the exported directory for each Source
 # defined in the spec file. However, our convention is that there
 # should be only one Source file and one CVS module per RPM. It's okay
 # if the CVS module consists of multiple directories, as long as the
 # spec file knows what's going on.
-$(SOURCEDIRS): SOURCES/$(MODULE)
+$(SOURCEDIRS): SOURCES/$(package)
 	cp -rl $< $@
 
-.SECONDARY: SOURCES/$(MODULE) $(SOURCEDIRS)
+.SECONDARY: SOURCES/$(package) $(SOURCEDIRS)
 
 # Generate tarballs
 SOURCES/%.tar.bz2: SOURCES/%
@@ -119,7 +119,7 @@ clean:
 	rm -rf \
 	$(RPMS) $(SRPM) \
 	$(patsubst SOURCES/%,BUILD/%,$(SOURCEDIRS)) \
-	$(SOURCES) $(SOURCEDIRS) SOURCES/$(MODULE) \
+	$(SOURCES) $(SOURCEDIRS) SOURCES/$(package) \
 	$(MK) $(SPECFILE) \
 	tmp
 
