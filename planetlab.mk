@@ -326,6 +326,22 @@ bootcd: $(filter-out bootcd,$(ALL))
 bootcd: RPMS/yumgroups.xml
 
 #
+# MyPLC
+#
+
+myplc-MODULE := myplc pl_db plc_api plc_www plc/scripts
+myplc-SPEC := myplc/myplc.spec
+# Package must be built as root
+myplc-RPMBUILD := sudo rpmbuild
+ALL += myplc
+
+# MyPLC may require current packages
+myplc: $(filter-out myplc,$(ALL))
+
+# ...and the yum manifest
+myplc: RPMS/yumgroups.xml
+
+#
 # Installation rules
 # 
 
