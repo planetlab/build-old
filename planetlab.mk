@@ -329,7 +329,7 @@ bootcd: RPMS/yumgroups.xml
 # MyPLC
 #
 
-myplc-MODULE := myplc pl_db plc_api plc_www plc/scripts
+myplc-MODULE := myplc build pl_db plc_api plc_www plc/scripts
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
