@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.19 2006/03/08 21:25:46 mlhuang Exp $
+# $Id: Rules.mk,v 1.20 2006/03/09 16:30:18 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -59,7 +59,7 @@ SOURCEDIRS := $(call stripext,$(SOURCES))
 
 SOURCES/$(MODULE):
 	mkdir -p SOURCES
-	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) $(MODULE)
+	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(MODULE) $(MODULE)
 
 # Make a hard-linked copy of the exported directory for each Source
 # defined in the spec file. However, our convention is that there
