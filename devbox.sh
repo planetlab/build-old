@@ -3,7 +3,7 @@
 # PlanetLab devbox release script. Intended to be used by scripts and
 # crontabs to build nightly releases (default).
 #
-# $Id: devbox.sh,v 1.3 2005/08/02 05:36:47 mef Exp $
+# $Id: devbox.sh,v 1.4 2005/09/21 18:57:53 mef Exp $
 #
 
 # Set defaults
@@ -80,15 +80,13 @@ for RELEASE in devbox alpha-devbox beta-devbox ; do
     install -D -m 644 ${DAT}/groups/${RELEASE}_yumgroups.xml ${BASE}/${DAT}/${DEVBOXRELEASE}/yumgroups.xml
     scp ${BASE}/${DAT}/${DEVBOXRELEASE}/yumgroups.xml ${SERVER}:${REPOSITORY}/${TMPDEVBOXRELEASE}/yumgroups.xml
 
-    ssh $SERVER yum-arch ${REPOSITORY}/${TMPDEVBOXRELEASE} >/dev/null
-
+    ssh $SERVER rm -rf ${REPOSITORY}/${DEVBOXRELEASE}-old
     ssh $SERVER mv ${REPOSITORY}/${DEVBOXRELEASE} ${REPOSITORY}/${DEVBOXRELEASE}-old
     ssh $SERVER mv ${REPOSITORY}/${TMPDEVBOXRELEASE} ${REPOSITORY}/${DEVBOXRELEASE}
-    if [ $? -ne 0 ] ; then    
-	ssh $SERVER mv ${REPOSITORY}/${DEVBOXRELEASE}-old ${REPOSITORY}/${DEVBOXRELEASE}
-    else
-	ssh $SERVER rm -rf ${REPOSITORY}/${DEVBOXRELEASE}-old
-    fi
+    ssh $SERVER rm -rf ${REPOSITORY}/${DEVBOXRELEASE}-old
+
+    ssh $SERVER yum-arch ${REPOSITORY}/${DEVBOXRELEASE} >/dev/null
+    ssh $SERVER createrepo -g yumgroups.xml ${REPOSITORY}/${DEVBOXRELEASE} >/dev/null
 done
 
 cd / || exit $?
