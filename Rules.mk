@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.21 2006/03/27 16:09:41 mlhuang Exp $
+# $Id: Rules.mk,v 1.22 2006/03/27 17:28:25 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -120,7 +120,6 @@ clean:
 	$(RPMS) $(SRPM) \
 	$(patsubst SOURCES/%,BUILD/%,$(SOURCEDIRS)) \
 	$(SOURCES) $(SOURCEDIRS) SOURCES/$(package) \
-	$(MK) $(SPECFILE) \
-	tmp
+	$(MK) $(SPECFILE)
 
 .PHONY: all clean
