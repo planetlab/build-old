@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.2 2005/10/01 18:20:08 mlhuang Exp $
+# $Id: mkfedora,v 1.1 2006/03/27 17:29:48 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -36,9 +36,7 @@ releasever=2
 basearch=i386
 
 # Yum groups to install
-groups=(
-"Core and Base"
-)
+groups=()
 
 # Packages to install
 packages=()
@@ -53,10 +51,7 @@ usage()
     echo "	-r release	Fedora release number (default: $releasever)"
     echo "	-a arch		Fedora architecture (default: $basearch)"
     echo "	-g group1 -g group2 ..."
-    echo "			Additional yumgroups to install. Defaults:"
-    for group in "${groups[@]}" ; do
-	echo "			$group"
-    done
+    echo "			Yumgroups to install (default: Core, Base)"
     echo "	-p package1 -p package2 ..."
     echo "			Additional packages to install (default: none)"
     echo "	-v		Be verbose"
@@ -261,8 +256,17 @@ done
 # configuration. This cooperates with the PlanetLab build system.
 if [ -n "$RPM_BUILD_DIR" ] ; then
     RPM_RPMS_DIR=$(cd $(dirname $RPM_BUILD_DIR)/RPMS && pwd -P)
-    yum-arch $RPM_RPMS_DIR || :
-    createrepo $RPM_RPMS_DIR || :
+    # yum-2.0.x
+    if [ -x /usr/bin/yum-arch ] ; then
+	yum-arch $RPM_RPMS_DIR
+    fi
+    # yum-2.4.x
+    if [ -x /usr/bin/createrepo ] ; then
+	if [ -f $RPM_RPMS_DIR/yumgroups.xml ] ; then
+	    groupfile="-g yumgroups.xml"
+	fi
+	createrepo $groupfile $RPM_RPMS_DIR
+    fi
     # If run under sudo, allow user to delete the headers/ and
     # repodata/ directories.
     if [ -n "$SUDO_USER" ] ; then
@@ -278,11 +282,15 @@ EOF
     # XXX Build system should generate yumgroups.xml automatically
 fi
 
-# The "Core" and "Base" groups are not uservisible by default in
+# Install "Core" and "Base" if no groups have been specified. The
+# "Core" and "Base" groups are not uservisible by default in
 # comps.xml, and old (Fedora Core 2) versions of yum will refuse to
 # recognize them explicitly.
-mkdir -p $tmp/corebase
-cat >$tmp/corebase/yumgroups.xml <<EOF
+if [ ${#groups[*]} -eq 0 ] ; then
+    groups=("Core and Base")
+
+    mkdir -p $tmp/corebase
+    cat >$tmp/corebase/yumgroups.xml <<EOF
 <?xml version="1.0"?>
 <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
 <comps>
@@ -300,17 +308,22 @@ cat >$tmp/corebase/yumgroups.xml <<EOF
 </comps>
 EOF
 
-# yum-2.0.x
-yum-arch $tmp/corebase || :
-# yum-2.4.x
-createrepo -g yumgroups.xml $tmp/corebase || :
+    # yum-2.0.x
+    if [ -x /usr/bin/yum-arch ] ; then
+	yum-arch $tmp/corebase
+    fi
+    # yum-2.4.x
+    if [ -x /usr/bin/createrepo ] ; then
+	createrepo -g yumgroups.xml $tmp/corebase
+    fi
 
-cat >>$vroot/etc/yum.conf <<EOF
+    cat >>$vroot/etc/yum.conf <<EOF
 
 [corebase]
-name=Core and Base
+name=Core and Base - $basearch - $tmp/corebase/
 baseurl=file://$tmp/corebase/
 EOF
+fi
 
 echo -n "* Installing base system..." >&3
 
@@ -324,10 +337,10 @@ yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
 echo "done" >&3
 
 if [ ${#packages[*]} -gt 0 ] ; then
-    echo -n "* Installing optional packages..."
+    echo -n "* Installing optional packages..." >&3
     yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
 	install "${packages[@]}"
-    echo "done"
+    echo "done" >&3
 fi
 
 # Clean yum cache
