@@ -110,14 +110,6 @@ PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
 ALL += PlanetLabConf
 
 #
-# PlanetLabKeys
-#
-
-PlanetLabKeys-MODULE := PlanetLabKeys
-PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
-ALL += PlanetLabKeys
-
-#
 # ipod
 #
 
