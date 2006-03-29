@@ -156,8 +156,6 @@
       <packagereq type="mandatory">perl</packagereq>
       <packagereq type="mandatory">python</packagereq>
       <packagereq type="mandatory">tar</packagereq>
-
-      <packagereq type="mandatory">PlanetLabKeys</packagereq>
     </packagelist>
   </group>
 
