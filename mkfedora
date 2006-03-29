@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.1 2006/03/27 17:29:48 mlhuang Exp $
+# $Id: mkfedora,v 1.2 2006/03/29 17:10:21 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -51,7 +51,7 @@ usage()
     echo "	-r release	Fedora release number (default: $releasever)"
     echo "	-a arch		Fedora architecture (default: $basearch)"
     echo "	-g group1 -g group2 ..."
-    echo "			Yumgroups to install (default: Core, Base)"
+    echo "			Yumgroups to install (default: none)"
     echo "	-p package1 -p package2 ..."
     echo "			Additional packages to install (default: none)"
     echo "	-v		Be verbose"
@@ -278,51 +278,6 @@ if [ -n "$RPM_BUILD_DIR" ] ; then
 name=Bootstrap - $basearch - $RPM_RPMS_DIR/
 baseurl=file://$RPM_RPMS_DIR/
 EOF
-
-    # XXX Build system should generate yumgroups.xml automatically
-fi
-
-# Install "Core" and "Base" if no groups have been specified. The
-# "Core" and "Base" groups are not uservisible by default in
-# comps.xml, and old (Fedora Core 2) versions of yum will refuse to
-# recognize them explicitly.
-if [ ${#groups[*]} -eq 0 ] ; then
-    groups=("Core and Base")
-
-    mkdir -p $tmp/corebase
-    cat >$tmp/corebase/yumgroups.xml <<EOF
-<?xml version="1.0"?>
-<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
-<comps>
-  <group>
-    <id>corebase</id>
-    <name>Core and Base</name>
-    <default>true</default>
-    <description>Core and Base Packages</description>
-    <uservisible>true</uservisible>
-    <grouplist>
-      <groupreq>core</groupreq>
-      <groupreq>base</groupreq>
-    </grouplist>
-  </group>
-</comps>
-EOF
-
-    # yum-2.0.x
-    if [ -x /usr/bin/yum-arch ] ; then
-	yum-arch $tmp/corebase
-    fi
-    # yum-2.4.x
-    if [ -x /usr/bin/createrepo ] ; then
-	createrepo -g yumgroups.xml $tmp/corebase
-    fi
-
-    cat >>$vroot/etc/yum.conf <<EOF
-
-[corebase]
-name=Core and Base - $basearch - $tmp/corebase/
-baseurl=file://$tmp/corebase/
-EOF
 fi
 
 echo -n "* Installing base system..." >&3
@@ -331,10 +286,12 @@ echo -n "* Installing base system..." >&3
 yum -c $vroot/etc/yum.conf --installroot=$vroot -y install glibc
 
 # Go, baby, go
-yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
-    groupinstall "${groups[@]}"
-
-echo "done" >&3
+if [ ${#groups[*]} -gt 0 ] ; then
+    echo -n "* Installing optional groups..." >&3
+    yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
+	groupinstall "${groups[@]}"
+    echo "done" >&3
+fi
 
 if [ ${#packages[*]} -gt 0 ] ; then
     echo -n "* Installing optional packages..." >&3
