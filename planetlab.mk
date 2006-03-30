@@ -267,7 +267,7 @@ ALL += plcapilib
 # vserver-reference
 #
 
-vserver-reference-MODULE := vserver-reference
+vserver-reference-MODULE := vserver-reference build
 vserver-reference-SPEC := vserver-reference/vserver-reference.spec
 # Package must be built as root
 vserver-reference-RPMBUILD := sudo rpmbuild
