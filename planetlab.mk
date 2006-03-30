@@ -166,14 +166,6 @@ pl_sshd-SPEC := pl_sshd/pl_sshd.spec
 ALL += pl_sshd
 
 #
-# Resource Management Tools
-#
-
-resman-MODULE := resman
-resman-SPEC := resman/resman.spec
-ALL += resman
-
-#
 # libhttpd++: 
 #
 
