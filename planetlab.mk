@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: planetlab.mk,v 1.7 2006/03/27 17:57:14 mlhuang Exp $
 #
 
 #
@@ -110,14 +110,6 @@ PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
 ALL += PlanetLabConf
 
 #
-# PlanetLabKeys
-#
-
-PlanetLabKeys-MODULE := PlanetLabKeys
-PlanetLabKeys-SPEC := PlanetLabKeys/PlanetLabKeys.spec
-ALL += PlanetLabKeys
-
-#
 # ipod
 #
 
@@ -172,14 +164,6 @@ ALL += sidewinder
 pl_sshd-MODULE := pl_sshd
 pl_sshd-SPEC := pl_sshd/pl_sshd.spec
 ALL += pl_sshd
-
-#
-# Resource Management Tools
-#
-
-resman-MODULE := resman
-resman-SPEC := resman/resman.spec
-ALL += resman
 
 #
 # libhttpd++: 
