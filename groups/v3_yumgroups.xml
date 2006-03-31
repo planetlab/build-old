@@ -114,7 +114,6 @@
       <packagereq type="mandatory">pl_sshd</packagereq>
       <packagereq type="mandatory">ipod</packagereq>
       <packagereq type="mandatory">ksymoops</packagereq>
-      <packagereq type="mandatory">lkcdutils</packagereq>
       <packagereq type="mandatory">vserver-reference</packagereq>
       <packagereq type="mandatory">proper</packagereq>
       <packagereq type="mandatory">netflow-init</packagereq>
