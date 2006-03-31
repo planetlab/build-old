@@ -166,6 +166,14 @@ pl_sshd-SPEC := pl_sshd/pl_sshd.spec
 ALL += pl_sshd
 
 #
+# Resource Management Tools
+#
+
+resman-MODULE := resman
+resman-SPEC := resman/resman.spec
+ALL += resman
+
+#
 # libhttpd++: 
 #
 
@@ -298,16 +306,16 @@ bootmanager: RPMS/yumgroups.xml
 # bootcd
 #
 
-bootcd-MODULE := bootcd_v3
+bootcd-MODULE := bootcd_v3 build
 bootcd-SPEC := bootcd_v3/bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
 ALL += bootcd
 
 # bootcd requires current packages
-bootcd: $(filter-out bootcd,$(ALL))
+#bootcd: $(filter-out bootcd,$(ALL))
 
 # ...and the yum manifest
-bootcd: RPMS/yumgroups.xml
+#bootcd: RPMS/yumgroups.xml
 
 #
 # MyPLC
