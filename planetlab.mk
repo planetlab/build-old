@@ -306,16 +306,16 @@ bootmanager: RPMS/yumgroups.xml
 # bootcd
 #
 
-bootcd-MODULE := bootcd_v3 build
+bootcd-MODULE := bootcd_v3
 bootcd-SPEC := bootcd_v3/bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
 ALL += bootcd
 
 # bootcd requires current packages
-#bootcd: $(filter-out bootcd,$(ALL))
+bootcd: $(filter-out bootcd,$(ALL))
 
 # ...and the yum manifest
-#bootcd: RPMS/yumgroups.xml
+bootcd: RPMS/yumgroups.xml
 
 #
 # MyPLC
