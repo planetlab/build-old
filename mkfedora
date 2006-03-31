@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.2 2006/03/29 17:10:21 mlhuang Exp $
+# $Id: mkfedora,v 1.3 2006/03/29 19:19:19 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -147,7 +147,8 @@ fi
 # Scratch space
 tmp=$(mktemp -d /tmp/mkfedora.XXXXXX)
 
-# Initialize /dev in reference image
+# Minimally initialize /dev in reference image. If installed, the dev
+# or udev RPMs will fill in the rest.
 mkdir -p $vroot/dev
 mknod -m 666 $vroot/dev/null c 1 3
 mknod -m 666 $vroot/dev/zero c 1 5
@@ -280,31 +281,43 @@ baseurl=file://$RPM_RPMS_DIR/
 EOF
 fi
 
-echo -n "* Installing base system..." >&3
-
 # glibc must be specified explicitly for the correct arch to be chosen.
+echo "* Installing glibc" >&3
 yum -c $vroot/etc/yum.conf --installroot=$vroot -y install glibc
 
 # Go, baby, go
 if [ ${#groups[*]} -gt 0 ] ; then
-    echo -n "* Installing optional groups..." >&3
+    echo "* Installing optional groups" >&3
     yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
 	groupinstall "${groups[@]}"
-    echo "done" >&3
 fi
 
 if [ ${#packages[*]} -gt 0 ] ; then
-    echo -n "* Installing optional packages..." >&3
+    echo "* Installing optional packages" >&3
     yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
 	install "${packages[@]}"
-    echo "done" >&3
+fi
+
+# FC2 dev %preinstall checks /proc/mounts to make sure that /dev is
+# not currently mounted as devfs. If it thinks it is, it will refuse
+# to install the package. On a modern system running udev that mounts
+# /dev as tmpfs, this check fails. Since we are installing into a
+# chroot, whether /dev is mounted on the host system or not doesn't
+# matter. If dev was explicitly mentioned in the packages list, force
+# its installation.
+if [ "$releasever" = "2" ] ; then
+    for package in "${packages[@]}" ; do
+	if [ "$package" = "dev" ] && ! rpm --root $vroot -q dev >/dev/null 2>&1 ; then
+	    rpm --root $vroot -Uvh --noscripts $baseurl/Fedora/RPMS/dev-3.3.13-1.i386.rpm
+	    break
+	fi
+    done
 fi
 
 # Clean yum cache
-echo -n "* Cleaning up..." >&3
+echo "* Cleaning up" >&3
 yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
     clean all
-echo "done" >&3
 
 # Clean RPM state
 rm -f $vroot/var/lib/rpm/__db*
