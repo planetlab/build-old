@@ -288,7 +288,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 # bootmanager
 #
 
-bootmanager-MODULE := bootmanager
+bootmanager-MODULE := bootmanager build
 bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
 ALL += bootmanager
