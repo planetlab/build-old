@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.4 2006/03/31 00:10:23 mlhuang Exp $
+# $Id: mkfedora,v 1.5 2006/03/31 21:17:49 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -321,6 +321,12 @@ yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
 
 # Clean RPM state
 rm -f $vroot/var/lib/rpm/__db*
+
+# Set time zone to UTC
+if [ -f /usr/share/zoneinfo/UTC -a -f /etc/localtime ] ; then
+    rm -f /etc/localtime
+    ln -s /usr/share/zoneinfo/UTC /etc/localtime
+fi
 
 # Clean up
 cleanup
