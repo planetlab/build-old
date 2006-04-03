@@ -284,9 +284,6 @@ ALL += vserver-reference
 # vserver-reference may require current packages
 vserver-reference: $(filter-out vserver-reference,$(ALL))
 
-# ...and the yum manifest
-vserver-reference: RPMS/yumgroups.xml
-
 #
 # bootmanager
 #
@@ -306,16 +303,13 @@ bootmanager: RPMS/yumgroups.xml
 # bootcd
 #
 
-bootcd-MODULE := bootcd_v3
+bootcd-MODULE := bootcd_v3 build bootmanager
 bootcd-SPEC := bootcd_v3/bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
 ALL += bootcd
 
 # bootcd requires current packages
 bootcd: $(filter-out bootcd,$(ALL))
-
-# ...and the yum manifest
-bootcd: RPMS/yumgroups.xml
 
 #
 # MyPLC
