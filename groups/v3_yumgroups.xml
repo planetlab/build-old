@@ -95,6 +95,7 @@
       <packagereq type="mandatory">nfs-utils</packagereq>
 
       <packagereq type="mandatory">util-vserver</packagereq>
+      <packagereq type="mandatory">util-vserver-build</packagereq>
       <packagereq type="mandatory">util-vserver-lib</packagereq>
       <packagereq type="mandatory">util-vserver-core</packagereq>
       <packagereq type="mandatory">util-vserver-sysv</packagereq>
@@ -115,8 +116,8 @@
       <packagereq type="mandatory">ipod</packagereq>
       <packagereq type="mandatory">ksymoops</packagereq>
       <packagereq type="mandatory">vserver-reference</packagereq>
+      <packagereq type="mandatory">vserver-system-packages</packagereq>
       <packagereq type="mandatory">proper</packagereq>
-      <packagereq type="mandatory">netflow-init</packagereq>
       <packagereq type="mandatory">resman</packagereq>
       <packagereq type="mandatory">pl_mom</packagereq>
     </packagelist>
