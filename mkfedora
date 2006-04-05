@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.7 2006/04/03 19:51:42 mlhuang Exp $
+# $Id: mkfedora,v 1.8 2006/04/05 21:20:27 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -270,9 +270,11 @@ baseurl=file://$RPM_RPMS_DIR/
 EOF
 fi
 
-# glibc must be specified explicitly for the correct arch to be chosen.
-echo "* Installing glibc" >&3
-yum -c $vroot/etc/yum.conf --installroot=$vroot -y install glibc
+# glibc must be specified explicitly for the correct arch to be
+# chosen. coreutils are basically mandatory for any useful
+# installation.
+echo "* Installing glibc and coreutils" >&3
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y install glibc coreutils
 
 # Go, baby, go
 if [ ${#groups[*]} -gt 0 ] ; then
