@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.6 2006/04/03 19:11:46 mlhuang Exp $
+# $Id: mkfedora,v 1.7 2006/04/03 19:51:42 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -103,19 +103,9 @@ if [ $UID -ne 0 ] ; then
     exit 1
 fi
 
-# Old versions of curl don't understand file:// URLs
 fetch ()
 {
-    url=$1
-    if curl --fail --silent --max-time 60 $url ; then
-	return 0
-    else
-	if [ -f ${url#file://} ] ; then
-	    cat ${url#file://}
-	    return 0
-	fi
-    fi
-    return 1
+    curl --fail --silent --max-time 60 "$1"
 }
 
 for mirror in "${mirrors[@]}" ; do
@@ -144,9 +134,6 @@ if [ $verbose -eq 0 ] ; then
     exec 2>/dev/null
 fi
 
-# Scratch space
-tmp=$(mktemp -d /tmp/mkfedora.XXXXXX)
-
 # Minimally initialize /dev in reference image. If installed, the dev
 # or udev RPMs will fill in the rest.
 mkdir -p $vroot/dev
@@ -161,6 +148,9 @@ mknod -m 666 $vroot/dev/ptmx c 5 2
 ln -nsf ../proc/self/fd $vroot/dev/fd
 # For df and linuxconf
 touch $vroot/dev/hdv1
+
+# Do not tolerate errors
+set -e
 
 # Mount /dev/pts in reference image
 mkdir -p $vroot/dev/pts
@@ -179,11 +169,10 @@ cleanup ()
     umount $vroot/proc
     umount $vroot/dev/shm
     umount $vroot/dev/pts
-    rm -rf $tmp
 }
 
 # Clean up before exiting if anything goes wrong
-trap "cleanup; exit 1" ERR
+trap "cleanup" ERR
 
 # Create a dummy /etc/fstab in reference image
 mkdir -p $vroot/etc
