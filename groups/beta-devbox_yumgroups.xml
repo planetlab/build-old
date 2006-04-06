@@ -11,6 +11,8 @@
     <packagelist>
       <packagereq type="mandatory">kernel</packagereq>
       <packagereq type="mandatory">util-vserver</packagereq>
+      <packagereq type="mandatory">util-vserver-core</packagereq>
+      <packagereq type="mandatory">util-vserver-legacy</packagereq>
       <packagereq type="mandatory">vserver-reference</packagereq>
       <packagereq type="mandatory">resman</packagereq>
     </packagelist>
