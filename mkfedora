@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.8 2006/04/05 21:20:27 mlhuang Exp $
+# $Id: mkfedora,v 1.9 2006/04/05 21:32:15 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -148,6 +148,10 @@ mknod -m 666 $vroot/dev/ptmx c 5 2
 ln -nsf ../proc/self/fd $vroot/dev/fd
 # For df and linuxconf
 touch $vroot/dev/hdv1
+# For mkinitrd (in case a kernel is being installed)
+for i in $(seq 0 7) ; do
+    mknod -m 640 $vroot/dev/loop$i b 7 $i
+done
 
 # Do not tolerate errors
 set -e
