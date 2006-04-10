@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.9 2006/04/05 21:32:15 mlhuang Exp $
+# $Id: mkfedora,v 1.10 2006/04/06 04:45:23 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -41,6 +41,12 @@ groups=()
 # Packages to install
 packages=()
 
+# Packages to exclude
+exclude=()
+
+# Exclude kernel* packages from all repositories except bootstrap
+exclude_kernel=
+
 usage()
 {
     echo "Usage: mkfedora [OPTION]... [basedir]"
@@ -54,13 +60,16 @@ usage()
     echo "			Yumgroups to install (default: none)"
     echo "	-p package1 -p package2 ..."
     echo "			Additional packages to install (default: none)"
+    echo "	-x package1 -x package2 ..."
+    echo "			Packages to exclude (default: none)"
+    echo "	-k		Exclude kernel* packages from all repositories except bootstrap"
     echo "	-v		Be verbose"
     echo "	-h		This message"
     exit 1
 }
 
 # Get options
-while getopts "l:r:a:g:p:vh" opt ; do
+while getopts "l:r:a:g:p:x:kvh" opt ; do
     case $opt in
 	l)
 	    if echo $OPTARG | grep -q -i '^\(file\|http[s]*\)://' ; then
@@ -80,6 +89,12 @@ while getopts "l:r:a:g:p:vh" opt ; do
 	    ;;
 	p)
 	    packages[${#packages[*]}]="$OPTARG"
+	    ;;
+	x)
+	    exclude[${#exclude[*]}]="$OPTARG"
+	    ;;
+	k)
+	    exclude_kernel="exclude=kernel*"
 	    ;;
 	v)
 	    verbose=1
@@ -232,6 +247,7 @@ reposdir=/dev/null
 [base]
 name=Fedora Core $releasever - $basearch - base
 baseurl=$baseurl/
+$exclude_kernel
 EOF
 
 for optional in core/updates extras ; do
@@ -241,6 +257,7 @@ for optional in core/updates extras ; do
 [$(basename $optional)]
 name=Fedora Core $releasever - $basearch - $(basename $optional)
 baseurl=$mirror/linux/$optional/$releasever/$basearch/
+$exclude_kernel
 EOF
     fi
 done
@@ -274,22 +291,26 @@ baseurl=file://$RPM_RPMS_DIR/
 EOF
 fi
 
+excludes=
+for package in "${exclude[@]}" ; do
+    excludes="$excludes --exclude=$package"
+done
+
 # glibc must be specified explicitly for the correct arch to be
-# chosen. coreutils are basically mandatory for any useful
-# installation.
-echo "* Installing glibc and coreutils" >&3
-yum -c $vroot/etc/yum.conf --installroot=$vroot -y install glibc coreutils
+# chosen.
+echo "* Installing glibc" >&3
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes install glibc
 
 # Go, baby, go
 if [ ${#groups[*]} -gt 0 ] ; then
     echo "* Installing optional groups" >&3
-    yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
+    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
 	groupinstall "${groups[@]}"
 fi
 
 if [ ${#packages[*]} -gt 0 ] ; then
     echo "* Installing optional packages" >&3
-    yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
+    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
 	install "${packages[@]}"
 fi
 
