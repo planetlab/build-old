@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.10 2006/04/06 04:45:23 mlhuang Exp $
+# $Id: mkfedora,v 1.11 2006/04/10 20:37:18 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -302,16 +302,16 @@ echo "* Installing glibc" >&3
 yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes install glibc
 
 # Go, baby, go
-if [ ${#groups[*]} -gt 0 ] ; then
-    echo "* Installing optional groups" >&3
-    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
-	groupinstall "${groups[@]}"
-fi
-
 if [ ${#packages[*]} -gt 0 ] ; then
     echo "* Installing optional packages" >&3
     yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
 	install "${packages[@]}"
+fi
+
+if [ ${#groups[*]} -gt 0 ] ; then
+    echo "* Installing optional groups" >&3
+    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
+	groupinstall "${groups[@]}"
 fi
 
 # FC2 dev %preinstall checks /proc/mounts to make sure that /dev is
