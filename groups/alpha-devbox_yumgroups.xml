@@ -10,6 +10,7 @@
     <uservisible>true</uservisible>
     <packagelist>
       <packagereq type="mandatory">kernel</packagereq>
+      <packagereq type="mandatory">kernel-smp</packagereq>
       <packagereq type="mandatory">util-vserver</packagereq>
       <packagereq type="mandatory">util-vserver-core</packagereq>
       <packagereq type="mandatory">util-vserver-legacy</packagereq>
