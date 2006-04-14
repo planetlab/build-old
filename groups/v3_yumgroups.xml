@@ -212,4 +212,25 @@
     </packagelist>
   </group>
 
+  <group>
+    <id>planetlabalpha</id>
+    <name>PlanetLab Alpha</name>    
+    <uservisible>true</uservisible>
+    <description></description>
+    <grouplist/>
+    <packagelist>
+      <packagereq type="mandatory">kernel-smp</packagereq>
+    </packagelist>
+  </group>
+
+  <group>
+    <id>planetlabbeta</id>
+    <name>PlanetLab Beta</name>    
+    <uservisible>true</uservisible>
+    <description></description>
+    <grouplist/>
+    <packagelist>
+    </packagelist>
+  </group>
+
 </comps>
