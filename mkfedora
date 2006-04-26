@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.11 2006/04/10 20:37:18 mlhuang Exp $
+# $Id: mkfedora,v 1.12 2006/04/11 15:43:16 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -44,7 +44,7 @@ packages=()
 # Packages to exclude
 exclude=()
 
-# Exclude kernel* packages from all repositories except bootstrap
+# Exclude kernel* (and related) packages from all repositories except bootstrap
 exclude_kernel=
 
 usage()
@@ -94,7 +94,7 @@ while getopts "l:r:a:g:p:x:kvh" opt ; do
 	    exclude[${#exclude[*]}]="$OPTARG"
 	    ;;
 	k)
-	    exclude_kernel="exclude=kernel*"
+	    exclude_kernel="exclude=kernel* ulogd iptables"
 	    ;;
 	v)
 	    verbose=1
