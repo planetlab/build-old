@@ -118,7 +118,6 @@
       <packagereq type="mandatory">vserver-reference</packagereq>
       <packagereq type="mandatory">vserver-system-packages</packagereq>
       <packagereq type="mandatory">proper</packagereq>
-      <packagereq type="mandatory">resman</packagereq>
       <packagereq type="mandatory">pl_mom</packagereq>
     </packagelist>
   </group>
