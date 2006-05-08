@@ -340,6 +340,17 @@ install:
 ifeq ($(BASE),)
 	@echo make install is only meant to be called from ./build.sh
 else
+ifneq ($(wildcard /etc/planetlab/secring.gpg),)
+        # Sign all RPMS. setsid detaches rpm from the terminal,
+        # allowing the (hopefully blank) GPG password to be entered
+        # from stdin instead of /dev/tty. Obviously, the build server
+        # should be secure.
+	echo | setsid rpm \
+	--define "_signature gpg" \
+	--define "_gpg_path /etc/planetlab" \
+	--define "_gpg_name PlanetLab <info@planet-lab.org>" \
+	--resign RPMS/*/*.rpm SRPMS/*.rpm
+endif
 ifneq ($(BUILDS),)
         # Remove old runs
 	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVER) /bin/bash -s
