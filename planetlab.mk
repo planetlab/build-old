@@ -362,7 +362,7 @@ endif
 	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*.rpm))) $(SERVER):$(ARCHIVE)/$(BASE)/RPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS >/dev/null
-	ssh $(SERVER) createrepo $(ARCHIVE)/$(BASE)/RPMS >/dev/null
+	ssh $(SERVER) createrepo -g yumgroups.xml $(ARCHIVE)/$(BASE)/RPMS >/dev/null
 	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(wildcard SRPMS/*.rpm) $(SERVER):$(ARCHIVE)/$(BASE)/SRPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
