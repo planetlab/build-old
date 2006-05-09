@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.7.2.4 2006/03/31 18:25:33 mlhuang Exp $
+# $Id: planetlab.mk,v 1.7.2.5 2006/05/08 19:05:09 mlhuang Exp $
 #
 
 #
@@ -376,7 +376,7 @@ endif
 	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*.rpm))) $(SERVER):$(ARCHIVE)/$(BASE)/RPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS >/dev/null
-	ssh $(SERVER) createrepo $(ARCHIVE)/$(BASE)/RPMS >/dev/null
+	ssh $(SERVER) createrepo -g yumgroups.xml $(ARCHIVE)/$(BASE)/RPMS >/dev/null
 	rsync --delete --links --perms --times --group --compress --rsh=ssh \
 	    $(wildcard SRPMS/*.rpm) $(SERVER):$(ARCHIVE)/$(BASE)/SRPMS/
 	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
