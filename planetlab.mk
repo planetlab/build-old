@@ -295,8 +295,8 @@ bootmanager: RPMS/yumgroups.xml
 # bootcd
 #
 
-bootcd-MODULE := bootcd_v3 build bootmanager
-bootcd-SPEC := bootcd_v3/bootcd.spec
+bootcd-MODULE := bootcd build bootmanager
+bootcd-SPEC := bootcd/bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
 ALL += bootcd
 
