@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: plc.mk,v 1.9 2006/03/08 21:45:27 mlhuang Exp $
+# $Id$
 #
 
 #
@@ -136,6 +136,7 @@ endif
 	rsync --delete --links --perms --times --group \
 	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*))) $(ARCHIVE)/$(BASE)/
 	yum-arch $(ARCHIVE)/$(BASE) >/dev/null
+	createrepo $(ARCHIVE)/$(BASE) >/dev/null
 ifeq ($(TAG),HEAD)
 	ln -nsf $(ARCHIVE)/$(BASE) $(REPOS)
 endif
