@@ -94,6 +94,8 @@
       <packagereq type="mandatory">portmap</packagereq>
       <packagereq type="mandatory">nfs-utils</packagereq>
 
+      <packagereq type="mandatory">schedutils</packagereq>
+
       <packagereq type="mandatory">util-vserver</packagereq>
       <packagereq type="mandatory">util-vserver-lib</packagereq>
       <packagereq type="mandatory">util-vserver-core</packagereq>
