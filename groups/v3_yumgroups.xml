@@ -109,7 +109,6 @@
       <packagereq type="mandatory">PLBootServerRequest</packagereq>
       <packagereq type="mandatory">PlanetLabAccounts</packagereq>
       <packagereq type="mandatory">PlanetLabConf</packagereq>
-      <packagereq type="mandatory">pycurl</packagereq>
       <packagereq type="mandatory">vnet</packagereq>
       <packagereq type="mandatory">PlanetLabID</packagereq>
       <packagereq type="mandatory">autofs</packagereq>
