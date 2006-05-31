@@ -126,14 +126,6 @@ sudo-SPEC := sudo/planetlab_sudo.spec
 ALL += sudo
 
 #
-# pycurl
-#
-
-pycurl-MODULE := pycurl
-pycurl-SPEC := pycurl/pycurl.spec
-ALL += pycurl
-
-#
 # BootServerRequest
 #
 
