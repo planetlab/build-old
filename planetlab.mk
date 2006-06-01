@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: planetlab.mk,v 1.20 2006/05/31 15:25:23 mlhuang Exp $
 #
 
 #
@@ -124,6 +124,14 @@ ALL += ipod
 sudo-MODULE := sudo
 sudo-SPEC := sudo/planetlab_sudo.spec
 ALL += sudo
+
+#
+# pycurl
+#
+
+pycurl-MODULE := pycurl
+pycurl-SPEC := pycurl/pycurl.spec
+ALL += pycurl
 
 #
 # BootServerRequest
