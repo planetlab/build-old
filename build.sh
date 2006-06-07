@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.32 2006/03/08 21:51:08 mlhuang Exp $
+# $Id: build.sh,v 1.33 2006/03/16 16:38:43 mlhuang Exp $
 #
 
 # Set defaults
@@ -87,8 +87,8 @@ exec &>${BASE}/log
 
 # Build
 cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
-make PLDISTRO=${PLDISTRO} -C ${BASE} && \
-make PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
+make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} && \
+make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 rc=$?
 
 if [ $rc -ne 0 ] ; then
