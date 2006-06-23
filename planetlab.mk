@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.21 2006/06/01 20:52:57 mlhuang Exp $
+# $Id$
 #
 
 #
@@ -254,15 +254,15 @@ ALL += util-python
 # proper and util-vserver both use scripts in util-python for building
 proper: util-python
 util-vserver: util-python
-pl_auth: util-python
+PlanetLabAuth: util-python
 
 #
-# pl_auth
+# PlanetLabAuth
 #
 
-pl_auth-MODULE := pl_auth
-pl_auth-SPEC := pl_auth/pl_auth.spec
-ALL += pl_auth
+PlanetLabAuth-MODULE := pl_auth
+PlanetLabAuth-SPEC := pl_auth/pl_auth.spec
+ALL += PlanetLabAuth
 
 #
 # plcapilib
