@@ -121,6 +121,7 @@
       <packagereq type="mandatory">vserver-system-packages</packagereq>
       <packagereq type="mandatory">proper</packagereq>
       <packagereq type="mandatory">pl_mom</packagereq>
+      <packagereq type="mandatory">PlanetLabAuth</packagereq>
     </packagelist>
   </group>
 
