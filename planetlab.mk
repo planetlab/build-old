@@ -184,6 +184,14 @@ ALL += proper
 proper: libhttpd++
 
 #
+# MySQL
+#
+
+mysql-MODULE := mysql
+mysql-SPEC := mysql/mysql.spec
+ALL += mysql
+
+#
 # ulogd
 #
 
@@ -191,7 +199,7 @@ ulogd-MODULE := ulogd
 ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
 
-ulogd: kernel proper
+ulogd: kernel proper mysql
 
 #
 # netflow
@@ -200,6 +208,8 @@ ulogd: kernel proper
 netflow-MODULE := netflow
 netflow-SPEC := netflow/netflow.spec
 ALL += netflow
+
+netflow: mysql
 
 #
 # PlanetLab Mom: Cleans up your mess
