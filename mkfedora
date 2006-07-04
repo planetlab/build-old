@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.12 2006/04/11 15:43:16 mlhuang Exp $
+# $Id: mkfedora,v 1.13 2006/04/26 01:59:59 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -32,7 +32,7 @@ ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
 )
 
 # Release and architecture to install
-releasever=2
+releasever=4
 basearch=i386
 
 # Yum groups to install
@@ -124,18 +124,28 @@ fetch ()
 }
 
 for mirror in "${mirrors[@]}" ; do
-    baseurl=$mirror/linux/core/$releasever/$basearch/os
-    if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
+    for baseurl in \
+	$mirror/linux/core/$releasever/$basearch/os \
+	$mirror/core/$releasever/$basearch/os \
+	$mirror/$releasever/$basearch/os ; do
+	if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
+	    break
+	fi
+	unset baseurl
+    done
+    if [ -n "$baseurl" ] ; then
 	break
     fi
     unset baseurl
 done
 
 if [ -z "$baseurl" ] ; then
-    echo "Error: linux/core/$releasever/$basearch/os/repodata/repomd.xml"
+    echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
     echo "       could not be found in any of the following locations:"
     echo
     for mirror in ${mirrors[@]} ; do
+	echo $mirror/linux/core
+	echo $mirror/core
 	echo $mirror
     done
     echo
@@ -250,16 +260,22 @@ baseurl=$baseurl/
 $exclude_kernel
 EOF
 
-for optional in core/updates extras ; do
-    if fetch $mirror/linux/$optional/$releasever/$basearch/repodata/repomd.xml ; then
-	cat >>$vroot/etc/yum.conf <<EOF
+for optional in updates extras ; do
+    for optionalurl in \
+	$mirror/linux/core/$optional/$releasever/$basearch \
+	$mirror/linux/$optional/$releasever/$basearch \
+	$mirror/$optional/$releasever/$basearch ; do
+        if fetch $optionalurl/repodata/repomd.xml ; then
+	    cat >>$vroot/etc/yum.conf <<EOF
 
 [$(basename $optional)]
 name=Fedora Core $releasever - $basearch - $(basename $optional)
-baseurl=$mirror/linux/$optional/$releasever/$basearch/
+baseurl=$optionalurl/
 $exclude_kernel
 EOF
-    fi
+	    break
+	fi
+    done
 done
 
 # If we are being built as part of an automated RPM build, solve the
