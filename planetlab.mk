@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: planetlab.mk,v 1.26 2006/07/06 20:54:19 mlhuang Exp $
 #
 
 #
@@ -30,7 +30,7 @@
 
 ifneq ($(wildcard CVS/Root),)
 CVSROOT := $(shell cat CVS/Root)
-TAG := $(shell cvs status Makefile | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\(.*\)/\1/p')
+TAG := $(shell cvs status planetlab.mk | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
 ifeq ($(TAG),(none))
 TAG := HEAD
 endif
