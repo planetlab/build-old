@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.33 2006/03/16 16:38:43 mlhuang Exp $
+# $Id: build.sh,v 1.35 2006/07/06 14:57:50 mlhuang Exp $
 #
 
 # Set defaults
@@ -86,7 +86,7 @@ exec 2>&1
 exec &>${BASE}/log
 
 # Build
-cvs -d ${CVSROOT} export -r ${TAG} -d ${BASE} ${MODULE}
+cvs -d ${CVSROOT} checkout -r ${TAG} -d ${BASE} ${MODULE}
 make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} && \
 make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 rc=$?
