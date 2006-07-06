@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.13 2006/04/26 01:59:59 mlhuang Exp $
+# $Id: mkfedora,v 1.14 2006/07/04 16:59:18 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -46,6 +46,11 @@ exclude=()
 
 # Exclude kernel* (and related) packages from all repositories except bootstrap
 exclude_kernel=
+
+# Local overrides (usually a better set of mirrors to choose from)
+if [ -f /etc/planetlab/mkfedora.conf ] ; then
+    . /etc/planetlab/mkfedora.conf
+fi
 
 usage()
 {
