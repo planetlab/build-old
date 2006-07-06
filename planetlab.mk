@@ -30,7 +30,7 @@
 
 ifneq ($(wildcard CVS/Root),)
 CVSROOT := $(shell cat CVS/Root)
-TAG := $(shell cvs status Makefile | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\(.*\)/\1/p')
+TAG := $(shell cvs status planetlab.mk | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
 ifeq ($(TAG),(none))
 TAG := HEAD
 endif
