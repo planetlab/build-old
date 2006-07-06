@@ -28,8 +28,16 @@
 # Default values
 #
 
+ifneq ($(wildcard CVS/Root),)
+CVSROOT := $(shell cat CVS/Root)
+TAG := $(shell cvs status Makefile | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\(.*\)/\1/p')
+ifeq ($(TAG),(none))
+TAG := HEAD
+endif
+else
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 TAG := HEAD
+endif
 
 #
 # kernel
