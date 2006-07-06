@@ -1,0 +1,198 @@
+#!/bin/bash
+#
+# Builds a Fedora Core 4 build environment suitable for rebuilding all
+# PlanetLab software, including MyPLC. Requires access to Fedora Core
+# 4 base, updates, and extras repositories.
+#
+# Mark Huang <mlhuang@cs.princeton.edu>
+# Copyright (C) 2006 The Trustees of Princeton University
+#
+# $Id$
+#
+
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+# Verbosity
+verbose=0
+
+# Default yum repositories to try
+mirror=
+
+# Yum groups to install
+grouplist=(
+"Development Tools"
+"Development Libraries"
+# In particular, compat-gcc-32 for kernel-2.6.12 builds
+"Legacy Software Development"
+)
+
+# Packages to install
+packagelist=(
+# kernel
+gnupg
+diffutils
+# util-vserver
+vconfig
+iptables
+wget
+beecrypt-devel
+tetex-latex
+gcc-c++
+# ulogd
+libpcap
+# iptables
+linuxdoc-tools
+# vserver-reference
+sudo
+yum
+createrepo
+# mysql
+gperf
+time
+# bootmanager
+sharutils
+# bootcd
+nasm
+mkisofs
+dosfstools
+# myplc
+rsync
+)
+
+# Tag to export
+tag=HEAD
+
+usage()
+{
+    echo "Usage: mkbuild [OPTION]... [basedir]"
+    echo "	-l url		Fedora mirror location"
+    echo "	-r release	Fedora release number"
+    echo "	-a arch		Fedora architecture"
+    echo "	-g group1 -g group2 ..."
+    echo "			Yumgroups to install. Defaults:"
+    for group in "${grouplist[@]}" ; do
+	echo "			$group"
+    done
+    echo "	-p package1 -p package2 ..."
+    echo "			Additional packages to install. Defaults:"
+    for package in "${packagelist[@]}" ; do
+	echo "			$package"
+    done
+    echo "	-t tag		CVS tag of PlanetLab sources to export (default: $tag)"
+    echo "	-v		Be verbose"
+    echo "	-h		This message"
+    exit 1
+}
+
+# Get options
+while getopts "kl:g:p:t:vh" opt ; do
+    case $opt in
+	l)
+	    mirror=$OPTARG
+	    ;;
+	g)
+	    grouplist[${#grouplist[*]}]="$OPTARG"
+	    ;;
+	p)
+	    packagelist[${#packagelist[*]}]="$OPTARG"
+	    ;;
+	t)
+	    tag=$OPTARG
+	    ;;
+	v)
+	    verbose=1
+	    set -x
+	    ;;
+	h|*)
+	    usage
+	    ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+if [ -n "$1" ] ; then
+    # Install in chroot
+    mkdir -p "$1"
+    vroot=$(cd "$1" && pwd -P)
+else
+    # Install for real
+    vroot=
+fi
+
+if [ $UID -ne 0 ] ; then
+    echo "Error: You must run this script as root."
+    exit 1
+fi
+
+exec 3>&1
+exec 4>&2
+if [ -z "$verbose" ] ; then
+    exec 1>/dev/null
+    exec 2>/dev/null
+fi
+
+# Do not tolerate errors
+set -e
+
+if [ -n "$vroot" ] ; then
+    # Install in chroot
+    if [ $verbose -ne 0 ] ; then
+	options="$options -v"
+    fi
+    if [ -n "$mirror" ] ; then
+	options="$options -l \"$mirror\""
+    fi
+    for group in "${grouplist[@]}" ; do
+	options="$options -g \"$group\""
+    done
+    for package in "${packagelist[@]}" ; do
+	options="$options -p \"$package\""
+    done
+
+    eval ./mkfedora $options $vroot
+else
+    # Install for real
+    echo "* Installing optional packages" >&3
+    yum -y install "${packagelist[@]}"
+
+    echo "* Installing optional groups" >&3
+    yum -y groupinstall "${grouplist[@]}"
+fi
+
+# If a preferred mirror was specified, configure mkfedora to use it
+if [ -n "$mirror" ] ; then
+    mkdir -p $vroot/etc/planetlab
+    echo "mirrors=($mirror)" >$vroot/etc/planetlab/mkfedora.conf
+fi
+
+# Install local CVS repository.
+echo "* Exporting source code to /cvs" >&3
+mkdir -p $vroot/cvs
+export CVSROOT=$vroot/cvs
+cvs -d $CVSROOT init
+
+tmp=$(mktemp -d /tmp/cvs.XXXXXX)
+trap "rm -rf $tmp" ERR
+pushd $tmp
+
+# Export source code from cvs.planet-lab.org to /tmp
+if [ "$tag" = "HEAD" ] ; then
+	date=$(date +%Y-%m-%d)
+	cvs_export="cvs -d :pserver:anon@cvs.planet-lab.org:/cvs export -D $date planetlab"
+	tag=planetlab-$date
+else
+	cvs_export="cvs -d :pserver:anon@cvs.planet-lab.org:/cvs export -r $tag planetlab"
+fi
+$cvs_export
+
+# Import into /cvs/tmp
+for dir in * ; do
+    pushd $dir
+    cvs -d $CVSROOT import -m "$cvs_export" -ko -I ! $dir planetlab $tag
+    popd
+done
+
+popd
+rm -rf $tmp
+
+exit 0
