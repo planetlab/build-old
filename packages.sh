@@ -6,7 +6,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id: packages.sh,v 1.5 2004/10/30 15:26:28 mlhuang Exp $
+# $Id: packages.sh,v 1.7 2006/07/07 02:12:59 mlhuang Exp $
 #
 
 # Set defaults
@@ -59,11 +59,11 @@ xml_escape_cdata() {
 
 # XXX rpmquery version 4.3.1 crashes if too large of a queryformat is passed
 #TAGS=$(rpm --querytags)
-TAGS="NAME VERSION RELEASE URL BUILDTIME DESCRIPTION"
+TAGS="NAME VERSION RELEASE ARCH URL BUILDTIME DESCRIPTION"
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- \$Id: packages.sh,v 1.5 2004/10/30 15:26:28 mlhuang Exp $ -->
+<!-- \$Id: packages.sh,v 1.7 2006/07/07 02:12:59 mlhuang Exp $ -->
 <!-- Generated at $(date) in $(cd ${1-.} && pwd -P) on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
@@ -96,7 +96,7 @@ BASE="$BASE"
 EOF
 
 # For every RPM in the current directory
-RPMS=$(find ${1-.} -name '*.rpm')
+RPMS=$(find ${1-.} -name '*.rpm' -and -not -name '*debuginfo*' | sort)
 for rpm in $RPMS ; do
 
 cat <<EOF

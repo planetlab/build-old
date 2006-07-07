@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.26 2006/07/06 20:54:19 mlhuang Exp $
+# $Id: planetlab.mk,v 1.27 2006/07/07 02:13:17 mlhuang Exp $
 #
 
 #
@@ -383,7 +383,7 @@ ifneq ($(BUILDS),)
 	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVER) /bin/bash -s
 endif
         # Create package manifest
-	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/SRPMS" SRPMS > SRPMS/packages.xml
+	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/RPMS" RPMS > packages.xml
         # Populate repository
 	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS
 	rsync --delete --links --perms --times --group --compress --rsh=ssh \
