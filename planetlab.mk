@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: planetlab.mk,v 1.7.2.8 2006/05/25 21:44:37 mlhuang Exp $
 #
 
 #
@@ -29,7 +29,7 @@
 #
 
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-TAG := planetlab-3_3-rc2
+TAG := planetlab-3_3-bootcd
 
 #
 # kernel
