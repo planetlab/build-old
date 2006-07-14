@@ -67,31 +67,12 @@ util-vserver-SPEC := util-vserver/util-vserver.spec
 ALL += util-vserver
 
 #
-# lkcdutils
-#
-
-lkcdutils-MODULE := lkcdutils
-lkcdutils-SPEC := lkcdutils/spec/lkcdutils.spec
-ALL += lkcdutils
-
-# Build kernel first so we can bootstrap off of its build
-lkcdutils: kernel
-
-#
 # yum
 #
 
 yum-MODULE := yum
 yum-SPEC := yum/yum.spec
 ALL += yum
-
-#
-# ksymoops
-#
-
-ksymoops-MODULE := ksymoops
-ksymoops-SPEC := ksymoops/ksymoops.spec
-ALL += ksymoops
 
 #
 # PlanetLabAccounts
@@ -334,7 +315,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 # MyPLC
 #
 
-myplc-MODULE := myplc build pl_db plc_api plc_www plc/scripts
+myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE))) myplc
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
