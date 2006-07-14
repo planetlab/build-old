@@ -315,7 +315,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 # MyPLC
 #
 
-myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE))) myplc
+myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE))) myplc build pl_db plc_api plc_www plc/scripts
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
