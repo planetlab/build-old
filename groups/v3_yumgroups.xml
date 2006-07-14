@@ -117,7 +117,6 @@
       <packagereq type="mandatory">planetlab_sudo</packagereq>
       <packagereq type="mandatory">pl_sshd</packagereq>
       <packagereq type="mandatory">ipod</packagereq>
-      <packagereq type="mandatory">ksymoops</packagereq>
       <packagereq type="mandatory">vserver-reference</packagereq>
       <packagereq type="mandatory">vserver-system-packages</packagereq>
       <packagereq type="mandatory">proper</packagereq>
