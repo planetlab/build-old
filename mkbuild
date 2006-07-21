@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: mkbuild,v 1.2 2006/07/17 21:26:06 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -162,7 +162,7 @@ fi
 # If a preferred mirror was specified, configure mkfedora to use it
 if [ -n "$mirror" ] ; then
     mkdir -p $vroot/etc/planetlab
-    echo "mirrors=($mirror)" >$vroot/etc/planetlab/mkfedora.conf
+    echo "PLC_DEVEL_FEDORA_URL=$mirror" >$vroot/etc/planetlab/plc_config
 fi
 
 # Install local CVS repository.

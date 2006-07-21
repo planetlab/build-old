@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.16 2006/07/06 22:55:47 mlhuang Exp $
+# $Id: mkfedora,v 1.17 2006/07/17 21:25:42 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -47,9 +47,12 @@ exclude=()
 # Exclude kernel* (and related) packages from all repositories except bootstrap
 exclude_kernel=
 
-# Local overrides (usually a better set of mirrors to choose from)
-if [ -f /etc/planetlab/mkfedora.conf ] ; then
-    . /etc/planetlab/mkfedora.conf
+# PlanetLab development environment
+if [ -f /etc/planetlab/plc_config ] ; then
+    . /etc/planetlab/plc_config
+    if [ -n "$PLC_DEVEL_FEDORA_URL" ] ; then
+	mirrors=($PLC_DEVEL_FEDORA_URL)
+    fi
 fi
 
 usage()
@@ -206,7 +209,7 @@ cleanup ()
 }
 
 # Clean up before exiting if anything goes wrong
-trap "cleanup" ERR
+trap "cleanup" ERR INT
 
 # Create a dummy /etc/fstab in reference image
 mkdir -p $vroot/etc
