@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.22 2006/03/27 17:28:25 mlhuang Exp $
+# $Id: Rules.mk,v 1.23 2006/03/28 22:05:24 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -23,6 +23,9 @@ $(SPECFILE):
 ifeq ($(TAG),HEAD)
         # Define date for untagged builds
 	echo "%define date $(shell date +%Y.%m.%d)" >> $@
+else
+        # Define cvstag for tagged builds
+	echo "%define cvstag $(TAG)" >> $@
 endif
 	cvs -d $(CVSROOT) checkout -r $(TAG) -p $(SPEC) >> $@
 
