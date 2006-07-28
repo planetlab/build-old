@@ -28,15 +28,21 @@
 # Default values
 #
 
-ifneq ($(wildcard CVS/Root),)
-CVSROOT := $(shell cat CVS/Root)
-TAG := $(shell cvs status planetlab.mk | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
-ifeq ($(TAG),(none))
-TAG := HEAD
-endif
-else
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 TAG := HEAD
+
+# Check if a tag has been checked out
+ifneq ($(wildcard CVS/Root),)
+# Check if we are able to access CVS
+CVSTAG := $(shell cvs status planetlab.mk 2>/dev/null | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
+ifneq ($(CVSTAG),)
+CVSROOT := $(shell cat CVS/Root)
+ifeq ($(CVSTAG),(none))
+TAG := HEAD
+else
+TAG := $(CVSTAG)
+endif
+endif
 endif
 
 #
