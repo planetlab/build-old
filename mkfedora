@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.18 2006/08/11 12:23:57 thierry Exp $
+# $Id: mkfedora,v 1.19 2006/08/16 01:23:53 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -329,10 +329,9 @@ if [ ${#packages[*]} -gt 0 ] ; then
    echo "* Installing optional packages" "${packages[@]}" >&3
    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
 	  install "${packages[@]}"
-   missing=$(rpm --root $vroot -q "${packages[@]}" | grep "not installed")
-   if [ -n "$missing" ] ; then
+   if ! rpm --root $vroot -q "${packages[@]}" >/dev/null ; then
        echo "* Warning: Missing packages"
-       cat <<<$missing
+       rpm --root $vroot -q "${packages[@]}" | grep "not installed"
    fi
 fi
 
