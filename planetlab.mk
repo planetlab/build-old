@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.30 2006/07/15 19:49:40 mlhuang Exp $
+# $Id: planetlab.mk,v 1.31 2006/07/28 04:53:14 mlhuang Exp $
 #
 
 #
@@ -28,15 +28,21 @@
 # Default values
 #
 
-ifneq ($(wildcard CVS/Root),)
-CVSROOT := $(shell cat CVS/Root)
-TAG := $(shell cvs status planetlab.mk | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
-ifeq ($(TAG),(none))
-TAG := HEAD
-endif
-else
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 TAG := HEAD
+
+# Check if a tag has been checked out
+ifneq ($(wildcard CVS/Root),)
+# Check if we are able to access CVS
+CVSTAG := $(shell cvs status planetlab.mk 2>/dev/null | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
+ifneq ($(CVSTAG),)
+CVSROOT := $(shell cat CVS/Root)
+ifeq ($(CVSTAG),(none))
+TAG := HEAD
+else
+TAG := $(CVSTAG)
+endif
+endif
 endif
 
 #

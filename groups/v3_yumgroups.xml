@@ -97,6 +97,8 @@
 
       <packagereq type="mandatory">schedutils</packagereq>
 
+      <packagereq type="default">vconfig</packagereq>
+
       <packagereq type="mandatory">util-vserver</packagereq>
       <packagereq type="mandatory">util-vserver-build</packagereq>
       <packagereq type="mandatory">util-vserver-lib</packagereq>
