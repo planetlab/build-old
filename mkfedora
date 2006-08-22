@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.20 2006/08/16 01:56:06 mlhuang Exp $
+# $Id: mkfedora,v 1.21 2006/08/22 12:37:08 thierry Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -277,6 +277,7 @@ for optional in updates extras ; do
     for optionalurl in \
 	$mirror/linux/core/$optional/$releasever/$basearch \
 	$mirror/core/$optional/$releasever/$basearch \
+	$mirror/linux/$optional/$releasever/$basearch \
 	$mirror/$optional/$releasever/$basearch ; do
         if fetch $optionalurl/repodata/repomd.xml ; then
 	    cat >>$vroot/etc/yum.conf <<EOF
