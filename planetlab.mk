@@ -278,6 +278,14 @@ plcapilib-SPEC := plcmdline/plcapilib.spec
 ALL += plcapilib
 
 #
+# PLCAPI
+#
+
+PLCAPI-MODULE := new_plc_api
+PLCAPI-SPEC := new_plc_api/PLCAPI.spec
+ALL += PLCAPI
+
+#
 # vserver-reference
 #
 
@@ -321,7 +329,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 # MyPLC
 #
 
-myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE)) myplc pl_db plc_api plc_www plc/scripts)
+myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE)) myplc new_plc_www plc/scripts)
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
