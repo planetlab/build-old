@@ -148,9 +148,9 @@ ALL += PlanetLabID
 # Node Manager
 #
 
-sidewinder-MODULE := sidewinder
-sidewinder-SPEC := sidewinder/sidewinder.spec
-ALL += sidewinder
+NodeManager-MODULE := NodeManager
+NodeManager-SPEC := NodeManager/NodeManager.spec
+ALL += NodeManager
 
 #
 # pl_sshd
