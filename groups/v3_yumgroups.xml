@@ -107,11 +107,10 @@
       <packagereq type="mandatory">util-vserver-legacy</packagereq>
       <packagereq type="mandatory">util-vserver-python</packagereq>
       <packagereq type="mandatory">util-python</packagereq>
-      <packagereq type="mandatory">sidewinder</packagereq>
+      <packagereq type="mandatory">NodeManager</packagereq>
       <packagereq type="mandatory">NodeUpdate</packagereq>
       <packagereq type="mandatory">PLBootServerRequest</packagereq>
       <packagereq type="mandatory">PlanetLabAccounts</packagereq>
-      <packagereq type="mandatory">PlanetLabConf</packagereq>
       <packagereq type="mandatory">pycurl</packagereq>
       <packagereq type="mandatory">vnet</packagereq>
       <packagereq type="mandatory">PlanetLabID</packagereq>
