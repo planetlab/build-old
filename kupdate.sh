@@ -14,7 +14,11 @@ bail ()
 
 usage ()
 {
-    echo "$0 kernel.rpm vnet.rpm"
+    program=$(basename $0)
+    echo "USAGE:"
+    echo " $program kernel.rpm vnet.rpm"
+    echo "   where kernel.rpm and vnet.rpm are the corresponding rpm files,"
+    echo "   which might live in ./RPMS/..."
     exit -1
 }
 
@@ -34,11 +38,14 @@ checkrpm $vnetrpm
 isofs=/plc/root/usr/share/bootcd/build/isofs
 tmpdir=$(mktemp -d /tmp/bootcd.XXXXXX)
 cur=`pwd`
-if [ -d ../bootmanager ] ; then
-    MERGE=${cur}/../bootmanager/source/merge_hw_tables.py
+if [ -f ${cur}/merge_hw_tables.py ] ; then
+    MERGE=${cur}/merge_hw_tables.py
+    chmod +x ${cur}/merge_hw_tables.py
 else
-    echo "cannot find merge_hw_tables.py"
-    exit -1
+    echo "fetching merge_hw_tables.py from cvs repository"
+    cvs -d :pserver:anonymous@cvs.planet-lab.org:/cvs co -p bootmanager/source/merge_hw_tables.py > ${cur}/merge_hw_tables.py
+    chmod +x ${cur}/merge_hw_tables.py
+    MERGE=${cur}/merge_hw_tables.py
 fi
 
 myplcwebdir=/plc/data/var/www/html
