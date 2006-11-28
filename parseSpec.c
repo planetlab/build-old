@@ -6,13 +6,14 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: parseSpec.c,v 1.2 2006/03/08 21:48:42 mlhuang Exp $
+ * $Id: parseSpec.c,v 1.3 2006/03/09 16:30:33 mlhuang Exp $
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <libgen.h>
+#include <errno.h>
 #include <rpm/rpmlib.h>
 #include <rpm/rpmts.h>
 #include <rpm/rpmcli.h>
@@ -51,7 +52,7 @@ rpmspecGet(rpmts ts, const char * arg)
 }
 
 int
-main(int argc, char *const argv[])
+main(int argc, char *argv[])
 {
 	poptContext context;
 	rpmts ts = NULL;
@@ -61,8 +62,44 @@ main(int argc, char *const argv[])
 	Package pkg;
 	const char *name, *version, *release, *arch, *unused;
 
+	/* BEGIN: support to pull out --target from the args list */
+	int  alen, i;
+	char *target = NULL;
+	int args = 1;
+	int tlen = strlen("--target");
+
+	/* walk argv list looking for --target */
+#if 0
+	while ((args+1)<argc) {
+	  if(strncmp(argv[args],"--target",tlen)==0){
+	    char **dash;
+
+	    /* get arch component of the --target option */
+	    dash = (char**)strchr(argv[args+1],'-');
+	    if (dash != NULL) *dash=NULL;
+
+	    /* copy arch component of --target option to target */
+	    alen = strnlen(argv[args+1],32);
+	    target = (char*)malloc(alen);
+	    if (target == NULL) return errno;
+	    strncpy(target,argv[args+1],alen);
+
+	    /* change argc, argv to take out the "--target xxx" */
+	    for (i=args;i<argc;i++) argv[i]=argv[i+2];
+	    argc-=2;
+
+	    break;
+	  }
+	}
+	argv[1]=argv[argc-1];
+	argv[2]=0;
+#endif
+	/* END: support to pull out --target from the args list */
+
 	/* Parse common options for all rpm modes and executables */
 	context = rpmcliInit(argc, argv, optionsTable);
+
+	exit(0);
 
 	/* Create transaction state */
 	ts = rpmtsCreate();
@@ -97,6 +134,12 @@ main(int argc, char *const argv[])
 		if (name && version && release && arch) {
 			if (!pkg->fileList)
 				printf("# Empty\n# ");
+
+			if (target != NULL) {
+			  if (strcmp(arch,target)!=0) {
+			    arch=target;
+			  }
+			}
 			printf("RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
 			       arch, name, version, release, arch);
 		}
