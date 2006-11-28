@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.23 2006/03/28 22:05:24 mlhuang Exp $
+# $Id: Rules.mk,v 1.24 2006/07/24 19:23:57 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -41,7 +41,7 @@ parseSpec: LDFLAGS := -lrpm -lrpmbuild
 
 $(MK): $(SPECFILE) parseSpec .rpmmacros
 	mkdir -p tmp
-	./parseSpec $(SPECFILE) > $@
+	./parseSpec $(RPMFLAGS) $(SPECFILE) > $@
 
 # Defines SOURCES, SRPM, RPMS
 include $(MK)
