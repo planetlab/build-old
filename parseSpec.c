@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: parseSpec.c,v 1.3 2006/03/09 16:30:33 mlhuang Exp $
+ * $Id: parseSpec.c,v 1.4 2006/11/28 21:28:11 mef Exp $
  */
 
 #include <stdio.h>
@@ -69,7 +69,6 @@ main(int argc, char *argv[])
 	int tlen = strlen("--target");
 
 	/* walk argv list looking for --target */
-#if 0
 	while ((args+1)<argc) {
 	  if(strncmp(argv[args],"--target",tlen)==0){
 	    char **dash;
@@ -93,13 +92,10 @@ main(int argc, char *argv[])
 	}
 	argv[1]=argv[argc-1];
 	argv[2]=0;
-#endif
 	/* END: support to pull out --target from the args list */
 
 	/* Parse common options for all rpm modes and executables */
 	context = rpmcliInit(argc, argv, optionsTable);
-
-	exit(0);
 
 	/* Create transaction state */
 	ts = rpmtsCreate();
