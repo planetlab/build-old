@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.36 2006/12/18 05:18:44 mef Exp $
+# $Id: planetlab.mk,v 1.37 2006/12/19 05:59:27 mef Exp $
 #
 
 #
@@ -76,9 +76,9 @@ ALL += madwifi-ng
 # ivtv 
 #
 
-ivtv-MODULE := ivtv
-ivtv-SPEC := ivtv/ivtv.spec
-ALL += ivtv
+#ivtv-MODULE := ivtv
+#ivtv-SPEC := ivtv/ivtv.spec
+#ALL += ivtv
 
 #
 # util-vserver
