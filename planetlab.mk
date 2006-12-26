@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.37 2006/12/19 05:59:27 mef Exp $
+# $Id: planetlab.mk,v 1.38 2006/12/20 04:43:19 mef Exp $
 #
 
 #
@@ -49,9 +49,17 @@ endif
 # kernel
 #
 
-kernel-MODULE := linux-2.6
-kernel-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-ALL += kernel
+kernel-i686-MODULE := linux-2.6
+kernel-i686-RPMFLAGS:= --target i686
+kernel-i686-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
+ALL += kernel-i686
+
+kernel-i586-MODULE := linux-2.6
+kernel-i586-RPMFLAGS:= --target i586
+kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
+ALL += kernel-i586
+
+kernel: kernel-i586 kernel-i686
 
 #
 # vnet
