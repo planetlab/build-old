@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: parseSpec.c,v 1.4 2006/11/28 21:28:11 mef Exp $
+ * $Id: parseSpec.c,v 1.5 2006/11/28 22:44:31 mef Exp $
  */
 
 #include <stdio.h>
@@ -89,9 +89,11 @@ main(int argc, char *argv[])
 
 	    break;
 	  }
+	  args++;
 	}
 	argv[1]=argv[argc-1];
 	argv[2]=0;
+	argc=2;
 	/* END: support to pull out --target from the args list */
 
 	/* Parse common options for all rpm modes and executables */
