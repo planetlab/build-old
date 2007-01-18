@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: planetlab.mk,v 1.42 2007/01/17 15:44:44 mlhuang Exp $
 #
 
 #
@@ -102,6 +102,7 @@ madwifi-ng: kernel
 
 util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
+util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
 
 #
