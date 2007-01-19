@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.22 2006/08/22 12:56:14 thierry Exp $
+# $Id: mkfedora,v 1.23 2007/01/19 19:14:06 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -335,7 +335,7 @@ yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes install glibc
 #get rpm and yum
 yum -c $vroot/etc/yum.conf --installroot=$vroot -y install rpm yum 
 
-# use host env resolv info
+# use host env resolv info to make yum work.
 cp /etc/resolv.conf $vroot/etc/resolv.conf
 
 # Go, baby, go
