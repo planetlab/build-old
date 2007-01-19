@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.42 2007/01/17 15:44:44 mlhuang Exp $
+# $Id: planetlab.mk,v 1.43 2007/01/18 16:35:52 mef Exp $
 #
 
 #
@@ -65,6 +65,7 @@ kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
 ALL += kernel-i586
 
 kernel: kernel-i586 kernel-i686
+kernel-clean: kernel-i586-clean kernel-i686-clean
 
 #
 # vnet
