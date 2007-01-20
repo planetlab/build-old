@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.43 2007/01/18 16:35:52 mef Exp $
+# $Id$
 #
 
 #
@@ -374,6 +374,16 @@ myplc: $(filter-out myplc,$(ALL))
 
 # ...and the yum manifest
 myplc: RPMS/yumgroups.xml
+
+#
+# MyPLC development environment
+#
+
+myplc-devel-MODULE := build myplc
+myplc-devel-SPEC := myplc/myplc-devel.spec
+# Package must be built as root
+myplc-devel-RPMBUILD := sudo rpmbuild
+ALL += myplc-devel
 
 #
 # Installation rules
