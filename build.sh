@@ -7,14 +7,22 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.34 2006/06/07 21:18:28 mlhuang Exp $
+# $Id: build.sh,v 1.35 2006/07/06 14:57:50 mlhuang Exp $
 #
 
 # Set defaults
-CVSROOT=:pserver:anon@cvs.planet-lab.org:/cvs
+if [ -f CVS/Root ] ; then
+    CVSROOT=$(cat CVS/Root)
+    TAG=$(cvs status build.sh | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
+    if [ "$TAG" = "(none)" ] ; then
+	TAG=HEAD
+    fi
+else
+    CVSROOT=:pserver:anon@cvs.planet-lab.org:/cvs
+    TAG=HEAD
+fi
 CVS_RSH=ssh
 MODULE=build
-TAG=HEAD
 BASE=$PWD
 PLDISTRO=planetlab
 
@@ -85,18 +93,54 @@ BASE=${BASE}${i}
 exec 2>&1
 exec &>${BASE}/log
 
-# Build
-cvs -d ${CVSROOT} checkout -r ${TAG} -d ${BASE} ${MODULE}
-make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} && \
-make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
-rc=$?
-
-if [ $rc -ne 0 ] ; then
+failure() {
     # Notify recipient of failure
     if [ -n "$MAILTO" ] ; then
 	tail -c 8k ${BASE}/log | mail -s "Failures for ${BASE}" $MAILTO
     fi
-    exit $rc
-fi
+    exit 1
+}
+
+trap failure ERR INT
+
+# Checkout build directory
+cvs -d ${CVSROOT} checkout -r ${TAG} -d ${BASE} ${MODULE}
+
+# Build development environment first
+make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} myplc-devel
+
+# Build everything else inside the development environment
+export PLC_ROOT=$BASE/BUILD/myplc-devel-*/myplc/devel/root
+export PLC_DATA=$BASE/BUILD/myplc-devel-*/myplc/devel/data
+
+cleanup() {
+    sudo umount $PLC_ROOT/data/build
+    sudo $BASE/BUILD/myplc-devel-*/myplc/host.init stop
+}
+
+trap "cleanup; failure" ERR INT
+
+# Start development environment
+sudo $BASE/BUILD/myplc-devel-*/myplc/host.init start
+
+# Cross mount the current build directory to the build user home directory
+sudo mount -o bind,rw $BASE $PLC_ROOT/data/build
+
+# Delete .rpmmacros file so that it gets regenerated with the
+# appropriate paths relative to the chroot.
+rm -f .rpmmacros
+
+# Enable networking
+sudo cp -f /etc/hosts /etc/resolv.conf $PLC_ROOT/etc/
+
+# Run the rest of the build
+sudo chroot $PLC_ROOT su - build -c "make TAG=\"$TAG\" PLDISTRO=\"$PLDISTRO\""
+
+# Clean up
+cleanup
+trap failure ERR INT
+
+# Install to boot server
+make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 
 exit 0
