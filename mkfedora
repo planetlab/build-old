@@ -75,12 +75,6 @@ usage()
     exit 1
 }
 
-### post-process output of createrepo --quiet or of yum-arch
-# replaces ^M with ^J, and removes whitespace-only lines
-function post-filter () {
-   tr '\r' '\n' | grep -v '^ *$'
-}
-
 # Get options
 while getopts "l:r:a:g:p:x:kvh" opt ; do
     case $opt in
@@ -299,14 +293,14 @@ if [ -n "$RPM_BUILD_DIR" ] ; then
     RPM_RPMS_DIR=$(cd $(dirname $RPM_BUILD_DIR)/RPMS && pwd -P)
     # yum-2.0.x
     if [ -x /usr/bin/yum-arch ] ; then
-	yum-arch $RPM_RPMS_DIR | post-filter
+	yum-arch -q $RPM_RPMS_DIR
     fi
     # yum-2.4.x
     if [ -x /usr/bin/createrepo ] ; then
 	if [ -f $RPM_RPMS_DIR/yumgroups.xml ] ; then
 	    groupfile="-g yumgroups.xml"
 	fi
-	createrepo --quiet $groupfile $RPM_RPMS_DIR | post-filter
+	createrepo --quiet $groupfile $RPM_RPMS_DIR
     fi
     # If run under sudo, allow user to delete the headers/ and
     # repodata/ directories.
