@@ -7,8 +7,10 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.35 2006/07/06 14:57:50 mlhuang Exp $
+# $Id: build.sh,v 1.36 2007/01/20 04:19:13 mlhuang Exp $
 #
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 # Set defaults
 if [ -f CVS/Root ] ; then
