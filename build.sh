@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.37 2007/01/20 14:08:42 mlhuang Exp $
+# $Id: build.sh,v 1.38 2007/01/21 08:46:02 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -130,7 +130,7 @@ sudo mount -o bind,rw $BASE $PLC_ROOT/data/build
 
 # Delete .rpmmacros and parseSpec files so that they get regenerated
 # appropriately in the development environment.
-rm -f .rpmmacros parseSpec
+rm -f $BASE/.rpmmacros $BASE/parseSpec
 
 # Enable networking
 sudo cp -f /etc/hosts /etc/resolv.conf $PLC_ROOT/etc/
