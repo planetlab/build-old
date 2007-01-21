@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.36 2007/01/20 04:19:13 mlhuang Exp $
+# $Id: build.sh,v 1.37 2007/01/20 14:08:42 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -128,9 +128,9 @@ sudo $BASE/BUILD/myplc-devel-*/myplc/host.init start
 # Cross mount the current build directory to the build user home directory
 sudo mount -o bind,rw $BASE $PLC_ROOT/data/build
 
-# Delete .rpmmacros file so that it gets regenerated with the
-# appropriate paths relative to the chroot.
-rm -f .rpmmacros
+# Delete .rpmmacros and parseSpec files so that they get regenerated
+# appropriately in the development environment.
+rm -f .rpmmacros parseSpec
 
 # Enable networking
 sudo cp -f /etc/hosts /etc/resolv.conf $PLC_ROOT/etc/
