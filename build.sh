@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.38 2007/01/21 08:46:02 mlhuang Exp $
+# $Id: build.sh,v 1.39 2007/01/21 16:51:29 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -116,6 +116,7 @@ export PLC_ROOT=$BASE/BUILD/myplc-devel-*/myplc/devel/root
 export PLC_DATA=$BASE/BUILD/myplc-devel-*/myplc/devel/data
 
 cleanup() {
+    sudo umount $PLC_ROOT/data/fedora
     sudo umount $PLC_ROOT/data/build
     sudo $BASE/BUILD/myplc-devel-*/myplc/host.init stop
 }
@@ -127,6 +128,12 @@ sudo $BASE/BUILD/myplc-devel-*/myplc/host.init start
 
 # Cross mount the current build directory to the build user home directory
 sudo mount -o bind,rw $BASE $PLC_ROOT/data/build
+
+# Also cross mount /data/fedora if it exists
+if [ -d /data/fedora ] ; then
+    sudo mkdir -p $PLC_ROOT/data/fedora
+    sudo mount -o bind,ro /data/fedora $PLC_ROOT/data/fedora
+fi
 
 # Delete .rpmmacros and parseSpec files so that they get regenerated
 # appropriately in the development environment.
