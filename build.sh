@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.40 2007/01/22 03:41:48 mlhuang Exp $
+# $Id: build.sh,v 1.41 2007/01/22 04:19:06 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -114,8 +114,8 @@ cvs -d ${CVSROOT} checkout -r ${TAG} -d ${BASE} ${MODULE}
 make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} myplc-devel
 
 # Build everything else inside the development environment
-export PLC_ROOT=$BASE/BUILD/myplc-devel-*/myplc/devel/root
-export PLC_DATA=$BASE/BUILD/myplc-devel-*/myplc/devel/data
+export PLC_ROOT=$(echo $BASE/BUILD/myplc-devel-*/myplc/devel/root)
+export PLC_DATA=$(echo $BASE/BUILD/myplc-devel-*/myplc/devel/data)
 
 cleanup() {
     sudo umount $PLC_ROOT/data/fedora
