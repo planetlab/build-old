@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.39 2007/01/21 16:51:29 mlhuang Exp $
+# $Id: build.sh,v 1.40 2007/01/22 03:41:48 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -104,6 +104,8 @@ failure() {
 }
 
 trap failure ERR INT
+
+set -x
 
 # Checkout build directory
 cvs -d ${CVSROOT} checkout -r ${TAG} -d ${BASE} ${MODULE}
