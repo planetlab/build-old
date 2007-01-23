@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.24 2006/07/24 19:23:57 mlhuang Exp $
+# $Id: Rules.mk,v 1.25 2006/11/28 22:45:05 mef Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -97,7 +97,7 @@ SOURCES/%.tar: SOURCES/%
 all: $(RPMS) $(SRPM)
 
 # Build RPMS
-$(RPMS): $(SPECFILE) $(SOURCES) .rpmmacros
+$(RPMS): $(SPECFILE) $(SOURCES)
 	mkdir -p BUILD RPMS
 	$(RPMBUILD) $(RPMFLAGS) -bb $<
 
@@ -108,7 +108,7 @@ $(wordlist 2,$(words $(RPMS)),$(RPMS)): $(firstword $(RPMS))
 endif
 
 # Build SRPM
-$(SRPM): $(SPECFILE) $(SOURCES) .rpmmacros
+$(SRPM): $(SPECFILE) $(SOURCES)
 	mkdir -p SRPMS
 	rpmbuild $(RPMFLAGS) -bs $<
 
