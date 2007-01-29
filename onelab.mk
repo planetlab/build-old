@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45 2007/01/20 04:09:20 mlhuang Exp $
+# $Id: onelab.mk,v 1.1 2007/01/27 08:39:38 thierry Exp $
 #
 
 #
@@ -393,8 +393,8 @@ myplc: RPMS/yumgroups.xml
 
 # Upload packages to boot server
 SERVER		:= root@onelab-plc.inria.fr
-ARCHIVE		:= /plc/var/www/html/install-rpms/
-BOOT_AREA	:= /plc/data/var/www/html/boot/
+RPMSAREA	:= /plc/data/var/www/html/install-rpms/
+BOOTAREA	:= /plc/data/var/www/html/boot/
 
 YUMGROUPS	:= $(PLDISTRO).xml
 #BASE		:= onelab
@@ -409,27 +409,27 @@ install: install-rpms install-index install-bootstrap
 
 install-rpms:RPMS/yumgroups.xml
         # create repository
-	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASETMP)
+	ssh $(SERVER) mkdir -p $(RPMSAREA)/$(BASETMP)
 	# populate
 	rsync -v --perms --times --group --compress --rsh=ssh \
-	   RPMS/yumgroups.xml $(wildcard RPMS/*/*.rpm) $(SERVER):$(ARCHIVE)/$(BASETMP)/
+	   RPMS/yumgroups.xml $(wildcard RPMS/*/*.rpm) $(SERVER):$(RPMSAREA)/$(BASETMP)/
 
 # would be better if we could run plc.d/packages on a temporary dir
 # currently while we run packages clients wont be able to use the repo (nor signed nor indexed)
 install-index:
 	# cleanup former bak
-	ssh $(SERVER) rm -rf $(ARCHIVE)/$(BASEBAK)
+	ssh $(SERVER) rm -rf $(RPMSAREA)/$(BASEBAK)
 	# bak previous repo
-	ssh $(SERVER) mv $(ARCHIVE)/$(BASE) $(ARCHIVE)/$(BASEBAK)
+	ssh $(SERVER) mv $(RPMSAREA)/$(BASE) $(RPMSAREA)/$(BASEBAK)
 	# install new repo
-	ssh $(SERVER) mv $(ARCHIVE)/$(BASETMP) $(ARCHIVE)/$(BASE)
+	ssh $(SERVER) mv $(RPMSAREA)/$(BASETMP) $(RPMSAREA)/$(BASE)
 	# sign and re-index
 	ssh $(SERVER) chroot /plc/root service plc start packages
 
 install-bootstrap:
 	# install node image
 	install_bz2=$(wildcard BUILD/bootmanager-*/bootmanager/support-files/PlanetLab-Bootstrap.tar.bz2) ; \
-	  if [ -n "$$install_bz2" ] ; then rsync $$install_bz2 $(SERVER):$(BOOT_AREA) ; fi
+	  if [ -n "$$install_bz2" ] ; then rsync $$install_bz2 $(SERVER):$(BOOTAREA) ; fi
 #endif
 
 .PHONY: install
