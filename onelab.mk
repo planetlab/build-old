@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.1 2007/01/27 08:39:38 thierry Exp $
+# $Id: onelab.mk,v 1.2 2007/01/29 09:41:43 thierry Exp $
 #
 
 #
@@ -90,6 +90,15 @@ ALL += madwifi-ng
 
 # Build kernel first so we can bootstrap off of its build
 madwifi-ng: kernel
+
+# 
+# wireless-tools
+# 
+
+wireless-tools-MODULE = wireless-tools
+wireless-tools-SPEC := wireless-tools.spec
+wireless-tools-CVSROOT := /cvs
+ALL += wireless-tools
 
 #
 # ivtv 
