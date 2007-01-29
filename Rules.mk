@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.25 2006/11/28 22:45:05 mef Exp $
+# $Id: Rules.mk,v 1.26 2007/01/23 06:42:44 mlhuang Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -60,9 +60,24 @@ $(patsubst %.tar,%,$(1))))))
 
 SOURCEDIRS := $(call stripext,$(SOURCES))
 
+# Thierry - Jan 29 2007
+# Allow different modules to have  different CVSROOT's
+#
+# is there a single module ? to mimick cvs export -d behaviour
+MULTI_MODULE := $(word 2,$(MODULE))
+ifeq "$(MULTI_MODULE)" ""
+# single module: do as before
 SOURCES/$(package):
 	mkdir -p SOURCES
 	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE)
+else
+# multiple modules : iterate 
+SOURCES/$(package):
+	mkdir -p SOURCES/$(package) && cd SOURCES/$(package) && (\
+	$(foreach module,$(MODULE),\
+	  cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
+         ))
+endif
 
 # Make a hard-linked copy of the exported directory for each Source
 # defined in the spec file. However, our convention is that there
@@ -126,3 +141,13 @@ clean:
 	$(MK) $(SPECFILE)
 
 .PHONY: all clean
+
+#################### convenience, for debugging only
+# make +foo : prints the value of $(foo)
+# make ++foo : idem but verbose, i.e. foo=$(foo)
+++%: varname=$(subst +,,$@)
+++%:
+	@echo $(varname)=$($(varname))
++%: varname=$(subst +,,$@)
++%:
+	@echo $($(varname))
