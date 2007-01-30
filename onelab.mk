@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.3 2007/01/29 11:02:56 thierry Exp $
+# $Id: onelab.mk,v 1.4 2007/01/29 11:09:38 thierry Exp $
 #
 
 #
@@ -402,43 +402,51 @@ myplc: RPMS/yumgroups.xml
 
 # Upload packages to boot server
 SERVER		:= root@onelab-plc.inria.fr
-RPMSAREA	:= /plc/data/var/www/html/install-rpms/
-BOOTAREA	:= /plc/data/var/www/html/boot/
+RPMSAREA	:= /var/www/html/install-rpms/
+BOOTAREA	:= /var/www/html/boot/
 
 YUMGROUPS	:= $(PLDISTRO).xml
 #BASE		:= onelab
-BASETMP		:= planetlab-upgrading
+BASENEW		:= build-$(notdir $(shell pwd))
 BASEBAK		:= planetlab-bak
 BASE		:= planetlab
 
 RPMS/yumgroups.xml:
 	install -D -m 644 $(YUMGROUPS) RPMS/yumgroups.xml
 
-install: install-rpms install-index install-bootstrap
+INSTALL-TARGETS := install-rpms install-index install-adopt install-bootstrap
+install: $(INSTALL-TARGETS)
+
+install-help:
+	@echo install: $(INSTALL-TARGETS)
 
 install-rpms:RPMS/yumgroups.xml
         # create repository
-	ssh $(SERVER) mkdir -p $(RPMSAREA)/$(BASETMP)
+	ssh $(SERVER) mkdir -p /plc/data/$(RPMSAREA)/$(BASENEW)
 	# populate
 	rsync -v --perms --times --group --compress --rsh=ssh \
-	   RPMS/yumgroups.xml $(wildcard RPMS/*/*.rpm) $(SERVER):$(RPMSAREA)/$(BASETMP)/
+	   RPMS/yumgroups.xml $(wildcard RPMS/*/*.rpm) $(SERVER):/plc/data/$(RPMSAREA)/$(BASENEW)/
 
-# would be better if we could run plc.d/packages on a temporary dir
-# currently while we run packages clients wont be able to use the repo (nor signed nor indexed)
 install-index:
+	# sign and index new repository
+	ssh $(SERVER) chroot /plc/root /etc/plc.d/packages start $(RPMSAREA)/$(BASENEW)/ 2>> install-index.log
+
+install-clean-index:
+	# sign and index new repository
+	ssh $(SERVER) chroot /plc/root /etc/plc.d/packages clean $(RPMSAREA)/$(BASENEW)/ 2>> install-index.log
+
+install-adopt:
 	# cleanup former bak
-	ssh $(SERVER) rm -rf $(RPMSAREA)/$(BASEBAK)
+	ssh $(SERVER) rm -rf /plc/data/$(RPMSAREA)/$(BASENEW)
 	# bak previous repo
-	ssh $(SERVER) mv $(RPMSAREA)/$(BASE) $(RPMSAREA)/$(BASEBAK)
+	ssh $(SERVER) mv /plc/data/$(RPMSAREA)/$(BASE) /plc/data/$(RPMSAREA)/$(BASEBAK)
 	# install new repo
-	ssh $(SERVER) mv $(RPMSAREA)/$(BASETMP) $(RPMSAREA)/$(BASE)
-	# sign and re-index
-	ssh $(SERVER) chroot /plc/root service plc start packages
+	ssh $(SERVER) mv /plc/data/$(RPMSAREA)/$(BASENEW) /plc/data/$(RPMSAREA)/$(BASE)
 
 install-bootstrap:
 	# install node image
 	install_bz2=$(wildcard BUILD/bootmanager-*/bootmanager/support-files/PlanetLab-Bootstrap.tar.bz2) ; \
-	  if [ -n "$$install_bz2" ] ; then rsync $$install_bz2 $(SERVER):$(BOOTAREA) ; fi
+	  if [ -n "$$install_bz2" ] ; then rsync $$install_bz2 $(SERVER):/plc/data/$(BOOTAREA) ; fi
 #endif
 
 .PHONY: install
