@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.4 2007/01/29 11:09:38 thierry Exp $
+# $Id: onelab.mk,v 1.5 2007/01/30 15:56:08 thierry Exp $
 #
 
 #
@@ -437,7 +437,7 @@ install-clean-index:
 
 install-adopt:
 	# cleanup former bak
-	ssh $(SERVER) rm -rf /plc/data/$(RPMSAREA)/$(BASENEW)
+	ssh $(SERVER) rm -rf /plc/data/$(RPMSAREA)/$(BASEBAK)
 	# bak previous repo
 	ssh $(SERVER) mv /plc/data/$(RPMSAREA)/$(BASE) /plc/data/$(RPMSAREA)/$(BASEBAK)
 	# install new repo
