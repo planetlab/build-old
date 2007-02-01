@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.41 2007/01/22 04:19:06 mlhuang Exp $
+# $Id: build.sh,v 1.42 2007/01/22 04:45:27 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -121,6 +121,7 @@ cleanup() {
     sudo umount $PLC_ROOT/data/fedora
     sudo umount $PLC_ROOT/data/build
     sudo $BASE/BUILD/myplc-devel-*/myplc/host.init stop
+    sudo chown -h -R $USER $PLC_DATA
 }
 
 trap "cleanup; failure" ERR INT
