@@ -124,6 +124,7 @@
       <packagereq type="mandatory">pl_mom</packagereq>
       <packagereq type="mandatory">PlanetLabAuth</packagereq>
       <packagereq type="mandatory">netflow-utils</packagereq>
+      <packagereq type="mandatory">PLCAPI</packagereq>
     </packagelist>
   </group>
 
