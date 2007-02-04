@@ -54,7 +54,6 @@
       <packagereq type="default">dhclient</packagereq>
       <packagereq type="default">diffutils</packagereq>
       <packagereq type="default">ethtool</packagereq>
-      <packagereq type="default" basearchonly="true">kernel-utils</packagereq>
       <packagereq type="mandatory">logrotate</packagereq>
       <packagereq type="mandatory">lsof</packagereq>
       <packagereq type="default">logwatch</packagereq>
@@ -84,7 +83,6 @@
       <packagereq type="mandatory">curl</packagereq>
       <packagereq type="mandatory">gzip</packagereq>
       <packagereq type="mandatory">iptables</packagereq>
-      <packagereq type="mandatory">lvm</packagereq>
       <packagereq type="mandatory">mkinitrd</packagereq>
       <packagereq type="mandatory">ntp</packagereq>
       <packagereq type="mandatory">perl</packagereq>
