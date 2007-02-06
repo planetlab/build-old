@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: planetlab.mk,v 1.46 2007/02/06 21:33:55 mlhuang Exp $
 #
 
 #
@@ -105,14 +105,6 @@ util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
 util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
-
-#
-# yum
-#
-
-yum-MODULE := yum
-yum-SPEC := yum/yum.spec
-ALL += yum
 
 #
 # PlanetLabAccounts
@@ -275,14 +267,6 @@ kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
 
 #
-# dhcp
-#
-
-dhcp-MODULE := dhcp
-dhcp-SPEC := dhcp/dhcp.spec
-ALL += dhcp
-
-#
 # util-python
 #
 
@@ -294,22 +278,6 @@ ALL += util-python
 proper: util-python
 util-vserver: util-python
 PlanetLabAuth: util-python
-
-#
-# PlanetLabAuth
-#
-
-PlanetLabAuth-MODULE := pl_auth
-PlanetLabAuth-SPEC := pl_auth/pl_auth.spec
-ALL += PlanetLabAuth
-
-#
-# plcapilib
-#
-
-plcapilib-MODULE := plcmdline
-plcapilib-SPEC := plcmdline/plcapilib.spec
-ALL += plcapilib
 
 #
 # PLCAPI
