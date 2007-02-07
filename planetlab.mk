@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.1 2007/02/06 21:35:46 mlhuang Exp $
+# $Id: planetlab.mk,v 1.45.2.2 2007/02/07 22:36:51 mlhuang Exp $
 #
 
 #
@@ -63,25 +63,6 @@ ALL += vnet
 
 # Build kernel first so we can bootstrap off of its build
 vnet: kernel
-
-#
-# madwifi
-#
-
-madwifi-ng-MODULE := madwifi-ng
-madwifi-ng-SPEC := madwifi-ng/madwifi.spec
-ALL += madwifi-ng
-
-# Build kernel first so we can bootstrap off of its build
-madwifi-ng: kernel
-
-#
-# ivtv 
-#
-
-#ivtv-MODULE := ivtv
-#ivtv-SPEC := ivtv/ivtv.spec
-#ALL += ivtv
 
 #
 # util-vserver
