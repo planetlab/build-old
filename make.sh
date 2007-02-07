@@ -1,4 +1,24 @@
 #!/bin/bash
+#
+# make(1) wrapper to build PlanetLab RPMS inside a myplc-devel
+# development environment.
+#
+# 1. $BASE is the build/ directory containing this script.
+# 2. Builds myplc-devel using host tools.
+# 3. Mounts $BASE onto the home directory of the build user inside
+#    myplc-devel.
+# 4. Executes "make" on the specified targets.
+#
+# Can be used to manally restart a build also, e.g.,
+#
+# cd build/nightly/2007.02.07/
+# ./make.sh kernel
+# 
+# Mark Huang <mlhuang@cs.princeton.edu>
+# Copyright (C) 2007 The Trustees of Princeton University
+#
+# $Id: make.sh,v 1.2 2007/02/07 23:49:42 mlhuang Exp $
+#
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
