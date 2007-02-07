@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2005 The Trustees of Princeton University
 #
-# $Id: build.sh,v 1.42 2007/01/22 04:45:27 mlhuang Exp $
+# $Id: build.sh,v 1.43 2007/02/01 16:03:33 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -110,47 +110,8 @@ set -x
 # Checkout build directory
 cvs -d ${CVSROOT} checkout -r ${TAG} -d ${BASE} ${MODULE}
 
-# Build development environment first
-make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} myplc-devel
-
-# Build everything else inside the development environment
-export PLC_ROOT=$(echo $BASE/BUILD/myplc-devel-*/myplc/devel/root)
-export PLC_DATA=$(echo $BASE/BUILD/myplc-devel-*/myplc/devel/data)
-
-cleanup() {
-    sudo umount $PLC_ROOT/data/fedora
-    sudo umount $PLC_ROOT/data/build
-    sudo $BASE/BUILD/myplc-devel-*/myplc/host.init stop
-    sudo chown -h -R $USER $PLC_DATA
-}
-
-trap "cleanup; failure" ERR INT
-
-# Start development environment
-sudo $BASE/BUILD/myplc-devel-*/myplc/host.init start
-
-# Cross mount the current build directory to the build user home directory
-sudo mount -o bind,rw $BASE $PLC_ROOT/data/build
-
-# Also cross mount /data/fedora if it exists
-if [ -d /data/fedora ] ; then
-    sudo mkdir -p $PLC_ROOT/data/fedora
-    sudo mount -o bind,ro /data/fedora $PLC_ROOT/data/fedora
-fi
-
-# Delete .rpmmacros and parseSpec files so that they get regenerated
-# appropriately in the development environment.
-rm -f $BASE/.rpmmacros $BASE/parseSpec
-
-# Enable networking
-sudo cp -f /etc/hosts /etc/resolv.conf $PLC_ROOT/etc/
-
-# Run the rest of the build
-sudo chroot $PLC_ROOT su - build -c "make TAG=\"$TAG\" PLDISTRO=\"$PLDISTRO\""
-
-# Clean up
-cleanup
-trap failure ERR INT
+# Build
+${BASE}/make.sh TAG=${TAG} PLDISTRO=${PLDISTRO}
 
 # Install to boot server
 make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
