@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.4 2007/02/08 00:25:37 mlhuang Exp $
+# $Id: planetlab.mk,v 1.45.2.5 2007/02/08 06:01:33 mlhuang Exp $
 #
 
 #
@@ -398,7 +398,7 @@ endif
 	rsync \
 	--exclude '*-debuginfo-*' \
 	--recursive --links --perms --times --group --compress --rsh=ssh \
-	RPMS $(SERVER):$(ARCHIVE)/$(BASE)
+	RPMS/ $(SERVER):$(ARCHIVE)/$(BASE)
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
 	if ! ssh $(SERVER) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
