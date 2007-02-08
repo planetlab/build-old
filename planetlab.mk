@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45 2007/01/20 04:09:20 mlhuang Exp $
+# $Id: planetlab.mk,v 1.46 2007/02/06 21:33:55 mlhuang Exp $
 #
 
 #
@@ -331,7 +331,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 # MyPLC
 #
 
-myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE)) myplc new_plc_www plc/scripts)
+myplc-MODULE := build myplc new_plc_www plc/scripts
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
