@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.46 2007/02/06 21:33:55 mlhuang Exp $
+# $Id: planetlab.mk,v 1.47 2007/02/08 00:23:45 mlhuang Exp $
 #
 
 #
@@ -359,12 +359,12 @@ ALL += myplc-devel
 
 # Upload packages to boot server
 SERVER := build@boot.planet-lab.org
-ARCHIVE := /var/www/html/install-rpms/archive
+ARCHIVE := /plc/data/var/www/html/install-rpms/archive
 
 # Put nightly alpha builds in a subdirectory
 ifeq ($(TAG),HEAD)
 ARCHIVE := $(ARCHIVE)/planetlab-alpha
-REPOS := /var/www/html/install-rpms/planetlab-alpha
+REPOS := /plc/data/var/www/html/install-rpms/planetlab-alpha
 endif
 
 RPMS/yumgroups.xml:
@@ -383,7 +383,7 @@ ifneq ($(wildcard /etc/planetlab/secring.gpg),)
 	--define "_signature gpg" \
 	--define "_gpg_path /etc/planetlab" \
 	--define "_gpg_name PlanetLab <info@planet-lab.org>" \
-	--resign RPMS/*/*.rpm SRPMS/*.rpm
+	--resign RPMS/*/*.rpm
 endif
 ifneq ($(BUILDS),)
         # Remove old runs
@@ -391,20 +391,18 @@ ifneq ($(BUILDS),)
 endif
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/RPMS" RPMS > packages.xml
+        # Update yum metadata
+	yum-arch RPMS >/dev/null
+	createrepo -g yumgroups.xml RPMS >/dev/null
         # Populate repository
-	ssh $(SERVER) mkdir -p $(ARCHIVE)/$(BASE)/RPMS $(ARCHIVE)/$(BASE)/SRPMS
-	rsync --delete --links --perms --times --group --compress --rsh=ssh \
-	    $(sort $(subst -debuginfo,,$(wildcard RPMS/yumgroups.xml RPMS/*/*.rpm))) $(SERVER):$(ARCHIVE)/$(BASE)/RPMS/
-	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/RPMS >/dev/null
-	ssh $(SERVER) createrepo -g yumgroups.xml $(ARCHIVE)/$(BASE)/RPMS >/dev/null
-	rsync --delete --links --perms --times --group --compress --rsh=ssh \
-	    $(wildcard SRPMS/*.rpm) $(SERVER):$(ARCHIVE)/$(BASE)/SRPMS/
-	ssh $(SERVER) yum-arch $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
-	ssh $(SERVER) createrepo $(ARCHIVE)/$(BASE)/SRPMS >/dev/null
+	rsync \
+	--exclude '*-debuginfo-*' \
+	--recursive --links --perms --times --group --compress --rsh=ssh \
+	RPMS $(SERVER):$(ARCHIVE)/$(BASE)
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
 	if ! ssh $(SERVER) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVER) ln -nsf $(ARCHIVE)/$(BASE)/RPMS/ $(REPOS) ; \
+	    ssh $(SERVER) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
 	fi
 endif
 endif
