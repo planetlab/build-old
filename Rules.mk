@@ -27,10 +27,7 @@ else
         # Define cvstag for tagged builds
 	echo "%define cvstag $(TAG)" >> $@
 endif
-	$(if $($(package)-SVNPATH),\
-  svn cat $($(package)-SVNPATH)/$(SPEC) >> $@,\
-  cvs -d $(CVSROOT) checkout -r $(TAG) -p $(SPEC) >> $@)
-
+	cvs -d $(CVSROOT) checkout -r $(TAG) -p $(SPEC) >> $@
 
 #
 # Parse spec file into Makefile fragment
@@ -64,8 +61,7 @@ $(patsubst %.tar,%,$(1))))))
 SOURCEDIRS := $(call stripext,$(SOURCES))
 
 # Thierry - Jan 29 2007
-# Allow different modules to have  different CVSROOT
-# and/or to be extracted from their SVNPATH
+# Allow different modules to have  different CVSROOT's
 #
 # is there a single module ? to mimick cvs export -d behaviour
 MULTI_MODULE := $(word 2,$(MODULE))
@@ -73,18 +69,14 @@ ifeq "$(MULTI_MODULE)" ""
 # single module: do as before
 SOURCES/$(package):
 	mkdir -p SOURCES
-	$(if $($(package)-SVNPATH),\
-  cd SOURCES && svn export $($(package)-SVNPATH) $(package),\
-  cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE))
+	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE)
 else
 # multiple modules : iterate 
 SOURCES/$(package):
 	mkdir -p SOURCES/$(package) && cd SOURCES/$(package) && (\
 	$(foreach module,$(MODULE),\
-	 $(if $($(module)-SVNPATH, \
-  svn export $($(module)-SVNPATH) $(module), \
-  cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
-         )))
+	  cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
+         ))
 endif
 
 # Make a hard-linked copy of the exported directory for each Source
