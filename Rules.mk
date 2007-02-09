@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.26 2007/01/23 06:42:44 mlhuang Exp $
+# $Id: Rules.mk,v 1.27 2007/01/29 19:18:45 thierry Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -27,7 +27,10 @@ else
         # Define cvstag for tagged builds
 	echo "%define cvstag $(TAG)" >> $@
 endif
-	cvs -d $(CVSROOT) checkout -r $(TAG) -p $(SPEC) >> $@
+	$(if $($(package)-SVNPATH),\
+  svn cat $($(package)-SVNPATH)/$(SPEC) >> $@,\
+  cvs -d $(CVSROOT) checkout -r $(TAG) -p $(SPEC) >> $@)
+
 
 #
 # Parse spec file into Makefile fragment
@@ -61,7 +64,8 @@ $(patsubst %.tar,%,$(1))))))
 SOURCEDIRS := $(call stripext,$(SOURCES))
 
 # Thierry - Jan 29 2007
-# Allow different modules to have  different CVSROOT's
+# Allow different modules to have  different CVSROOT
+# and/or to be extracted from their SVNPATH
 #
 # is there a single module ? to mimick cvs export -d behaviour
 MULTI_MODULE := $(word 2,$(MODULE))
@@ -69,14 +73,18 @@ ifeq "$(MULTI_MODULE)" ""
 # single module: do as before
 SOURCES/$(package):
 	mkdir -p SOURCES
-	cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE)
+	$(if $($(package)-SVNPATH),\
+  cd SOURCES && svn export $($(package)-SVNPATH) $(package),\
+  cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE))
 else
 # multiple modules : iterate 
 SOURCES/$(package):
 	mkdir -p SOURCES/$(package) && cd SOURCES/$(package) && (\
 	$(foreach module,$(MODULE),\
-	  cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
-         ))
+	 $(if $($(module)-SVNPATH, \
+  svn export $($(module)-SVNPATH) $(module), \
+  cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
+         )))
 endif
 
 # Make a hard-linked copy of the exported directory for each Source
