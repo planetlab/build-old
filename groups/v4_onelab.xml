@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+<comps>
+
+  <group>
+    <id>planetlab</id>
+    <name>PlanetLab</name>
+    <default>true</default>
+    <description>PlanetLab Node Packages</description>
+    <uservisible>false</uservisible>
+    <packagelist>
+      <packagereq type="mandatory">basesystem</packagereq>
+      <packagereq type="mandatory">bash</packagereq>
+      <packagereq type="mandatory">coreutils</packagereq>
+      <packagereq type="mandatory">cpio</packagereq>
+      <packagereq type="mandatory">e2fsprogs</packagereq>
+      <packagereq type="mandatory">ed</packagereq>
+      <packagereq type="mandatory">file</packagereq>     
+      <packagereq type="mandatory">filesystem</packagereq>
+      <packagereq type="mandatory">glibc</packagereq>
+      <packagereq type="mandatory">hdparm</packagereq>
+      <packagereq type="mandatory">initscripts</packagereq>
+      <packagereq type="mandatory">iproute</packagereq>
+      <packagereq type="mandatory">iputils</packagereq>
+      <packagereq type="mandatory">kbd</packagereq>
+      <packagereq type="mandatory">kernel</packagereq>
+      <packagereq type="mandatory">libtermcap</packagereq>
+      <packagereq type="mandatory">passwd</packagereq>
+      <packagereq type="mandatory">procps</packagereq>
+      <packagereq type="mandatory">readline</packagereq>
+      <packagereq type="mandatory">fedora-release</packagereq>
+      <packagereq type="mandatory">rootfiles</packagereq>
+      <packagereq type="mandatory">rpm</packagereq>
+      <packagereq type="mandatory">setserial</packagereq>
+      <packagereq type="mandatory">setup</packagereq>
+      <packagereq type="mandatory">sysklogd</packagereq>
+      <packagereq type="mandatory">SysVinit</packagereq>
+      <packagereq type="mandatory">termcap</packagereq>
+      <packagereq type="mandatory">util-linux</packagereq>
+      <packagereq type="mandatory">vim-minimal</packagereq>
+
+      <packagereq type="default">authconfig</packagereq>
+      <packagereq type="default">shadow-utils</packagereq>
+
+      <packagereq type="default">anacron</packagereq>
+      <packagereq type="mandatory">at</packagereq>
+      <packagereq type="default">authconfig</packagereq>
+      <packagereq type="default">autofs</packagereq>
+      <packagereq type="mandatory">bc</packagereq>
+      <packagereq type="mandatory">bind-utils</packagereq>
+      <packagereq type="mandatory">bzip2</packagereq>
+      <packagereq type="mandatory">crontabs</packagereq>
+      <packagereq type="default">dhclient</packagereq>
+      <packagereq type="default">diffutils</packagereq>
+      <packagereq type="default">ethtool</packagereq>
+      <packagereq type="default" basearchonly="true">kernel-utils</packagereq>
+      <packagereq type="mandatory">logrotate</packagereq>
+      <packagereq type="mandatory">lsof</packagereq>
+      <packagereq type="default">logwatch</packagereq>
+      <packagereq type="mandatory">mailcap</packagereq>
+      <packagereq type="default">nano</packagereq>
+      <packagereq type="default">nc</packagereq>
+      <packagereq type="mandatory">netdump</packagereq>
+      <packagereq type="default">openssh-clients</packagereq>
+      <packagereq type="mandatory">parted</packagereq>
+      <packagereq type="mandatory">pciutils</packagereq>
+      <packagereq type="mandatory">psacct</packagereq>
+      <packagereq type="mandatory">quota</packagereq>
+      <packagereq type="default">rsh</packagereq>
+      <packagereq type="default">rsync</packagereq>
+      <packagereq type="default">sendmail</packagereq>
+      <packagereq type="default">sudo</packagereq>
+      <packagereq type="mandatory">telnet</packagereq>
+      <packagereq type="mandatory">traceroute</packagereq>
+      <packagereq type="mandatory">time</packagereq>
+      <packagereq type="mandatory">tmpwatch</packagereq>
+      <packagereq type="default">tcpdump</packagereq>
+      <packagereq type="default">openssh-server</packagereq>
+      <packagereq type="default">vixie-cron</packagereq>
+      <packagereq type="default">wget</packagereq>
+      <packagereq type="default">yum</packagereq>
+
+      <packagereq type="mandatory">curl</packagereq>
+      <packagereq type="mandatory">gzip</packagereq>
+      <packagereq type="mandatory">iptables</packagereq>
+      <packagereq type="mandatory">lvm</packagereq>
+      <packagereq type="mandatory">mkinitrd</packagereq>
+      <packagereq type="mandatory">ntp</packagereq>
+      <packagereq type="mandatory">perl</packagereq>
+      <packagereq type="mandatory">python</packagereq>
+      <packagereq type="mandatory">tar</packagereq>
+      <packagereq type="mandatory">expect</packagereq>
+
+      <packagereq type="mandatory">portmap</packagereq>
+      <packagereq type="mandatory">nfs-utils</packagereq>
+
+      <packagereq type="mandatory">schedutils</packagereq>
+
+      <packagereq type="default">vconfig</packagereq>
+
+      <packagereq type="mandatory">util-vserver</packagereq>
+      <packagereq type="mandatory">util-vserver-build</packagereq>
+      <packagereq type="mandatory">util-vserver-lib</packagereq>
+      <packagereq type="mandatory">util-vserver-core</packagereq>
+      <packagereq type="mandatory">util-vserver-sysv</packagereq>
+      <packagereq type="mandatory">util-vserver-legacy</packagereq>
+      <packagereq type="mandatory">util-vserver-python</packagereq>
+      <packagereq type="mandatory">util-python</packagereq>
+      <packagereq type="mandatory">NodeManager</packagereq>
+      <packagereq type="mandatory">NodeUpdate</packagereq>
+      <packagereq type="mandatory">PLBootServerRequest</packagereq>
+      <packagereq type="mandatory">PlanetLabAccounts</packagereq>
+      <packagereq type="mandatory">PlanetLabConf</packagereq>
+      <packagereq type="mandatory">pycurl</packagereq>
+      <packagereq type="mandatory">vnet</packagereq>
+      <packagereq type="mandatory">hotplug</packagereq>
+      <packagereq type="mandatory">pcmcia-cs</packagereq>
+      <packagereq type="mandatory">madwifi</packagereq>
+      <packagereq type="mandatory">wireless-tools</packagereq>
+
+      <packagereq type="mandatory">PlanetLabID</packagereq>
+      <packagereq type="mandatory">autofs</packagereq>
+      <packagereq type="mandatory">planetlab_sudo</packagereq>
+      <packagereq type="mandatory">pl_sshd</packagereq>
+      <packagereq type="mandatory">ipod</packagereq>
+      <packagereq type="mandatory">vserver-reference</packagereq>
+      <packagereq type="mandatory">vserver-system-packages</packagereq>
+      <packagereq type="mandatory">proper</packagereq>
+      <packagereq type="mandatory">pl_mom</packagereq>
+      <packagereq type="mandatory">PlanetLabAuth</packagereq>
+      <packagereq type="mandatory">netflow-utils</packagereq>
+      <packagereq type="mandatory">PLCAPI</packagereq>
+    </packagelist>
+  </group>
+
+  <group>
+    <id>vserver</id>
+    <name>VServer</name>
+    <uservisible>true</uservisible>
+    <description>VServer Reference Image</description>
+    <packagelist>
+      <packagereq type="mandatory">bash</packagereq>
+      <packagereq type="mandatory">coreutils</packagereq>
+      <packagereq type="mandatory">iputils</packagereq>
+      <packagereq type="mandatory">kernel-vserver</packagereq>
+
+      <packagereq type="mandatory">bzip2</packagereq>
+      <packagereq type="mandatory">crontabs</packagereq>
+      <packagereq type="default">diffutils</packagereq>
+      <packagereq type="mandatory">logrotate</packagereq>
+      <packagereq type="default">openssh-clients</packagereq>
+      <packagereq type="mandatory">passwd</packagereq>
+      <packagereq type="default">rsh</packagereq>
+      <packagereq type="default">rsync</packagereq>
+      <packagereq type="default">sudo</packagereq>
+      <packagereq type="default">tcpdump</packagereq>
+      <packagereq type="mandatory">telnet</packagereq>
+      <packagereq type="mandatory">traceroute</packagereq>
+      <packagereq type="mandatory">time</packagereq>
+      <packagereq type="default">vixie-cron</packagereq>
+      <packagereq type="default">wget</packagereq>
+      <packagereq type="default">yum</packagereq>
+
+      <packagereq type="mandatory">curl</packagereq>
+      <packagereq type="mandatory">gzip</packagereq>
+      <packagereq type="mandatory">perl</packagereq>
+      <packagereq type="mandatory">python</packagereq>
+      <packagereq type="mandatory">tar</packagereq>
+    </packagelist>
+  </group>
+
+  <group>
+    <id>bootcd</id>
+    <name>BootCD</name>
+    <uservisible>true</uservisible>
+    <description>BootCD Image</description>
+    <packagelist>
+      <packagereq type="mandatory">dhclient</packagereq>
+      <packagereq type="mandatory">bash</packagereq>
+      <packagereq type="mandatory">coreutils</packagereq>
+      <packagereq type="mandatory">iputils</packagereq>
+      <packagereq type="mandatory">kernel</packagereq>
+      <packagereq type="mandatory">hotplug</packagereq>
+      <packagereq type="mandatory">pcmcia-cs</packagereq>
+      <packagereq type="mandatory">madwifi</packagereq>
+      <packagereq type="mandatory">wireless-tools</packagereq>
+
+      <packagereq type="mandatory">bzip2</packagereq>
+      <packagereq type="mandatory">crontabs</packagereq>
+      <packagereq type="default">diffutils</packagereq>
+      <packagereq type="mandatory">logrotate</packagereq>
+      <packagereq type="default">openssh-clients</packagereq>
+      <packagereq type="mandatory">passwd</packagereq>
+      <packagereq type="default">rsh</packagereq>
+      <packagereq type="default">rsync</packagereq>
+      <packagereq type="default">sudo</packagereq>
+      <packagereq type="default">tcpdump</packagereq>
+      <packagereq type="mandatory">telnet</packagereq>
+      <packagereq type="mandatory">traceroute</packagereq>
+      <packagereq type="mandatory">time</packagereq>
+      <packagereq type="default">vixie-cron</packagereq>
+      <packagereq type="default">wget</packagereq>
+      <packagereq type="default">yum</packagereq>
+      <packagereq type="mandatory">curl</packagereq>
+      <packagereq type="mandatory">gzip</packagereq>
+      <packagereq type="mandatory">perl</packagereq>
+      <packagereq type="mandatory">python</packagereq>
+      <packagereq type="mandatory">tar</packagereq>
+      <packagereq type="mandatory">pciutils</packagereq>
+      <packagereq type="mandatory">kbd</packagereq>
+      <packagereq type="mandatory">authconfig</packagereq>
+      <packagereq type="mandatory">hdparm</packagereq>
+      <packagereq type="mandatory">lvm</packagereq>
+      <packagereq type="mandatory">lvm2</packagereq>
+      <packagereq type="mandatory">kexec-tools</packagereq>
+      <packagereq type="mandatory">gnupg</packagereq>
+      <packagereq type="mandatory">nano</packagereq>
+      <packagereq type="mandatory">parted</packagereq>
+      <packagereq type="mandatory">pyparted</packagereq>
+      <packagereq type="mandatory">openssh-server</packagereq>
+      <packagereq type="mandatory">openssh-clients</packagereq>
+      <packagereq type="mandatory">ncftp</packagereq>
+      <packagereq type="mandatory">dosfstools</packagereq>
+      <packagereq type="mandatory">dos2unix</packagereq>
+      <packagereq type="mandatory">bind-utils</packagereq>
+      <packagereq type="mandatory">sharutils</packagereq>
+    </packagelist>
+  </group>
+
+</comps>
