@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.6 2007/01/30 17:46:10 thierry Exp $
+# $Id: onelab.mk,v 1.7 2007/02/09 01:16:19 thierry Exp $
 #
 
 #
@@ -373,7 +373,12 @@ SERVER		:= root@onelab-plc.inria.fr
 RPMSAREA	:= /var/www/html/install-rpms/
 BOOTAREA	:= /var/www/html/boot/
 
-YUMGROUPS	:= $(PLDISTRO).xml
+ifeq ($(PLDISTRO),planetlab)
+YUMGROUPS	:= groups/v3_yumgroups.xml
+else
+YUMGROUPS	:= groups/v4_onelab.xml
+endif
+
 #BASE		:= onelab
 BASENEW		:= build-$(notdir $(shell pwd))
 BASEBAK		:= planetlab-bak
