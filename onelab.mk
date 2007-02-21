@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.7 2007/02/09 01:16:19 thierry Exp $
+# $Id: onelab.mk,v 1.8 2007/02/14 08:47:15 thierry Exp $
 #
 
 #
@@ -29,7 +29,9 @@
 #
 
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-TAG := HEAD
+#TAG := HEAD
+# build based on the latest release candidate
+TAG := planetlab-4_0-rc1
 
 # Check if a tag has been checked out
 ifneq ($(wildcard CVS/Root),)
