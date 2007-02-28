@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.5 2007/01/30 15:56:08 thierry Exp $
+# $Id$
 #
 
 #
@@ -29,6 +29,7 @@
 #
 
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+# it's useless to set this here because it's overriden on the command line by nightly-build.sh
 TAG := HEAD
 
 # Check if a tag has been checked out
@@ -96,8 +97,8 @@ madwifi-ng: kernel
 # 
 
 wireless-tools-MODULE = wireless-tools
-wireless-tools-SPEC := wireless-tools/wireless-tools.spec
-wireless-tools-CVSROOT := /cvs
+wireless-tools-SPEC := wireless-tools.spec
+wireless-tools-SVNPATH := file:///svn/wireless-tools/29pre10
 ALL += wireless-tools
 
 #
@@ -116,14 +117,6 @@ util-vserver-MODULE := util-vserver
 util-vserver-SPEC := util-vserver/util-vserver.spec
 util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
-
-#
-# yum
-#
-
-yum-MODULE := yum
-yum-SPEC := yum/yum.spec
-ALL += yum
 
 #
 # PlanetLabAccounts
@@ -286,14 +279,6 @@ kexec-tools-SPEC := kexec-tools/kexec-tools.spec
 ALL += kexec-tools
 
 #
-# dhcp
-#
-
-dhcp-MODULE := dhcp
-dhcp-SPEC := dhcp/dhcp.spec
-ALL += dhcp
-
-#
 # util-python
 #
 
@@ -305,22 +290,6 @@ ALL += util-python
 proper: util-python
 util-vserver: util-python
 PlanetLabAuth: util-python
-
-#
-# PlanetLabAuth
-#
-
-PlanetLabAuth-MODULE := pl_auth
-PlanetLabAuth-SPEC := pl_auth/pl_auth.spec
-ALL += PlanetLabAuth
-
-#
-# plcapilib
-#
-
-plcapilib-MODULE := plcmdline
-plcapilib-SPEC := plcmdline/plcapilib.spec
-ALL += plcapilib
 
 #
 # PLCAPI
@@ -374,7 +343,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 # MyPLC
 #
 
-myplc-MODULE := $(sort $(foreach module,$(ALL),$($(module)-MODULE)) myplc new_plc_www plc/scripts)
+myplc-MODULE := build myplc new_plc_www plc/scripts
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
@@ -405,7 +374,12 @@ SERVER		:= root@onelab-plc.inria.fr
 RPMSAREA	:= /var/www/html/install-rpms/
 BOOTAREA	:= /var/www/html/boot/
 
-YUMGROUPS	:= $(PLDISTRO).xml
+ifeq ($(PLDISTRO),planetlab)
+YUMGROUPS	:= groups/v3_yumgroups.xml
+else
+YUMGROUPS	:= groups/v4_onelab.xml
+endif
+
 #BASE		:= onelab
 BASENEW		:= build-$(notdir $(shell pwd))
 BASEBAK		:= planetlab-bak
