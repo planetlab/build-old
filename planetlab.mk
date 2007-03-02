@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.49 2007/02/08 15:18:08 mlhuang Exp $
+# $Id: planetlab.mk,v 1.45.2.7 2007/02/09 01:34:38 mlhuang Exp $
 #
 
 #
@@ -49,23 +49,9 @@ endif
 # kernel
 #
 
-kernel-x86_64-MODULE := linux-2.6
-kernel-x86_64-RPMFLAGS:= --target x86_64
-kernel-x86_64-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-#ALL += kernel-x86_64
-
-kernel-i686-MODULE := linux-2.6
-kernel-i686-RPMFLAGS:= --target i686
-kernel-i686-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-ALL += kernel-i686
-
-kernel-i586-MODULE := linux-2.6
-kernel-i586-RPMFLAGS:= --target i586
-kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-ALL += kernel-i586
-
-kernel: kernel-i586 kernel-i686
-kernel-clean: kernel-i586-clean kernel-i686-clean
+kernel-MODULE := linux-2.6
+kernel-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
+ALL += kernel
 
 #
 # vnet
@@ -77,25 +63,6 @@ ALL += vnet
 
 # Build kernel first so we can bootstrap off of its build
 vnet: kernel
-
-#
-# madwifi
-#
-
-madwifi-ng-MODULE := madwifi-ng
-madwifi-ng-SPEC := madwifi-ng/madwifi.spec
-ALL += madwifi-ng
-
-# Build kernel first so we can bootstrap off of its build
-madwifi-ng: kernel
-
-#
-# ivtv 
-#
-
-#ivtv-MODULE := ivtv
-#ivtv-SPEC := ivtv/ivtv.spec
-#ALL += ivtv
 
 #
 # util-vserver
@@ -358,8 +325,7 @@ ALL += myplc-devel
 # 
 
 # Upload packages to boot server
-SERVERA := build@boot1.planet-lab.org
-SERVERB := build@boot2.planet-lab.org
+SERVER := build@boot.planet-lab.org
 ARCHIVE := /plc/data/var/www/html/install-rpms/archive
 
 # Put nightly alpha builds in a subdirectory
@@ -388,8 +354,7 @@ ifneq ($(wildcard /etc/planetlab/secring.gpg),)
 endif
 ifneq ($(BUILDS),)
         # Remove old runs
-	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVERA) /bin/bash -s
-	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVERB) /bin/bash -s
+	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVER) /bin/bash -s
 endif
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/RPMS" RPMS > packages.xml
@@ -400,19 +365,11 @@ endif
 	rsync \
 	--exclude '*-debuginfo-*' \
 	--recursive --links --perms --times --group --compress --rsh=ssh \
-	RPMS/ $(SERVERA):$(ARCHIVE)/$(BASE)
-	rsync \
-	--exclude '*-debuginfo-*' \
-	--recursive --links --perms --times --group --compress --rsh=ssh \
-	RPMS/ $(SERVERB):$(ARCHIVE)/$(BASE)
-
+	RPMS/ $(SERVER):$(ARCHIVE)/$(BASE)
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
-	if ! ssh $(SERVERA) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVERA) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
-	fi
-	if ! ssh $(SERVERB) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVERB) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	if ! ssh $(SERVER) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
+	    ssh $(SERVER) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
 	fi
 endif
 endif
