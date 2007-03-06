@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.6 2007/02/08 15:18:37 mlhuang Exp $
+# $Id: planetlab.mk,v 1.45.2.7 2007/03/06 15:52:02 faiyaza Exp $
 #
 
 #
@@ -59,13 +59,15 @@ kernel-i686-RPMFLAGS:= --target i686
 kernel-i686-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
 ALL += kernel-i686
 
-kernel-i586-MODULE := linux-2.6
-kernel-i586-RPMFLAGS:= --target i586
-kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-ALL += kernel-i586
+#kernel-i586-MODULE := linux-2.6
+#kernel-i586-RPMFLAGS:= --target i586
+#kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
+#ALL += kernel-i586
 
-kernel: kernel-i586 kernel-i686
-kernel-clean: kernel-i586-clean kernel-i686-clean
+#kernel: kernel-i586 kernel-i686
+kernel: kernel-i686
+#kernel-clean: kernel-i586-clean kernel-i686-clean
+kernel-clean: kernel-i686-clean
 
 #
 # vnet
