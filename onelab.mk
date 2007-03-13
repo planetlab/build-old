@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.11 2007/03/06 17:04:46 thierry Exp $
+# $Id: onelab.mk,v 1.12 2007/03/06 22:19:16 thierry Exp $
 #
 
 #
@@ -98,7 +98,7 @@ madwifi-ng: kernel
 
 wireless-tools-MODULE = wireless-tools
 wireless-tools-SPEC := wireless-tools.spec
-wireless-tools-SVNPATH := file:///svn/wireless-tools/tags/29pre14
+wireless-tools-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/wireless-tools/tags/29pre14
 ALL += wireless-tools
 
 #
@@ -297,6 +297,7 @@ PlanetLabAuth: util-python
 
 PLCAPI-MODULE := new_plc_api
 PLCAPI-SPEC := new_plc_api/PLCAPI.spec
+PLCAPI-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
 ALL += PLCAPI
 
 #
