@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.12 2007/03/06 22:19:16 thierry Exp $
+# $Id: onelab.mk,v 1.13 2007/03/13 15:53:07 thierry Exp $
 #
 
 #
@@ -296,7 +296,7 @@ PlanetLabAuth: util-python
 #
 
 PLCAPI-MODULE := new_plc_api
-PLCAPI-SPEC := new_plc_api/PLCAPI.spec
+PLCAPI-SPEC := PLCAPI.spec
 PLCAPI-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
 ALL += PLCAPI
 
