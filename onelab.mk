@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.14 2007/03/14 09:14:03 thierry Exp $
+# $Id: onelab.mk,v 1.15 2007/03/16 14:59:47 thierry Exp $
 #
 
 #
@@ -320,6 +320,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 bootmanager-MODULE := bootmanager build
 bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
+bootmanager-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/bootmanager/trunk
 ALL += bootmanager
 
 # bootmanager requires current packages
