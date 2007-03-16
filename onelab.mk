@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.13 2007/03/13 15:53:07 thierry Exp $
+# $Id: onelab.mk,v 1.14 2007/03/14 09:14:03 thierry Exp $
 #
 
 #
@@ -335,6 +335,7 @@ bootmanager: RPMS/yumgroups.xml
 bootcd-MODULE := bootcd build bootmanager
 bootcd-SPEC := bootcd/bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
+bootcd-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/bootcd/trunk
 ALL += bootcd
 
 # bootcd requires current packages
