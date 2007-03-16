@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.15 2007/03/16 14:59:47 thierry Exp $
+# $Id: onelab.mk,v 1.16 2007/03/16 16:07:57 thierry Exp $
 #
 
 #
@@ -23,6 +23,15 @@
 #
 # Add to ALL if you want the package built as part of the default set.
 #
+
+####
+# we do not use TAG directly anymore, and let it to HEAD
+# this because we want the rpm's releases to reflect the date even when a tag is used
+# our build script defines COMMON_TAG that the various components are free to use or not
+ 
+# COMMON_TAG set from the build script
+
+include onelab-tags.mk
 
 #
 # Default values
