@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.17 2007/03/16 19:08:13 thierry Exp $
+# $Id: onelab.mk,v 1.18 2007/03/19 09:18:54 thierry Exp $
 #
 
 #
@@ -326,7 +326,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 #
 
 bootmanager-MODULE := bootmanager build
-bootmanager-SPEC := bootmanager/bootmanager.spec
+bootmanager-SPEC := bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
 ALL += bootmanager
 
@@ -341,7 +341,7 @@ bootmanager: RPMS/yumgroups.xml
 #
 
 bootcd-MODULE := bootcd build bootmanager
-bootcd-SPEC := bootcd/bootcd.spec
+bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
 ALL += bootcd
 
@@ -353,7 +353,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 #
 
 myplc-MODULE := build myplc new_plc_www plc/scripts
-myplc-SPEC := myplc/myplc.spec
+myplc-SPEC := myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
 ALL += myplc
