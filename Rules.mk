@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.30 2007/02/12 09:42:25 thierry Exp $
+# $Id: Rules.mk,v 1.32 2007/03/02 20:53:00 faiyaza Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -82,7 +82,7 @@ SOURCES/$(package):
 	mkdir -p SOURCES/$(package) && cd SOURCES/$(package) && (\
 	$(foreach module,$(MODULE),\
 	 $(if $($(module)-SVNPATH), \
-  svn export $($(module)-SVNPATH) $(module), \
+  svn export $($(module)-SVNPATH) $(module);, \
   cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
          )))
 endif
