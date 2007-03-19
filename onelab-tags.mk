@@ -1,40 +1,47 @@
-> # we do not use TAG directly anymore
-> # this because we want the rpm's releases to reflect the date even when a tag is used
-> # our build script defines $(COMMON_TAG) that the various components are free to use or not
-> 
-# $(COMMON_TAG) set from the build script
+# we do not use TAG directly anymore
+# this because we want the rpm's releases to reflect the date even when a tag is used
+ 
 
-build-tag :=			$(COMMON_TAG)
-linux-2.6-TAG :=		$(COMMON_TAG)
-vnet-TAG :=			$(COMMON_TAG)
-madwifi-ng-TAG := 		$(COMMON_TAG)
-wireless-tools-TAG :=		29pre14
-ivtv-TAG := 			$(COMMON_TAG)
-util-vserver-TAG := 		$(COMMON_TAG)
-PlanetLabAccounts-TAG := 	$(COMMON_TAG)
-NodeUpdate-TAG := 		$(COMMON_TAG)
-PlanetLabConf-TAG := 		$(COMMON_TAG)
-ipod-TAG := 			$(COMMON_TAG)
-sudo-TAG := 			$(COMMON_TAG)
-pycurl-TAG := 			$(COMMON_TAG)
-BootServerRequest-TAG := 	$(COMMON_TAG)
-PlanetLabID-TAG := 		$(COMMON_TAG)
-NodeManager-TAG := 		$(COMMON_TAG)
-pl_sshd-TAG := 			$(COMMON_TAG)
-libhttpd++-TAG := 		$(COMMON_TAG)
-proper-TAG := 			$(COMMON_TAG)
-mysql-TAG := 			$(COMMON_TAG)
-ulogd-TAG := 			$(COMMON_TAG)
-netflow-TAG := 			$(COMMON_TAG)
-pl_mom-TAG := 			$(COMMON_TAG)
-iptables-TAG := 		$(COMMON_TAG)
-iproute2-TAG := 		$(COMMON_TAG)
-kexec-tools-TAG := 		$(COMMON_TAG)
-util-python-TAG := 		$(COMMON_TAG)
-new_plc_api-TAG :=		trunk
-vserver-reference-TAG := 	$(COMMON_TAG)
-bootmanager-TAG :=		trunk
-bootcd-TAG :=			trunk
-myplc-TAG := 			$(COMMON_TAG)
-new_plc_www-TAG := 		$(COMMON_TAG)
-plc/scripts-TAG := 		$(COMMON_TAG)
+CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+
+# this one is special : the boot script (in our case nightly-build.sh) extracts 
+# build from the trunk/HEAD. Then the various modules may need to extract build again,
+# typically when then use mkfedora, and for that purpose they use the following tag.
+build-TAG :=			planetlab-4_0-rc2
+
+linux-2.6-TAG :=		planetlab-4_0-rc2
+vnet-TAG :=			planetlab-4_0-rc2
+madwifi-ng-TAG := 		planetlab-4_0-rc2
+wireless-tools-SVNPATH :=	svn+ssh://build@svn.one-lab.org/svn/wireless-tools/tags/29pre14
+ivtv-TAG := 			planetlab-4_0-rc2
+util-vserver-TAG := 		planetlab-4_0-rc2
+PlanetLabAccounts-TAG := 	planetlab-4_0-rc2
+NodeUpdate-TAG := 		planetlab-4_0-rc2
+PlanetLabConf-TAG := 		planetlab-4_0-rc2
+ipod-TAG := 			planetlab-4_0-rc2
+sudo-TAG := 			planetlab-4_0-rc2
+pycurl-TAG := 			planetlab-4_0-rc2
+BootServerRequest-TAG := 	planetlab-4_0-rc2
+PlanetLabID-TAG := 		planetlab-4_0-rc2
+NodeManager-TAG := 		planetlab-4_0-rc2
+pl_sshd-TAG := 			planetlab-4_0-rc2
+libhttpd++-TAG := 		planetlab-4_0-rc2
+proper-TAG := 			planetlab-4_0-rc2
+mysql-TAG := 			planetlab-4_0-rc2
+ulogd-TAG := 			planetlab-4_0-rc2
+netflow-TAG := 			planetlab-4_0-rc2
+pl_mom-TAG := 			planetlab-4_0-rc2
+iptables-TAG := 		planetlab-4_0-rc2
+iproute2-TAG := 		planetlab-4_0-rc2
+kexec-tools-TAG := 		planetlab-4_0-rc2
+util-python-TAG := 		planetlab-4_0-rc2
+# the build's logic is sometimes confusing. Whether a package mentions a single or multiple modules, 
+# the variable used is different. We define both just in case (as of now only the first one is used)
+PLCAPI-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
+new_plc_api-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
+vserver-reference-TAG := 	planetlab-4_0-rc2
+bootmanager-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootmanager/trunk
+bootcd-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootcd/trunk
+myplc-TAG := 			planetlab-4_0-rc2
+new_plc_www-TAG := 		planetlab-4_0-rc2
+plc/scripts-TAG := 		planetlab-4_0-rc2

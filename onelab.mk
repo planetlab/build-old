@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.16 2007/03/16 16:07:57 thierry Exp $
+# $Id: onelab.mk,v 1.17 2007/03/16 19:08:13 thierry Exp $
 #
 
 #
@@ -31,13 +31,14 @@
  
 # COMMON_TAG set from the build script
 
-include onelab-tags.mk
+TAGSFILE = onelab-tags.mk
+
+include $(TAGSFILE)
 
 #
 # Default values
 #
 
-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 # it's useless to set this here because it's overriden on the command line by nightly-build.sh
 TAG := HEAD
 
@@ -107,7 +108,6 @@ madwifi-ng: kernel
 
 wireless-tools-MODULE = wireless-tools
 wireless-tools-SPEC := wireless-tools.spec
-wireless-tools-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/wireless-tools/tags/29pre14
 ALL += wireless-tools
 
 #
@@ -306,7 +306,6 @@ PlanetLabAuth: util-python
 
 PLCAPI-MODULE := new_plc_api
 PLCAPI-SPEC := PLCAPI.spec
-PLCAPI-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
 ALL += PLCAPI
 
 #
@@ -329,7 +328,6 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 bootmanager-MODULE := bootmanager build
 bootmanager-SPEC := bootmanager/bootmanager.spec
 bootmanager-RPMBUILD := sudo rpmbuild
-bootmanager-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/bootmanager/trunk
 ALL += bootmanager
 
 # bootmanager requires current packages
@@ -345,7 +343,6 @@ bootmanager: RPMS/yumgroups.xml
 bootcd-MODULE := bootcd build bootmanager
 bootcd-SPEC := bootcd/bootcd.spec
 bootcd-RPMBUILD := sudo rpmbuild
-bootcd-SVNPATH := svn+ssh://build@svn.one-lab.org/svn/bootcd/trunk
 ALL += bootcd
 
 # bootcd requires current packages
