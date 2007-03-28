@@ -53,5 +53,5 @@ vserver-reference-TAG := 	planetlab-4_0-rc2
 bootmanager-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootmanager/trunk
 bootcd-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootcd/trunk
 myplc-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/myplc/trunk
-new_plc_www-TAG := 		planetlab-4_0-rc2
+new_plc_www-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/new_plc_www/trunk
 plc/scripts-TAG := 		planetlab-4_0-rc2
