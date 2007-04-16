@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.23 2007/04/16 15:08:08 thierry Exp $
+# $Id: onelab.mk,v 1.24 2007/04/16 15:17:06 thierry Exp $
 #
 
 #
@@ -380,11 +380,11 @@ SOURCES/myplc/myplc:
 
 SOURCES/myplc/myplc/myplc-release: SOURCES/myplc/myplc
 	@echo 'Creating myplc-release'
-	rm $@
-	touch $@
+	rm -f $@
 	(echo -n 'Build date: ' ; date '+%Y.%m.%d') >> $@
 	(echo -n 'Build hostname: ' ; hostname) >> $@
 	(echo -n 'Build location: ' ; pwd) >> $@
+	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx tags file contents" >> $@
 	cat $(TAGSFILE) >> $@
 
 #
