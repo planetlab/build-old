@@ -52,6 +52,9 @@ new_plc_api-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
 vserver-reference-TAG := 	planetlab-4_0-branch
 bootmanager-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootmanager/trunk
 bootcd-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootcd/trunk
-myplc-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/myplc/trunk
+# xxx-ambiguous-xxx
+plcwww-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/new_plc_www/trunk
 new_plc_www-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/new_plc_www/trunk
+# end
+myplc-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/myplc/trunk
 plc/scripts-TAG := 		planetlab-4_0-branch

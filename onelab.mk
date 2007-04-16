@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.18 2007/03/19 09:18:54 thierry Exp $
+# $Id: onelab.mk,v 1.19 2007/03/19 13:26:55 thierry Exp $
 #
 
 #
@@ -347,6 +347,14 @@ ALL += bootcd
 
 # bootcd requires current packages
 bootcd: $(filter-out bootcd,$(ALL))
+
+#
+# plcwww
+#
+
+plcwww-MODULE := new_plc_www
+plcwww-SPEC := plcwww.spec
+ALL += plcwww
 
 #
 # MyPLC
