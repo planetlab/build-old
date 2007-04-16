@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.19 2007/03/19 13:26:55 thierry Exp $
+# $Id: onelab.mk,v 1.20 2007/04/16 12:55:26 thierry Exp $
 #
 
 #
@@ -360,7 +360,7 @@ ALL += plcwww
 # MyPLC
 #
 
-myplc-MODULE := build myplc new_plc_www plc/scripts
+myplc-MODULE := build myplc plc/scripts
 myplc-SPEC := myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo rpmbuild
