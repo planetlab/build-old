@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.24 2007/04/16 15:17:06 thierry Exp $
+# $Id: onelab.mk,v 1.25 2007/04/16 15:28:18 thierry Exp $
 #
 
 #
@@ -96,7 +96,7 @@ vnet: kernel
 #
 
 madwifi-ng-MODULE := madwifi-ng
-madwifi-ng-SPEC := madwifi-ng/madwifi.spec
+madwifi-ng-SPEC := madwifi.spec
 ALL += madwifi-ng
 
 # Build kernel first so we can bootstrap off of its build
@@ -373,12 +373,12 @@ myplc: $(filter-out myplc,$(ALL))
 myplc: RPMS/yumgroups.xml
 
 # we also ship various information on the build in /etc/myplc-release
-myplc: SOURCES/myplc/myplc/myplc-release
+# we cannot store this under SOURCES/myplc 
+# otherwise the code extraction phase does not take place 
+# because it depends on $SOURCES/$(package) as per Rules.mk
+myplc: SOURCES/myplc-release
 
-SOURCES/myplc/myplc:
-	mkdir -p $@
-
-SOURCES/myplc/myplc/myplc-release: SOURCES/myplc/myplc
+SOURCES/myplc-release:
 	@echo 'Creating myplc-release'
 	rm -f $@
 	(echo -n 'Build date: ' ; date '+%Y.%m.%d') >> $@

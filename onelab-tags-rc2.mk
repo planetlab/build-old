@@ -21,7 +21,7 @@ kernel-x86_64-TAG :=		planetlab-4_0-rc2
 kernel-i586-TAG :=		planetlab-4_0-rc2
 # end
 vnet-TAG :=			planetlab-4_0-rc2
-madwifi-ng-TAG := 		planetlab-4_0-rc2
+madwifi-ng-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/madwifi-ng/tags/0.9.3
 wireless-tools-SVNPATH :=	svn+ssh://build@svn.one-lab.org/svn/wireless-tools/tags/29pre14
 ivtv-TAG := 			planetlab-4_0-rc2
 util-vserver-TAG := 		planetlab-4_0-rc2
