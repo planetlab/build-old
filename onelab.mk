@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.21 2007/04/16 13:32:51 thierry Exp $
+# $Id: onelab.mk,v 1.22 2007/04/16 13:59:29 thierry Exp $
 #
 
 #
@@ -377,6 +377,7 @@ myplc: SOURCES/myplc/myplc/myplc-release
 
 SOURCES/myplc/myplc/myplc-release: 
 	@echo 'Creating myplc-release'
+	mkdir -p $(dirname $@)
 	rm $@
 	touch $@
 	(echo -n 'Build date: ' ; date '+%Y.%m.%d') >> $@
