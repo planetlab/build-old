@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.20 2007/04/16 12:55:26 thierry Exp $
+# $Id: onelab.mk,v 1.21 2007/04/16 13:32:51 thierry Exp $
 #
 
 #
@@ -371,6 +371,18 @@ myplc: $(filter-out myplc,$(ALL))
 
 # ...and the yum manifest
 myplc: RPMS/yumgroups.xml
+
+# we also ship various information on the build in /etc/myplc-release
+myplc: SOURCES/myplc/myplc/myplc-release
+
+SOURCES/myplc/myplc/myplc-release: 
+	@echo 'Creating myplc-release'
+	rm $@
+	touch $@
+	(echo -n 'Build date: ' ; date '+%Y.%m.%d') >> $@
+	(echo -n 'Build hostname: ' ; hostname) >> $@
+	(echo -n 'Build location: ' ; pwd) >> $@
+	cat $(TAGSFILE) >> $@
 
 #
 # MyPLC development environment
