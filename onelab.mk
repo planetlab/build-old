@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: onelab.mk,v 1.22 2007/04/16 13:59:29 thierry Exp $
+# $Id: onelab.mk,v 1.23 2007/04/16 15:08:08 thierry Exp $
 #
 
 #
@@ -375,9 +375,11 @@ myplc: RPMS/yumgroups.xml
 # we also ship various information on the build in /etc/myplc-release
 myplc: SOURCES/myplc/myplc/myplc-release
 
-SOURCES/myplc/myplc/myplc-release: 
+SOURCES/myplc/myplc:
+	mkdir -p $@
+
+SOURCES/myplc/myplc/myplc-release: SOURCES/myplc/myplc
 	@echo 'Creating myplc-release'
-	mkdir -p $(dirname $@)
 	rm $@
 	touch $@
 	(echo -n 'Build date: ' ; date '+%Y.%m.%d') >> $@
