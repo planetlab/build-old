@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.52 2007/03/02 20:55:36 faiyaza Exp $
+# $Id: planetlab.mk,v 1.53 2007/03/02 21:12:49 faiyaza Exp $
 #
 
 #
@@ -203,6 +203,14 @@ proper-SPEC := proper/proper.spec
 ALL += proper
 
 proper: libhttpd++
+
+#
+# CoDemux: Port 80 demux
+#
+
+codemux-MODULE := codemux
+codemux-SPEC   := codemux/codemux.spec
+ALL += codemux
 
 #
 # MySQL
