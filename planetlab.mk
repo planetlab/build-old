@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.8 2007/03/06 16:03:20 faiyaza Exp $
+# $Id: planetlab.mk,v 1.45.2.9 2007/05/02 16:21:28 faiyaza Exp $
 #
 
 #
@@ -367,7 +367,8 @@ ALL += myplc-devel
 # 
 
 # Upload packages to boot server
-SERVER := build@boot.planet-lab.org
+SERVERA := build@boot1.planet-lab.org
+SERVERB := build@boot2.planet-lab.org
 ARCHIVE := /plc/data/var/www/html/install-rpms/archive
 
 # Put nightly alpha builds in a subdirectory
@@ -396,7 +397,8 @@ ifneq ($(wildcard /etc/planetlab/secring.gpg),)
 endif
 ifneq ($(BUILDS),)
         # Remove old runs
-	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVER) /bin/bash -s
+	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVERA) /bin/bash -s
+	echo "cd $(ARCHIVE) && ls -t | sed -n $(BUILDS)~1p | xargs rm -rf" | ssh $(SERVERB) /bin/bash -s
 endif
         # Create package manifest
 	sh ./packages.sh -b "http://build.planet-lab.org/$(subst $(HOME)/,,$(shell pwd))/RPMS" RPMS > packages.xml
@@ -407,11 +409,19 @@ endif
 	rsync \
 	--exclude '*-debuginfo-*' \
 	--recursive --links --perms --times --group --compress --rsh=ssh \
-	RPMS/ $(SERVER):$(ARCHIVE)/$(BASE)
+	RPMS/ $(ASERVERA):$(ARCHIVE)/$(BASE)
+	rsync \
+	--exclude '*-debuginfo-*' \
+	--recursive --links --perms --times --group --compress --rsh=ssh \
+	RPMS/ $(SERVERB):$(ARCHIVE)/$(BASE)
+
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
-	if ! ssh $(SERVER) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVER) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	if ! ssh $(SERVERA) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
+	    ssh $(SERVERA) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	fi
+	if ! ssh $(SERVERB) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
+	    ssh $(SERVERB) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
 	fi
 endif
 endif
