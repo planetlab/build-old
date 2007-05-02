@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.7 2007/03/06 15:52:02 faiyaza Exp $
+# $Id: planetlab.mk,v 1.45.2.8 2007/03/06 16:03:20 faiyaza Exp $
 #
 
 #
@@ -328,6 +328,13 @@ ALL += bootcd
 
 # bootcd requires current packages
 bootcd: $(filter-out bootcd,$(ALL))
+
+#
+# CoDemux
+#
+codemux-MODULE := codemux
+codemux-SPEC := codemux/codemux.spec
+ALL += codemux
 
 #
 # MyPLC
