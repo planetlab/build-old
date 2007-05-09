@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.55 2007/05/02 16:21:11 faiyaza Exp $
+# $Id: planetlab.mk,v 1.56 2007/05/04 16:34:33 mef Exp $
 #
 
 #
@@ -377,7 +377,7 @@ REPOS := /plc/data/var/www/html/install-rpms/planetlab-alpha
 endif
 
 RPMS/yumgroups.xml:
-	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
+	install -D -m 644 groups/v4_yumgroups.xml RPMS/yumgroups.xml
 
 install:
 ifeq ($(BASE),)
