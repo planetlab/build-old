@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: onelab.mk,v 1.6.2.1 2007/02/28 19:41:47 faiyaza Exp $
 #
 
 #
@@ -98,7 +98,7 @@ madwifi-ng: kernel
 
 wireless-tools-MODULE = wireless-tools
 wireless-tools-SPEC := wireless-tools.spec
-wireless-tools-SVNPATH := file:///svn/wireless-tools/29pre10
+wireless-tools-SVNPATH := svn:ssh://build@svn.one-lab.org/svn/imports/29pre14
 ALL += wireless-tools
 
 #
