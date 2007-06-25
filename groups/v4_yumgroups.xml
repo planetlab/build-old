@@ -154,6 +154,7 @@
       <packagereq type="mandatory">time</packagereq>
       <packagereq type="default">vixie-cron</packagereq>
       <packagereq type="default">wget</packagereq>
+      <packagereq type="default">which</packagereq>
       <packagereq type="default">yum</packagereq>
 
       <packagereq type="mandatory">curl</packagereq>
