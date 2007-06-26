@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.56 2007/05/04 16:34:33 mef Exp $
+# $Id: planetlab.mk,v 1.57 2007/05/09 20:26:38 faiyaza Exp $
 #
 
 #
@@ -71,12 +71,12 @@ kernel-clean: kernel-i586-clean kernel-i686-clean
 # vnet
 #
 
-vnet-MODULE := vnet
-vnet-SPEC := vnet/vnet.spec
-ALL += vnet
+#vnet-MODULE := vnet
+#vnet-SPEC := vnet/vnet.spec
+#ALL += vnet
 
 # Build kernel first so we can bootstrap off of its build
-vnet: kernel
+#vnet: kernel
 
 #
 # madwifi
