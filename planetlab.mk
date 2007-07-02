@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.58 2007/06/26 17:54:33 faiyaza Exp $
+# $Id: planetlab.mk,v 1.59 2007/06/28 16:46:38 faiyaza Exp $
 #
 
 #
@@ -71,30 +71,30 @@ kernel-clean: kernel-i586-clean kernel-i686-clean
 # vnet
 #
 
-#vnet-MODULE := vnet
-#vnet-SPEC := vnet/vnet.spec
+vnet-MODULE := vnet
+vnet-SPEC := vnet/vnet.spec
 #ALL += vnet
 
 # Build kernel first so we can bootstrap off of its build
-#vnet: kernel
+vnet: kernel
 
 #
 # madwifi
 #
 
-#madwifi-ng-MODULE := madwifi-ng
-#madwifi-ng-SPEC := madwifi-ng/madwifi.spec
+madwifi-ng-MODULE := madwifi-ng
+madwifi-ng-SPEC := madwifi-ng/madwifi.spec
 #ALL += madwifi-ng
 
 # Build kernel first so we can bootstrap off of its build
-#madwifi-ng: kernel
+madwifi-ng: kernel
 
 #
 # ivtv 
 #
 
-#ivtv-MODULE := ivtv
-#ivtv-SPEC := ivtv/ivtv.spec
+ivtv-MODULE := ivtv
+ivtv-SPEC := ivtv/ivtv.spec
 #ALL += ivtv
 
 #
@@ -210,7 +210,7 @@ proper: libhttpd++
 
 codemux-MODULE := codemux
 codemux-SPEC   := codemux/codemux.spec
-ALL += codemux
+#ALL += codemux
 
 #
 # MySQL
