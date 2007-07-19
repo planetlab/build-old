@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Rules.mk,v 1.32 2007/03/02 20:53:00 faiyaza Exp $
+# $Id: Rules.mk,v 1.33 2007/03/19 16:25:04 thierry Exp $
 #
 
 # Base rpmbuild in the current directory
@@ -38,7 +38,7 @@ endif
 
 MK := tmp/$(package).mk
 
-parseSpec: CFLAGS := -g -Wall
+parseSpec: CFLAGS := -g -Wall -D_GNU_SOURCE
 
 parseSpec: LDFLAGS := -lrpm -lrpmbuild
 
