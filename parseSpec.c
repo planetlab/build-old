@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: parseSpec.c,v 1.5 2006/11/28 22:44:31 mef Exp $
+ * $Id: parseSpec.c,v 1.6 2007/01/18 15:55:24 mef Exp $
  */
 
 #include <stdio.h>
@@ -82,6 +82,7 @@ main(int argc, char *argv[])
 	    target = (char*)malloc(alen);
 	    if (target == NULL) return errno;
 	    strncpy(target,argv[args+1],alen);
+	    target[alen]='\0';
 
 	    /* change argc, argv to take out the "--target xxx" */
 	    for (i=args;i<argc;i++) argv[i]=argv[i+2];
