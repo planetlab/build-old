@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: parseSpec.c,v 1.6 2007/01/18 15:55:24 mef Exp $
+ * $Id: parseSpec.c,v 1.7 2007/07/23 15:12:44 mef Exp $
  */
 
 #include <stdio.h>
@@ -79,7 +79,7 @@ main(int argc, char *argv[])
 
 	    /* copy arch component of --target option to target */
 	    alen = strnlen(argv[args+1],32);
-	    target = (char*)malloc(alen);
+	    target = (char*)malloc(alen+1);
 	    if (target == NULL) return errno;
 	    strncpy(target,argv[args+1],alen);
 	    target[alen]='\0';
