@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.59 2007/06/28 16:46:38 faiyaza Exp $
+# $Id: planetlab.mk,v 1.60 2007/07/02 17:44:40 faiyaza Exp $
 #
 
 #
@@ -49,34 +49,21 @@ endif
 # kernel
 #
 
-kernel-x86_64-MODULE := linux-2.6
-kernel-x86_64-RPMFLAGS:= --target x86_64
-kernel-x86_64-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-#ALL += kernel-x86_64
+# Figure out whether we are building on i386 or x86_64 host
+HOSTARCH := $(shell uname -i)
 
-kernel-i686-MODULE := linux-2.6
-kernel-i686-RPMFLAGS:= --target i686
-kernel-i686-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-ALL += kernel-i686
+kernel-$(HOSTARCH)-MODULE := linux-2.6
+kernel-$(HOSTARCH)-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
+ifeq ($(HOSTARCH),i386)
+kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
+else
+kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
+endif
 
-kernel-i586-MODULE := linux-2.6
-kernel-i586-RPMFLAGS:= --target i586
-kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-ALL += kernel-i586
+ALL += kernel-$(HOSTARCH)
 
-kernel: kernel-i586 kernel-i686
-kernel-clean: kernel-i586-clean kernel-i686-clean
-
-#
-# vnet
-#
-
-vnet-MODULE := vnet
-vnet-SPEC := vnet/vnet.spec
-#ALL += vnet
-
-# Build kernel first so we can bootstrap off of its build
-vnet: kernel
+kernel-clean: kernel-$(HOSTARCH)-clean
+kernel: kernel-$(HOSTARCH)
 
 #
 # madwifi
