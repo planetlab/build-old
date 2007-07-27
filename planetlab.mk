@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.60 2007/07/02 17:44:40 faiyaza Exp $
+# $Id: planetlab.mk,v 1.61 2007/07/24 15:20:36 mef Exp $
 #
 
 #
@@ -347,6 +347,14 @@ myplc-devel-SPEC := myplc/myplc-devel.spec
 # Package must be built as root
 myplc-devel-RPMBUILD := sudo rpmbuild
 ALL += myplc-devel
+
+#
+# libnl
+#
+
+libnl-MODULE := libnl
+libnl-SPEC := libnl/libnl.spec
+ALL += libnl
 
 #
 # Installation rules
