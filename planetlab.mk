@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.9 2007/05/02 16:21:28 faiyaza Exp $
+# $Id: planetlab.mk,v 1.45.2.10 2007/05/02 16:24:15 faiyaza Exp $
 #
 
 #
@@ -409,7 +409,7 @@ endif
 	rsync \
 	--exclude '*-debuginfo-*' \
 	--recursive --links --perms --times --group --compress --rsh=ssh \
-	RPMS/ $(ASERVERA):$(ARCHIVE)/$(BASE)
+	RPMS/ $(SERVERA):$(ARCHIVE)/$(BASE)
 	rsync \
 	--exclude '*-debuginfo-*' \
 	--recursive --links --perms --times --group --compress --rsh=ssh \
