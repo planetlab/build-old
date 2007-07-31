@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.61 2007/07/24 15:20:36 mef Exp $
+# $Id: planetlab.mk,v 1.62 2007/07/27 20:08:34 dhozac Exp $
 #
 
 #
@@ -355,6 +355,8 @@ ALL += myplc-devel
 libnl-MODULE := libnl
 libnl-SPEC := libnl/libnl.spec
 ALL += libnl
+
+util-vserver: libnl
 
 #
 # Installation rules
