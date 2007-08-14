@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.62 2007/07/27 20:08:34 dhozac Exp $
+# $Id: planetlab.mk,v 1.63 2007/07/31 14:15:30 dhozac Exp $
 #
 
 #
@@ -413,11 +413,11 @@ endif
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
 	if ! ssh $(SERVERA) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVERA) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	    ssh $(SERVERA) ln -nsf archive/$(BASE) $(REPOS) ; \
 	fi
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
 	if ! ssh $(SERVERB) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVERB) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	    ssh $(SERVERB) ln -nsf archive/$(BASE) $(REPOS) ; \
 	fi
 
 endif
