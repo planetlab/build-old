@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.45.2.10 2007/05/02 16:24:15 faiyaza Exp $
+# $Id: planetlab.mk,v 1.45.2.11 2007/07/27 19:59:24 faiyaza Exp $
 #
 
 #
@@ -378,7 +378,7 @@ REPOS := /plc/data/var/www/html/install-rpms/planetlab-alpha
 endif
 
 RPMS/yumgroups.xml:
-	install -D -m 644 groups/v3_yumgroups.xml RPMS/yumgroups.xml
+	install -D -m 644 groups/v4_yumgroups.xml RPMS/yumgroups.xml
 
 install:
 ifeq ($(BASE),)
@@ -418,10 +418,10 @@ endif
 ifeq ($(TAG),HEAD)
         # Update nightly alpha symlink if it does not exist or is broken, or it is Monday
 	if ! ssh $(SERVERA) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVERA) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	    ssh $(SERVERA) ln -nsf archive/$(BASE) $(REPOS) ; \
 	fi
 	if ! ssh $(SERVERB) "[ -e $(REPOS) ] && exit 0 || exit 1" || [ "$(shell date +%A)" = "Monday" ] ; then \
-	    ssh $(SERVERB) ln -nsf $(ARCHIVE)/$(BASE) $(REPOS) ; \
+	    ssh $(SERVERB) ln -nsf archive/$(BASE) $(REPOS) ; \
 	fi
 endif
 endif
