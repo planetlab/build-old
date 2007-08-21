@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.26 2007/01/20 04:10:04 mlhuang Exp $
+# $Id: mkfedora,v 1.27 2007/08/21 03:41:37 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -24,6 +24,7 @@ verbose=0
 # Default yum repositories to try
 mirrors=(
 file:///data/fedora
+ftp://smoke.cs.princeton.edu/pub/mirrors/fedora
 http://coblitz.codeen.org/coblitz.planet-lab.org/pub/fedora
 ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
 http://coblitz.planet-lab.org/pub/fedora
