@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.86 2006/03/08 21:38:50 mlhuang Exp $
+# $Id: Makefile,v 1.87 2006/08/11 12:28:38 thierry Exp $
 #
 
 # Default target
@@ -38,7 +38,7 @@ $(foreach package,$(ALL),$(package)-clean): %-clean:
 
 # Remove all generated files
 clean:
-	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros tmp parseSpec
+	rm -rf BUILD RPMS SOURCES SPECS SRPMS .rpmmacros tmp parseSpec .rpmbuild.sh
 
 .PHONY: all $(ALL) $(foreach package,$(ALL),$(package)-clean) clean
 

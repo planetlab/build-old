@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.63 2007/07/31 14:15:30 dhozac Exp $
+# $Id: planetlab.mk,v 1.64 2007/08/14 16:16:39 faiyaza Exp $
 #
 
 #
@@ -187,6 +187,7 @@ ALL += libhttpd++
 
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
+proper-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += proper
 
 proper: libhttpd++
@@ -289,7 +290,7 @@ ALL += PLCAPI
 vserver-reference-MODULE := vserver-reference build
 vserver-reference-SPEC := vserver-reference/vserver-reference.spec
 # Package must be built as root
-vserver-reference-RPMBUILD := sudo rpmbuild
+vserver-reference-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += vserver-reference
 
 # vserver-reference may require current packages
@@ -301,7 +302,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 
 bootmanager-MODULE := bootmanager build
 bootmanager-SPEC := bootmanager/bootmanager.spec
-bootmanager-RPMBUILD := sudo rpmbuild
+bootmanager-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += bootmanager
 
 # bootmanager requires current packages
@@ -316,7 +317,7 @@ bootmanager: RPMS/yumgroups.xml
 
 bootcd-MODULE := bootcd build bootmanager
 bootcd-SPEC := bootcd/bootcd.spec
-bootcd-RPMBUILD := sudo rpmbuild
+bootcd-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += bootcd
 
 # bootcd requires current packages
@@ -329,7 +330,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 myplc-MODULE := build myplc new_plc_www plc/scripts
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
-myplc-RPMBUILD := sudo rpmbuild
+myplc-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += myplc
 
 # MyPLC may require current packages
@@ -345,7 +346,7 @@ myplc: RPMS/yumgroups.xml
 myplc-devel-MODULE := build myplc
 myplc-devel-SPEC := myplc/myplc-devel.spec
 # Package must be built as root
-myplc-devel-RPMBUILD := sudo rpmbuild
+myplc-devel-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += myplc-devel
 
 #
