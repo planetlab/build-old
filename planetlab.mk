@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.64 2007/08/14 16:16:39 faiyaza Exp $
+# $Id: planetlab.mk,v 1.65 2007/08/22 14:41:32 mef Exp $
 #
 
 #
@@ -206,7 +206,7 @@ codemux-SPEC   := codemux/codemux.spec
 
 mysql-MODULE := mysql
 mysql-SPEC := mysql/mysql.spec
-ALL += mysql
+#ALL += mysql
 
 #
 # ulogd
@@ -216,7 +216,7 @@ ulogd-MODULE := ulogd
 ulogd-SPEC := ulogd/ulogd.spec
 ALL += ulogd
 
-ulogd: kernel proper mysql
+ulogd: kernel proper #mysql
 
 #
 # netflow
@@ -226,7 +226,7 @@ netflow-MODULE := netflow
 netflow-SPEC := netflow/netflow.spec
 ALL += netflow
 
-netflow: mysql
+netflow: #mysql
 
 #
 # PlanetLab Mom: Cleans up your mess
