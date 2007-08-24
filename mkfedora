@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.28 2007/08/21 03:47:21 mef Exp $
+# $Id: mkfedora,v 1.29 2007/08/24 04:47:00 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -133,16 +133,25 @@ fetch ()
 }
 
 for mirror in "${mirrors[@]}" ; do
-    for baseurl in \
-	$mirror/linux/core/$releasever/$basearch/os \
-	$mirror/linux/$releasever/$basearch/os \
-	$mirror/core/$releasever/$basearch/os \
-	$mirror/$releasever/$basearch/os ; do
-	if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
-	    break
-	fi
-	unset baseurl
-    done
+    if [ $releasever -ge 7 ] ; then
+    	for baseurl in \
+		$mirror/$releasever/Everything/$basearch/os ; do
+		if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
+	    	    break
+		fi
+		unset baseurl
+        done
+    else
+    	for baseurl in \
+		$mirror/linux/core/$releasever/$basearch/os \
+		$mirror/core/$releasever/$basearch/os \
+		$mirror/$releasever/$basearch/os ; do
+		if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
+	    		break
+		fi
+		unset baseurl
+    	done
+    fi
     if [ -n "$baseurl" ] ; then
 	break
     fi
@@ -150,15 +159,23 @@ for mirror in "${mirrors[@]}" ; do
 done
 
 if [ -z "$baseurl" ] ; then
-    echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
-    echo "       could not be found in any of the following locations:"
-    echo
-    for mirror in ${mirrors[@]} ; do
-	echo $mirror/linux/core
-	echo $mirror/linux
-	echo $mirror/core
-	echo $mirror
-    done
+    if [ $releasever -ge 7 ] ; then
+    	echo "Error: $releasever/Everything/$basearch/os/repodata/repomd.xml"
+    	echo "       could not be found in any of the following locations:"
+    	echo
+    	for mirror in ${mirrors[@]} ; do
+		echo $mirror/linux
+    	done
+    else
+    	echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
+    	echo "       could not be found in any of the following locations:"
+    	echo
+    	for mirror in ${mirrors[@]} ; do
+		echo $mirror/linux/core
+		echo $mirror/core
+		echo $mirror
+    	done
+    fi
     echo
     usage
 fi
