@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.29 2007/08/24 04:47:00 mef Exp $
+# $Id: mkfedora,v 1.30 2007/08/24 05:00:14 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -30,6 +30,7 @@ ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
 http://coblitz.planet-lab.org/pub/fedora
 ftp://mirror.stanford.edu/pub/mirrors/fedora
 ftp://rpmfind.net/linux/fedora
+http://fedora.laptop.org/fedora-linux-releases
 )
 
 # Release and architecture to install
