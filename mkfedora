@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.27 2007/08/21 03:41:37 mef Exp $
+# $Id: mkfedora,v 1.28 2007/08/21 03:47:21 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -135,6 +135,7 @@ fetch ()
 for mirror in "${mirrors[@]}" ; do
     for baseurl in \
 	$mirror/linux/core/$releasever/$basearch/os \
+	$mirror/linux/$releasever/$basearch/os \
 	$mirror/core/$releasever/$basearch/os \
 	$mirror/$releasever/$basearch/os ; do
 	if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
@@ -154,6 +155,7 @@ if [ -z "$baseurl" ] ; then
     echo
     for mirror in ${mirrors[@]} ; do
 	echo $mirror/linux/core
+	echo $mirror/linux
 	echo $mirror/core
 	echo $mirror
     done
