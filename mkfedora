@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Builds a Fedora Core reference image. Requires the build server to
+# Builds a Fedora reference image. Requires the build server to
 # host a local yum repository in one of:
 #
 # /usr/share/mirrors/fedora
@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.30 2007/08/24 05:00:14 mef Exp $
+# $Id: mkfedora,v 1.31 2007/08/24 05:01:39 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -267,6 +267,12 @@ rpm --root $vroot --import $baseurl/RPM-GPG-KEY-fedora
 
 # Initialize yum in reference image
 mkdir -p $vroot/var/cache/yum $vroot/var/log
+if [ $releasever -lt 7 ] ; then
+	corename="Core "
+else
+	corename=""
+fi
+
 cat >$vroot/etc/yum.conf <<EOF
 [main]
 cachedir=/var/cache/yum
@@ -284,7 +290,7 @@ gpgcheck=0
 reposdir=/dev/null
 
 [base]
-name=Fedora Core $releasever - $basearch - base
+name=Fedora ${corename}${releasever} - $basearch - base
 baseurl=$baseurl/
 $exclude_kernel
 EOF
@@ -299,7 +305,7 @@ for optional in updates extras ; do
 	    cat >>$vroot/etc/yum.conf <<EOF
 
 [$(basename $optional)]
-name=Fedora Core $releasever - $basearch - $(basename $optional)
+name=Fedora ${corename}${releasever} - $basearch - $(basename $optional)
 baseurl=$optionalurl/
 $exclude_kernel
 EOF
