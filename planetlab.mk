@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.65 2007/08/22 14:41:32 mef Exp $
+# $Id: planetlab.mk,v 1.66 2007/08/22 14:42:27 mef Exp $
 #
 
 #
@@ -148,14 +148,6 @@ ALL += pycurl
 BootServerRequest-MODULE := BootServerRequest
 BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
 ALL += BootServerRequest
-
-#
-# PlanetLabID
-#
-
-PlanetLabID-MODULE := PlanetLabID
-PlanetLabID-SPEC := PlanetLabID/PlanetLabID.spec
-ALL += PlanetLabID
 
 #
 # Node Manager
