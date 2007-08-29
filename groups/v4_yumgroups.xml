@@ -112,7 +112,6 @@
       <packagereq type="mandatory">pycurl</packagereq>
       <packagereq type="mandatory">vnet</packagereq>
       <packagereq type="mandatory">codemux</packagereq>
-      <packagereq type="mandatory">PlanetLabID</packagereq>
       <packagereq type="mandatory">autofs</packagereq>
       <packagereq type="mandatory">planetlab_sudo</packagereq>
       <packagereq type="mandatory">pl_sshd</packagereq>
