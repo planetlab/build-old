@@ -1,0 +1,206 @@
+# -*-Shell-script-*-
+#
+# Common functions for build scripts used by various packages
+# incorporated (e.g., build, myplc, myplc-devel, vserver-reference)
+#
+# Marc E. Fiuczynski <mef@cs.princeton.edu>
+# Copyright (C) 2007 The Trustees of Princeton University
+#
+# $Id:$
+#
+
+function pl_getDefaultFedoraRelease() {
+    # FC4 is currently the default release
+    return 4
+}
+
+function pl_getFedoraRelease() {
+    pl_getDefaultFedoraRelease
+    defaultFedoraRelease=$?
+    if [ -f "/etc/fedora-release" ] ; then
+	fedoraRelease=$(awk ' { if ($2=="Core") print $4; else print $3 } ' /etc/fedora-release)
+	[ $fedoraRelease -lt $defaultFedoraRelease ] && fedoraRelease=$defaultFedoraRelease
+    else
+	fedoraRelease=defaultFedoraRelease
+    fi
+    return $fedoraRelease
+}
+
+# select basearch of the host devel environment
+pl_FEDORA_ARCH=$(uname -i)
+
+# let mkfedora select one of its mirrors
+pl_FEDORA_URL=""
+
+pl_getDefaultFedoraRelease
+pl_FEDORA_RELEASE=$?
+
+# get patch to appropriate yumgroups.xml file
+# XXX This path should be relative to PLDISTRO, as defined in
+# build/Makefile
+pl_YUMGROUPSXML="../build/groups/v4_yumgroups.xml"
+
+function pl_process_fedora_options () {
+    # Get options
+    shiftcount=0
+    while getopts "l:r:a:h" opt ; do
+	case $opt in
+	    l)
+		pl_FEDORA_URL=$OPTARG
+		let shiftcount=$shiftcount+2
+		;;
+	    r)
+		pl_FEDORA_RELEASE=$OPTARG
+		let shiftcount=$shiftcount+2
+		;;
+	    a)
+		pl_FEDORA_ARCH=$OPTARG
+		let shiftcount=$shiftcount+2
+		;;
+	    h|*)
+		echo "Usage: $0 [OPTION]..."
+		echo "	-l url		Fedora mirror location (default: $pl_FEDORA_URL)"
+		echo "	-r release	Fedora release number (default: $pl_FEDORA_RELEASE)"
+		echo "	-a arch		Fedora architecture (default: $pl_FEDORA_ARCH)"
+		echo "	-h		This message"
+		exit 1
+		;;
+	esac
+    done
+    return $shiftcount
+}
+
+function pl_makedevs() {
+    vroot=$1
+    # Clean ${vroot}/dev, but only when ${vroot}!=""
+    [ -n $vroot ] && rm -rf $vroot/dev
+    
+    mkdir -p $vroot/dev
+    mknod -m 666 $vroot/dev/null c 1 3
+    mknod -m 666 $vroot/dev/zero c 1 5
+    mknod -m 666 $vroot/dev/full c 1 7
+    mknod -m 644 $vroot/dev/random c 1 8
+    mknod -m 644 $vroot/dev/urandom c 1 9
+    mknod -m 666 $vroot/dev/tty c 5 0
+    mknod -m 666 $vroot/dev/ptmx c 5 2
+    # For bash command substitution
+    ln -nsf ../proc/self/fd $vroot/dev/fd
+
+    # For df and linuxconf
+    touch $vroot/dev/hdv1
+
+    # For TUN/TAP
+    mkdir -p $vroot/dev/net
+    mknod -m 600 $vroot/dev/net/tun c 10 200
+
+    # For pseudo ttys
+    mkdir -p $vroot/dev/pts
+
+    # for tmpfs mount
+    mkdir -p $vroot/dev/shm
+
+    # For mkinitrd (in case a kernel is being installed)
+    for i in $(seq 0 7) ; do
+	mknod -m 640 $vroot/dev/loop$i b 7 $i
+    done
+}
+
+function pl_mkfedora() {
+    root=$1
+    shift
+    options=$@
+
+    pl_makedevs $root
+
+    [ -n "$pl_FEDORA_URL" ] && options="$options -l $pl_FEDORA_URL"
+    [ -n "$pl_FEDORA_ARCH" ] && options="$options -a $pl_FEDORA_ARCH"
+    [ -n "$pl_FEDORA_RELEASE" ] && options="$options -r $pl_FEDORA_RELEASE"
+    # echo "mkfedora -v $options $root"
+    eval ./mkfedora -v $options $root
+}
+
+function pl_setup_chroot() {
+    root=$1
+    packages=$2
+    groups=$3
+
+    pl_mkfedora $root $packages $groups
+
+    # Disable all services in reference image
+    chroot $root sh -c "/sbin/chkconfig --list | awk '{ print \$1 }' | xargs -i /sbin/chkconfig {} off"
+
+    # FC2 minilogd starts up during shutdown and makes unmounting
+    # impossible. Just get rid of it.
+    rm -f $root/sbin/minilogd
+    ln -nsf /bin/true $root/sbin/minilogd
+
+    # This tells the Boot Manager that it is okay to update
+    # /etc/resolv.conf and /etc/hosts whenever the network configuration
+    # changes. Users are free to delete this file.
+    touch $vroot/etc/AUTO_UPDATE_NET_FILES
+}
+
+# Move specified directories out of a src tree into a dst tree, and
+# then for each moved directory create a symlink in src to dst.
+function pl_move_dirs() {
+    root=$1
+    data=$2
+    store=$3
+    shift 3
+
+    mkdir -p $root/data
+    for datadir in "$@" ; do
+	mkdir -p ${data}${datadir}
+	if [ -d ${root}/${datadir} -a ! -h ${root}/${datadir} ] ; then
+	    (cd ${root} && find ./${datadir} | cpio -p -d -u ../${data}/)
+	fi
+	rm -rf ${root}/${datadir}
+	mkdir -p $(dirname ${root}/${datadir})
+	ln -nsf /${store}/${datadir} ${root}/${datadir}
+    done
+}
+
+# Construct an image file from given some directory
+# XXX in the future maybe use livecdtools?
+function pl_make_image() {
+    root=$1
+    image=$2
+    extraspace=$3
+
+    # Leave about 100 MB free space and allow for about 20% inode overhead
+    bytes=$((($(du -sb $root | cut -f1) + $extraspace) * 120 / 100))
+    bs=4096
+    blocks=$(($bytes / $bs))
+    dd bs=$bs count=$blocks if=/dev/zero of=$image
+    mkfs.ext3 -b $bs -j -F $image
+
+    # Temporarily mount it
+    tmp=$(mktemp -d tmp.XXXXXX)
+    mount -o loop $image $tmp
+    trap "umount $tmp; rmdir $tmp" ERR INT
+
+    # Move files to it
+    (cd $root && tar cpf - .) | (cd $tmp && tar xpf -)
+
+    # Unmount it
+    umount $tmp
+    rmdir $tmp
+    trap - ERR INT
+}
+
+# Fix permissions on tmp directories
+function pl_fixtmp_permissions() {
+    root=$1
+    chmod 1777 $root/tmp $root/usr/tmp $root/var/tmp
+}
+
+function pl_fixdirs() {
+    root=$1
+    datadirs=$2
+    for datadir in datadirs ; do
+	if [ -h ${root}/${datadir} ] ; then
+	    rm -f ${root}/${datadir}
+	    mkdir -p ${root}/${datadir}
+	fi
+    done
+}
