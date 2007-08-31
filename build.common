@@ -6,7 +6,7 @@
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id:$
+# $Id: build.common,v 1.1.2.3 2007/08/30 17:43:08 mef Exp $
 #
 
 function pl_getDefaultFedoraRelease() {
@@ -116,15 +116,15 @@ function pl_mkfedora() {
     [ -n "$pl_FEDORA_ARCH" ] && options="$options -a $pl_FEDORA_ARCH"
     [ -n "$pl_FEDORA_RELEASE" ] && options="$options -r $pl_FEDORA_RELEASE"
     # echo "mkfedora -v $options $root"
-    eval ./mkfedora -v $options $root
+    eval mkfedora -v $options $root
 }
 
 function pl_setup_chroot() {
     root=$1
-    packages=$2
-    groups=$3
+    shift
+    options=$@
 
-    pl_mkfedora $root $packages $groups
+    pl_mkfedora $root $options
 
     # Disable all services in reference image
     chroot $root sh -c "/sbin/chkconfig --list | awk '{ print \$1 }' | xargs -i /sbin/chkconfig {} off"
@@ -204,3 +204,4 @@ function pl_fixdirs() {
 	fi
     done
 }
+
