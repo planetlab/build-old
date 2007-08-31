@@ -6,7 +6,7 @@
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id: build.common,v 1.1.2.3 2007/08/30 17:43:08 mef Exp $
+# $Id: build.common,v 1.2 2007/08/31 02:20:54 mef Exp $
 #
 
 function pl_getDefaultFedoraRelease() {
@@ -21,7 +21,7 @@ function pl_getFedoraRelease() {
 	fedoraRelease=$(awk ' { if ($2=="Core") print $4; else print $3 } ' /etc/fedora-release)
 	[ $fedoraRelease -lt $defaultFedoraRelease ] && fedoraRelease=$defaultFedoraRelease
     else
-	fedoraRelease=defaultFedoraRelease
+	fedoraRelease=$defaultFedoraRelease
     fi
     return $fedoraRelease
 }
@@ -32,7 +32,7 @@ pl_FEDORA_ARCH=$(uname -i)
 # let mkfedora select one of its mirrors
 pl_FEDORA_URL=""
 
-pl_getDefaultFedoraRelease
+pl_getFedoraRelease
 pl_FEDORA_RELEASE=$?
 
 # get patch to appropriate yumgroups.xml file
