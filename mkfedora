@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.31 2007/08/24 05:01:39 mef Exp $
+# $Id: mkfedora,v 1.32.2.1 2007/08/30 16:39:01 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -188,34 +188,11 @@ if [ $verbose -eq 0 ] ; then
     exec 2>/dev/null
 fi
 
-# Minimally initialize /dev in reference image. If installed, the dev
-# or udev RPMs will fill in the rest.
-mkdir -p $vroot/dev
-mknod -m 666 $vroot/dev/null c 1 3
-mknod -m 666 $vroot/dev/zero c 1 5
-mknod -m 666 $vroot/dev/full c 1 7
-mknod -m 644 $vroot/dev/random c 1 8
-mknod -m 644 $vroot/dev/urandom c 1 9
-mknod -m 666 $vroot/dev/tty c 5 0
-mknod -m 666 $vroot/dev/ptmx c 5 2
-# For bash command substitution
-ln -nsf ../proc/self/fd $vroot/dev/fd
-# For df and linuxconf
-touch $vroot/dev/hdv1
-# For mkinitrd (in case a kernel is being installed)
-for i in $(seq 0 7) ; do
-    mknod -m 640 $vroot/dev/loop$i b 7 $i
-done
-
 # Do not tolerate errors
 set -e
 
-# Mount /dev/pts in reference image
-mkdir -p $vroot/dev/pts
+# Mount /dev/pts and /dev/shm in reference image
 mount -t devpts none $vroot/dev/pts
-
-# Mount /dev/shm in reference image
-mkdir -p $vroot/dev/shm
 mount -t tmpfs none $vroot/dev/shm
 
 # Mount /proc in reference image
