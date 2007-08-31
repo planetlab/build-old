@@ -7,10 +7,12 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2006 The Trustees of Princeton University
 #
-# $Id: mkbuild,v 1.1 2006/07/06 14:30:07 mlhuang Exp $
+# $Id: mkbuild,v 1.2.4.1 2007/08/30 16:39:00 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+
+. build.common
 
 # Verbosity
 verbose=0
@@ -149,7 +151,7 @@ if [ -n "$vroot" ] ; then
 	options="$options -p \"$package\""
     done
 
-    eval ./mkfedora $options $vroot
+    pl_mkfedora $vroot $options
 else
     # Install for real
     echo "* Installing optional packages" >&3
