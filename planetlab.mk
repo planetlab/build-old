@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.66 2007/08/22 14:42:27 mef Exp $
+# $Id: planetlab.mk,v 1.67 2007/08/29 19:20:37 faiyaza Exp $
 #
 
 #
@@ -137,9 +137,16 @@ ALL += sudo
 # pycurl
 #
 
+curl_vernum := $(shell printf %d 0x$(shell curl-config --vernum))
+pycurl_vernum := $(shell printf %d 0x070d01) # 7.13.1
+pycurl_incompatnum := $(shell printf %d 0x071000) # 7.16.0
+ifeq ($(shell test $(curl_vernum) -ge $(pycurl_vernum) && echo 1),1)
+ifeq ($(shell test $(curl_vernum) -ge $(pycurl_incompatnum) && echo 0),1)
 pycurl-MODULE := pycurl
 pycurl-SPEC := pycurl/pycurl.spec
 ALL += pycurl
+endif
+endif
 
 #
 # BootServerRequest
