@@ -155,7 +155,7 @@
       <packagereq type="default">vixie-cron</packagereq>
       <packagereq type="default">wget</packagereq>
       <packagereq type="default">which</packagereq>
-      <packagereq type="default">jre-6u1-linux</packagereq>
+      <packagereq type="mandatory">jre-6u1-linux</packagereq>
       <packagereq type="default">yum</packagereq>
 
       <packagereq type="mandatory">curl</packagereq>
