@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.67 2007/08/29 19:20:37 faiyaza Exp $
+# $Id: planetlab.mk,v 1.67.2.5 2007/09/06 21:01:20 mef Exp $
 #
 
 #
@@ -283,6 +283,14 @@ PLCAPI-SPEC := new_plc_api/PLCAPI.spec
 ALL += PLCAPI
 
 #
+# PLCWWW
+#
+
+PLCWWW-MODULE := new_plc_www
+PLCWWW-SPEC := new_plc_www/PLCWWW.spec
+ALL += PLCWWW
+
+#
 # vserver-reference
 #
 
@@ -348,6 +356,21 @@ myplc-devel-SPEC := myplc/myplc-devel.spec
 myplc-devel-RPMBUILD := sudo sh .rpmbuild.sh
 ALL += myplc-devel
 
+#
+# MyPLC native
+#
+
+myplc-native-MODULE := build myplc plc/scripts
+myplc-native-SPEC := myplc/myplc-native.spec
+# Package must be built as root
+myplc-native-RPMBUILD := sudo sh .rpmbuild.sh
+ALL += myplc-native
+
+# MyPLC may require current packages
+myplc-native: $(filter-out myplc,$(ALL))
+
+# ...and the yum manifest
+myplc-native: RPMS/yumgroups.xml
 #
 # libnl
 #
