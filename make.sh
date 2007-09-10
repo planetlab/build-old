@@ -17,7 +17,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id$
+# $Id: make.sh,v 1.2 2007/02/07 23:49:42 mlhuang Exp $
 #
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -45,6 +45,11 @@ trap "cleanup" ERR INT
 
 # Start development environment
 sudo $BASE/BUILD/myplc-devel-*/myplc/host.init start
+
+# Make sure "build" user has proper sudoers setup
+if [ $(sudo grep "build.*ALL=(ALL).*NOPASSWD:.*ALL" $PLC_ROOT/etc/sudoers | wc -l) -eq 0 ] ; then
+	sudo echo "build ALL=(ALL) NOPASSWD: ALL" >> $PLC_ROOT/etc/sudoers
+fi
 
 # Cross mount the current build directory to the build user home directory
 sudo mount -o bind,rw $BASE $PLC_ROOT/data/build
