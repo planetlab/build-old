@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.67.2.5 2007/09/06 21:01:20 mef Exp $
+# $Id: planetlab.mk,v 1.69 2007/09/06 21:02:43 mef Exp $
 #
 
 #
@@ -186,7 +186,7 @@ ALL += libhttpd++
 
 proper-MODULE := proper
 proper-SPEC := proper/proper.spec
-proper-RPMBUILD := sudo sh .rpmbuild.sh
+proper-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += proper
 
 proper: libhttpd++
@@ -297,7 +297,7 @@ ALL += PLCWWW
 vserver-reference-MODULE := vserver-reference build
 vserver-reference-SPEC := vserver-reference/vserver-reference.spec
 # Package must be built as root
-vserver-reference-RPMBUILD := sudo sh .rpmbuild.sh
+vserver-reference-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += vserver-reference
 
 # vserver-reference may require current packages
@@ -309,7 +309,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 
 bootmanager-MODULE := bootmanager build
 bootmanager-SPEC := bootmanager/bootmanager.spec
-bootmanager-RPMBUILD := sudo sh .rpmbuild.sh
+bootmanager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += bootmanager
 
 # bootmanager requires current packages
@@ -324,7 +324,7 @@ bootmanager: RPMS/yumgroups.xml
 
 bootcd-MODULE := bootcd build bootmanager
 bootcd-SPEC := bootcd/bootcd.spec
-bootcd-RPMBUILD := sudo sh .rpmbuild.sh
+bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += bootcd
 
 # bootcd requires current packages
@@ -337,7 +337,7 @@ bootcd: $(filter-out bootcd,$(ALL))
 myplc-MODULE := build myplc new_plc_www plc/scripts
 myplc-SPEC := myplc/myplc.spec
 # Package must be built as root
-myplc-RPMBUILD := sudo sh .rpmbuild.sh
+myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc
 
 # MyPLC may require current packages
@@ -353,7 +353,7 @@ myplc: RPMS/yumgroups.xml
 myplc-devel-MODULE := build myplc
 myplc-devel-SPEC := myplc/myplc-devel.spec
 # Package must be built as root
-myplc-devel-RPMBUILD := sudo sh .rpmbuild.sh
+myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc-devel
 
 #
@@ -363,7 +363,7 @@ ALL += myplc-devel
 myplc-native-MODULE := build myplc plc/scripts
 myplc-native-SPEC := myplc/myplc-native.spec
 # Package must be built as root
-myplc-native-RPMBUILD := sudo sh .rpmbuild.sh
+myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc-native
 
 # MyPLC may require current packages
