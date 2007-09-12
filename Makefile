@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: Makefile,v 1.88 2007/08/22 14:41:32 mef Exp $
+# $Id: Makefile,v 1.89 2007/09/12 20:26:20 mef Exp $
 #
 
 # Default target
@@ -18,7 +18,7 @@ PLDISTRO := planetlab
 
 include $(PLDISTRO).mk
 
-RPMBUILD ?= rpmbuild
+RPMBUILD ?= bash ./rpmbuild.sh
 CVS_RSH ?= ssh
 
 ifeq ($(findstring $(package),$(ALL)),)
