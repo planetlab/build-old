@@ -1,6 +1,5 @@
 .cvsps
 .rpmmacros
-.rpmbuild.sh
 BUILD
 RPMS
 SOURCES
