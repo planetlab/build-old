@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id$
+# $Id: mkfedora,v 1.26 2007/01/20 04:10:04 mlhuang Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -202,9 +202,9 @@ mount -t proc none $vroot/proc
 
 cleanup ()
 {
-    umount $vroot/proc
-    umount $vroot/dev/shm
-    umount $vroot/dev/pts
+    umount -l $vroot/proc
+    umount -l $vroot/dev/shm
+    umount -l $vroot/dev/pts
 }
 
 # Clean up before exiting if anything goes wrong
