@@ -6,7 +6,7 @@
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id: build.common,v 1.2 2007/08/31 02:20:54 mef Exp $
+# $Id: build.common,v 1.3 2007/08/31 03:17:34 mef Exp $
 #
 
 function pl_getDefaultFedoraRelease() {
@@ -89,17 +89,20 @@ function pl_makedevs() {
     # For df and linuxconf
     touch $vroot/dev/hdv1
 
-    # For TUN/TAP
-    mkdir -p $vroot/dev/net
-    mknod -m 600 $vroot/dev/net/tun c 10 200
-
     # For pseudo ttys
     mkdir -p $vroot/dev/pts
+
+    # (Might have to remove the following for vserver-reference.)
 
     # for tmpfs mount
     mkdir -p $vroot/dev/shm
 
+    # For TUN/TAP
+    mkdir -p $vroot/dev/net
+    mknod -m 600 $vroot/dev/net/tun c 10 200
+
     # For mkinitrd (in case a kernel is being installed)
+    # As well for loop back mounting within a vserver. 
     for i in $(seq 0 7) ; do
 	mknod -m 640 $vroot/dev/loop$i b 7 $i
     done
@@ -183,7 +186,7 @@ function pl_make_image() {
     (cd $root && tar cpf - .) | (cd $tmp && tar xpf -)
 
     # Unmount it
-    umount $tmp
+    umount -l $tmp
     rmdir $tmp
     trap - ERR INT
 }
