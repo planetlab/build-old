@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.32.2.1 2007/08/30 16:39:01 mef Exp $
+# $Id: mkfedora,v 1.33 2007/08/31 02:23:08 mef Exp $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -201,9 +201,9 @@ mount -t proc none $vroot/proc
 
 cleanup ()
 {
-    umount $vroot/proc
-    umount $vroot/dev/shm
-    umount $vroot/dev/pts
+    umount -l $vroot/proc
+    umount -l $vroot/dev/shm
+    umount -l $vroot/dev/pts
 }
 
 # Clean up before exiting if anything goes wrong
@@ -379,6 +379,10 @@ if [ -f $vroot/usr/share/zoneinfo/UTC -a -f $vroot/etc/localtime ] ; then
     rm -f $vroot/etc/localtime
     ln -s /usr/share/zoneinfo/UTC $vroot/etc/localtime
 fi
+
+
+# remove trap handler, as we are about to call it directly.
+trap - ERR INT
 
 # Clean up
 cleanup
