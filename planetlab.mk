@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk,v 1.69 2007/09/06 21:02:43 mef Exp $
+# $Id: planetlab.mk,v 1.70 2007/09/12 20:26:20 mef Exp $
 #
 
 #
@@ -97,9 +97,9 @@ ALL += util-vserver
 # PlanetLabAccounts
 #
 
-PlanetLabAccounts-MODULE := PlanetLabAccounts
-PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
-ALL += PlanetLabAccounts
+#PlanetLabAccounts-MODULE := PlanetLabAccounts
+#PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
+#ALL += PlanetLabAccounts
 
 #
 # NodeUpdate
