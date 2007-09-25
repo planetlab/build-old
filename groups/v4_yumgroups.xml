@@ -108,7 +108,6 @@
       <packagereq type="mandatory">NodeManager</packagereq>
       <packagereq type="mandatory">NodeUpdate</packagereq>
       <packagereq type="mandatory">PLBootServerRequest</packagereq>
-      <packagereq type="mandatory">PlanetLabAccounts</packagereq>
       <packagereq type="mandatory">pycurl</packagereq>
       <packagereq type="mandatory">vnet</packagereq>
       <packagereq type="mandatory">codemux</packagereq>
@@ -120,7 +119,6 @@
       <packagereq type="mandatory">vserver-system-packages</packagereq>
       <packagereq type="mandatory">proper</packagereq>
       <packagereq type="mandatory">pl_mom</packagereq>
-      <packagereq type="mandatory">PlanetLabAuth</packagereq>
       <packagereq type="mandatory">netflow-utils</packagereq>
       <packagereq type="mandatory">PyXML</packagereq>
     </packagelist>
