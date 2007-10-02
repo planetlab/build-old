@@ -29,6 +29,7 @@
 #
 
 CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+SVNROOT := http://svn.planet-lab.org/svn
 TAG := HEAD
 
 # Check if a tag has been checked out
