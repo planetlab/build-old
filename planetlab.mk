@@ -227,9 +227,9 @@ ulogd: kernel proper #mysql
 # netflow
 #
 
-netflow-MODULE := netflow
-netflow-SPEC := netflow/netflow.spec
-ALL += netflow
+NetFlow-MODULE := NetFlow
+NetFlow-SPEC := NetFlow/netflow.spec
+ALL += NetFlow
 
 netflow: #mysql
 
@@ -287,6 +287,13 @@ ALL += util-python
 proper: util-python
 util-vserver: util-python
 #PlanetLabAuth: util-python
+
+#
+# vsys
+#
+vsys-MODULE := vsys
+vsys-SPEC := vsys/vsys.spec
+ALL += vsys
 
 #
 # PLCAPI
