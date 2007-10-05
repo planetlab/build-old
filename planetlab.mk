@@ -299,8 +299,8 @@ ALL += vsys
 # PLCAPI
 #
 
-PLCAPI-MODULE := new_plc_api
-PLCAPI-SPEC := new_plc_api/PLCAPI.spec
+PLCAPI-MODULE := PLCAPI
+PLCAPI-SPEC := PLCAPI/PLCAPI.spec
 ALL += PLCAPI
 
 #
