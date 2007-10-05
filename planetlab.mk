@@ -132,19 +132,21 @@ ALL += PingOfDeath
 #ALL += sudo
 
 #
-# pycurl
+# pycurl:  DEPRECATE
+#
+# [tony] use FC6+ release
 #
 
-curl_vernum := $(shell printf %d 0x$(shell curl-config --vernum))
-pycurl_vernum := $(shell printf %d 0x070d01) # 7.13.1
-pycurl_incompatnum := $(shell printf %d 0x071000) # 7.16.0
-ifeq ($(shell test $(curl_vernum) -ge $(pycurl_vernum) && echo 1),1)
-ifeq ($(shell test $(curl_vernum) -ge $(pycurl_incompatnum) && echo 0),1)
-pycurl-MODULE := pycurl
-pycurl-SPEC := pycurl/pycurl.spec
-ALL += pycurl
-endif
-endif
+#curl_vernum := $(shell printf %d 0x$(shell curl-config --vernum))
+#pycurl_vernum := $(shell printf %d 0x070d01) # 7.13.1
+#pycurl_incompatnum := $(shell printf %d 0x071000) # 7.16.0
+#ifeq ($(shell test $(curl_vernum) -ge $(pycurl_vernum) && echo 1),1)
+#ifeq ($(shell test $(curl_vernum) -ge $(pycurl_incompatnum) && echo 0),1)
+#pycurl-MODULE := pycurl
+#pycurl-SPEC := pycurl/pycurl.spec
+#ALL += pycurl
+#endif
+#endif
 
 #
 # BootServerRequest
