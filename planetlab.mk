@@ -149,13 +149,16 @@ ALL += PingOfDeath
 #endif
 
 #
-# BootServerRequest
+# BootServerRequest:  DEPRECATE
+#
+# Not used by anything.
 #
 
-BootServerRequest-MODULE := BootServerRequest
-BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
-ALL += BootServerRequest
-
+#BootServerRequest-MODULE := BootServerRequest
+#BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
+#ALL += BootServerRequest
+#
+#
 #
 # Node Manager
 #
