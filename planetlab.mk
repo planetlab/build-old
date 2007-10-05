@@ -286,7 +286,7 @@ ALL += util-python
 # proper and util-vserver both use scripts in util-python for building
 proper: util-python
 util-vserver: util-python
-PlanetLabAuth: util-python
+#PlanetLabAuth: util-python
 
 #
 # PLCAPI
