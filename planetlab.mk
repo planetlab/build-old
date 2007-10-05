@@ -66,24 +66,25 @@ ALL += kernel-$(HOSTARCH)
 kernel-clean: kernel-$(HOSTARCH)-clean
 kernel: kernel-$(HOSTARCH)
 
-#
-# madwifi
-#
 
-madwifi-ng-MODULE := madwifi-ng
-madwifi-ng-SPEC := madwifi-ng/madwifi.spec
-#ALL += madwifi-ng
-
-# Build kernel first so we can bootstrap off of its build
-madwifi-ng: kernel
-
-#
-# ivtv 
-#
-
-ivtv-MODULE := ivtv
-ivtv-SPEC := ivtv/ivtv.spec
-#ALL += ivtv
+###  Why are we building these??  -F
+### madwifi
+###
+##
+###madwifi-ng-MODULE := madwifi-ng
+###madwifi-ng-SPEC := madwifi-ng/madwifi.spec
+###ALL += madwifi-ng
+##
+### Build kernel first so we can bootstrap off of its build
+###madwifi-ng: kernel
+##
+###
+### ivtv 
+###
+##
+###ivtv-MODULE := ivtv
+###ivtv-SPEC := ivtv/ivtv.spec
+###ALL += ivtv
 
 #
 # util-vserver
@@ -103,7 +104,9 @@ NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
 ALL += NodeUpdate
 
 #
-# PlanetLabConf
+# PlanetLabConf:  DEPRECATED.  
+#
+# conf_files does the same thing in NM
 #
 
 #PlanetLabConf-MODULE := PlanetLabConf
@@ -114,17 +117,19 @@ ALL += NodeUpdate
 # ipod
 #
 
-ipod-MODULE := ipod
-ipod-SPEC := ipod/ipod.spec
-ALL += ipod
+PingOfDeath-MODULE := PingOfDeath
+PingOfDeath-SPEC := PingOfDeath/ipod.spec
+ALL += PingOfDeath
 
 #
-# sudo
+# sudo:  DEPRECATED
+#
+# Added functionality provided by this package to www/PlanetLabConf/sudoers.
 #
 
-sudo-MODULE := sudo
-sudo-SPEC := sudo/planetlab_sudo.spec
-ALL += sudo
+#sudo-MODULE := sudo
+#sudo-SPEC := sudo/planetlab_sudo.spec
+#ALL += sudo
 
 #
 # pycurl
@@ -167,6 +172,9 @@ ALL += pl_sshd
 
 #
 # libhttpd++: 
+#
+# Deprecate when vsys takes over [sapan].
+# keep in build for proper.
 #
 
 libhttpd++-MODULE := libhttpd++
@@ -224,9 +232,9 @@ netflow: #mysql
 # PlanetLab Mom: Cleans up your mess
 #
 
-pl_mom-MODULE := pl_mom
-pl_mom-SPEC := pl_mom/pl_mom.spec
-ALL += pl_mom
+MoM-MODULE := MoM
+MoM-SPEC := MoM/pl_mom.spec
+ALL += MoM
 
 #
 # iptables
@@ -247,15 +255,23 @@ iproute-SPEC := iproute2/iproute.spec
 ALL += iproute
 
 #
-# kexec-tools
+# kexec-tools:  DEPRECATE
+#
+# [marc]    use FC6+ release
 #
 
-kexec-tools-MODULE := kexec-tools
-kexec-tools-SPEC := kexec-tools/kexec-tools.spec
-ALL += kexec-tools
+#kexec-tools-MODULE := kexec-tools
+#kexec-tools-SPEC := kexec-tools/kexec-tools.spec
+#ALL += kexec-tools
 
 #
 # util-python
+#
+# [marc]    deprecate server.py
+#
+# I dont know what the above means...  Daniel says we need to seperate util-vserver from
+# pl specific utilities (vuseradd, etc) which may or may not include vserver.py.  Until then,
+# I'm keeping this in the build.  -F
 #
 
 util-python-MODULE := util-python
@@ -287,64 +303,64 @@ ALL += PLCWWW
 # vserver-reference
 #
 
-vserver-reference-MODULE := vserver-reference build
-vserver-reference-SPEC := vserver-reference/vserver-reference.spec
+VserverReference-MODULE := VserverReference build
+VserverReference-SPEC := VserverReference/vserver-reference.spec
 # Package must be built as root
-vserver-reference-RPMBUILD := sudo bash ./rpmbuild.sh
-ALL += vserver-reference
+VserverReference-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += VserverReference
 
 # vserver-reference may require current packages
 vserver-reference: $(filter-out vserver-reference,$(ALL))
 
 #
-# bootmanager
+# BootManager
 #
 
-bootmanager-MODULE := bootmanager build
-bootmanager-SPEC := bootmanager/bootmanager.spec
-bootmanager-RPMBUILD := sudo bash ./rpmbuild.sh
-ALL += bootmanager
+BootManager-MODULE := BootManager build
+BootManager-SPEC := BootManager/BootManager.spec
+BootManager-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += BootManager
 
-# bootmanager requires current packages
-bootmanager: $(filter-out bootmanager,$(ALL))
+# BootManager requires current packages
+BootManager: $(filter-out BootManager,$(ALL))
 
 # ...and the yum manifest
-bootmanager: RPMS/yumgroups.xml
+BootManager: RPMS/yumgroups.xml
 
 #
-# bootcd
+# BootCD
 #
 
-bootcd-MODULE := bootcd build bootmanager
-bootcd-SPEC := bootcd/bootcd.spec
-bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
-ALL += bootcd
+BootCD-MODULE := BootCD build bootmanager
+BootCD-SPEC := BootCD/BootCD.spec
+BootCD-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += BootCD
 
-# bootcd requires current packages
-bootcd: $(filter-out bootcd,$(ALL))
+# BootCD requires current packages
+BootCD: $(filter-out BootCD,$(ALL))
 
 #
 # MyPLC
 #
 
-myplc-MODULE := build myplc new_plc_www plc/scripts
-myplc-SPEC := myplc/myplc.spec
+MyPLC-MODULE := build MyPLC new_plc_www plc/scripts
+MyPLC-SPEC := MyPLC/myplc.spec
 # Package must be built as root
-myplc-RPMBUILD := sudo bash ./rpmbuild.sh
-ALL += myplc
+MyPLC-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += MyPLC
 
 # MyPLC may require current packages
-myplc: $(filter-out myplc,$(ALL))
+MyPLC: $(filter-out MyPLC,$(ALL))
 
 # ...and the yum manifest
-myplc: RPMS/yumgroups.xml
+MyPLC: RPMS/yumgroups.xml
 
 #
 # MyPLC development environment
 #
 
 myplc-devel-MODULE := build myplc
-myplc-devel-SPEC := myplc/myplc-devel.spec
+myplc-devel-SPEC := MyPLC/myplc-devel.spec
 # Package must be built as root
 myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc-devel
@@ -353,19 +369,25 @@ ALL += myplc-devel
 # MyPLC native
 #
 
-myplc-native-MODULE := build myplc plc/scripts
-myplc-native-SPEC := myplc/myplc-native.spec
+myplc-native-MODULE := build MyPLC plc/scripts
+myplc-native-SPEC := MyPLC/myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc-native
 
 # MyPLC may require current packages
-myplc-native: $(filter-out myplc,$(ALL))
+myplc-native: $(filter-out MyPLC,$(ALL))
 
 # ...and the yum manifest
 myplc-native: RPMS/yumgroups.xml
+
+
 #
 # libnl
+#
+# [daniel]    wait for latest Fedora release 
+# (03:29:46 PM) daniel_hozac: interfacing with the kernel directly when dealing with netlink was fugly, so... i had to find something nicer.
+# (03:29:53 PM) daniel_hozac: the one in Fedora is lacking certain APIs i need.
 #
 
 libnl-MODULE := libnl
