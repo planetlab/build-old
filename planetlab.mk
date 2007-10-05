@@ -284,8 +284,9 @@ util-python-SPEC := util-python/util-python.spec
 ALL += util-python
 
 # proper and util-vserver both use scripts in util-python for building
+# [dhozac]  Not anymore.  util-vserver uses automake and no longer needs util-python
 proper: util-python
-util-vserver: util-python
+#util-vserver: util-python
 #PlanetLabAuth: util-python
 
 #
