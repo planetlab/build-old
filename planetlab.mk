@@ -307,8 +307,8 @@ ALL += PLCAPI
 # PLCWWW
 #
 
-PLCWWW-MODULE := new_plc_www
-PLCWWW-SPEC := new_plc_www/PLCWWW.spec
+PLCWWW-MODULE := WWW
+PLCWWW-SPEC := WWW/PLCWWW.spec
 ALL += PLCWWW
 
 #
