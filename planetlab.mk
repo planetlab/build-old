@@ -106,9 +106,9 @@ ALL += NodeUpdate
 # PlanetLabConf
 #
 
-PlanetLabConf-MODULE := PlanetLabConf
-PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
-ALL += PlanetLabConf
+#PlanetLabConf-MODULE := PlanetLabConf
+#PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
+#ALL += PlanetLabConf
 
 #
 # ipod
