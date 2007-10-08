@@ -11,15 +11,19 @@
 # Required:
 #
 # CVSROOT or package-CVSROOT: CVSROOT to use
-# TAG or package-TAG: CVS tag to use
-# package-MODULE: CVS module name to use
+# or
+# SVNPATH or package-SVNPATH: SVNPATH to use
+# Note: do not define both CVSROOT and SVNPATH
+#
+# TAG or package-TAG: CVS/SVN tag to use
+# package-MODULE: CVS/SVN module name to use
 # package-SPEC: RPM spec file template
 #
 # Optional:
 #
 # package-RPMFLAGS: Miscellaneous RPM flags
 # package-RPMBUILD: If not rpmbuild
-# package-CVS_RSH: If not ssh
+# package-CVS_RSH: If not ssh for cvs
 #
 # Add to ALL if you want the package built as part of the default set.
 #
@@ -28,9 +32,11 @@
 # Default values
 #
 
-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-SVNROOT := http://svn.planet-lab.org/svn
-TAG := HEAD
+#CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+#TAG := HEAD
+
+SVNPATH := https://svn.planet-lab.org/svn
+TAG := trunk
 
 # Check if a tag has been checked out
 ifneq ($(wildcard CVS/Root),)
@@ -54,7 +60,7 @@ endif
 HOSTARCH := $(shell uname -i)
 
 kernel-$(HOSTARCH)-MODULE := linux-2.6
-kernel-$(HOSTARCH)-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
+kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
 ifeq ($(HOSTARCH),i386)
 kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
 else
@@ -91,7 +97,7 @@ kernel: kernel-$(HOSTARCH)
 #
 
 util-vserver-MODULE := util-vserver
-util-vserver-SPEC := util-vserver/util-vserver.spec
+util-vserver-SPEC := util-vserver.spec
 util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
 
@@ -100,7 +106,7 @@ ALL += util-vserver
 #
 
 NodeUpdate-MODULE := NodeUpdate
-NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
+NodeUpdate-SPEC := NodeUpdate.spec
 ALL += NodeUpdate
 
 #
@@ -118,7 +124,7 @@ ALL += NodeUpdate
 #
 
 PingOfDeath-MODULE := PingOfDeath
-PingOfDeath-SPEC := PingOfDeath/ipod.spec
+PingOfDeath-SPEC := ipod.spec
 ALL += PingOfDeath
 
 #
@@ -164,7 +170,7 @@ ALL += PingOfDeath
 #
 
 NodeManager-MODULE := NodeManager
-NodeManager-SPEC := NodeManager/NodeManager.spec
+NodeManager-SPEC := NodeManager.spec
 ALL += NodeManager
 
 #
@@ -172,7 +178,7 @@ ALL += NodeManager
 #
 
 pl_sshd-MODULE := pl_sshd
-pl_sshd-SPEC := pl_sshd/pl_sshd.spec
+pl_sshd-SPEC := pl_sshd.spec
 ALL += pl_sshd
 
 #
@@ -183,7 +189,7 @@ ALL += pl_sshd
 #
 
 libhttpd++-MODULE := libhttpd++
-libhttpd++-SPEC := libhttpd++/libhttpd++.spec
+libhttpd++-SPEC := libhttpd++.spec
 ALL += libhttpd++
 
 #
@@ -191,7 +197,7 @@ ALL += libhttpd++
 #
 
 proper-MODULE := proper
-proper-SPEC := proper/proper.spec
+proper-SPEC := proper.spec
 proper-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += proper
 
@@ -202,7 +208,7 @@ proper: libhttpd++
 #
 
 codemux-MODULE := codemux
-codemux-SPEC   := codemux/codemux.spec
+codemux-SPEC   := codemux.spec
 #ALL += codemux
 
 #
@@ -210,7 +216,7 @@ codemux-SPEC   := codemux/codemux.spec
 #
 
 mysql-MODULE := mysql
-mysql-SPEC := mysql/mysql.spec
+mysql-SPEC := mysql.spec
 #ALL += mysql
 
 #
@@ -218,7 +224,7 @@ mysql-SPEC := mysql/mysql.spec
 #
 
 ulogd-MODULE := ulogd
-ulogd-SPEC := ulogd/ulogd.spec
+ulogd-SPEC := ulogd.spec
 ALL += ulogd
 
 ulogd: kernel proper #mysql
@@ -228,7 +234,7 @@ ulogd: kernel proper #mysql
 #
 
 NetFlow-MODULE := NetFlow
-NetFlow-SPEC := NetFlow/netflow.spec
+NetFlow-SPEC := netflow.spec
 ALL += NetFlow
 
 netflow: #mysql
@@ -238,7 +244,7 @@ netflow: #mysql
 #
 
 MoM-MODULE := MoM
-MoM-SPEC := MoM/pl_mom.spec
+MoM-SPEC := pl_mom.spec
 ALL += MoM
 
 #
@@ -246,7 +252,7 @@ ALL += MoM
 #
 
 iptables-MODULE := iptables
-iptables-SPEC := iptables/iptables.spec
+iptables-SPEC := iptables.spec
 ALL += iptables
 
 iptables: kernel
@@ -256,7 +262,7 @@ iptables: kernel
 #
 
 iproute-MODULE := iproute2
-iproute-SPEC := iproute2/iproute.spec
+iproute-SPEC := iproute.spec
 ALL += iproute
 
 #
@@ -280,7 +286,7 @@ ALL += iproute
 #
 
 util-python-MODULE := util-python
-util-python-SPEC := util-python/util-python.spec
+util-python-SPEC := util-python.spec
 ALL += util-python
 
 # proper and util-vserver both use scripts in util-python for building
@@ -293,7 +299,7 @@ proper: util-python
 # vsys
 #
 vsys-MODULE := vsys
-vsys-SPEC := vsys/vsys.spec
+vsys-SPEC := vsys.spec
 ALL += vsys
 
 #
@@ -301,7 +307,7 @@ ALL += vsys
 #
 
 PLCAPI-MODULE := PLCAPI
-PLCAPI-SPEC := PLCAPI/PLCAPI.spec
+PLCAPI-SPEC := PLCAPI.spec
 ALL += PLCAPI
 
 #
@@ -309,7 +315,7 @@ ALL += PLCAPI
 #
 
 PLCWWW-MODULE := WWW
-PLCWWW-SPEC := WWW/PLCWWW.spec
+PLCWWW-SPEC := PLCWWW.spec
 ALL += PLCWWW
 
 #
@@ -317,7 +323,7 @@ ALL += PLCWWW
 #
 
 VserverReference-MODULE := VserverReference build
-VserverReference-SPEC := VserverReference/vserver-reference.spec
+VserverReference-SPEC := vserver-reference.spec
 # Package must be built as root
 VserverReference-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += VserverReference
@@ -330,7 +336,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 #
 
 BootManager-MODULE := BootManager build
-BootManager-SPEC := BootManager/BootManager.spec
+BootManager-SPEC := BootManager.spec
 BootManager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootManager
 
@@ -345,7 +351,7 @@ BootManager: RPMS/yumgroups.xml
 #
 
 BootCD-MODULE := BootCD build bootmanager
-BootCD-SPEC := BootCD/BootCD.spec
+BootCD-SPEC := BootCD.spec
 BootCD-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootCD
 
@@ -356,8 +362,8 @@ BootCD: $(filter-out BootCD,$(ALL))
 # MyPLC
 #
 
-MyPLC-MODULE := build MyPLC new_plc_www plc/scripts
-MyPLC-SPEC := MyPLC/myplc.spec
+MyPLC-MODULE := MyPLC build new_plc_www plc/scripts
+MyPLC-SPEC := myplc.spec
 # Package must be built as root
 MyPLC-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += MyPLC
@@ -372,8 +378,8 @@ MyPLC: RPMS/yumgroups.xml
 # MyPLC development environment
 #
 
-myplc-devel-MODULE := build myplc
-myplc-devel-SPEC := MyPLC/myplc-devel.spec
+myplc-devel-MODULE := MyPLC build 
+myplc-devel-SPEC := myplc-devel.spec
 # Package must be built as root
 myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc-devel
@@ -382,8 +388,8 @@ ALL += myplc-devel
 # MyPLC native
 #
 
-myplc-native-MODULE := build MyPLC plc/scripts
-myplc-native-SPEC := MyPLC/myplc-native.spec
+myplc-native-MODULE := MyPLC build plc/scripts
+myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += myplc-native
@@ -396,6 +402,15 @@ myplc-native: RPMS/yumgroups.xml
 
 
 #
+# MyPLC native
+#
+
+myplc-devel-native-SVNPATH := https://svn.planet-lab.org/svn/MyPLC/trunk
+myplc-devel-native-MODULE := MyPLC
+myplc-devel-native-SPEC := myplc-devel-native.spec
+ALL += myplc-devel-native
+
+#
 # libnl
 #
 # [daniel]    wait for latest Fedora release 
@@ -404,7 +419,7 @@ myplc-native: RPMS/yumgroups.xml
 #
 
 libnl-MODULE := libnl
-libnl-SPEC := libnl/libnl.spec
+libnl-SPEC := libnl.spec
 ALL += libnl
 
 util-vserver: libnl

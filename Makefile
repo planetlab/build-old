@@ -48,6 +48,7 @@ else
 CVSROOT := $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT))
 TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
+SVNPATH := $(if $($(package)-SVNPATH),$($(package)-SVNPATH),$(SVNPATH))
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $(if $($(package)-RPMFLAGS),$($(package)-RPMFLAGS),$(RPMFLAGS))
 RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),$(RPMBUILD))

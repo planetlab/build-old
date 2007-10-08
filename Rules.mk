@@ -27,10 +27,13 @@ else
         # Define cvstag for tagged builds
 	echo "%define cvstag $(TAG)" >> $@
 endif
-	$(if $($(package)-SVNPATH),\
-  svn cat $($(package)-SVNPATH)/$(SPEC) >> $@,\
-  cvs -d $(CVSROOT) checkout -r $(TAG) -p $(SPEC) >> $@)
+	$(if $(CVSROOT),\
+	  cvs -d $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT)) checkout -r $(TAG) -p $(MODULE)/$(SPEC) >> $@; \
+	)
 
+	$(if $(SVNPATH),\
+	  svn cat $(if $($(package)-SVNPATAH),$($(package)-SVNPATH),$(SVNPATH))/$(MODULE)/$(TAG)/$(SPEC) >> $@; \
+	)
 
 #
 # Parse spec file into Makefile fragment
@@ -73,18 +76,24 @@ ifeq "$(MULTI_MODULE)" ""
 # single module: do as before
 SOURCES/$(package):
 	mkdir -p SOURCES
-	$(if $($(package)-SVNPATH),\
-  cd SOURCES && svn export $($(package)-SVNPATH) $(package),\
-  cd SOURCES && cvs -d $(CVSROOT) export -r $(TAG) -d $(package) $(MODULE))
+	$(if $(CVSROOT),\
+	  cd SOURCES && cvs -d $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT)) export -r $(TAG) -d $(package) $(MODULE);\
+	)
+	$(if $(SVNPATH),\
+	  cd SOURCES && svn export $(if $($(package)-SVNPATH),$($(package)-SVNPATH),$(SVNPATH))/$(MODULE)/$(TAG) $(package);\
+	)
 else
 # multiple modules : iterate 
 SOURCES/$(package):
 	mkdir -p SOURCES/$(package) && cd SOURCES/$(package) && (\
 	$(foreach module,$(MODULE),\
-	 $(if $($(module)-SVNPATH), \
-  svn export $($(module)-SVNPATH) $(module);, \
-  cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
-         )))
+	  $(if $(CVSROOT), \
+		cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
+	   )
+	  $(if $(SVNPATH), \
+		svn export $(if $($(module)-SVNPATH),$($(module)-SVNPATH),$(SVNPATH))/$(module)/$(TAG) $(module);\
+	   )
+	))
 endif
 
 # Make a hard-linked copy of the exported directory for each Source
