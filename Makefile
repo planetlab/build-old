@@ -45,10 +45,10 @@ clean:
 else
 
 # Define variables for Rules.mk
-CVSROOT := $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT))
+#CVSROOT := $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT))
+#SVNPATH := $(if $($(package)-SVNPATH),$($(package)-SVNPATH),$(SVNPATH))
 TAG := $(if $($(package)-TAG),$($(package)-TAG),$(TAG))
 MODULE := $($(package)-MODULE)
-SVNPATH := $(if $($(package)-SVNPATH),$($(package)-SVNPATH),$(SVNPATH))
 SPEC := $($(package)-SPEC)
 RPMFLAGS := $(if $($(package)-RPMFLAGS),$($(package)-RPMFLAGS),$(RPMFLAGS))
 RPMBUILD := $(if $($(package)-RPMBUILD),$($(package)-RPMBUILD),$(RPMBUILD))
