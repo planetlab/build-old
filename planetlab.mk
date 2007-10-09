@@ -59,6 +59,8 @@ endif
 # Figure out whether we are building on i386 or x86_64 host
 HOSTARCH := $(shell uname -i)
 
+kernel-$(HOSTARCH)-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+kernel-$(HOSTARCH)-TAG := HEAD
 kernel-$(HOSTARCH)-MODULE := linux-2.6
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
 ifeq ($(HOSTARCH),i386)
@@ -207,9 +209,10 @@ proper: libhttpd++
 # CoDemux: Port 80 demux
 #
 
-codemux-MODULE := codemux
-codemux-SPEC   := codemux.spec
-#ALL += codemux
+CoDemux-MODULE := CoDemux
+CoDemux-SPEC   := codemux.spec
+CoDemux-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += CoDemux
 
 #
 # MySQL
@@ -243,9 +246,9 @@ netflow: #mysql
 # PlanetLab Mom: Cleans up your mess
 #
 
-MoM-MODULE := MoM
-MoM-SPEC := pl_mom.spec
-ALL += MoM
+Mom-MODULE := Mom
+Mom-SPEC := pl_mom.spec
+ALL += Mom
 
 #
 # iptables
@@ -292,15 +295,19 @@ ALL += util-python
 # proper and util-vserver both use scripts in util-python for building
 # [dhozac]  Not anymore.  util-vserver uses automake and no longer needs util-python
 proper: util-python
+
 #util-vserver: util-python
 #PlanetLabAuth: util-python
 
+
+# vsys does not compile when ocaml rpm is installed.  Need to fix include path
+# so that it compiles.  Sapan will need to fix this.
 #
 # vsys
 #
 vsys-MODULE := vsys
 vsys-SPEC := vsys.spec
-ALL += vsys
+# ALL += vsys
 
 #
 # PLCAPI
@@ -350,26 +357,26 @@ BootManager: RPMS/yumgroups.xml
 # BootCD
 #
 
-BootCD-MODULE := BootCD build bootmanager
-BootCD-SPEC := BootCD.spec
+BootCD-MODULE := BootCD build BootManager
+BootCD-SPEC := bootcd.spec
 BootCD-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootCD
 
 # BootCD requires current packages
-BootCD: $(filter-out BootCD,$(ALL))
+# BootCD: $(filter-out BootCD,$(ALL))
 
 #
 # MyPLC
 #
 
-MyPLC-MODULE := MyPLC build new_plc_www plc/scripts
+MyPLC-MODULE := MyPLC build WWW
 MyPLC-SPEC := myplc.spec
 # Package must be built as root
 MyPLC-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += MyPLC
 
 # MyPLC may require current packages
-MyPLC: $(filter-out MyPLC,$(ALL))
+#MyPLC: $(filter-out MyPLC,$(ALL))
 
 # ...and the yum manifest
 MyPLC: RPMS/yumgroups.xml
@@ -388,7 +395,7 @@ ALL += myplc-devel
 # MyPLC native
 #
 
-myplc-native-MODULE := MyPLC build plc/scripts
+myplc-native-MODULE := MyPLC build
 myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
@@ -405,7 +412,6 @@ myplc-native: RPMS/yumgroups.xml
 # MyPLC native
 #
 
-myplc-devel-native-SVNPATH := https://svn.planet-lab.org/svn/MyPLC/trunk
 myplc-devel-native-MODULE := MyPLC
 myplc-devel-native-SPEC := myplc-devel-native.spec
 ALL += myplc-devel-native
