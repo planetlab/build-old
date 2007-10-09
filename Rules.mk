@@ -16,6 +16,13 @@ export CVSROOT CVS_RSH
 #
 
 SPECFILE := SPECS/$(notdir $(SPEC))
+MULTI_MODULE := $(word 2,$(MODULE))
+# is there a single module ? to mimick cvs export -d behaviour
+ifeq "$(MULTI_MODULE)" ""
+	_MAINMODULE := $(MODULE)
+else
+	_MAINMODULE := $(firstword $(MODULE))
+endif 
 
 $(SPECFILE):
 	mkdir -p SPECS
@@ -28,11 +35,11 @@ else
 	echo "%define cvstag $(TAG)" >> $@
 endif
 	$(if $(CVSROOT),\
-	  cvs -d $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT)) checkout -r $(TAG) -p $(MODULE)/$(SPEC) >> $@; \
+	  cvs -d $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT)) checkout -r $(TAG) -p $(_MAINMODULE)/$(SPEC) >> $@; \
 	)
 
 	$(if $(SVNPATH),\
-	  svn cat $(if $($(package)-SVNPATAH),$($(package)-SVNPATH),$(SVNPATH))/$(MODULE)/$(TAG)/$(SPEC) >> $@; \
+	  svn cat $(if $($(package)-SVNPATAH),$($(package)-SVNPATH),$(SVNPATH))/$(_MAINMODULE)/$(TAG)/$(SPEC) >> $@; \
 	)
 
 #
@@ -71,29 +78,22 @@ SOURCEDIRS := $(call stripext,$(SOURCES))
 # and/or to be extracted from their SVNPATH
 #
 # is there a single module ? to mimick cvs export -d behaviour
-MULTI_MODULE := $(word 2,$(MODULE))
 ifeq "$(MULTI_MODULE)" ""
 # single module: do as before
 SOURCES/$(package):
-	mkdir -p SOURCES
-	$(if $(CVSROOT),\
-	  cd SOURCES && cvs -d $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT)) export -r $(TAG) -d $(package) $(MODULE);\
-	)
-	$(if $(SVNPATH),\
-	  cd SOURCES && svn export $(if $($(package)-SVNPATH),$($(package)-SVNPATH),$(SVNPATH))/$(MODULE)/$(TAG) $(package);\
+	mkdir -p SOURCES && cd SOURCES && (\
+	 $(if $(CVSROOT), cvs -d $(if $($(package)-CVSROOT),$($(package)-CVSROOT),$(CVSROOT)) export -r $(TAG) -d $(package) $(MODULE);) \
+	 $(if $(SVNPATH), svn export $(if $($(package)-SVNPATH),$($(package)-SVNPATH),$(SVNPATH))/$(MODULE)/$(TAG) $(package) ;) \
 	)
 else
 # multiple modules : iterate 
 SOURCES/$(package):
 	mkdir -p SOURCES/$(package) && cd SOURCES/$(package) && (\
-	$(foreach module,$(MODULE),\
-	  $(if $(CVSROOT), \
-		cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);\
-	   )
-	  $(if $(SVNPATH), \
-		svn export $(if $($(module)-SVNPATH),$($(module)-SVNPATH),$(SVNPATH))/$(module)/$(TAG) $(module);\
-	   )
-	))
+	 $(foreach module,$(MODULE),\
+	  $(if $(CVSROOT), cvs -d $(if $($(module)-CVSROOT),$($(module)-CVSROOT),$(CVSROOT)) export -r $(TAG)  $(module);)\
+	  $(if $(SVNPATH), svn export $(if $($(module)-SVNPATH),$($(module)-SVNPATH),$(SVNPATH))/$(module)/$(TAG) $(module);)\
+	 )\
+        )
 endif
 
 # Make a hard-linked copy of the exported directory for each Source
