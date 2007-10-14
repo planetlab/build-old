@@ -343,7 +343,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 #
 
 BootManager-MODULE := BootManager build
-BootManager-SPEC := BootManager.spec
+BootManager-SPEC := bootmanager.spec
 BootManager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootManager
 
