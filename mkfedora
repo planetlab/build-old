@@ -209,6 +209,12 @@ cleanup ()
 # Clean up before exiting if anything goes wrong
 trap "cleanup" ERR INT
 
+# Create a /var/lib dirs for yum & rpm
+mkdir -p $vroot/var/lib/yum
+mkdir -p $vroot/var/lib/rpm
+
+
+
 # Create a dummy /etc/fstab in reference image
 mkdir -p $vroot/etc
 cat >$vroot/etc/fstab <<EOF
