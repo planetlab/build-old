@@ -236,11 +236,11 @@ ulogd: kernel proper #mysql
 # netflow
 #
 
-NetFlow-MODULE := NetFlow
-NetFlow-SPEC := netflow.spec
-ALL += NetFlow
+PlanetFlow-MODULE := PlanetFlow
+PlanetFlow-SPEC := netflow.spec
+ALL += PlantFlow
 
-netflow: #mysql
+PlanetFlow: #mysql
 
 #
 # PlanetLab Mom: Cleans up your mess
