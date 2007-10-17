@@ -238,7 +238,7 @@ ulogd: kernel proper #mysql
 
 PlanetFlow-MODULE := PlanetFlow
 PlanetFlow-SPEC := netflow.spec
-ALL += PlantFlow
+ALL += PlanetFlow
 
 PlanetFlow: #mysql
 
