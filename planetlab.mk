@@ -59,9 +59,7 @@ endif
 # Figure out whether we are building on i386 or x86_64 host
 HOSTARCH := $(shell uname -i)
 
-kernel-$(HOSTARCH)-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-kernel-$(HOSTARCH)-TAG := HEAD
-kernel-$(HOSTARCH)-MODULE := linux-2.6
+kernel-$(HOSTARCH)-MODULE := Linux-2.6
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
 ifeq ($(HOSTARCH),i386)
 kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
