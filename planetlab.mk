@@ -400,19 +400,19 @@ MyPLC-native: RPMS/yumgroups.xml
 # MyPLC development environment
 #
 
-myplc-devel-MODULE := MyPLC build 
-myplc-devel-SPEC := myplc-devel.spec
+MyPLC-devel-MODULE := MyPLC build 
+MyPLC-devel-SPEC := myplc-devel.spec
 # Package must be built as root
-myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
-#ALL += myplc-devel
+MyPLC-devel-RPMBUILD := sudo bash ./rpmbuild.sh
+#ALL += MyPLC-devel
 
 #
 # MyPLC native development environment
 #
 
-myplc-devel-native-MODULE := MyPLC
-myplc-devel-native-SPEC := myplc-devel-native.spec
-ALL += myplc-devel-native
+MyPLC-devel-native-MODULE := MyPLC
+MyPLC-devel-native-SPEC := myplc-devel-native.spec
+ALL += MyPLC-devel-native
 
 #
 # libnl
