@@ -87,8 +87,8 @@ done
 BASE=${BASE}${i}
 
 # Redirect output from here
-#exec 2>&1
-#exec &>${BASE}/log
+exec 2>&1
+exec &>${BASE}/log
 
 failure() {
     # Notify recipient of failure
