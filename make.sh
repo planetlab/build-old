@@ -31,20 +31,20 @@ rm -f $BASE/.rpmmacros $BASE/parseSpec
 make -C $BASE myplc-devel
 
 # Build everything else inside the development environment
-export PLC_ROOT=$(echo $BASE/BUILD/myplc-devel-*/myplc/devel/root)
-export PLC_DATA=$(echo $BASE/BUILD/myplc-devel-*/myplc/devel/data)
+export PLC_ROOT=$(echo $BASE/BUILD/myplc-devel-*/MyPLC/devel/root)
+export PLC_DATA=$(echo $BASE/BUILD/myplc-devel-*/MyPLC/devel/data)
 
 cleanup() {
     sudo umount $PLC_ROOT/data/fedora
     sudo umount $PLC_ROOT/data/build
-    sudo $BASE/BUILD/myplc-devel-*/myplc/host.init stop
+    sudo $BASE/BUILD/myplc-devel-*/MyPLC/host.init stop
     sudo chown -h -R $USER $PLC_DATA
 }
 
 trap "cleanup" ERR INT
 
 # Start development environment
-sudo $BASE/BUILD/myplc-devel-*/myplc/host.init start
+sudo $BASE/BUILD/myplc-devel-*/MyPLC/host.init start
 
 # Make sure "build" user has proper sudoers setup
 if [ $(sudo grep "build.*ALL=(ALL).*NOPASSWD:.*ALL" $PLC_ROOT/etc/sudoers | wc -l) -eq 0 ] ; then
