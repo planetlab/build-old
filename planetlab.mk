@@ -374,10 +374,27 @@ MyPLC-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += MyPLC
 
 # MyPLC may require current packages
-#MyPLC: $(filter-out MyPLC,$(ALL))
+MyPLC: $(filter-out MyPLC,$(ALL))
 
 # ...and the yum manifest
 MyPLC: RPMS/yumgroups.xml
+
+
+#
+# MyPLC native
+#
+
+MyPLC-native-MODULE := MyPLC build WWW
+MyPLC-native-SPEC := myplc-native.spec
+# Package must be built as root
+MyPLC-native-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += MyPLC-native
+
+# MyPLC may require current packages
+MyPLC-native: $(filter-out MyPLC,$(ALL))
+
+# ...and the yum manifest
+MyPLC-native: RPMS/yumgroups.xml
 
 #
 # MyPLC development environment
@@ -387,32 +404,15 @@ myplc-devel-MODULE := MyPLC build
 myplc-devel-SPEC := myplc-devel.spec
 # Package must be built as root
 myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
-ALL += myplc-devel
+#ALL += myplc-devel
 
 #
-# MyPLC native
-#
-
-myplc-native-MODULE := MyPLC build
-myplc-native-SPEC := myplc-native.spec
-# Package must be built as root
-myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-#ALL += myplc-native
-
-# MyPLC may require current packages
-myplc-native: $(filter-out MyPLC,$(ALL))
-
-# ...and the yum manifest
-myplc-native: RPMS/yumgroups.xml
-
-
-#
-# MyPLC native
+# MyPLC native development environment
 #
 
 myplc-devel-native-MODULE := MyPLC
 myplc-devel-native-SPEC := myplc-devel-native.spec
-#ALL += myplc-devel-native
+ALL += myplc-devel-native
 
 #
 # libnl

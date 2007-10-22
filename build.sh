@@ -138,8 +138,12 @@ else
     # Checkout build directory
     svn checkout ${SVNPATH}/${MODULE}/${TAG} ${BASE}
 
-    # Build
-    ${BASE}/make.sh TAG=${TAG} PLDISTRO=${PLDISTRO}
+    # Build myplc-devel-native, install it to ensure we've got the right packages, and let it rip
+    make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} BASE=$BASE BUILDS=$BUILDS myplc-devel-native
+    sudo yum -y localinstall RPMS/i386/myplc-devel-native-*.*.rpm 
+
+    # Build everything
+    make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} BASE=$BASE BUILDS=$BUILDS
 
     # Install to boot server
     make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
