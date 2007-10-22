@@ -13,7 +13,7 @@
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 # Set defaults
-SVNPATH=http://svn.planet-lab.org/svn
+SVNPATH=https://svn.planet-lab.org/svn
 TAG=trunk
 MODULE=build
 BASE=$PWD
@@ -123,7 +123,7 @@ if [ -n "$VSERVER" ] ; then
     # Checkout build directory
     VSUEXEC="vserver $BASE exec su - build -c"
 
-    $VSUEXEC "svn co ${SVNPATH}/${MODULE}/${TAG} ${MODULE}"
+    $VSUEXEC "svn checkout ${SVNPATH}/${MODULE}/${TAG} ${MODULE}"
 
     # Build
     #XXX vserver $BASE suexec build ${MODULE}/make.sh TAG=${TAG} PLDISTRO=${PLDISTRO}
@@ -136,7 +136,7 @@ if [ -n "$VSERVER" ] ; then
     vserver $BASE stop
 else
     # Checkout build directory
-    svn co ${SVNPATH}/${MODULE}/${TAG} ${BASE}
+    svn checkout ${SVNPATH}/${MODULE}/${TAG} ${BASE}
 
     # Build
     ${BASE}/make.sh TAG=${TAG} PLDISTRO=${PLDISTRO}
