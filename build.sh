@@ -146,7 +146,8 @@ else
     make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} BASE=$BASE BUILDS=$BUILDS
 
     # Install to boot server
-    make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
+    # XXX not yet
+    #make TAG=${TAG} PLDISTRO=${PLDISTRO} -C ${BASE} install BASE=$BASE BUILDS=$BUILDS
 fi
 
 exit 0
