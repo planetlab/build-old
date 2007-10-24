@@ -11,4 +11,4 @@
 set -x
 
 export HOME=${PWD}
-rpmbuild $@
+rpmbuild "$@"
