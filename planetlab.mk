@@ -58,6 +58,7 @@ endif
 
 # Figure out whether we are building on i386 or x86_64 host
 HOSTARCH := $(shell uname -i)
+FEDORA := $(shell ./getrelease.sh)
 
 kernel-$(HOSTARCH)-MODULE := Linux-2.6
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
@@ -411,6 +412,7 @@ MyPLC-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 #
 
 MyPLC-devel-native-MODULE := MyPLC
+MyPLC-devel-native-RPMFLAGS := --define "fedora $(FEDORA)"
 MyPLC-devel-native-SPEC := myplc-devel-native.spec
 ALL += MyPLC-devel-native
 
