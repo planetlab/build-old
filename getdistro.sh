@@ -2,5 +2,4 @@
 
 . build.common
 
-echo $pl_DISTRO_RELEASE
-
+echo $pl_DISTRO

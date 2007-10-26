@@ -9,31 +9,47 @@
 # $Id: build.common,v 1.3 2007/08/31 03:17:34 mef Exp $
 #
 
-function pl_getDefaultFedoraRelease() {
+function pl_getDefaultDistro() {
     # FC4 is currently the default release
-    return 4
+    echo "Fedora"
 }
 
-function pl_getFedoraRelease() {
-    pl_getDefaultFedoraRelease
-    defaultFedoraRelease=$?
-    if [ -f "/etc/fedora-release" ] ; then
-	fedoraRelease=$(awk ' { if ($2=="Core") print $4; else print $3 } ' /etc/fedora-release)
-	[ $fedoraRelease -lt $defaultFedoraRelease ] && fedoraRelease=$defaultFedoraRelease
-    else
-	fedoraRelease=$defaultFedoraRelease
-    fi
-    return $fedoraRelease
+function pl_getDefaultRelease() {
+    # FC4 is currently the default release
+    echo "4"
 }
+
+function pl_getDistro() {
+    defaultDistro=$(pl_getDefaultDistro)
+    if [ -f "/etc/redhat-release" ] ; then
+	distro=$(awk ' { print $1 } ' /etc/redhat-release)
+    else
+	distro=$defaultDistro
+    fi
+    echo "$distro"
+}
+
+function pl_getRelease() {
+    defaultRelease=$(pl_getDefaultRelease)
+    if [ -f "/etc/redhat-release" ] ; then
+	release=$(awk ' { if ($1=="Fedora" && $2=="Core") print $4 ; if (($1=="Fedora" && $2!="Core")||$1=="CentOS") print $3 } ' /etc/redhat-release)
+	[ $release -lt $defaultRelease ] && release=$defaultRelease
+    else
+	release=$defaultRelease
+    fi
+    echo "$release"
+}
+
+# figure out which redhat distro we are using (fedora, centos, redhat)
+pl_DISTRO=$(pl_getDistro)
 
 # select basearch of the host devel environment
-pl_FEDORA_ARCH=$(uname -i)
+pl_DISTRO_ARCH=$(uname -i)
 
 # let mkfedora select one of its mirrors
-pl_FEDORA_URL=""
+pl_DISTRO_URL=""
 
-pl_getFedoraRelease
-pl_FEDORA_RELEASE=$?
+pl_DISTRO_RELEASE=$(pl_getRelease)
 
 # get patch to appropriate yumgroups.xml file
 # XXX This path should be relative to PLDISTRO, as defined in
@@ -46,22 +62,23 @@ function pl_process_fedora_options () {
     while getopts "l:r:a:h" opt ; do
 	case $opt in
 	    l)
-		pl_FEDORA_URL=$OPTARG
+		pl_DISTRO_URL=$OPTARG
 		let shiftcount=$shiftcount+2
 		;;
 	    r)
-		pl_FEDORA_RELEASE=$OPTARG
+		pl_DISTRO_RELEASE=$OPTARG
 		let shiftcount=$shiftcount+2
 		;;
 	    a)
-		pl_FEDORA_ARCH=$OPTARG
+		pl_DISTRO_ARCH=$OPTARG
 		let shiftcount=$shiftcount+2
 		;;
 	    h|*)
 		echo "Usage: $0 [OPTION]..."
-		echo "	-l url		Fedora mirror location (default: $pl_FEDORA_URL)"
-		echo "	-r release	Fedora release number (default: $pl_FEDORA_RELEASE)"
-		echo "	-a arch		Fedora architecture (default: $pl_FEDORA_ARCH)"
+		echo "	-l url		distro mirror location (default: $pl_DISTRO_URL)"
+		echo "	-r release	distro release number (default: $pl_DISTRO_RELEASE)"
+		echo "	-a arch		distro architecture (default: $pl_DISTRO_ARCH)"
+		echo "where distro can be either fedora, centos, or redhat"
 		echo "	-h		This message"
 		exit 1
 		;;
@@ -103,7 +120,7 @@ function pl_makedevs() {
 
     # For mkinitrd (in case a kernel is being installed)
     # As well for loop back mounting within a vserver. 
-    for i in $(seq 0 7) ; do
+    for i in $(seq 0 255) ; do
 	mknod -m 640 $vroot/dev/loop$i b 7 $i
     done
 }
@@ -115,9 +132,9 @@ function pl_mkfedora() {
 
     pl_makedevs $root
 
-    [ -n "$pl_FEDORA_URL" ] && options="$options -l $pl_FEDORA_URL"
-    [ -n "$pl_FEDORA_ARCH" ] && options="$options -a $pl_FEDORA_ARCH"
-    [ -n "$pl_FEDORA_RELEASE" ] && options="$options -r $pl_FEDORA_RELEASE"
+    [ -n "$pl_DISTRO_URL" ] && options="$options -l $pl_DISTRO_URL"
+    [ -n "$pl_DISTRO_ARCH" ] && options="$options -a $pl_DISTRO_ARCH"
+    [ -n "$pl_DISTRO_RELEASE" ] && options="$options -r $pl_DISTRO_RELEASE"
     # echo "mkfedora -v $options $root"
     eval mkfedora -v $options $root
 }
