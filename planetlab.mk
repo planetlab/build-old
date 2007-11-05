@@ -204,7 +204,7 @@ ulogd: kernel proper #mysql
 #
 
 PlanetFlow-MODULE := PlanetFlow
-PlanetFlow-RPMFLAGS := --define "distroname $(DISTRO)" --define "distrorelease $(RELEASE)"
+PlanetFlow-RPMFLAGS := --define "distroname '$(DISTRO)'" --define "distrorelease $(RELEASE)"
 PlanetFlow-SPEC := netflow.spec
 ALL += PlanetFlow
 
@@ -376,7 +376,7 @@ MyPLC-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 #
 
 MyPLC-devel-native-MODULE := MyPLC
-MyPLC-devel-native-RPMFLAGS := --define "distroname $(DISTRO)" --define "distrorelease $(RELEASE)"
+MyPLC-devel-native-RPMFLAGS := --define "distroname '$(DISTRO)'" --define "distrorelease $(RELEASE)"
 MyPLC-devel-native-SPEC := myplc-devel-native.spec
 ALL += MyPLC-devel-native
 
