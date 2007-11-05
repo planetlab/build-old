@@ -29,37 +29,24 @@
 #
 
 #
-# Default values
+# Default values -- should be able to override these from command line
 #
 
-#CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-#TAG := HEAD
+HOSTARCH := $(shell uname -i)
+DISTRO := $(shell ./getdistro.sh)
+RELEASE := $(shell ./getrelease.sh)
 
-SVNPATH := https://svn.planet-lab.org/svn
-TAG := trunk
+#
+# load in a release specific tags file
+# Override TAGSFILE from command line to select something else
+#
+TAGSFILE = default-tags.mk
+include $(TAGSFILE)
 
-# Check if a tag has been checked out
-ifneq ($(wildcard CVS/Root),)
-# Check if we are able to access CVS
-CVSTAG := $(shell cvs status planetlab.mk 2>/dev/null | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
-ifneq ($(CVSTAG),)
-CVSROOT := $(shell cat CVS/Root)
-ifeq ($(CVSTAG),(none))
-TAG := HEAD
-else
-TAG := $(CVSTAG)
-endif
-endif
-endif
 
 #
 # kernel
 #
-
-# Figure out whether we are building on i386 or x86_64 host
-HOSTARCH := $(shell uname -i)
-DISTRO := $(shell ./getdistro.sh)
-RELEASE := $(shell ./getrelease.sh)
 
 kernel-$(HOSTARCH)-MODULE := Linux-2.6
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
@@ -73,26 +60,6 @@ ALL += kernel-$(HOSTARCH)
 
 kernel-clean: kernel-$(HOSTARCH)-clean
 kernel: kernel-$(HOSTARCH)
-
-
-###  Why are we building these??  -F
-### madwifi
-###
-##
-###madwifi-ng-MODULE := madwifi-ng
-###madwifi-ng-SPEC := madwifi-ng/madwifi.spec
-###ALL += madwifi-ng
-##
-### Build kernel first so we can bootstrap off of its build
-###madwifi-ng: kernel
-##
-###
-### ivtv 
-###
-##
-###ivtv-MODULE := ivtv
-###ivtv-SPEC := ivtv/ivtv.spec
-###ALL += ivtv
 
 #
 # util-vserver
@@ -237,6 +204,7 @@ ulogd: kernel proper #mysql
 #
 
 PlanetFlow-MODULE := PlanetFlow
+PlanetFlow-RPMFLAGS := --define "distroname $(DISTRO)" --define "distrorelease $(RELEASE)"
 PlanetFlow-SPEC := netflow.spec
 ALL += PlanetFlow
 
@@ -281,33 +249,27 @@ ALL += iproute
 #
 # util-python
 #
-# [marc]    deprecate server.py
-#
-# I dont know what the above means...  Daniel says we need to seperate util-vserver from
-# pl specific utilities (vuseradd, etc) which may or may not include vserver.py.  Until then,
-# I'm keeping this in the build.  -F
+# [marc]    deprecate with proper
 #
 
 util-python-MODULE := util-python
 util-python-SPEC := util-python.spec
 ALL += util-python
 
-# proper and util-vserver both use scripts in util-python for building
-# [dhozac]  Not anymore.  util-vserver uses automake and no longer needs util-python
+# proper uses scripts in util-python for building
 proper: util-python
 
-#util-vserver: util-python
-#PlanetLabAuth: util-python
-
-
-# vsys does not compile when ocaml rpm is installed.  Need to fix include path
-# so that it compiles.  Sapan will need to fix this.
 #
 # vsys
 #
 vsys-MODULE := vsys
 vsys-SPEC := vsys.spec
-# ALL += vsys
+ifeq ($(DISTRO),"Fedora")
+ifeq ($(RELEASE),7)
+ALL += vsys
+endif
+endif
+
 
 #
 # PLCAPI
@@ -344,6 +306,7 @@ vserver-reference: $(filter-out vserver-reference,$(ALL))
 
 BootManager-MODULE := BootManager build
 BootManager-SPEC := bootmanager.spec
+# Package must be built as root
 BootManager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootManager
 
@@ -357,7 +320,7 @@ BootManager: RPMS/yumgroups.xml
 # BootCD
 #
 
-BootCD-MODULE := BootCD build BootManager
+BootCD-MODULE := BootCD BootManager build
 BootCD-SPEC := bootcd.spec
 BootCD-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootCD
@@ -413,7 +376,7 @@ MyPLC-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 #
 
 MyPLC-devel-native-MODULE := MyPLC
-MyPLC-devel-native-RPMFLAGS := --define "distro $(DISTRO)" --define "release $(RELEASE)"
+MyPLC-devel-native-RPMFLAGS := --define "distroname $(DISTRO)" --define "distrorelease $(RELEASE)"
 MyPLC-devel-native-SPEC := myplc-devel-native.spec
 ALL += MyPLC-devel-native
 
@@ -431,6 +394,18 @@ ALL += libnl
 
 util-vserver: libnl
 
+RPMS/yumgroups.xml:
+	install -D -m 644 groups/v4_yumgroups.xml RPMS/yumgroups.xml
+
+#XXX We need to rethink this installation support for several reasons:
+# 1) it is pldistro specific
+# 2) may involve installing files for different node groups (e.g., alpha, beta, etc.)
+# 3) may involve N rpm repositories to where it should be uploaded
+#
+# Not clear to me at all that this should be incorporated into a
+# Makefile at all.  Instead it should be something that gets wrapped
+# into a myplc (sub) rpm package and then is installed by that way.
+
 #
 # Installation rules
 # 
@@ -445,9 +420,6 @@ ifeq ($(TAG),HEAD)
 ARCHIVE := $(ARCHIVE)/planetlab-alpha
 REPOS := /plc/data/var/www/html/install-rpms/planetlab-alpha
 endif
-
-RPMS/yumgroups.xml:
-	install -D -m 644 groups/v4_yumgroups.xml RPMS/yumgroups.xml
 
 install:
 ifeq ($(BASE),)
