@@ -225,3 +225,16 @@ function pl_fixdirs() {
     done
 }
 
+function pl_getPackages() {
+    filename=$1
+    packages=$(grep "^packages:.*" $filename | awk ' {print $2}')
+    echo "$packages"
+    return 0
+}
+
+function pl_getGroups() {
+    filename=$1
+    groups=$(grep "^groups:.*" $filename | awk ' {print $2}')
+    echo "$groups"
+    return 0
+}
