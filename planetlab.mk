@@ -329,6 +329,19 @@ ALL += BootCD
 # BootCD: $(filter-out BootCD,$(ALL))
 
 #
+# BootstrapFS
+#
+
+BootstrapFS-MODULE := BootstrapFS build
+BootstrapFS-SPEC := bootstrapfs.spec
+# Package must be built as root
+BootstrapFS-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += BootstrapFS
+
+# BootstrapFS requires current packages
+BootstrapFS: $(filter-out BootstrapFS,$(ALL))
+
+#
 # MyPLC
 #
 
