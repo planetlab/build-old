@@ -334,7 +334,7 @@ BootstrapFS-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootstrapFS
 
 # BootstrapFS requires current packages
-BootstrapFS: $(filter-out BootstrapFS,$(ALL)
+BootstrapFS: $(filter-out BootstrapFS,$(ALL))
 
 # ... and the groups manifest
 BootstrapFS: RPMS/yumgroups.xml
