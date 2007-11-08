@@ -332,7 +332,7 @@ ALL += BootCD
 # BootstrapFS
 #
 
-BootstrapFS-MODULE := BootstrapFS
+BootstrapFS-MODULE := BootstrapFS build
 BootstrapFS-SPEC := bootstrapfs.spec
 # Package must be built as root
 BootstrapFS-RPMBUILD := sudo bash ./rpmbuild.sh
