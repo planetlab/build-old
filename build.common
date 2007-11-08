@@ -227,8 +227,8 @@ function pl_fixdirs() {
 
 function pl_getPackages() {
     filename=$1
-    packages=$(grep "^packages:.*" $filename | awk ' {print $2}')
-    echo "$packages"
+    packages=$(grep "^package:.*" $filename | awk ' {print $2}')
+    echo "$package"
     return 0
 }
 
