@@ -298,7 +298,11 @@ VserverReference-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += VserverReference
 
 # vserver-reference may require current packages
-vserver-reference: $(filter-out vserver-reference,$(ALL))
+VserverReference: $(filter-out vserver-reference,$(ALL))
+
+# ... and the groups manifest
+VserverReference: RPMS/yumgroups.xml
+
 
 #
 # BootManager
@@ -310,12 +314,6 @@ BootManager-SPEC := bootmanager.spec
 BootManager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootManager
 
-# BootManager requires current packages
-BootManager: $(filter-out BootManager,$(ALL))
-
-# ...and the yum manifest
-BootManager: RPMS/yumgroups.xml
-
 #
 # BootCD
 #
@@ -324,9 +322,6 @@ BootCD-MODULE := BootCD BootManager build
 BootCD-SPEC := bootcd.spec
 BootCD-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootCD
-
-# BootCD requires current packages
-# BootCD: $(filter-out BootCD,$(ALL))
 
 #
 # BootstrapFS
@@ -339,7 +334,10 @@ BootstrapFS-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += BootstrapFS
 
 # BootstrapFS requires current packages
-BootstrapFS: $(filter-out BootstrapFS,$(ALL))
+BootstrapFS: $(filter-out BootstrapFS,$(ALL)
+
+# ... and the groups manifest
+BootstrapFS: RPMS/yumgroups.xml
 
 #
 # MyPLC
