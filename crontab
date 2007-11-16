@@ -3,7 +3,7 @@
 #
 # TMP=/tmp EDITOR=emacs crontab crontab
 #
-# $Id: crontab,v 1.12 2005/03/10 20:57:06 mlhuang Exp $
+# $Id$
 #
 
 SHELL=/bin/bash

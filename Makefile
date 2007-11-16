@@ -1,7 +1,7 @@
 #
 # Thierry Parmentelat - INRIA Sophia Antipolis 
 #
-### $Id: Makefile 1088 2007-11-15 14:51:33Z thierry $
+### $Id$
 # 
 # run 'make help' for more info
 

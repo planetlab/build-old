@@ -6,7 +6,7 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id: spec2make.c 968 2007-11-07 16:15:55Z thierry $
+ * $Id$
  */
 
 #include <stdio.h>

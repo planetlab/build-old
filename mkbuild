@@ -7,7 +7,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2006 The Trustees of Princeton University
 #
-# $Id: mkbuild,v 1.2.4.1 2007/08/30 16:39:00 mef Exp $
+# $Id$
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin

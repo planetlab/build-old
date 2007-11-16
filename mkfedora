@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora 1073 2007-11-15 09:56:03Z thierry $
+# $Id$
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin

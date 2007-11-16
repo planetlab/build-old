@@ -6,7 +6,7 @@
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id: build.common 1094 2007-11-16 08:38:42Z thierry $
+# $Id$
 #
 
 function pl_getDefaultDistro() {

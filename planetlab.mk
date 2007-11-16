@@ -4,7 +4,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 #
-# $Id: planetlab.mk 1082 2007-11-15 13:49:05Z thierry $
+# $Id$
 #
 
 #

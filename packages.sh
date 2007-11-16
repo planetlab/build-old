@@ -6,7 +6,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004 The Trustees of Princeton University
 #
-# $Id: packages.sh,v 1.6 2005/06/14 18:53:43 mlhuang Exp $
+# $Id$
 #
 
 # Set defaults
@@ -63,7 +63,7 @@ TAGS="NAME VERSION RELEASE ARCH URL BUILDTIME DESCRIPTION"
 
 cat <<EOF
 <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-<!-- \$Id: packages.sh,v 1.6 2005/06/14 18:53:43 mlhuang Exp $ -->
+<!-- \$Id$ -->
 <!-- Generated at $(date) in $(cd ${1-.} && pwd -P) on $HOSTNAME by $USER -->
 <!DOCTYPE PACKAGES [
   <!ELEMENT PACKAGES (PACKAGE)*>
