@@ -1,0 +1,60 @@
+# syntax
+# only lines starting with 'package:' or 'group:' are considered
+package: iptables 
+package: dev 
+package: dosfstools 
+package: mkisofs 
+package: inotify-tools-devel 
+package: beecrypt-devel 
+package: bzip2 gzip
+package: coreutils 
+package: sharutils 
+# not sure this is still needed, was maybe used for patches
+package: diffutils 
+package: cpio tar
+package: rpm rpm-build rpm-devel 
+package: redhat-rpm-config 
+package: yum createrepo 
+package: curl curl-devel 
+# not sure this is still needed
+package: wget 
+package: subversion cvs 
+package: rsync 
+package: time 
+package: less 
+package: sudo 
+package: openssh
+# for vsys
+package: ocaml ocaml-ocamldoc 
+package: expat-devel
+package: db4-devel 
+package: ncurses-devel 
+package: readline-devel 
+package: dnsmasq 
+# is this useful ?
+package: expect 
+package: glibc glibc-common 
+package: make install gcc-c++ 
+package: gd 
+package: gnupg 
+package: gperf 
+package: httpd mod_python mod_ssl 
+package: openssl 
+package: bison flex
+# what on earth can that be needed for ?
+package: libpcap libpcap-devel 
+package: libtool 
+package: sendmail sendmail-cf mailx 
+package: metadata 
+package: mysql mysql-devel mysql-server 
+package: nasm 
+package: php php-devel php-gd php-pgsql 
+package: postgresql postgresql-devel postgresql-python postgresql-server 
+package: python python-devel 
+package: PyXML 
+package: docbook-utils-pdf doxygen tetex-latex linuxdoc-tools 
+package: vconfig 
+package: vixie-cron 
+package: xmlsec1 xmlsec1-openssl 
+# rebuild doc in myplc
+package: ghostscript
