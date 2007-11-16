@@ -13,7 +13,7 @@
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2004-2006 The Trustees of Princeton University
 #
-# $Id: mkfedora,v 1.33 2007/08/31 02:23:08 mef Exp $
+# $Id: mkfedora 1073 2007-11-15 09:56:03Z thierry $
 #
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
@@ -24,6 +24,7 @@ verbose=0
 # Default yum repositories to try
 mirrors=(
 file:///data/fedora
+http://localhost/fedora
 ftp://smoke.cs.princeton.edu/pub/mirrors/fedora
 http://coblitz.codeen.org/coblitz.planet-lab.org/pub/fedora
 ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
@@ -133,26 +134,30 @@ fetch ()
     curl --fail --silent --max-time 60 "$1"
 }
 
+# hard to find two mirrors with a similar layout
+# set list of attempted locations according to releasever
+if [ $releasever -ge 7 ] ; then
+    attempts="
+$releasever/Everything/$basearch/os
+core/$releasever/Everything/$basearch/os \
+linux/core/$releasever/$basearch/os
+"
+else
+    attempts="
+linux/core/$releasever/$basearch/os 
+core/$releasever/$basearch/os 
+$releasever/$basearch/os
+"
+fi
+
 for mirror in "${mirrors[@]}" ; do
-    if [ $releasever -ge 7 ] ; then
-    	for baseurl in \
-		$mirror/$releasever/Everything/$basearch/os ; do
-		if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
-	    	    break
-		fi
-		unset baseurl
-        done
-    else
-    	for baseurl in \
-		$mirror/linux/core/$releasever/$basearch/os \
-		$mirror/core/$releasever/$basearch/os \
-		$mirror/$releasever/$basearch/os ; do
-		if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
-	    		break
-		fi
-		unset baseurl
-    	done
-    fi
+    for attempt in $attempts; do 
+	baseurl=$mirror/$attempt
+	if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
+	    break
+	fi
+	unset baseurl
+    done
     if [ -n "$baseurl" ] ; then
 	break
     fi
@@ -160,23 +165,14 @@ for mirror in "${mirrors[@]}" ; do
 done
 
 if [ -z "$baseurl" ] ; then
-    if [ $releasever -ge 7 ] ; then
-    	echo "Error: $releasever/Everything/$basearch/os/repodata/repomd.xml"
-    	echo "       could not be found in any of the following locations:"
-    	echo
-    	for mirror in ${mirrors[@]} ; do
-		echo $mirror/linux
-    	done
-    else
-    	echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
-    	echo "       could not be found in any of the following locations:"
-    	echo
-    	for mirror in ${mirrors[@]} ; do
-		echo $mirror/linux/core
-		echo $mirror/core
-		echo $mirror
-    	done
-    fi
+    echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
+    echo "       could not be found in any of the following locations:"
+    echo
+    for mirror in ${mirrors[@]} ; do
+	for attempt in $attempts ; do
+	    echo $mirror/$attempt
+	done
+    done
     echo
     usage
 fi

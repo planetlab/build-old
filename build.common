@@ -6,7 +6,7 @@
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id: build.common,v 1.3 2007/08/31 03:17:34 mef Exp $
+# $Id: build.common 1094 2007-11-16 08:38:42Z thierry $
 #
 
 function pl_getDefaultDistro() {
@@ -51,10 +51,27 @@ pl_DISTRO_URL=""
 
 pl_DISTRO_RELEASE=$(pl_getRelease)
 
+# vserver expects something like fc4 or f7
+# for fedora only as of now
+case $pl_DISTRO in
+    [Ff]edora*)
+	if [ "$pl_DISTRO_RELEASE" -le 6 ] ; then
+	    pl_DISTRO_NAME=fc$pl_DISTRO_RELEASE
+	else
+	    pl_DISTRO_NAME=f$pl_DISTRO_RELEASE
+	fi ;;
+    *)
+	echo "build.common: WARNING - pl_DISTRO_NAME not set for distro=$pl_DISTRO" ;;
+esac
+
 # get patch to appropriate yumgroups.xml file
 # XXX This path should be relative to PLDISTRO, as defined in
 # build/Makefile
 pl_YUMGROUPSXML="../build/groups/v4_yumgroups.xml"
+# Thierry: quick & dirty improvement 
+# this is updated by the toplevel build, from the appropriate pldistro-dep file
+# use another var for now for safety
+pl_DISTRO_YUMGROUPS="../../../RPMS/yumgroups.xml"
 
 function pl_process_fedora_options () {
     # Get options
@@ -227,14 +244,25 @@ function pl_fixdirs() {
 
 function pl_getPackages() {
     filename=$1
-    packages=$(grep "^package:.*" $filename | awk ' {print $2}')
+    packages=$(grep "^package:" $filename | sed -e s,package:,,)
     echo "$packages"
     return 0
 }
 
+# add -p before each package for mkfedora
+function pl_getPackagesOptions() {
+    pl_getPackages "$@" | awk '{for (i=1;i<=NF;i++) {print "-p " $i}}'
+}
+
 function pl_getGroups() {
     filename=$1
-    groups=$(grep "^group:.*" $filename | awk ' {print $2}')
+    groups=$(grep "^group:" $filename | sed -e s,group:,,)
     echo "$groups"
     return 0
 }
+
+# add -g before each group for mkfedora
+function pl_getGroupsOptions() {
+    pl_getGroups "$@" | awk '{for (i=1;i<=NF;i++) {print "-g " $i}}'
+}
+
