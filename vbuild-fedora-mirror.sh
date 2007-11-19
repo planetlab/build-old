@@ -5,7 +5,8 @@ COMMAND=$(basename $0)
 
 dry_run=
 root=/data/fedora/linux
-rsyncurl=rsync://fr.rpmfind.net/linux/fedora
+rsyncurl=rsync://mirrors.kernel.org/fedora
+#rsyncurl=rsync://fr.rpmfind.net/linux/fedora
 fcdistro=fc6
 arch=i386
 
