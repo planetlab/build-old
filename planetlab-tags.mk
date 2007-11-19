@@ -1,5 +1,6 @@
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 Linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/Linux-2.6/trunk
+libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/trunk
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/trunk
@@ -22,4 +23,3 @@ BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/trunk
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/trunk
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/trunk
-libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk

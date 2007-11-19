@@ -3,7 +3,113 @@
 #
 ### $Id$
 # 
-# run 'make help' for more info
+####################
+# invokation:
+#
+# (*) make stage1=true
+#     this extracts all specfiles and computes .mk from specfiles
+#     you need to specify PLDISTRO here if relevant - see below
+# (*) make help
+#     for more info on how to invoke this stuff
+#
+#################### (fedora) distributions
+#
+# (*) as of nov. 2007, myplc-devel is deprecated
+# (*) instead, we create a fresh vserver that holds required tools (see e.g. planetlab-fc6-devel.lst)
+# (*) the build uses the current fedora version as a target for the produced images
+# (*) so you simply need to create a fedora 8 build image for building fedora-8 images 
+#     
+#################### (planetlab) distributions
+#
+# (*) the default distribution is called 'planetlab'
+# (*) you may define an alternative distribution, e.g. onelab
+# in this case you need to
+# (*) create onelab.mk that defines your *packages* (see below)
+# (*) create onelab-tags.mk that defines where to fetch your *modules*
+# (*) create your main yumgroups.xml as groups/<distro>.xml
+# (*) there are also various places where a set of modules are defined.
+#     check for .lst files in the various modules that build root images
+#     and mimick what's done for planetlab 
+# (*) then you need to run 
+#     make stage1=true PLDISTRO=onelab
+#
+#################### 
+# This build deals with 2 kinds of objects
+# 
+# (*) packages are named upon the RPM name; they are moslty lowercase
+#     Add a package to ALL if you want it built as part of the default set.
+# (*) modules are named after the subversion tree; as of this writing their names 
+#     are mostly mixedcase like MyPLC or Vserverreference
+# 
+#################### packages
+# basics: how to build a package - you need/may define the following variables
+# 
+# (*) package-MODULES
+#     a package needs one or several modules to build. 
+#     to this end, define 
+# (*) package-SPEC
+#     the package's specfile; this is relative to the FIRST module in package-MODULES
+#     see 'codebase' below
+#
+# Optional:
+#
+# (*) package-SPECVARS
+#     space-separated list of spec variable definitions, where you can reference make variable that relate to 
+#     packages defined BEFORE the current one (note: you should use = - as opposed to := - to define these)
+#     e.g. mydriver-SPECVARS = foo=$(kernel-rpm-release) 
+#     would let you use the %release from the kernel's package when rpmbuild'ing mydriver - see automatic below
+# (*) package-DEPENDS
+#     a set of *packages* that this package depends on
+# (*) package-DEPENDFILES
+#     a set of files that the package depends on - and that make needs to know about
+#     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
+#     is refreshed with createrepo prior to running rpmbuild
+# (*) package-RPMFLAGS: Miscellaneous RPM flags
+# (*) package-RPMBUILD: If not rpmbuild - mostly used for sudo'ing rpmbuild
+#
+#################### modules
+# Required information about the various modules (set this in e.g. planetlab-tags.mk)
+#
+# (*) module-SVNPATH
+#     the complete path where this module lies; 
+#     you can specify the trunk or a given tag with this variable
+# 
+# OR if the module is managed under cvs
+# 
+# (*) module-CVSROOT
+# (*) module-TAG
+#
+#################### automatic variables
+#
+# the build defines the following make variables - these are extracted from spec files
+# (*) package-TARBALL : from the Source<n>: declaration
+#     example: kernel-i386-TARBALL = SOURCES/linux-2.6.20.tar.bz2
+# (*) package-SOURCE : 
+#     example: kernel-i386-SOURCE = SOURCES/linux-2.6.20
+# (*) package-SRPM
+#     example: kernel-i386-SRPM = SRPMS/kernel-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.src.rpm
+# (*) package-RPM
+#     example: kernel-i386-RPM = \
+#	RPMS/i686/kernel-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm \
+#	RPMS/i686/kernel-devel-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm \
+#	RPMS/i686/kernel-vserver-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm \
+#	RPMS/i686/kernel-debuginfo-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm
+# (*) package-rpm-name
+#     example: kernel-i386-rpm-name = kernel
+# (*) package-rpm-release
+#     example: kernel-i386-rpm-release = 1.2949.fc6.vs2.2.0.1.0.planetlab
+# (*) package-version
+#     example: kernel-i386-rpm-version = 2.6.20
+# (*) package-subversion
+#     example: myplc-rpm-subversion = 15
+####################
+
+#
+# Default values
+#
+HOSTARCH := $(shell uname -i)
+DISTRO := $(shell ./getdistro.sh)
+RELEASE := $(shell ./getrelease.sh)
 
 #################### Makefile
 # Default target
@@ -11,7 +117,7 @@ all:
 .PHONY:all
 
 ### default values
-PLDISTRO := onelab
+PLDISTRO := planetlab
 RPMBUILD := rpmbuild
 export CVS_RSH := ssh
 
@@ -112,7 +218,7 @@ SOURCES/myplc-release:
 define stage1_variables
 $(1)_spec = $(notdir $($(1)-SPEC))
 $(1)_specpath = SPECS/$(notdir $($(1)-SPEC))
-$(1)_module = $(firstword $($(1)-MODULE))
+$(1)_module = $(firstword $($(1)-MODULES))
 endef
 
 $(foreach package, $(ALL), $(eval $(call stage1_variables,$(package))))
@@ -240,12 +346,11 @@ endef
 # usage: extract_multi_module package 
 define extract_multi_module
 	mkdir -p CODEBASES/$(1) && cd CODEBASES/$(1) && (\
-	$(foreach m,$($(1)-MODULE), $(if $($(m)-SVNPATH), svn export $($(m)-SVNPATH) $(m);, cvs -d $($(m)-CVSROOT) export -r $($(m)-TAG) $(m);)))
+	$(foreach m,$($(1)-MODULES), $(if $($(m)-SVNPATH), svn export $($(m)-SVNPATH) $(m);, cvs -d $($(m)-CVSROOT) export -r $($(m)-TAG) $(m);)))
 endef
 
 CODEBASES/%: package=$(notdir $@)
-CODEBASES/%: module=$($(package)-MODULE)
-CODEBASES/%: multi_module=$(word 2,$(module))
+CODEBASES/%: multi_module=$(word 2,$($(package)-MODULES))
 CODEBASES/%: 
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG CODEBASE $(package) : $@ " ; date)
 	$(if $(multi_module),\
@@ -364,6 +469,9 @@ $(1)-clean-tarball:
 	rm -rf $($(1)-TARBALL)
 .PHONY: $(1)-clean-tarball
 CLEANS += $(1)-clean-tarball
+$(1)-clean-build:
+	rm -rf BUILD/$(notdir $($(1)-SOURCE))
+CLEANS += $(1)-clean-build
 $(1)-clean-rpm:
 	rm -rf $($(1)-RPM)
 .PHONY: $(1)-clean-rpm
@@ -372,7 +480,7 @@ $(1)-clean-srpm:
 	rm -rf $($(1)-SRPM)
 .PHONY: $(1)-clean-srpm
 CLEANS += $(1)-clean-srpm
-$(1)-clean: $(1)-clean-codebase $(1)-clean-source $(1)-clean-tarball $(1)-clean-rpm $(1)-clean-srpm
+$(1)-clean: $(1)-clean-codebase $(1)-clean-source $(1)-clean-tarball $(1)-clean-build $(1)-clean-rpm $(1)-clean-srpm
 .PHONY: $(1)-clean
 endef
 
@@ -410,7 +518,7 @@ endef
 
 # compute all modules
 ALL-MODULES :=
-$(foreach package,$(ALL), $(eval ALL-MODULES+=$($(package)-MODULE)))
+$(foreach package,$(ALL), $(eval ALL-MODULES+=$($(package)-MODULES)))
 ALL-MODULES:=$(sort $(ALL-MODULES))
 
 $(foreach module,$(ALL-MODULES), $(eval $(call print_version,$(module))))
@@ -472,10 +580,9 @@ help:
 	@echo "$ make distclean"
 	@echo "  brute-force cleaning, removes entire directories - requires a new stage1"
 	@echo "$ make util-vserver-clean"
-	@echo "  removes codebase, source, tarball, rpm and srpm for util-vserver"
+	@echo "  removes codebase, source, tarball, build, rpm and srpm for util-vserver"
 	@echo "$ make util-vserver-clean-codebase"
-	@echo "  and so on"
-
+	@echo "  and so on for source, tarball, build, rpm and srpm"
 
 #################### convenience, for debugging only
 # make +foo : prints the value of $(foo)
