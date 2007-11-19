@@ -124,7 +124,7 @@ function post_install () {
 # be careful to backslash $ in this, otherwise it's the root context that's going to do the evaluation
     cat << EOF | $personality vserver $VERBOSE $vserver exec bash -x
     # set up /dev/loop* in vserver
-    for i in \$(seq 0 7) ; do
+    for i in \$(seq 0 255) ; do
 	mknod -m 640 /dev/loop\$i b 7 \$i
     done
     
