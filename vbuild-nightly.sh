@@ -16,7 +16,7 @@ DEFAULT_MAILTO_onelab="onelab-build@one-lab.org"
 DEFAULT_MAILTO_planetlab=$DEFAULT_MAILTO_onelab
 
 # web publishing results
-DEFAULT_WEBPATH="/build/@PLDISTRO@/@BASE@"
+DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
 # for the test part
 TESTBUILDURL="http://build.one-lab.org/"
@@ -34,8 +34,8 @@ function failure() {
     if [ -n "$MAILTO" ] ; then
 	tail -c 8k $LOG | mail -s "Failures for build ${BASE}" $MAILTO
     fi
-    cp $LOG ${WEBPATH}.log.txt
-    (echo -n "============================== $COMMAND: failure at" ; date ; tail -c 20k $LOG) > ${WEBPATH}.bko.txt
+    cp $LOG ${WEBPATH}/${BASE}.log.txt
+    (echo -n "============================== $COMMAND: failure at" ; date ; tail -c 20k $LOG) > ${WEBPATH}/${BASE}.bko.txt
     exit 1
 }
 
@@ -44,8 +44,8 @@ function success () {
     if [ -n "$MAILTO" ] ; then
 	(echo "http://build.one-lab.org/$PLDISTRO/$BASE" ; echo "Completed on $(date)" ) | mail -s "Successfull build for ${BASE}" $MAILTO
     fi
-    cp $LOG ${WEBPATH}.log.txt
-    touch ${WEBPATH}.bok.txt
+    cp $LOG ${WEBPATH}/${BASE}.log.txt
+    touch ${WEBPATH}/${BASE}.bok.txt
     exit 0
 }
 
@@ -219,7 +219,7 @@ function main () {
     ### set BASE from DISTRO, if unspecified
     sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g"
     BASE=$(echo ${BASE} | sed $sedargs)
-    WEBPATH=$(echo ${WEBPATH} | sed $sedargs -e s,@BASE@,"$BASE",g)
+    WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
     if [ ! -d /vservers ] ; then
         # in the vserver
@@ -263,7 +263,6 @@ function main () {
 	    done
 	    BASE=${BASE}${i}
 	    # need update
-	    WEBPATH=$(echo ${WEBPATH} | sed $sedargs -e s,@BASE@,"$BASE",g)
 	    # manage LOG - beware it might be a symlink so nuke it first
 	    LOG=/vservers/${BASE}.log.txt
 	    rm -f $LOG
@@ -311,8 +310,9 @@ function main () {
 	fi
 
 	# publish to the web so runtest can find them
-	rm -rf $WEBPATH ; mkdir -p $WEBPATH
-	tar -C /vservers/$BASE/build -cf - RPMS SRPMS | tar -C $WEBPATH -xf -
+	rm -rf $WEBPATH ; mkdir -p $WEBPATH/{RPMS,SRPMS}
+	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/RPMS/
+	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/SRPMS/
 	
 	set +e
 	if [ -n "$DO_TEST" ] ; then 
