@@ -48,30 +48,30 @@ case $findex in
     2|4|6)
 	echo "============================== $findex core"
 	mkdir -p ${root}/core/$findex/$arch/os/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/core/$findex/$arch/os/ ${root}/core/$findex/$arch/os/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/$findex/$arch/os/ ${root}/core/$findex/$arch/os/
 	echo "============================== $findex updates"
 	mkdir -p  ${root}/core/updates/$findex/$arch/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
 	echo "============================== $findex extras"
 	mkdir -p ${root}/extras/$findex/$arch/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/extras/$findex/$arch/ ${root}/extras/$findex/$arch/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/extras/$findex/$arch/ ${root}/extras/$findex/$arch/
 	;;
     7)
 	echo "============================== $findex core"
 	mkdir -p ${root}/core/$findex/$arch/os/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/core/$findex/Everything/$arch/os/ ${root}/core/$findex/$arch/os/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/$findex/Everything/$arch/os/ ${root}/core/$findex/$arch/os/
 	echo "============================== $findex updates"
 	mkdir -p ${root}/core/updates/$findex/$arch/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
 	;;
     8)
     # somehow the layout on my favorite mirror is different in 7 and 8, /Everything/ has gone 
 	echo "============================== $findex core"
 	mkdir -p ${root}/core/$findex/$arch/os/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/core/$findex/$arch/os/ ${root}/core/$findex/$arch/os/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/$findex/$arch/os/ ${root}/core/$findex/$arch/os/
 	echo "============================== $findex updates"
 	mkdir -p ${root}/core/updates/$findex/$arch/
-	rsync $dry_run -avz --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
+	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
 	;;
     *)
 	echo "Unknown fedora index $findex - exiting"
