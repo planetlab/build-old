@@ -310,9 +310,9 @@ function main () {
 	fi
 
 	# publish to the web so runtest can find them
-	rm -rf $WEBPATH ; mkdir -p $WEBPATH/{RPMS,SRPMS}
-	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/RPMS/
-	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/SRPMS/
+	rm -rf $WEBPATH/$BASE ; mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
+	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
+	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
 	
 	set +e
 	if [ -n "$DO_TEST" ] ; then 
