@@ -35,7 +35,7 @@ function failure() {
 	tail -c 8k $LOG | mail -s "Failures for build ${BASE}" $MAILTO
     fi
     cp $LOG ${WEBPATH}.log.txt
-    (echo -n "============================== $COMMAND: failure at" ; date ; tail -c 20k $LOG) > ${WEBPATH}.broken.txt
+    (echo -n "============================== $COMMAND: failure at" ; date ; tail -c 20k $LOG) > ${WEBPATH}.bko.txt
     exit 1
 }
 
@@ -45,7 +45,7 @@ function success () {
 	(echo "http://build.one-lab.org/$PLDISTRO/$BASE" ; echo "Completed on $(date)" ) | mail -s "Successfull build for ${BASE}" $MAILTO
     fi
     cp $LOG ${WEBPATH}.log.txt
-    touch ${WEBPATH}.ok.txt
+    touch ${WEBPATH}.bok.txt
     exit 0
 }
 
@@ -241,7 +241,7 @@ function main () {
 		exit 1
 	    fi
 	    # manage LOG - beware it might be a symlink so nuke it first
-	    LOG=/vservers/${BASE}.txt
+	    LOG=/vservers/${BASE}.log.txt
 	    rm -f $LOG
 	    exec > $LOG 2>&1
 	    set -x
@@ -265,7 +265,7 @@ function main () {
 	    # need update
 	    WEBPATH=$(echo ${WEBPATH} | sed $sedargs -e s,@BASE@,"$BASE",g)
 	    # manage LOG - beware it might be a symlink so nuke it first
-	    LOG=/vservers/${BASE}.txt
+	    LOG=/vservers/${BASE}.log.txt
 	    rm -f $LOG
 	    exec > $LOG 2>&1 
 	    set -x
