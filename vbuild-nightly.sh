@@ -83,6 +83,7 @@ function build () {
 function runtest () {
     set -x
     set -e
+    trap failure ERR INT
 
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
     here=$(pwd)
@@ -92,6 +93,7 @@ function runtest () {
     rpm=$(ls myplc-[0-9]*.rpm)
     if [ ${#rpm[@]} != 1 ] ; then
 	echo "$COMMAND: Cannot locate rpm for testing"
+	failure
 	exit 1
     fi
     url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/i386/${rpm}
@@ -100,6 +102,7 @@ function runtest () {
     cd /vservers/$BASE/build/CODEBASES/PLCAPI
     if [ ! -d plctest/ ] ; then
 	echo "$COMMAND : Cannot not locate plctest/ - exiting"
+	failure
 	exit 1
     fi
   # compute test directory name on test box
@@ -132,6 +135,7 @@ function show_env () {
     echo MAKEOPTS="${MAKEOPTS[@]}"
     echo PLDISTROTAGS="$PLDISTROTAGS"
     echo TAGSRELEASE="$TAGSRELEASE"
+    echo -n "(might be unexpanded)"
     echo WEBPATH="$WEBPATH"
     if [ -d /vservers ] ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
@@ -314,7 +318,6 @@ function main () {
 	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
 	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
 	
-	set +e
 	if [ -n "$DO_TEST" ] ; then 
 	    runtest
 	fi
