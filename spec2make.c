@@ -135,8 +135,9 @@ main(int argc, char *argv[])
 	suffix_index=strstr(fullSource,*suffix);
 	if (suffix_index) {
 	  char sourcename[PATH_MAX];
-	  strncpy(sourcename,fullSource,suffix_index-fullSource);
-	  *suffix_index='\0';
+	  size_t len = (size_t)(suffix_index-fullSource);
+	  strncpy(sourcename,fullSource,len);
+	  sourcename[len]='\0';
 	  printf ("%s-SOURCE := SOURCES/%s\n",package_name,basename(sourcename));
 	  printf ("%s-CODEBASE := CODEBASES/%s\n",package_name,package_name);
 	  break;
