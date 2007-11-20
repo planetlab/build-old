@@ -39,11 +39,6 @@ case $fcdistro in
 	;;
 esac
 
-# manage LOG - beware it might be a symlink so nuke it first
-LOG=$(mktemp /tmp/vserver-fedora-mirror-log.XXXX)
-rm -f $LOG
-exec > $LOG 2>&1
-
 echo "root=$root"
 echo rsyncurl="$rsyncurl"
 echo "fcdistro=$fcdistro"
