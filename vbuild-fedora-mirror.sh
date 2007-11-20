@@ -39,6 +39,11 @@ case $fcdistro in
 	;;
 esac
 
+# manage LOG - beware it might be a symlink so nuke it first
+LOG=$(mktemp /tmp/vserver-fedora-mirror-log.XXXX)
+rm -f $LOG
+exec > $LOG 2>&1
+
 echo "root=$root"
 echo rsyncurl="$rsyncurl"
 echo "fcdistro=$fcdistro"
@@ -56,6 +61,7 @@ case $findex in
 	echo "============================== $findex extras"
 	mkdir -p ${root}/extras/$findex/$arch/
 	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/extras/$findex/$arch/ ${root}/extras/$findex/$arch/
+	RES=0
 	;;
     7)
 	echo "============================== $findex core"
@@ -64,6 +70,7 @@ case $findex in
 	echo "============================== $findex updates"
 	mkdir -p ${root}/core/updates/$findex/$arch/
 	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
+	RES=0
 	;;
     8)
     # somehow the layout on my favorite mirror is different in 7 and 8, /Everything/ has gone 
@@ -73,9 +80,12 @@ case $findex in
 	echo "============================== $findex updates"
 	mkdir -p ${root}/core/updates/$findex/$arch/
 	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
+	RES=0
 	;;
     *)
 	echo "Unknown fedora index $findex - exiting"
-	exit 1
+	RES=1
 	;;
 esac
+
+exit $RES 
