@@ -161,7 +161,7 @@ include $(previousmks)
 all: verbose
 verbose:
 	@echo "========== stage2 : $(package)"
-	@echo "stage2 : included .mk files : $(previousmks)"
+#	@echo "stage2 : included .mk files : $(previousmks)"
 all: $($(package)_specpath)
 all: MAKE/$(package).mk
 else
