@@ -115,7 +115,7 @@ ALL += ulogd
 #
 netflow-MODULES := PlanetFlow
 netflow-SPEC := netflow.spec
-netflow-SPECVARS := distroname=$(DISTRO) distrorelease=$(RELEASE)
+netflow-SPECVARS = distroname=$(DISTRO) distrorelease=$(RELEASE)
 ALL += netflow
 
 #
@@ -183,7 +183,7 @@ bootmanager-SPEC := bootmanager.spec
 bootmanager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += bootmanager
 
-# we do not want BootCD to depend on vserver-reference, do we ?
+# copy the current list, so as to keep image-building rpms out
 ALL-REGULARS := $(ALL)
 
 #
@@ -205,7 +205,7 @@ bootcd-MODULES := BootCD BootManager build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 # package has *some* dependencies, at least these ones
-bootcd-DEPENDS := $(KERNELS)
+bootcd-DEPENDS := $(ALL-REGULARS)
 bootcd-DEPENDFILES := RPMS/yumgroups.xml
 ALL += bootcd
 
@@ -228,7 +228,7 @@ myplc-SPEC := myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 # myplc may require all packages
-myplc-DEPENDS := $(ALL)
+myplc-DEPENDS := $(filter-out vserver,$(ALL))
 myplc-DEPENDFILES := RPMS/yumgroups.xml
 ALL += myplc
 
@@ -239,7 +239,7 @@ myplc-native-MODULES := MyPLC build
 myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-# Thierry : I don't think we depend on these at build-time
+# Thierry : don't depend on these at build-time
 #myplc-native-DEPENDS := $(MyPLC-DEPENDS)
 # Thierry : dunno about this one, let's stay safe
 myplc-native-DEPENDFILES := $(MyPLC-DEPENDFILES)
@@ -257,6 +257,6 @@ myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 # MyPLC native development environment
 #
 myplc-devel-native-MODULES := MyPLC
-myplc-devel-native-SPECVARS := distroname=$(DISTRO) distrorelease=$(RELEASE)
 myplc-devel-native-SPEC := myplc-devel-native.spec
+myplc-devel-native-SPECVARS = distroname=$(DISTRO) distrorelease=$(RELEASE)
 #ALL += myplc-devel-native
