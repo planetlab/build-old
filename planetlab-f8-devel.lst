@@ -24,6 +24,8 @@ package: time
 package: less 
 package: sudo 
 package: openssh
+# for spec2make / rpmlib
+package: popt-devel
 # for vsys
 package: ocaml ocaml-ocamldoc 
 package: expat-devel
