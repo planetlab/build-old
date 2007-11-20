@@ -60,6 +60,13 @@ case $pl_DISTRO in
 	else
 	    pl_DISTRO_NAME=f$pl_DISTRO_RELEASE
 	fi ;;
+    [Cc]entOS*)
+	if [ "$pl_DISTRO_RELEASE" = "4.5" ] ; then
+	    # centos 4.5 is just centos4 + enhancements
+	    pl_DISTRO_NAME=centos4
+	else
+	    pl_DISTRO_NAME=centos$pl_DISTRO_RELEASE
+	fi ;;
     *)
 	echo "build.common: WARNING - pl_DISTRO_NAME not set for distro=$pl_DISTRO" ;;
 esac
