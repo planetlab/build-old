@@ -283,7 +283,7 @@ function main () {
 	    ./vbuild-init-vserver.sh ${BASE} ${FCDISTRO} ${PLDISTRO}
 	    # cleanup
 	    cd -
-	    rm -f $tmpdir
+	    rm -rf $tmpdir
 	    # Extract build again - in the vserver
 	    vserver ${BASE} exec svn export ${SVNPATH} /build
 	fi
