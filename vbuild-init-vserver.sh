@@ -50,6 +50,7 @@ function setup_vserver () {
     fcdistro=$1; shift
     personality=$1; shift
 
+    CLONED=0
     # create the new vserver
     if [ ! -d /etc/vservers/$vserver ] ; then
 	# check if we can create the vserver from a reference vserver
@@ -58,7 +59,6 @@ function setup_vserver () {
 	    CLONED=1
 	else
 	    $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
-	    CLONED=0
 	fi
     fi
 
@@ -79,7 +79,7 @@ function setup_vserver () {
 
     # start the vserver so we can do the following operations
     $personality vyum $vserver -- -y install yum
-    [ $CLONED -ne 1] && $personality vserver $VERBOSE $vserver pkgmgmt internalize
+    [ $CLONED -eq 0] && $personality vserver $VERBOSE $vserver pkgmgmt internalize
     $personality vserver $VERBOSE $vserver start
     $personality vserver $VERBOSE $vserver exec rm -f /var/lib/rpm/__db*
     $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
