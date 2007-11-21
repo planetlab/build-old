@@ -72,7 +72,7 @@ case $distro in
 		for repopath in core/$distroindex/$arch/os/ core/updates/$distroindex/$arch/ extras/$distroindex/$arch/
 		  do
 		  echo "============================== $distro -> $distroindex $repopath"
-		  mkdir -p ${root}/${path}
+		  mkdir -p ${root}/${repopath}
 		  rsync $options ${rsyncurl}/${repopath} ${root}/${repopath}
 		done
 		RES=0
