@@ -20,6 +20,7 @@ PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/trunk
 WWW-SVNPATH			:= http://svn.planet-lab.org/svn/WWW/trunk
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
+pypcilib-SVNPATH		+= http://svn.planet-lab.org/svn/pypcilib/trunk
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/trunk
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/trunk
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/trunk

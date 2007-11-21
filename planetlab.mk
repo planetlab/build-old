@@ -183,6 +183,13 @@ bootmanager-SPEC := bootmanager.spec
 bootmanager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += bootmanager
 
+#
+# pypcilib : used in bootcd
+# 
+pypcilib-MODULES := pypcilib
+pypcilib-SPEC := pypcilib.spec
+ALL += pypcilib
+
 # copy the current list, so as to keep image-building rpms out
 ALL-REGULARS := $(ALL)
 
