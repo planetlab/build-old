@@ -72,12 +72,8 @@ case $pl_DISTRO in
 esac
 
 # get patch to appropriate yumgroups.xml file
-# XXX This path should be relative to PLDISTRO, as defined in
-# build/Makefile
-pl_YUMGROUPSXML="../build/groups/v4_yumgroups.xml"
 # Thierry: quick & dirty improvement 
-# this is updated by the toplevel build, from the appropriate pldistro-dep file
-# use another var for now for safety
+# this file is updated by the toplevel build, from groups/pldistro>.xml
 pl_DISTRO_YUMGROUPS="../../../RPMS/yumgroups.xml"
 
 function pl_process_fedora_options () {
