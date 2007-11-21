@@ -285,7 +285,7 @@ function main () {
 	    cd -
 	    rm -rf $tmpdir
 	    # Extract build again - in the vserver
-	    vserver ${BASE} exec svn export ${SVNPATH} /build
+	    vserver ${BASE} exec svn checkout ${SVNPATH} /build
 	fi
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
 
