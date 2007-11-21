@@ -278,7 +278,7 @@ function main () {
 	    ### extract vbuild-init-vserver.sh and run it
 	    svn cat $SVNPATH/vbuild-init-vserver.sh > /tmp/vbuild-init-vserver-$$.sh
 	    # get .lst 
-	    lst=${PLDISTRO}-${FCDISTRO}-devel.lst
+	    lst=${PLDISTRO}-devel.lst
 	    svn cat $SVNPATH/$lst > /tmp/$lst 
 
             # Create vserver
@@ -289,7 +289,7 @@ function main () {
 	    rm -f /tmp/vbuild-init-vserver-$$.sh /tmp/$lst
 	    cd -
 	    # Extract build
-	    vserver ${BASE} exec svn checkout ${SVNPATH} /build
+	    vserver ${BASE} exec svn export ${SVNPATH} /build
 	fi
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
 

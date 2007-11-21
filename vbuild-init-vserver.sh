@@ -3,6 +3,9 @@
 
 COMMAND=$(basename $0)
 
+# lst parsing utilities
+PATH=$(dirname $0):$PATH . build.common
+
 function failure () {
     echo "$COMMAND : Bailing out"
     exit 1
@@ -94,7 +97,7 @@ function devel_tools () {
     personality=$1; shift
 
     # check for .lst file based on pldistro
-    lst=${pldistro}-${fcdistro}-devel.lst
+    lst=${pldistro}-devel.lst
     if [ -f $lst ] ; then
 	echo "$COMMAND: Using $lst"
     else
@@ -103,8 +106,8 @@ function devel_tools () {
     fi
 
     # install individual packages, then groups
-    packages=$(grep "^package:" $lst | sed -e s,package:,,)
-    groups=$(grep "^group:" $lst | sed -e s,group:,,)
+    packages=$(pl_getPackages2 ${fcdistro} $lst)
+    groups=$(pl_getGroups2 ${fcdistro} $lst)
 
     [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
     [ -n "$groups" ] && $personality vserver $vserver exec yum -y groupinstall $groups

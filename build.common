@@ -249,6 +249,40 @@ function pl_fixdirs() {
     done
 }
 
+########## .lst format
+# comments start with a # - this is needed only if you use a keyword in a comment
+# lst_parse keyword fcdistro lst1 .. lstn
+# for a given keyword like 'package' :
+# we support fcdistro-dependant format, for tokens (pkgname) without whitespace
+# you can e.g. use
+# package: pkg1 .. pkgn 
+# package+f8: pkg1 .. pkgn
+# package-f8: pkg1 .. pkgn
+
+function lst_parse () {
+
+    keyword=$1;shift
+    fcdistro=$1; shift
+
+    # grab regular descriptions
+    all=$(grep -v '^#' "$@" | grep --regexp="^${keyword}:" | sed -e "s,${keyword}:,,")
+    # grab additions
+    add=$(grep -v '^#' "$@" | grep --regexp="^${keyword}+${fcdistro}:" | sed -e "s,${keyword}\+${fcdistro}:,,")
+    # grab exclusions
+    sub=$(grep -v '^#' "$@" | grep --regexp="^${keyword}\-${fcdistro}:" | sed -e "s,${keyword}\-${fcdistro}:,,")
+
+    for i in $all $add; do
+	for exclude in $sub; do
+	    [ "$i" = "$exclude" ] && continue 2
+	done
+	echo "$i "
+    done
+    return 0
+}
+
+function pl_getPackages2() { fcdistro=$1; shift ; lst_parse package $fcdistro "$@" }
+function pl_getGroups2() { fcdistro=$1; shift ; lst_parse group $fcdistro "$@" }
+
 function pl_getPackages() {
     filename=$1
     packages=$(grep "^package:" $filename | sed -e s,package:,,)

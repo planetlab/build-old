@@ -15,7 +15,7 @@
 #################### (fedora) distributions
 #
 # (*) as of nov. 2007, myplc-devel is deprecated
-# (*) instead, we create a fresh vserver that holds required tools (see e.g. planetlab-fc6-devel.lst)
+# (*) instead, we create a fresh vserver that holds required tools (see e.g. planetlab-devel.lst)
 # (*) the build uses the current fedora version as a target for the produced images
 # (*) so you simply need to create a fedora 8 build image for building fedora-8 images 
 #     
