@@ -7,14 +7,14 @@ dry_run=
 root=/data/fedora/linux
 rsyncurl=rsync://mirrors.kernel.org/fedora
 #rsyncurl=rsync://fr.rpmfind.net/linux/fedora
-fcdistro=fc6
+distroname=fc6
 arch=i386
 
 
 function usage () {
-    echo "Usage: $COMMAND [-n] [-v] [-r root] [-u rsyncurl] [-f fcdistro] [-a arch]"
-    echo "Defaults to -r $root -u $rsyncurl -f $fcdistro -a $arch"
-    echo "Use vserver conventions for fcdistro, e.g. fc6 and f7"
+    echo "Usage: $COMMAND [-n] [-v] [-r root] [-u rsyncurl] [-f distroname] [-a arch]"
+    echo "Defaults to -r $root -u $rsyncurl -f $distroname -a $arch"
+    echo "Use vserver conventions for distroname, e.g. fc6 and f7"
     exit 1
 }
 
@@ -24,61 +24,77 @@ while getopts "nvr:u:f:a:h" opt ; do
 	v) set -x ;;
 	r) root=$OPTARG ;;
 	u) rsyncurl=$OPTARG ;;
-	f) fcdistro=$OPTARG ;;
+	f) distroname=$OPTARG ;;
 	a) arch=$OPTARG ;;
 	h|*) usage ;;
     esac
 done
 
-case $fcdistro in
+case $distroname in
     fc*[1-6])
-	findex=$(echo $fcdistro | sed -e s,fc,,g)
+    	distroindex=$(echo $distroname | sed -e "s,fc,,g")
+	distro="Fedora Core"
+	;;
+    f*[7-8])
+	distroindex=$(echo $distroname | sed -e "s,f,,g")
+	distro="Fedora"
+	;;
+    centos*[4-5])
+	distroindex=$(echo $distroname | sed -e "s,centos,,g")
+	distro="CentOS"
 	;;
     *)
-	findex=$(echo $fcdistro | sed -e s,f,,g)
+	echo "Unknown redhat distribution $distroname - exiting"
+	RES=1
 	;;
+
 esac
 
-echo "root=$root"
-echo rsyncurl="$rsyncurl"
-echo "fcdistro=$fcdistro"
-echo "findex=$findex"
-echo "arch=$arch"
+excludelist="debug/ iso/ ppc/ opx"
+options="$dry_run -avz --delete --delete-excluded"
+for e in $excludelist
+do
+  options="$options --exclude $e"
+done
 
-case $findex in
-    2|4|6)
-	echo "============================== $findex core"
-	mkdir -p ${root}/core/$findex/$arch/os/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/$findex/$arch/os/ ${root}/core/$findex/$arch/os/
-	echo "============================== $findex updates"
-	mkdir -p  ${root}/core/updates/$findex/$arch/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
-	echo "============================== $findex extras"
-	mkdir -p ${root}/extras/$findex/$arch/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/extras/$findex/$arch/ ${root}/extras/$findex/$arch/
-	RES=0
-	;;
-    7)
-	echo "============================== $findex core"
-	mkdir -p ${root}/core/$findex/$arch/os/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/$findex/Everything/$arch/os/ ${root}/core/$findex/$arch/os/
-	echo "============================== $findex updates"
-	mkdir -p ${root}/core/updates/$findex/$arch/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
-	RES=0
-	;;
-    8)
-    # somehow the layout on my favorite mirror is different in 7 and 8, /Everything/ has gone 
-	echo "============================== $findex core"
-	mkdir -p ${root}/core/$findex/$arch/os/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/$findex/$arch/os/ ${root}/core/$findex/$arch/os/
-	echo "============================== $findex updates"
-	mkdir -p ${root}/core/updates/$findex/$arch/
-	rsync $dry_run -avz --delete --exclude debug/ ${rsyncurl}/core/updates/$findex/$arch/ ${root}/core/updates/$findex/$arch/
-	RES=0
+echo "root=$root"
+echo "distro=$distroname"
+echo "distroname=$distroname"
+echo "distroindex=$distroindex"
+echo "arch=$arch"
+echo rsyncurl="$rsyncurl"
+echo "rsync options=$options"
+
+case $distro in
+    [Ff]edora*)
+        case $distroindex in
+	    2|4|6)
+		for repopath in core/$distroindex/$arch/os/ core/updates/$distroindex/$arch/ extras/$distroindex/$arch/
+		  do
+		  echo "============================== $distro -> $distroindex $repopath"
+		  mkdir -p ${root}/${path}
+		  rsync $options ${rsyncurl}/${repopath} ${root}/${repopath}
+		done
+		RES=0
+		;;
+
+	    7|8)
+		for repopath in releases/$distroindex/Everything/$arch/os/ updates/$distroindex/$arch/
+		  do
+		  echo "============================== $distro -> $distroindex $repopath"
+		  mkdir -p ${root}/${repopath}
+		  rsync $options ${rsyncurl}/${repopath} ${root}/${repopath}
+		done
+		RES=0
+		;;
+	    *)
+		echo "Unknown fedora index $distroindex - exiting"
+		RES=1
+		;;
+	esac
 	;;
     *)
-	echo "Unknown fedora index $findex - exiting"
+	echo "$distro $distroindex currently unsupported - exiting"
 	RES=1
 	;;
 esac
