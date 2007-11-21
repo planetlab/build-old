@@ -78,8 +78,10 @@ function setup_vserver () {
     [ $cap -eq 0 ] && echo 'CAP_IPC_LOCK' >> /etc/vservers/$vserver/bcapabilities
 
     # start the vserver so we can do the following operations
-    $personality vyum $vserver -- -y install yum
-    [ $CLONED -eq 0] && $personality vserver $VERBOSE $vserver pkgmgmt internalize
+    if [ $CLONED -eq 0 ] ; then
+	$personality vyum $vserver -- -y install yum
+	$personality vserver $VERBOSE $vserver pkgmgmt internalize
+    fi
     $personality vserver $VERBOSE $vserver start
     $personality vserver $VERBOSE $vserver exec rm -f /var/lib/rpm/__db*
     $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
