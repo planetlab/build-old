@@ -275,20 +275,16 @@ function main () {
 	    echo "XXXXXXXXXX $COMMAND: creating vserver $BASE" $(date)
 	    show_env
 
-	    ### extract vbuild-init-vserver.sh and run it
-	    svn cat $SVNPATH/vbuild-init-vserver.sh > /tmp/vbuild-init-vserver-$$.sh
-	    # get .lst 
-	    lst=${PLDISTRO}-devel.lst
-	    svn cat $SVNPATH/$lst > /tmp/$lst 
-
+	    ### extract the whole build - much simpler
+	    tmpdir=$(mktemp /tmp/$COMMAND.XXXXXX)
+	    svn export $SVNPATH $tmpdir
             # Create vserver
-	    cd /tmp
-	    chmod +x vbuild-init-vserver-$$.sh
-	    /tmp/vbuild-init-vserver-$$.sh ${BASE} ${FCDISTRO} ${PLDISTRO}
+	    cd $tmpdir
+	    ./vbuild-init-vserver.sh ${BASE} ${FCDISTRO} ${PLDISTRO}
 	    # cleanup
-	    rm -f /tmp/vbuild-init-vserver-$$.sh /tmp/$lst
 	    cd -
-	    # Extract build
+	    rm -f $tmpdir
+	    # Extract build again - in the vserver
 	    vserver ${BASE} exec svn export ${SVNPATH} /build
 	fi
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
