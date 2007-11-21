@@ -12,6 +12,9 @@ the places where these distro-dependent config files lie are
 ./build/<pldistro>-devel.lst
 	set of packages required for building
 
+./Linux-2.6/configs/kernel-2.6.<n>-<arch>-<pldistro>.config
+	(subject to change location in the future)
+
 ./bootcd/<pldistro>-bootcd.lst
 ./bootstrapfs/<pldistro>-base.lst
 ./bootstrapfs/<pldistro>-filesystems
