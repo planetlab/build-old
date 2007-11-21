@@ -276,7 +276,7 @@ function main () {
 	    show_env
 
 	    ### extract the whole build - much simpler
-	    tmpdir=$(mktemp /tmp/$COMMAND.XXXXXX)
+	    tmpdir=$(mktemp -d /tmp/$COMMAND.XXXXXX)
 	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
