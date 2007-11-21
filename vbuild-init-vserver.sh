@@ -54,7 +54,14 @@ function setup_vserver () {
     personality=$1; shift
 
     # create the new vserver
-    [ ! -d /etc/vservers/$vserver ] && $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
+    if [ ! -d /etc/vservers/$vserver ] ; then
+	# check if we can create the vserver from a reference vserver
+	if [ ! -d /vserver/${fcdistro}_reference ] ; then
+	    $personality vserver $VERBOSE $vserver build -m clone -- --source /vserver/${fcdistro}_reference
+	else
+	    $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
+	fi
+    fi
 
     if [ ! -z "$personality" ] ; then
 	l32=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
@@ -82,7 +89,6 @@ function setup_vserver () {
 
     # set up resolv.conf
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
-
 }
 
 function devel_tools () {
