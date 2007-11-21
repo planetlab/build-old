@@ -278,28 +278,7 @@ function lst_parse () {
 
 function pl_getPackages2() { fcdistro=$1; shift ; lst_parse package $fcdistro "$@" ; }
 function pl_getGroups2() { fcdistro=$1; shift ; lst_parse group $fcdistro "$@" ; }
-
-function pl_getPackages() {
-    filename=$1
-    packages=$(grep "^package:" $filename | sed -e s,package:,,)
-    echo "$packages"
-    return 0
-}
-
 # add -p before each package for mkfedora
-function pl_getPackagesOptions() {
-    pl_getPackages "$@" | awk '{for (i=1;i<=NF;i++) {print "-p " $i}}'
-}
-
-function pl_getGroups() {
-    filename=$1
-    groups=$(grep "^group:" $filename | sed -e s,group:,,)
-    echo "$groups"
-    return 0
-}
-
+function pl_getPackagesOptions2 () { pl_getPackages2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-p " $i}}' ; }
 # add -g before each group for mkfedora
-function pl_getGroupsOptions() {
-    pl_getGroups "$@" | awk '{for (i=1;i<=NF;i++) {print "-g " $i}}'
-}
-
+function pl_getGroupsOptions2 () { pl_getGroups2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-g " $i}}' ; }
