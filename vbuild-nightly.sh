@@ -22,7 +22,7 @@ DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 TESTBUILDURL="http://build.one-lab.org/"
 TESTBOX=onelab-test.inria.fr
 TESTBOXSSH=root@onelab-test.inria.fr
-TESTSVNPATH="http://svn.one-lab.org/new_plc_api/trunk/plctest"
+TESTSVNPATH="http://svn.planet-lab.org/svn/tests/system"
 TESTSCRIPT=TestMain.py
 ####################
 # assuming vserver runs in UTC
@@ -98,18 +98,15 @@ function runtest () {
     fi
     url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/i386/${rpm}
 
-    # find the place where the plctest material was checked out
-    cd /vservers/$BASE/build/CODEBASES/PLCAPI
-    if [ ! -d plctest/ ] ; then
-	echo "$COMMAND : Cannot not locate plctest/ - exiting"
-	failure
-	exit 1
-    fi
+    # checkout the system test (formerly known as plctest)
+    cd /build
+    svn export $TESTSVNPATH system-test
+
   # compute test directory name on test box
-    testdir=plctest-${BASE}
+    testdir=system-test-${BASE}
   # rsync/push test material onto the test box
     ssh ${TESTBOXSSH} mkdir -p ${testdir}
-    rsync -a -v plctest/ ${TESTBOXSSH}:${testdir}
+    rsync -a -v system-test/ ${TESTBOXSSH}:${testdir}
   # invoke test on testbox
     ssh ${TESTBOXSSH} python -u ${testdir}/${TESTSCRIPT} ${url} 
   #invoke make install from build to the testbox
