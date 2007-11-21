@@ -50,7 +50,7 @@ case $distroname in
 
 esac
 
-excludelist="debug/ iso/ ppc/ opx"
+excludelist="debug/ iso/ ppc/ source/"
 options="$dry_run -avz --delete --delete-excluded"
 for e in $excludelist
 do
