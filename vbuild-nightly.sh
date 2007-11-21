@@ -22,7 +22,7 @@ DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 TESTBUILDURL="http://build.one-lab.org/"
 TESTBOX=onelab-test.inria.fr
 TESTBOXSSH=root@onelab-test.inria.fr
-TESTSVNPATH="http://svn.planet-lab.org/svn/tests/system"
+TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
 TESTSCRIPT=TestMain.py
 ####################
 # assuming vserver runs in UTC
@@ -99,14 +99,20 @@ function runtest () {
     url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/i386/${rpm}
 
     # checkout the system test (formerly known as plctest)
-    cd /build
-    svn export $TESTSVNPATH system-test
+    cd /vservers/${BASE}/build
+    svn export $TESTSVNPATH TESTS
+    # dont trust retcod
+    if [ ! -d TESTS ] ; then 
+	echo "$COMMAND: could not svn export $SVNPATH - check url"
+	exit 1
+    fi
 
   # compute test directory name on test box
-    testdir=system-test-${BASE}
-  # rsync/push test material onto the test box
+    testdir=plctest-${BASE}
+  # rsync/push test material onto the test box - clean first
+    ssh ${TESTBOXSSH} rm -rf ${testdir}
     ssh ${TESTBOXSSH} mkdir -p ${testdir}
-    rsync -a -v system-test/ ${TESTBOXSSH}:${testdir}
+    rsync -a -v TESTS/ ${TESTBOXSSH}:${testdir}/
   # invoke test on testbox
     ssh ${TESTBOXSSH} python -u ${testdir}/${TESTSCRIPT} ${url} 
   #invoke make install from build to the testbox

@@ -13,9 +13,6 @@ function failure () {
 
 # overwrite vserver's internal yum config from what is in
 # .distributions/<distrib>/yum/yum.conf and /yum.repos.d 
-# note : on fc6 I've had trouble with yum.conf, I haven't created a custom yum.conf
-# when using the default yum.conf, 
-# vserver build -m yum complained that /vservers/<v>/var/log/yum.log could not be created
 
 function configure_yum_in_vserver () {
     set -x 
