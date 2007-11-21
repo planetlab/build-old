@@ -1,5 +1,4 @@
-# syntax
-# only lines starting with 'package:' or 'group:' are considered
+#
 package: iptables 
 package: dev 
 package: dosfstools 
@@ -41,7 +40,6 @@ package: gperf
 package: httpd mod_python mod_ssl 
 package: openssl 
 package: bison flex
-# what on earth can that be needed for ?
 package: libpcap libpcap-devel 
 package: libtool 
 package: sendmail sendmail-cf mailx 
@@ -58,3 +56,61 @@ package: vixie-cron
 package: xmlsec1 xmlsec1-openssl 
 # rebuild doc in myplc
 package: ghostscript
+
+### from former xml config -- might help mapping tools to package
+#      <packagelist>
+#	<!-- kernel-vserver is intended for the vserver-reference, but
+#	     serves the same useful purpose for MyPLC, namely, to
+#	     Provide: kernel without actually installing anything. -->
+#	<packagereq type="mandatory">kernel-vserver</packagereq>	
+#
+#	<!-- Build script sends mail on failure -->
+#	<packagereq type="mandatory">mailx</packagereq>
+#	<packagereq type="mandatory">sendmail</packagereq>
+#
+#	<!-- kernel -->
+#	<packagereq type="mandatory">gnupg</packagereq>
+#	<packagereq type="mandatory">diffutils</packagereq>
+#
+#	<!-- util-vserver -->
+#	<packagereq type="mandatory">vconfig</packagereq>
+#	<packagereq type="mandatory">iptables</packagereq>
+#	<packagereq type="mandatory">wget</packagereq>
+#	<packagereq type="mandatory">beecrypt-devel</packagereq>
+#	<packagereq type="mandatory">tetex-latex</packagereq>
+#	<packagereq type="mandatory">gcc-c++</packagereq>
+#
+#	<!-- ulogd -->
+#	<packagereq type="mandatory">libpcap</packagereq>
+#	<packagereq type="mandatory">libpcap-devel</packagereq>
+#
+#	<!-- iptables -->
+#	<packagereq type="mandatory">linuxdoc-tools</packagereq>
+#
+#	<!-- vserver-reference -->
+#	<packagereq type="mandatory">sudo</packagereq>
+#	<packagereq type="mandatory">yum</packagereq>
+#	<packagereq type="mandatory">createrepo</packagereq>
+#
+#	<!-- mysql -->
+#	<packagereq type="mandatory">gperf</packagereq>
+#	<packagereq type="mandatory">time</packagereq>
+#
+#	<!-- bootmanager -->
+#	<packagereq type="mandatory">sharutils</packagereq>
+#
+#	<!-- bootcd -->
+#	<packagereq type="mandatory">nasm</packagereq>
+#	<packagereq type="mandatory">mkisofs</packagereq>
+#	<packagereq type="mandatory">dosfstools</packagereq>
+#
+#	<!-- myplc -->
+#	<packagereq type="mandatory">rsync</packagereq>
+#	<packagereq type="mandatory">ghostscript</packagereq>
+#
+#	<!-- new_plc_api -->
+#	<packagereq type="mandatory">docbook-utils-pdf</packagereq>
+#	<packagereq type="mandatory">postgresql-devel</packagereq>
+#	<packagereq type="mandatory">php-devel</packagereq>
+#	<packagereq type="mandatory">SOAPpy</packagereq>
+#	<packagereq type="mandatory">PyXML</packagereq>
