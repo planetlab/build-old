@@ -1,120 +1,74 @@
-#
-package: iptables 
-package: dev 
-package: dosfstools 
-package: mkisofs 
-package: inotify-tools-devel 
-package: beecrypt-devel 
+# general utilities
+package: sendmail sendmail-cf mailx 
+package: make install 
+package: glibc glibc-common 
 package: bzip2 gzip
-package: coreutils 
-package: sharutils 
-# not sure this is still needed, was maybe used for patches
-package: diffutils 
 package: cpio tar
+package: coreutils 
 package: rpm rpm-build rpm-devel 
 package: redhat-rpm-config 
-package: yum createrepo 
 package: curl curl-devel 
-# not sure this is still needed
-package: wget 
 package: subversion cvs 
-package: rsync 
-package: time 
 package: less 
-package: sudo 
 package: openssh
-# for spec2make / rpmlib
-package+f8: popt-devel
-# for pypcilib
-package: pciutils-devel
-# for vsys
-package: ocaml ocaml-ocamldoc 
+# undetermined 
+package: expect 
+package: gd 
+package: httpd mod_python mod_ssl 
+package: openssl 
+package: bison flex
+package: libtool 
+package: metadata 
+package: mysql mysql-devel mysql-server 
+package: python python-devel 
+package: doxygen  
+package: vixie-cron 
+package: xmlsec1 xmlsec1-openssl 
+package: dev 
+package: inotify-tools-devel 
 package: expat-devel
 package: db4-devel 
 package: ncurses-devel 
 package: readline-devel 
 package: dnsmasq 
-# is this useful ?
-package: expect 
-package: glibc glibc-common 
-package: make install gcc-c++ 
-package: gd 
+# for spec2make / rpmlib
+package+f8: popt-devel
+# kernel
 package: gnupg 
-package: gperf 
-package: httpd mod_python mod_ssl 
-package: openssl 
-package: bison flex
-package: libpcap libpcap-devel 
-package: libtool 
-package: sendmail sendmail-cf mailx 
-package: metadata 
-package: mysql mysql-devel mysql-server 
-package: nasm 
-package: php php-devel php-gd php-pgsql 
-package: postgresql postgresql-devel postgresql-python postgresql-server 
-package: python python-devel 
-package: PyXML 
-package: docbook-utils-pdf doxygen tetex-latex linuxdoc-tools 
+package: diffutils 
+# util-vserver
 package: vconfig 
-package: vixie-cron 
-package: xmlsec1 xmlsec1-openssl 
-# rebuild doc in myplc
+package: iptables 
+package: wget 
+package: beecrypt-devel 
+package: tetex-latex
+package: gcc-c++ 
+# ulogd
+package: libpcap libpcap-devel 
+# iptables
+package: linuxdoc-tools 
+# vserver-reference
+package: sudo 
+package: yum createrepo 
+# mysql
+package: gperf 
+package: time 
+# bootmanager
+package: sharutils 
+# bootcd
+package: nasm 
+package: mkisofs 
+package: dosfstools 
+# myplc
+package: rsync 
 package: ghostscript
-
-### from former xml config -- might help mapping tools to package
-#      <packagelist>
-#	<!-- kernel-vserver is intended for the vserver-reference, but
-#	     serves the same useful purpose for MyPLC, namely, to
-#	     Provide: kernel without actually installing anything. -->
-#	<packagereq type="mandatory">kernel-vserver</packagereq>	
-#
-#	<!-- Build script sends mail on failure -->
-#	<packagereq type="mandatory">mailx</packagereq>
-#	<packagereq type="mandatory">sendmail</packagereq>
-#
-#	<!-- kernel -->
-#	<packagereq type="mandatory">gnupg</packagereq>
-#	<packagereq type="mandatory">diffutils</packagereq>
-#
-#	<!-- util-vserver -->
-#	<packagereq type="mandatory">vconfig</packagereq>
-#	<packagereq type="mandatory">iptables</packagereq>
-#	<packagereq type="mandatory">wget</packagereq>
-#	<packagereq type="mandatory">beecrypt-devel</packagereq>
-#	<packagereq type="mandatory">tetex-latex</packagereq>
-#	<packagereq type="mandatory">gcc-c++</packagereq>
-#
-#	<!-- ulogd -->
-#	<packagereq type="mandatory">libpcap</packagereq>
-#	<packagereq type="mandatory">libpcap-devel</packagereq>
-#
-#	<!-- iptables -->
-#	<packagereq type="mandatory">linuxdoc-tools</packagereq>
-#
-#	<!-- vserver-reference -->
-#	<packagereq type="mandatory">sudo</packagereq>
-#	<packagereq type="mandatory">yum</packagereq>
-#	<packagereq type="mandatory">createrepo</packagereq>
-#
-#	<!-- mysql -->
-#	<packagereq type="mandatory">gperf</packagereq>
-#	<packagereq type="mandatory">time</packagereq>
-#
-#	<!-- bootmanager -->
-#	<packagereq type="mandatory">sharutils</packagereq>
-#
-#	<!-- bootcd -->
-#	<packagereq type="mandatory">nasm</packagereq>
-#	<packagereq type="mandatory">mkisofs</packagereq>
-#	<packagereq type="mandatory">dosfstools</packagereq>
-#
-#	<!-- myplc -->
-#	<packagereq type="mandatory">rsync</packagereq>
-#	<packagereq type="mandatory">ghostscript</packagereq>
-#
-#	<!-- new_plc_api -->
-#	<packagereq type="mandatory">docbook-utils-pdf</packagereq>
-#	<packagereq type="mandatory">postgresql-devel</packagereq>
-#	<packagereq type="mandatory">php-devel</packagereq>
-#	<packagereq type="mandatory">SOAPpy</packagereq>
-#	<packagereq type="mandatory">PyXML</packagereq>
+# PLCAPI
+package: docbook-utils-pdf 
+package: postgresql postgresql-devel postgresql-python postgresql-server 
+package: php php-devel php-gd php-pgsql 
+package: PyXML 
+# used to reference SOAPpy as well
+# for pypcilib
+package: pciutils-devel
+# for vsys
+package: ocaml ocaml-ocamldoc 
