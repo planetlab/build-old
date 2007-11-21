@@ -100,6 +100,7 @@ function runtest () {
 
     # checkout the system test (formerly known as plctest)
     cd /vservers/${BASE}/build
+    rm -rf TESTS
     svn export $TESTSVNPATH TESTS
     # dont trust retcod
     if [ ! -d TESTS ] ; then 
