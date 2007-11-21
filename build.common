@@ -276,8 +276,8 @@ function lst_parse () {
     return 0
 }
 
-function pl_getPackages2() { fcdistro=$1; shift ; lst_parse package $fcdistro "$@" }
-function pl_getGroups2() { fcdistro=$1; shift ; lst_parse group $fcdistro "$@" }
+function pl_getPackages2() { fcdistro=$1; shift ; lst_parse package $fcdistro "$@" ; }
+function pl_getGroups2() { fcdistro=$1; shift ; lst_parse group $fcdistro "$@" ; }
 
 function pl_getPackages() {
     filename=$1
