@@ -54,7 +54,7 @@ function setup_vserver () {
     if [ ! -d /etc/vservers/$vserver ] ; then
 	# check if we can create the vserver from a reference vserver
 	if [ -d /vservers/${fcdistro}_reference ] ; then
-	    $personality vserver $VERBOSE $vserver build -m clone -- --source /vserver/${fcdistro}_reference
+	    $personality vserver $VERBOSE $vserver build -m clone -- --source /vservers/${fcdistro}_reference
 	else
 	    $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
 	fi
