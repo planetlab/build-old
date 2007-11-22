@@ -189,16 +189,15 @@ set -e
 mount -t devpts none $vroot/dev/pts
 mount -t tmpfs none $vroot/dev/shm
 
-## make rpms ignore installing stuff to /proc
-#mkdir -p $vroot/etc/rpm
-## Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
-## you have to use at least one language beside 'C'
-#echo "%_install_langs         C:de:en:es:fr" > $vroot/etc/rpm/macros
-#echo "%_netsharedpath /proc" >> $vroot/etc/rpm/macros
-
 # xxx fixme : do this mount/unmount thing for fc4 only
 if [ "$releasever" -lt 6 ] ; then
-   # Mount /proc in reference image
+    ## make rpms ignore installing stuff to /proc
+    mkdir -p $vroot/etc/rpm
+    # Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
+    # you have to use at least one language beside 'C'
+    echo "%_install_langs         C:de:en:es:fr" > $vroot/etc/rpm/macros
+    echo "%_netsharedpath /proc" >> $vroot/etc/rpm/macros
+    # Mount /proc in reference image
     mkdir -p $vroot/proc
     mount -t proc none $vroot/proc
 fi
