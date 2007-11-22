@@ -25,13 +25,11 @@ verbose=0
 mirrors=(
 file:///data/fedora
 http://localhost/fedora
-ftp://smoke.cs.princeton.edu/pub/mirrors/fedora
+http://build.planet-lab.org/fedora
 http://coblitz.codeen.org/coblitz.planet-lab.org/pub/fedora
 ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
-http://coblitz.planet-lab.org/pub/fedora
 ftp://mirror.stanford.edu/pub/mirrors/fedora
 ftp://rpmfind.net/linux/fedora
-http://fedora.laptop.org/fedora-linux-releases
 )
 
 # Release and architecture to install
