@@ -1,5 +1,9 @@
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
+ifeq "$(RELEASE)" "8"
+Linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+else
 Linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/Linux-2.6/trunk
+endif
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/trunk
