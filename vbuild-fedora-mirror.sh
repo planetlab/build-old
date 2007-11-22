@@ -51,7 +51,7 @@ case $distroname in
 esac
 
 excludelist="debug/ iso/ ppc/ source/"
-options="$dry_run -avz --delete --delete-excluded"
+options="$dry_run -avz --delete --delete-excluded --no-motd"
 for e in $excludelist
 do
   options="$options --exclude $e"
