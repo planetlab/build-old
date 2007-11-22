@@ -191,7 +191,10 @@ mount -t tmpfs none $vroot/dev/shm
 
 # make rpms ignore installing stuff to /proc
 mkdir -p $vroot/etc/rpm
-echo "%_netsharedpath /proc" > $vroot/etc/rpm/macros
+# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
+# you have to use at least one language beside 'C'
+echo "%_install_langs         C:de:en:es:fr" > $vroot/etc/rpm/macros
+echo "%_netsharedpath /proc" >> $vroot/etc/rpm/macros
 # Mount /proc in reference image
 mkdir -p $vroot/proc
 mount -t proc none $vroot/proc
