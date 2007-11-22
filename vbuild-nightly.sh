@@ -310,6 +310,7 @@ function main () {
 	    cp $COMMANDPATH /vservers/${BASE}/build/
 
 	    # invoke this command in the vserver for building (-T)
+	    vserver ${BASE} exec chmod +x /build/$COMMAND
 	    vserver ${BASE} exec /build/$COMMAND "${argv[@]}" -b "${BASE}"
 	fi
 
