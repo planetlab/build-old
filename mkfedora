@@ -189,14 +189,16 @@ set -e
 mount -t devpts none $vroot/dev/pts
 mount -t tmpfs none $vroot/dev/shm
 
-# why do we need this ? it prevents the 'filesystem' rpm from installing
-## Mount /proc in reference image
-#mkdir -p $vroot/proc
-#mount -t proc none $vroot/proc
+# make rpms ignore installing stuff to /proc
+mkdir -p $vroot/etc/rpm
+echo "%_netsharedpath /proc" > $vroot/etc/rpm/macros
+# Mount /proc in reference image
+mkdir -p $vroot/proc
+mount -t proc none $vroot/proc
 
 cleanup ()
 {
-#    umount -l $vroot/proc
+    umount -l $vroot/proc
     umount -l $vroot/dev/shm
     umount -l $vroot/dev/pts
 }
