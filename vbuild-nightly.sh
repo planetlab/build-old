@@ -28,24 +28,39 @@ TESTSCRIPT=TestMain.py
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
 
+# temporary - wrap a quick summary of suspicious stuff
+# this is to focus on installation that go wrong
+# use with care, a *lot* of other things can go bad as well
+function summary () {
+    from=$1; shift
+    echo "******************** BEG SUMMARY" 
+    tr -d '\r' < $from | egrep 'BEG RPM|not installed|Installing:.*([eE]rror|[wW]arning)' 
+    echo "******************** END SUMMARY" 
+}
+
+
 # Notify recipient of failure or success, manage various stamps 
 function failure() {
     set -x
+    WEBLOG=${WEBPATH}/${BASE}.log.txt
+    cp $LOG ${WEBLOG}
+    summary $LOG >> ${WEBLOG}
+    (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 20k $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
-	tail -c 8k $LOG | mail -s "Failures for build ${BASE}" $MAILTO
+	tail -c 20k ${WEBPATH}/${BASE}.log.txt | mail -s "Failures for build ${BASE}" $MAILTO
     fi
-    cp $LOG ${WEBPATH}/${BASE}.log.txt
-    (echo -n "============================== $COMMAND: failure at" ; date ; tail -c 20k $LOG) > ${WEBPATH}/${BASE}.bko.txt
     exit 1
 }
 
 function success () {
     set -x
+    WEBLOG=${WEBPATH}/${BASE}.log.txt
+    cp $LOG ${WEBLOG}
+    summary $LOG >> ${WEBLOG}
+    touch ${WEBLOG}.ok
     if [ -n "$MAILTO" ] ; then
 	(echo "http://build.one-lab.org/$PLDISTRO/$BASE" ; echo "Completed on $(date)" ) | mail -s "Successfull build for ${BASE}" $MAILTO
     fi
-    cp $LOG ${WEBPATH}/${BASE}.log.txt
-    touch ${WEBPATH}/${BASE}.bok.txt
     exit 0
 }
 

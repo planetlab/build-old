@@ -314,6 +314,13 @@ SOURCES/%.tar.gz: SOURCES/%
 SOURCES/%.tgz: SOURCES/%
 	tar chpzf $@ -C SOURCES $*
 
+##
+URLS/%: url=$(subst @colon@,:,$(subst @slash@,/,$(notdir $@)))
+URLS/%: basename=$(notdir $(url))
+URLS/%: 
+	echo curl $(url) -o SOURCES/$(basename)
+	touch $@
+
 ### the directory SOURCES/<package>-<version> is made 
 # with a copy -rl from CODEBASES/<package>
 # the former is $(package-SOURCE) and the latter is $(package-CODEBASE)
