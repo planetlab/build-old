@@ -11,8 +11,13 @@
 #
 # kernel
 #
+ifeq "$(RELEASE)" "8"
+kernel-$(HOSTARCH)-MODULES := linux-2.6
+kernel-$(HOSTARCH)-SPEC := kernel-2.6-planetlab.spec
+else
 kernel-$(HOSTARCH)-MODULES := Linux-2.6
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
+endif
 ifeq ($(HOSTARCH),i386)
 kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
 else
