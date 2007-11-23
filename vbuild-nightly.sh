@@ -26,7 +26,7 @@ TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
 TESTSCRIPT=TestMain.py
 ####################
 # assuming vserver runs in UTC
-DATE=$(date -u +'%Y.%m.%d')
+DATE=$(date +'%Y.%m.%d')
 
 # Notify recipient of failure or success, manage various stamps 
 function failure() {
@@ -295,9 +295,9 @@ function main () {
 
 	# The log inside the vserver contains everything
 	LOG2=/vservers/${BASE}/log.txt
-	(echo "==================== Transcript of vserver creation -- BEG $(date)" ; \
+	(echo "==================== BEG VSERVER Transcript of vserver creation" ; \
 	 cat $LOG ; \
-	 echo "==================== Transcript of vserver creation -- END $(date)" ; \
+	 echo "==================== END VSERVER Transcript of vserver creation" ; \
 	 echo "xxxxxxxxxx Messing with logs, symlinking $LOG2 to $LOG" ) >> $LOG2
 	### not too nice : nuke the former log, symlink it to the new one
 	rm $LOG; ln -s $LOG2 $LOG
