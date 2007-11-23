@@ -115,7 +115,6 @@ ALL += ulogd
 #
 netflow-MODULES := PlanetFlow
 netflow-SPEC := netflow.spec
-netflow-SPECVARS := distroname=$(DISTRO) distrorelease=$(RELEASE)
 ALL += netflow
 
 #
@@ -265,5 +264,4 @@ myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
 #
 myplc-devel-native-MODULES := MyPLC
 myplc-devel-native-SPEC := myplc-devel-native.spec
-myplc-devel-native-SPECVARS := distroname=$(DISTRO) distrorelease=$(RELEASE)
 #ALL += myplc-devel-native
