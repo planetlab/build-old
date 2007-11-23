@@ -68,7 +68,9 @@ case $pl_DISTRO in
 	    pl_DISTRO_NAME=centos$pl_DISTRO_RELEASE
 	fi ;;
     *)
-	echo "build.common: WARNING - pl_DISTRO_NAME not set for distro=$pl_DISTRO" ;;
+	pl_DISTRO_NAME="unknown-name-for-${pl_DISTRO}-please-edit-build.common"
+	echo 1>&2 "build.common: WARNING - pl_DISTRO_NAME not set for distro=$pl_DISTRO" 
+	;;
 esac
 
 # get patch to appropriate yumgroups.xml file
