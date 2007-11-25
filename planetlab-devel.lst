@@ -60,6 +60,7 @@ package: sharutils
 package: nasm 
 package: mkisofs 
 package: dosfstools 
+package: mtools
 # myplc
 package: rsync 
 package: ghostscript
