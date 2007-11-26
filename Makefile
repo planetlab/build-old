@@ -274,6 +274,8 @@ export HOME := $(shell pwd)
 	rm -f $@ 
 	echo "%_topdir $(HOME)" >> $@
 	echo "%_tmppath $(HOME)/tmp" >> $@
+	echo "%_netsharedpath /proc:/dev/pts" >> $@
+	echo "%_install_langs C:de:en:es:fr" >> $@
 
 ### run spec2make on the spec file and include the result
 # usage: spec2make package
