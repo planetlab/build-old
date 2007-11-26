@@ -120,6 +120,13 @@ ulogd-DEPENDS := $(KERNELS) proper
 ALL += ulogd
 
 #
+# fprobe-ulog
+#
+fprobe-ulog-MODULES := fprobe-ulog
+fprobe-ulog-SPEC := fprobe-ulog.spec
+ALL += fprobe-ulog
+
+#
 # netflow
 #
 netflow-MODULES := PlanetFlow
