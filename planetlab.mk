@@ -14,21 +14,32 @@
 # until we are able to build the new kernel layout:
 # use the old exploded-tree, 2.6.20-based, version on fc4, 6 & 7
 # and the new one on f8 - that requires the build-id patch
+
+# 
+# use a package name with srpm in it:
+# in this case the srpm is created by running make srpm in the codebase
 #
+
 ifeq "$(RELEASE)" "8"
-kernel-$(HOSTARCH)-MODULES := linux-patches
-kernel-$(HOSTARCH)-SPEC := kernel-2.6-planetlab.spec
+srpm-kernel-$(HOSTARCH)-MODULES := linux-patches
+srpm-kernel-$(HOSTARCH)-SPEC := kernel-2.6-planetlab.spec
+ifeq ($(HOSTARCH),i386)
+srpm-kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
+else
+srpm-kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
+endif
+KERNELS += srpm-kernel-$(HOSTARCH)
+
 else
 kernel-$(HOSTARCH)-MODULES := linux-tree
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
-endif
 ifeq ($(HOSTARCH),i386)
 kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
 else
 kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
 endif
-
 KERNELS += kernel-$(HOSTARCH)
+endif
 
 kernel: $(KERNELS)
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
