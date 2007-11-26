@@ -1,7 +1,7 @@
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 # see planetlab.mk for when we use one or the other
-Linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/Linux-2.6/trunk
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+linux-tree-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/2.6.20
+linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # 
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk

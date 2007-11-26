@@ -11,11 +11,15 @@
 #
 # kernel
 #
+# until we are able to build the new kernel layout:
+# use the old exploded-tree, 2.6.20-based, version on fc4, 6 & 7
+# and the new one on f8 - that requires the build-id patch
+#
 ifeq "$(RELEASE)" "8"
-kernel-$(HOSTARCH)-MODULES := linux-2.6
+kernel-$(HOSTARCH)-MODULES := linux-patches
 kernel-$(HOSTARCH)-SPEC := kernel-2.6-planetlab.spec
 else
-kernel-$(HOSTARCH)-MODULES := Linux-2.6
+kernel-$(HOSTARCH)-MODULES := linux-tree
 kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
 endif
 ifeq ($(HOSTARCH),i386)
