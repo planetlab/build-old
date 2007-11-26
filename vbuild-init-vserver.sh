@@ -25,7 +25,13 @@ function configure_yum_in_vserver () {
     cd /etc/vservers/.distributions/${fcdistro}
     if [ -f yum/yum.conf ] ; then
 	echo "Initializing yum.conf in $vserver from $(pwd)/yum"
-	cp yum/yum.conf /vservers/$vserver/etc/yum.conf
+        sed -e "s!@YUMETCDIR@!/etc!g;
+                s!@YUMCACHEDIR@!/var/cache/yum!g;
+                s!@YUMLOGDIR@!/var/log!g;
+                s!@YUMLOCKDIR@!/var/lock!g;
+               " yum/yum.conf > /vservers/$vserver/etc/yum.conf
+
+	# post process the various @...@ variables from this yum.conf file.
     else
 	echo "Cannot initialize yum.conf in $vserver - using $fcdistro default"
     fi
