@@ -10,10 +10,9 @@ DEFAULT_PLDISTRO=planetlab
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 
-DEFAULT_MAILTO_onelab="onelab-build@one-lab.org"
-# tmp - send all mails to onelab
-#DEFAULT_MAILTO_planetlab="devel@planet-lab.org"
-DEFAULT_MAILTO_planetlab=$DEFAULT_MAILTO_onelab
+# NOTE: do not think we want to put email addresses into scripts
+# that can be harvested by spambots. --mef
+DEFAULT_MAILTO="onelab-build@one-lab.org"
 
 # web publishing results
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
@@ -59,7 +58,7 @@ function success () {
     summary $LOG >> ${WEBLOG}
     touch ${WEBLOG}.ok
     if [ -n "$MAILTO" ] ; then
-	(echo "http://build.one-lab.org/$PLDISTRO/$BASE" ; echo "Completed on $(date)" ) | mail -s "Successfull build for ${BASE}" $MAILTO
+	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successfull build for ${BASE}" $MAILTO
     fi
     exit 0
 }
@@ -231,11 +230,12 @@ function main () {
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
-    # 
+
+    # NOTE: suggest that by default no email is sent and that the user
+    # should explicitly invoke this script with the -m arg to pass in
+    # the appropriate email address. --mef
     if [ "$PLDISTRO" = "onelab" ] ; then
-	[ -z "$MAILTO" ] && MAILTO="$DEFAULT_MAILTO_onelab"
-    else
-	[ -z "$MAILTO" ] && MAILTO="$DEFAULT_MAILTO_planetlab"
+	[ -z "$MAILTO" ] && MAILTO="$DEFAULT_MAILTO"
     fi
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
