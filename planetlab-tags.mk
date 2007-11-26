@@ -4,8 +4,7 @@ linux-tree-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/2.6.20
 linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # 
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
-# latest trunk does not build - FIXME - remove when appropriate
-util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk@7068
+util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/trunk
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/trunk
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/trunk
