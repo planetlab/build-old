@@ -51,7 +51,7 @@ case $distroname in
 esac
 
 excludelist="debug/ iso/ ppc/ source/"
-options="$dry_run -avz --delete --delete-excluded --no-motd"
+options="$dry_run -avz --delete --delete-excluded --quiet"
 for e in $excludelist
 do
   options="$options --exclude $e"
@@ -65,6 +65,7 @@ echo "arch=$arch"
 echo rsyncurl="$rsyncurl"
 echo "rsync options=$options"
 
+RES=0
 case $distro in
     [Ff]edora*)
         case $distroindex in
@@ -75,7 +76,6 @@ case $distro in
 		  mkdir -p ${root}/${repopath}
 		  rsync $options ${rsyncurl}/${repopath} ${root}/${repopath}
 		done
-		RES=0
 		;;
 
 	    7|8)
@@ -85,7 +85,6 @@ case $distro in
 		  mkdir -p ${root}/${repopath}
 		  rsync $options ${rsyncurl}/${repopath} ${root}/${repopath}
 		done
-		RES=0
 		;;
 	    *)
 		echo "Unknown fedora index $distroindex - exiting"
@@ -93,6 +92,25 @@ case $distro in
 		;;
 	esac
 	;;
+    
+    CentOS*)
+	case $distroindex in
+	    5)
+		for repopath in $distroindex/os/$arch/ $distroindex/updates/$arch/
+		  do
+		  echo "============================== $distro -> $distroindex $repopath"
+		  mkdir -p ${root}/${repopath}
+		  rsync $options ${rsyncurl}/${repopath} ${root}/${repopath}
+		done
+		
+		;;
+	    *)
+		echo "$distro $distroindex currently unsupported - exiting"
+		RES=1
+		;;
+	esac
+	;;
+
     *)
 	echo "$distro $distroindex currently unsupported - exiting"
 	RES=1
