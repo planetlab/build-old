@@ -18,6 +18,8 @@
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
+echo "* Entering mkfedora " "$@"
+
 # Verbosity
 verbose=0
 
@@ -52,6 +54,7 @@ exclude_kernel=
 if [ -f /etc/planetlab/plc_config ] ; then
     . /etc/planetlab/plc_config
     if [ -n "$PLC_DEVEL_FEDORA_URL" ] ; then
+	echo "* mkfedora : setting mirrors from /etc/planetlab/config"
 	mirrors=($PLC_DEVEL_FEDORA_URL)
     fi
 fi
@@ -148,18 +151,19 @@ $releasever/$basearch/os
 "
 fi
 
+echo "$0: candidate mirrors"
+for mirror in "${mirrors[@]}" ; do
+    echo "* candidate mirror $mirror"
+done
+baseurl=""
 for mirror in "${mirrors[@]}" ; do
     for attempt in $attempts; do 
-	baseurl=$mirror/$attempt
-	if fetch $baseurl/repodata/repomd.xml >/dev/null ; then
-	    break
+	attempturl=$mirror/$attempt
+	if fetch $attempturl/repodata/repomd.xml >/dev/null ; then
+	    baseurl=$attempturl
+	    break 2
 	fi
-	unset baseurl
     done
-    if [ -n "$baseurl" ] ; then
-	break
-    fi
-    unset baseurl
 done
 
 if [ -z "$baseurl" ] ; then
