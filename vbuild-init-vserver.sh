@@ -87,6 +87,7 @@ function setup_vserver () {
     $personality vserver $VERBOSE $vserver exec rm -f /var/lib/rpm/__db*
     $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
+    # minimal config in the vserver for yum to work
     configure_yum_in_vserver $vserver $fcdistro
 
     # set up resolv.conf
@@ -154,6 +155,11 @@ function post_install () {
 	fi
     fi
     
+    # customize root's prompt
+    cat << PROFILE > /root/.profile
+export PS1="[$vserver] \\w # "
+PROFILE
+
     uid=2000
     gid=2000
     
