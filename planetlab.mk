@@ -41,10 +41,11 @@ KERNELS += srpm-kernel-$(HOSTARCH)
 #endif
 
 kernel: $(KERNELS)
+	sudo rpm -Uvh RPMS/i686/kernel-devel*.rpm
+
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
 
 kernel-devel: $(KERNELS)
-	sudo rpm -Uvh RPMS/i686/kernel-devel*.rpm
 
 ALL += $(KERNELS)
 
