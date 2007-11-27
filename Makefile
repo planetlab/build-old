@@ -269,8 +269,13 @@ spec2make: spec2make.c
 	$(CC) -g -Wall $< -o $@ -lrpm -lrpmbuild
 
 # Base rpmbuild in the current directory
-export HOME := $(shell pwd)
+# trying a longer topdir 
+# http://forums.fedoraforum.org/showthread.php?t=39625
+# and more specifically post#6
+# hard-wired for now 
+export HOME := /building
 .rpmmacros:
+	rm -f /building ; ln -s /build /building
 	rm -f $@ 
 	echo "%_topdir $(HOME)" >> $@
 	echo "%_tmppath $(HOME)/tmp" >> $@
@@ -391,7 +396,7 @@ $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALL)
 else
 $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-CODEBASE)
 	mkdir -p BUILD SRPMS tmp
-	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
+	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
 	make -C $($(1)-CODEBASE) srpm && \
            rm -f SRPMS/$(notdir $($(1)-SRPM)) && \
            ln $($(1)-CODEBASE)/$(notdir $($(1)-SRPM)) SRPMS/$(notdir $($(1)-SRPM)) 
