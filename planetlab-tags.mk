@@ -1,7 +1,7 @@
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 # see planetlab.mk for when we use one or the other
-linux-tree-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/2.6.20
-#linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+# linux-tree-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/2.6.20
+linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # 
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk
@@ -10,7 +10,7 @@ PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/trunk
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/trunk
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/trunk
 libhttpd++-SVNPATH		:= http://svn.planet-lab.org/svn/libhttpd++/trunk
-#proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/trunk
+proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/trunk
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/trunk
 ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/trunk
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
