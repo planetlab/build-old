@@ -20,7 +20,8 @@
 # in this case the srpm is created by running make srpm in the codebase
 #
 
-ifeq "$(RELEASE)" "8"
+# using 2.6.22 on all platforms - experimental
+#ifeq "$(RELEASE)" "8"
 srpm-kernel-$(HOSTARCH)-MODULES := linux-patches
 srpm-kernel-$(HOSTARCH)-SPEC := kernel-2.6-planetlab.spec
 ifeq ($(HOSTARCH),i386)
@@ -30,16 +31,16 @@ srpm-kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
 endif
 KERNELS += srpm-kernel-$(HOSTARCH)
 
-else
-kernel-$(HOSTARCH)-MODULES := linux-tree
-kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
-ifeq ($(HOSTARCH),i386)
-kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
-else
-kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
-endif
-KERNELS += kernel-$(HOSTARCH)
-endif
+#else
+#kernel-$(HOSTARCH)-MODULES := linux-tree
+#kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
+#ifeq ($(HOSTARCH),i386)
+#kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
+#else
+#kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
+#endif
+#KERNELS += kernel-$(HOSTARCH)
+#endif
 
 kernel: $(KERNELS)
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
@@ -112,7 +113,8 @@ proper-SPEC := proper.spec
 proper-RPMBUILD := sudo bash ./rpmbuild.sh
 # proper uses scripts in util-python for building
 proper-DEPENDS := libhttpd++ util-python
-ALL += proper
+# disabled temporarily (or ?)
+#ALL += proper
 
 #
 # codemux: Port 80 demux

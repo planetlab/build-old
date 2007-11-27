@@ -74,7 +74,7 @@
 #     the complete path where this module lies; 
 #     you can specify the trunk or a given tag with this variable
 # 
-# OR if the module is managed under cvs
+# OR if the module is managed under cvs (will be obsoleted)
 # 
 # (*) module-CVSROOT
 # (*) module-TAG
