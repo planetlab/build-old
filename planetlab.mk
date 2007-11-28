@@ -167,15 +167,6 @@ iproute-SPEC := iproute.spec
 ALL += iproute
 
 #
-# util-python
-#
-# [marc]    deprecate with proper
-#
-#util-python-MODULES := util-python
-#util-python-SPEC := util-python.spec
-#ALL += util-python
-
-#
 # vsys
 #
 vsys-MODULES := vsys
