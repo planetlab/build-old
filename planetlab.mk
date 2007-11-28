@@ -127,7 +127,8 @@ ALL += codemux
 #
 ulogd-MODULES := ulogd
 ulogd-SPEC := ulogd.spec
-ulogd-DEPENDDEVELS := $(kernel_package) proper
+ulogd-DEPENDDEVELS := $(kernel_package)
+ulogd-DEPENDDEVELRPMS := proper-libs proper-devel
 ALL += ulogd
 
 #
