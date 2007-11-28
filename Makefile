@@ -422,7 +422,7 @@ $($(1)-RPMS): $($(1)-SRPM)
 	mkdir -p BUILD RPMS SPECS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPENDFILES)), createrepo --quiet -g yumgroups.xml RPMS/ , )
-	@$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
+	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) --rebuild $($(1)-SRPM), \
 	  $(RPMBUILD)  $($(1)-RPMFLAGS) --rebuild $($(1)-SRPM))
