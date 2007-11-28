@@ -62,6 +62,8 @@
 #     a set of *packages* that this package depends on
 # (*) package-DEPENDDEVELS
 #     a set of *packages* that the build will rpm-install the -devel variant before building <package>
+# (*) package-DEPENDDEVELRPMS
+#     a set of *rpm* that the build will rpm-install before building <package>
 # (*) package-DEPENDFILES
 #     a set of files that the package depends on - and that make needs to know about
 #     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
@@ -392,6 +394,7 @@ $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALLS)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
 	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
+	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm -Uvh $($(rpm)-RPM-PATH);)
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath),
 	  $(RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath))	
@@ -401,6 +404,7 @@ $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-CODEBASE)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
 	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
+	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm -Uvh $($(rpm)-RPM-PATH);)
 	make -C $($(1)-CODEBASE) srpm && \
            rm -f SRPMS/$(notdir $($(1)-SRPM)) && \
            ln $($(1)-CODEBASE)/$(notdir $($(1)-SRPM)) SRPMS/$(notdir $($(1)-SRPM)) 

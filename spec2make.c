@@ -165,13 +165,15 @@ main(int argc, char *argv[])
 	  arch=target;
 	}
       }
-      printf("%s %s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
-	     (pkg->fileList?"":"# Empty "),
-	     package_name, arch, name, version, release, arch);
-      if (strstr (name,"-devel")!=NULL) {
-	printf("%s %s-DEVEL-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
-	     (pkg->fileList?"":"# Empty "),
+      if (pkg->fileList) {
+	printf("%s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
 	       package_name, arch, name, version, release, arch);
+	printf("%s-RPM-PATH := RPMS/%s/%s-%s-%s.%s.rpm\n",
+	       name,arch, name, version, release, arch);
+	if (strstr (name,"-devel")!=NULL) {
+	  printf("%s-DEVEL-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+		 package_name, arch, name, version, release, arch);
+	}
       }
     }
   }

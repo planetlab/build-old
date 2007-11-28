@@ -102,9 +102,9 @@ ALL += pl_sshd
 # Deprecate when vsys takes over [sapan].
 # keep in build for proper.
 #
-libhttpd++-MODULES := libhttpd++
-libhttpd++-SPEC := libhttpd++.spec
-ALL += libhttpd++
+libhttpd-MODULES := libhttpd++
+libhttpd-SPEC := libhttpd++.spec
+ALL += libhttpd
 
 #
 # proper: Privileged Operations Service
@@ -112,7 +112,8 @@ ALL += libhttpd++
 proper-MODULES := proper
 proper-SPEC := proper.spec
 #proper-RPMBUILD := sudo bash ./rpmbuild.sh
-proper-DEPENDDEVELS := libhttpd++
+proper-DEPENDS := libhttpd
+proper-DEPENDDEVELRPMS := libhttpd++
 ALL += proper
 
 #
