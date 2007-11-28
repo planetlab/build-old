@@ -111,9 +111,7 @@ ALL += libhttpd
 #
 proper-MODULES := proper
 proper-SPEC := proper.spec
-#proper-RPMBUILD := sudo bash ./rpmbuild.sh
-proper-DEPENDS := libhttpd
-proper-DEPENDDEVELRPMS := libhttpd++
+proper-DEPENDDEVELS := libhttpd
 ALL += proper
 
 #
