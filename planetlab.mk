@@ -111,12 +111,9 @@ ALL += libhttpd++
 #
 proper-MODULES := proper
 proper-SPEC := proper.spec
-proper-RPMBUILD := sudo bash ./rpmbuild.sh
-# proper uses scripts in util-python for building
-proper-DEPENDDEVELS := libhttpd++ util-python
-# disabled temporarily (or ?)
-# need to check that these two define a -devel package
-#ALL += proper
+#proper-RPMBUILD := sudo bash ./rpmbuild.sh
+proper-DEPENDDEVELS := libhttpd++
+ALL += proper
 
 #
 # codemux: Port 80 demux
@@ -175,9 +172,9 @@ ALL += iproute
 #
 # [marc]    deprecate with proper
 #
-util-python-MODULES := util-python
-util-python-SPEC := util-python.spec
-ALL += util-python
+#util-python-MODULES := util-python
+#util-python-SPEC := util-python.spec
+#ALL += util-python
 
 #
 # vsys
