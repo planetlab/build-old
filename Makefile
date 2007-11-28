@@ -429,8 +429,8 @@ $($(1)-RPMS): $($(1)-SRPM)
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPENDFILES)), createrepo --quiet -g yumgroups.xml RPMS/ , )
 	$(if $($(1)-RPMBUILD),\
-	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) --rebuild $($(1)-SRPM), \
-	  $(RPMBUILD)  $($(1)-RPMFLAGS) --rebuild $($(1)-SRPM))
+	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) --rebuild --define "_sourcedir $(HOME)/tmp" $($(1)-SRPM), \
+	  $(RPMBUILD)  $($(1)-RPMFLAGS) --rebuild --define "_sourcedir $(HOME)/tmp" $($(1)-SRPM))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 endef
 
