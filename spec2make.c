@@ -160,18 +160,17 @@ main(int argc, char *argv[])
     name = version = release = arch = NULL;
     (void) headerNEVRA(pkg->header, &name, &unused, &version, &release, &arch);
     if (name && version && release && arch) {
-      if (!pkg->fileList)
-	printf("# Empty\n# ");
-
       if (target != NULL) {
 	if (strcmp(arch,target)!=0) {
 	  arch=target;
 	}
       }
-      printf("%s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+      printf("%s %s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+	     (pkg->fileList?"":"# Empty "),
 	     package_name, arch, name, version, release, arch);
       if (strstr (name,"-devel")!=NULL) {
-	printf("%s-DEVEL-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+	printf("%s %s-DEVEL-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+	     (pkg->fileList?"":"# Empty "),
 	       package_name, arch, name, version, release, arch);
       }
     }
