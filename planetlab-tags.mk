@@ -18,7 +18,6 @@ PlanetFlow-SVNPATH		:= http://svn.planet-lab.org/svn/PlanetFlow/trunk
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/trunk
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/trunk
-util-python-SVNPATH		:= http://svn.planet-lab.org/svn/util-python/trunk
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/trunk
 WWW-SVNPATH			:= http://svn.planet-lab.org/svn/WWW/trunk
