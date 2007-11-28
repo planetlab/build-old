@@ -60,6 +60,8 @@
 #     would let you use the %release from the kernel's package when rpmbuild'ing mydriver - see automatic below
 # (*) package-DEPENDS
 #     a set of *packages* that this package depends on
+# (*) package-DEPENDDEVELS
+#     a set of *packages* that the build will rpm-install the -devel variant before building <package>
 # (*) package-DEPENDFILES
 #     a set of files that the package depends on - and that make needs to know about
 #     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
@@ -82,14 +84,14 @@
 #################### automatic variables
 #
 # the build defines the following make variables - these are extracted from spec files
-# (*) package-TARBALL : from the Source<n>: declaration
-#     example: kernel-i386-TARBALL = SOURCES/linux-2.6.20.tar.bz2
+# (*) package-TARBALLS : from the Source<n>: declaration
+#     example: kernel-i386-TARBALLS = SOURCES/linux-2.6.20.tar.bz2
 # (*) package-SOURCE : 
 #     example: kernel-i386-SOURCE = SOURCES/linux-2.6.20
 # (*) package-SRPM
 #     example: kernel-i386-SRPM = SRPMS/kernel-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.src.rpm
-# (*) package-RPM
-#     example: kernel-i386-RPM = \
+# (*) package-RPMS
+#     example: kernel-i386-RPMS = \
 #	RPMS/i686/kernel-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm \
 #	RPMS/i686/kernel-devel-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm \
 #	RPMS/i686/kernel-vserver-2.6.20-1.2949.fc6.vs2.2.0.1.0.planetlab.i686.rpm \
@@ -307,7 +309,7 @@ all: savepldistro
 
 ####################
 ### pack sources into tarballs
-ALLTARBALLS:= $(foreach package, $(ALL), $($(package)-TARBALL))
+ALLTARBALLS:= $(foreach package, $(ALL), $($(package)-TARBALLS))
 tarballs: $(ALLTARBALLS)
 	@echo $(words $(ALLTARBALLS)) source tarballs OK
 .PHONY: tarballs
@@ -386,7 +388,7 @@ srpms: $(ALLSRPMS)
 # select upon the package name, whether it contains srpm or not
 define target_source_rpm 
 ifeq "$(subst srpm,,$(1))" "$(1)"
-$($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALL) 
+$($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALLS) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
 	$(if $($(1)-RPMBUILD),\
@@ -407,7 +409,7 @@ endef
 $(foreach package,$(ALL),$(eval $(call target_source_rpm,$(package))))
 
 ### rpmbuild invokation
-ALLRPMS:=$(foreach package,$(ALL),$($(package)-RPM))
+ALLRPMS:=$(foreach package,$(ALL),$($(package)-RPMS))
 # same as above, mention $(ALL) and not $(ALLRPMS)
 rpms: $(ALLRPMS)
 	@echo $(words $(ALLRPMS)) binary rpms OK
@@ -416,10 +418,11 @@ rpms: $(ALLRPMS)
 # usage: build_binary_rpm package
 # xxx hacky - invoke createrepo if DEPENDFILES mentions RPMS/yumgroups.xml
 define target_binary_rpm 
-$($(1)-RPM): $($(1)-SRPM)
+$($(1)-RPMS): $($(1)-SRPM)
 	mkdir -p BUILD RPMS SPECS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPENDFILES)), createrepo --quiet -g yumgroups.xml RPMS/ , )
+	@$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) --rebuild $($(1)-SRPM), \
 	  $(RPMBUILD)  $($(1)-RPMFLAGS) --rebuild $($(1)-SRPM))
@@ -439,20 +442,20 @@ RPMS/yumgroups.xml: $(YUMGROUPS)
 # e.g. make proper -> does propers rpms
 # usage shorthand_target package
 define target_shorthand 
-$(1): $($(package)-RPM)
+$(1): $($(package)-RPMS)
 .PHONY: $(1)
 $(1)-spec: $($(package)-SPEC)
 .PHONY: $(1)-spec
 $(1)-mk: $($(package)-MK)
 .PHONY: $(1)-mk
-$(1)-tarball: $($(package)-TARBALL)
+$(1)-tarball: $($(package)-TARBALLS)
 .PHONY: $(1)-tarball
 $(1)-codebase: $($(package)-CODEBASE)
 .PHONY: $(1)-source
 $(1)-source: $($(package)-SOURCE)
 .PHONY: $(1)-codebase
-$(1)-rpm: $($(package)-RPM)
-.PHONY: $(1)-rpm
+$(1)-rpms: $($(package)-RPMS)
+.PHONY: $(1)-rpms
 $(1)-srpm: $($(package)-SRPM)
 .PHONY: $(1)-srpm
 endef
@@ -462,7 +465,7 @@ $(foreach package,$(ALL),$(eval $(call target_shorthand,$(package))))
 ### dependencies
 define package_depends_on_file
 $(1):$(2)
-$($(1)-RPM):$(2)
+$($(1)-RPMS):$(2)
 endef
 
 define target_dependfiles
@@ -471,17 +474,16 @@ endef
 
 define package_depends_on_package
 $(1):$(2)
-$(1):$($(2)-RPM)
-$($(1)-RPM):$($(2)-RPM)
+$(1):$($(2)-RPMS)
+$($(1)-RPMS):$($(2)-RPMS)
 endef
 
 define target_depends
-$(foreach package,$($(1)-DEPENDS),$(eval $(call package_depends_on_package,$(1),$(package))))
+$(foreach package,$($(1)-DEPENDS) $($(1)-DEPENDDEVELS),$(eval $(call package_depends_on_package,$(1),$(package))))
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_depends,$(package))))
 $(foreach package,$(ALL),$(eval $(call target_dependfiles,$(package))))
-
 
 ### clean target
 # usage: target_clean package
@@ -495,21 +497,21 @@ $(1)-clean-source:
 .PHONY: $(1)-clean-source
 CLEANS += $(1)-clean-source
 $(1)-clean-tarball:
-	rm -rf $($(1)-TARBALL)
+	rm -rf $($(1)-TARBALLS)
 .PHONY: $(1)-clean-tarball
 CLEANS += $(1)-clean-tarball
 $(1)-clean-build:
 	rm -rf BUILD/$(notdir $($(1)-SOURCE))
 CLEANS += $(1)-clean-build
-$(1)-clean-rpm:
-	rm -rf $($(1)-RPM)
-.PHONY: $(1)-clean-rpm
-CLEANS += $(1)-clean-rpm
+$(1)-clean-rpms:
+	rm -rf $($(1)-RPMS)
+.PHONY: $(1)-clean-rpms
+CLEANS += $(1)-clean-rpms
 $(1)-clean-srpm:
 	rm -rf $($(1)-SRPM)
 .PHONY: $(1)-clean-srpm
 CLEANS += $(1)-clean-srpm
-$(1)-clean: $(1)-clean-codebase $(1)-clean-source $(1)-clean-tarball $(1)-clean-build $(1)-clean-rpm $(1)-clean-srpm
+$(1)-clean: $(1)-clean-codebase $(1)-clean-source $(1)-clean-tarball $(1)-clean-build $(1)-clean-rpms $(1)-clean-srpm
 .PHONY: $(1)-clean
 endef
 
@@ -582,7 +584,7 @@ help:
 	@echo "  rebuilds everything"
 	@echo '$ make util-vserver'
 	@echo "  makes the RPMS related to util-vserver"
-	@echo "  equivalent to 'make util-vserver-rpm'"
+	@echo "  equivalent to 'make util-vserver-rpms'"
 	@echo ""
 	@echo "Or, vertically - step-by-step for a given package"
 	@echo '$ make util-vserver-codebase'
@@ -591,7 +593,7 @@ help:
 	@echo "  creates source link in SOURCES/util-vserver-<version>"
 	@echo '$ make util-vserver-tarball'
 	@echo "  creates source tarball in SOURCES/util-vserver-<version>.<tarextension>"
-	@echo '$ make util-vserver-rpm'
+	@echo '$ make util-vserver-rpms'
 	@echo "  build rpm(s) in RPMS/"
 	@echo '$ make util-vserver-srpm'
 	@echo "  build source rpm in SRPMS/"

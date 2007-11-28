@@ -123,7 +123,7 @@ main(int argc, char *argv[])
     char fullSource[PATH_MAX];
 
     strncpy(fullSource, source->fullSource, sizeof(fullSource));
-    printf("%s-TARBALL += SOURCES/%s\n", package_name, basename(fullSource));
+    printf("%s-TARBALLS += SOURCES/%s\n", package_name, basename(fullSource));
     /* computes the SOURCEDIR variable by removing .tar.gz or .tar.bz2 */
     { 
       char *suffixes[] = {".tar.gz",".tgz",".tar.bz2", NULL};
@@ -168,8 +168,12 @@ main(int argc, char *argv[])
 	  arch=target;
 	}
       }
-      printf("%s-RPM += RPMS/%s/%s-%s-%s.%s.rpm\n",
+      printf("%s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
 	     package_name, arch, name, version, release, arch);
+      if (strstr (name,"-devel")!=NULL) {
+	printf("%s-DEVEL-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+	       package_name, arch, name, version, release, arch);
+      }
     }
   }
 

@@ -41,13 +41,12 @@ KERNELS += srpm-kernel-$(HOSTARCH)
 #endif
 
 kernel: $(KERNELS)
-	sudo rpm -Uvh RPMS/i686/kernel-devel*.rpm
-
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
 
-kernel-devel: $(KERNELS)
-
 ALL += $(KERNELS)
+
+# the first kernel package defined here
+kernel_package := $(word 1,$(KERNELS))
 
 #
 # libnl
@@ -66,7 +65,7 @@ ALL += libnl
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
 util-vserver-RPMFLAGS:= --without dietlibc
-util-vserver-DEPENDS := libnl
+util-vserver-DEPENDDEVELS := libnl
 ALL += util-vserver
 
 #
@@ -114,8 +113,9 @@ proper-MODULES := proper
 proper-SPEC := proper.spec
 proper-RPMBUILD := sudo bash ./rpmbuild.sh
 # proper uses scripts in util-python for building
-proper-DEPENDS := libhttpd++ util-python
+proper-DEPENDDEVELS := libhttpd++ util-python
 # disabled temporarily (or ?)
+# need to check that these two define a -devel package
 #ALL += proper
 
 #
@@ -131,7 +131,7 @@ ALL += codemux
 #
 ulogd-MODULES := ulogd
 ulogd-SPEC := ulogd.spec
-ulogd-DEPENDS := kernel-devel proper
+ulogd-DEPENDDEVELS := $(kernel_package) proper
 ALL += ulogd
 
 #
@@ -160,7 +160,7 @@ ALL += pl_mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-iptables-DEPENDS :=kernel-devel
+iptables-DEPENDDEVELS := $(kernel_package)
 ALL += iptables
 
 #
