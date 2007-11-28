@@ -4,7 +4,7 @@
 ### $Id$
 # 
 ####################
-# invokation:
+# invocation:
 #
 # (*) make stage1=true
 #     this extracts all specfiles and computes .mk from specfiles
@@ -29,17 +29,17 @@
 # (*) create your main yumgroups.xml as groups/<distro>.xml
 # (*) there are also various places where a set of modules are defined.
 #     check for .lst files in the various modules that build root images
-#     and mimick what's done for planetlab 
+#     and mimic what's done for planetlab 
 # (*) then you need to run 
 #     make stage1=true PLDISTRO=onelab
 #
 #################### 
 # This build deals with 2 kinds of objects
 # 
-# (*) packages are named upon the RPM name; they are moslty lowercase
+# (*) packages are named upon the RPM name; they are mostly lowercase
 #     Add a package to ALL if you want it built as part of the default set.
 # (*) modules are named after the subversion tree; as of this writing their names 
-#     are mostly mixedcase like MyPLC or Vserverreference
+#     are mostly mixed case like MyPLC or Vserverreference
 # 
 #################### packages
 # basics: how to build a package - you need/may define the following variables
@@ -393,8 +393,8 @@ ifeq "$(subst srpm,,$(1))" "$(1)"
 $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALLS) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
-	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
-	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm -Uvh $($(rpm)-RPM-PATH);)
+	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm --force -Uvh $($(devel)-DEVEL-RPMS);))
+	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm --force -Uvh $($(rpm)-RPM-PATH);)
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath),
 	  $(RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath))	
@@ -403,8 +403,8 @@ else
 $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-CODEBASE)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
-	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm -Uvh $($(devel)-DEVEL-RPMS);))
-	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm -Uvh $($(rpm)-RPM-PATH);)
+	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm --force -Uvh $($(devel)-DEVEL-RPMS);))
+	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm --force -Uvh $($(rpm)-RPM-PATH);)
 	make -C $($(1)-CODEBASE) srpm && \
            rm -f SRPMS/$(notdir $($(1)-SRPM)) && \
            ln $($(1)-CODEBASE)/$(notdir $($(1)-SRPM)) SRPMS/$(notdir $($(1)-SRPM)) 
