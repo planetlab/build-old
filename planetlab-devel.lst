@@ -74,3 +74,4 @@ package: PyXML
 package: pciutils-devel
 # for vsys
 package: ocaml ocaml-ocamldoc 
+package: syslinux
