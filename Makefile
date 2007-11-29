@@ -193,6 +193,7 @@ include $(ALLMKS)
 # this is because the inter-package dependencies are expressed like
 # util-vserver: util-python
 all: rpms
+all: repo
 endif
 endif
 
@@ -208,6 +209,23 @@ myplc-release:
 	(echo -n 'Build tags file: ' ; fgrep '$$''Id' $(PLDISTROTAGS)) >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx modules versions info" >> $@
 	$(MAKE) --no-print-directory versions >> $@
+
+### yumgroups.xml
+# the source
+ifndef YUMGROUPS
+YUMGROUPS := groups/$(PLDISTRO).xml
+endif
+
+RPMS/yumgroups.xml: $(YUMGROUPS)
+	mkdir -p RPMS
+	install -D -m 644 $(YUMGROUPS) $@
+
+createrepo = createrepo --quiet -g yumgroups.xml RPMS/ 
+
+repo: RPMS/yumgroups.xml
+	$(createrepo)
+
+.PHONY: repo
 
 ####################
 # notes: 
@@ -427,7 +445,7 @@ define target_binary_rpm
 $($(1)-RPMS): $($(1)-SRPM)
 	mkdir -p BUILD RPMS SPECS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
-	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPENDFILES)), createrepo --quiet -g yumgroups.xml RPMS/ , )
+	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPENDFILES)), $(createrepo) , )
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) --rebuild --define "_sourcedir $(HOME)/tmp" $($(1)-SRPM), \
 	  $(RPMBUILD)  $($(1)-RPMFLAGS) --rebuild --define "_sourcedir $(HOME)/tmp" $($(1)-SRPM))
@@ -435,13 +453,6 @@ $($(1)-RPMS): $($(1)-SRPM)
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_binary_rpm,$(package))))
-
-### RPMS/yumgroups.xml
-ifndef YUMGROUPS
-YUMGROUPS := groups/$(PLDISTRO).xml
-endif
-RPMS/yumgroups.xml: $(YUMGROUPS)
-	install -D -m 644 $(YUMGROUPS) $@
 
 ### shorthand target
 # e.g. make proper -> does propers rpms
