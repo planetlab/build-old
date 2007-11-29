@@ -139,9 +139,9 @@ fetch ()
 # set list of attempted locations according to releasever
 if [ $releasever -ge 7 ] ; then
     attempts="
-linux/releases/$releasever/$basearch/os
+linux/releases/$releasever/Everything/$basearch/os
 $releasever/Everything/$basearch/os
-core/$releasever/Everything/$basearch/os \
+core/$releasever/Everything/$basearch/os
 linux/core/$releasever/$basearch/os
 "
 else
