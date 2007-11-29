@@ -279,19 +279,20 @@ myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 #myplc-native-DEPENDS := $(MyPLC-DEPENDS)
 # Thierry : dunno about this one, let's stay safe
 myplc-native-DEPENDFILES := $(MyPLC-DEPENDFILES)
-#ALL += myplc-native
+ALL += myplc-native
 
-#
-# MyPLC development environment : chroot-based 
-#
-myplc-devel-MODULES := MyPLC build 
-myplc-devel-SPEC := myplc-devel.spec
-myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
-#ALL += myplc-devel
-
-#
-# MyPLC native development environment
-#
-myplc-devel-native-MODULES := MyPLC
-myplc-devel-native-SPEC := myplc-devel-native.spec
-#ALL += myplc-devel-native
+######################################## obsolete section
+### #
+### # MyPLC development environment : chroot-based 
+### #
+### myplc-devel-MODULES := MyPLC build 
+### myplc-devel-SPEC := myplc-devel.spec
+### myplc-devel-RPMBUILD := sudo bash ./rpmbuild.sh
+### #ALL += myplc-devel
+### 
+### #
+### # MyPLC native development environment
+### #
+### myplc-devel-native-MODULES := MyPLC
+### myplc-devel-native-SPEC := myplc-devel-native.spec
+### #ALL += myplc-devel-native
