@@ -179,6 +179,9 @@ ifeq ($(DISTRO),"Fedora")
 ifeq ($(RELEASE),7)
 ALL += vsys
 endif
+ifeq ($(RELEASE),8)
+ALL += vsys
+endif
 endif
 
 #
