@@ -63,7 +63,7 @@
 # (*) package-DEPENDDEVELS
 #     a set of *packages* that the build will rpm-install the -devel variant before building <package>
 # (*) package-DEPENDDEVELRPMS
-#     a set of *rpm* that the build will rpm-install before building <package>
+#     a set of *rpms* that the build will rpm-install before building <package>
 # (*) package-DEPENDFILES
 #     a set of files that the package depends on - and that make needs to know about
 #     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
@@ -285,6 +285,7 @@ export HOME := /building
 	echo "%_tmppath $(HOME)/tmp" >> $@
 	echo "%_netsharedpath /proc:/dev/pts" >> $@
 	echo "%_install_langs C:de:en:es:fr" >> $@
+	echo "%_excludedocs yes" >> $@
 
 ### run spec2make on the spec file and include the result
 # usage: spec2make package
