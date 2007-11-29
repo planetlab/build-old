@@ -8,16 +8,12 @@
 #
 # see doc in Makefile  
 #
+
 #
 # kernel
 #
-# until we are able to build the new kernel layout:
-# use the old exploded-tree, 2.6.20-based, version on fc4, 6 & 7
-# and the new one on f8 - that requires the build-id patch
-
-# 
 # use a package name with srpm in it:
-# in this case the srpm is created by running make srpm in the codebase
+# so the source rpm is created by running make srpm in the codebase
 #
 
 srpm-kernel-$(HOSTARCH)-MODULES := linux-patches
@@ -29,24 +25,19 @@ srpm-kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
 endif
 KERNELS += srpm-kernel-$(HOSTARCH)
 
-#else
-#kernel-$(HOSTARCH)-MODULES := linux-tree
-#kernel-$(HOSTARCH)-SPEC := scripts/kernel-2.6-planetlab.spec
-#ifeq ($(HOSTARCH),i386)
-#kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
-#else
-#kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
-#endif
-#KERNELS += kernel-$(HOSTARCH)
-#endif
-
 kernel: $(KERNELS)
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
 
-ALL += $(KERNELS)
-
-# the first kernel package defined here
+# the first kernel package defined here for convenience
 kernel_package := $(word 1,$(KERNELS))
+
+ALL += $(KERNELS)
+# this is to mark on which image a given rpm is supposed to go
+IN_BOOTCD += $(KERNELS)
+IN_VSERVER += $(KERNELS)
+IN_BOOTSTRAPFS += $(KERNELS)
+# turns out myplc installs kernel-vserver
+IN_MYPLC += $(KERNELS)
 
 #
 # libnl
@@ -67,6 +58,7 @@ util-vserver-SPEC := util-vserver.spec
 util-vserver-RPMFLAGS:= --without dietlibc
 util-vserver-DEPENDDEVELS := libnl
 ALL += util-vserver
+IN_BOOTSTRAPFS += util-vserver
 
 #
 # NodeUpdate
@@ -74,13 +66,15 @@ ALL += util-vserver
 NodeUpdate-MODULES := NodeUpdate
 NodeUpdate-SPEC := NodeUpdate.spec
 ALL += NodeUpdate
+IN_BOOTSTRAPFS += NodeUpdate
 
 #
 # ipod
 #
-PingOfDeath-MODULES := PingOfDeath
-PingOfDeath-SPEC := ipod.spec
-ALL += PingOfDeath
+ipod-MODULES := PingOfDeath
+ipod-SPEC := ipod.spec
+ALL += ipod
+IN_BOOTSTRAPFS += ipod
 
 #
 # NodeManager
@@ -88,6 +82,7 @@ ALL += PingOfDeath
 NodeManager-MODULES := NodeManager
 NodeManager-SPEC := NodeManager.spec
 ALL += NodeManager
+IN_BOOTSTRAPFS += NodeManager
 
 #
 # pl_sshd
@@ -95,6 +90,7 @@ ALL += NodeManager
 pl_sshd-MODULES := pl_sshd
 pl_sshd-SPEC := pl_sshd.spec
 ALL += pl_sshd
+IN_BOOTSTRAPFS += pl_sshd
 
 #
 # libhttpd++: 
@@ -121,6 +117,7 @@ codemux-MODULES := CoDemux
 codemux-SPEC   := codemux.spec
 codemux-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += codemux
+IN_BOOTSTRAPFS += codemux
 
 #
 # ulogd
@@ -130,6 +127,7 @@ ulogd-SPEC := ulogd.spec
 ulogd-DEPENDDEVELS := $(kernel_package)
 ulogd-DEPENDDEVELRPMS := proper-libs proper-devel
 ALL += ulogd
+IN_VSERVER += ulogd
 
 #
 # fprobe-ulog
@@ -137,6 +135,7 @@ ALL += ulogd
 fprobe-ulog-MODULES := fprobe-ulog
 fprobe-ulog-SPEC := fprobe-ulog.spec
 ALL += fprobe-ulog
+IN_BOOTSTRAPFS += fprobe-ulog
 
 #
 # netflow
@@ -144,6 +143,7 @@ ALL += fprobe-ulog
 netflow-MODULES := PlanetFlow
 netflow-SPEC := netflow.spec
 ALL += netflow
+IN_BOOTSTRAPFS += netflow
 
 #
 # PlanetLab Mom: Cleans up your mess
@@ -151,6 +151,7 @@ ALL += netflow
 pl_mom-MODULES := Mom
 pl_mom-SPEC := pl_mom.spec
 ALL += pl_mom
+IN_BOOTSTRAPFS += pl_mom
 
 #
 # iptables
@@ -159,6 +160,7 @@ iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
 iptables-DEPENDDEVELS := $(kernel_package)
 ALL += iptables
+IN_BOOTSTRAPFS += iptables
 
 #
 # iproute
@@ -166,6 +168,7 @@ ALL += iptables
 iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
 ALL += iproute
+IN_BOOTSTRAPFS += iproute
 
 #
 # vsys
@@ -184,6 +187,7 @@ endif
 PLCAPI-MODULES := PLCAPI
 PLCAPI-SPEC := PLCAPI.spec
 ALL += PLCAPI
+IN_MYPLC += PLCAPI
 
 #
 # PLCWWW
@@ -191,6 +195,7 @@ ALL += PLCAPI
 PLCWWW-MODULES := WWW
 PLCWWW-SPEC := PLCWWW.spec
 ALL += PLCWWW
+IN_MYPLC += PLCWWW
 
 #
 # bootmanager
@@ -200,6 +205,7 @@ bootmanager-SPEC := bootmanager.spec
 # Package must be built as root
 bootmanager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += bootmanager
+IN_MYPLC += bootmanager
 
 #
 # pypcilib : used in bootcd
@@ -207,21 +213,7 @@ ALL += bootmanager
 pypcilib-MODULES := pypcilib
 pypcilib-SPEC := pypcilib.spec
 ALL += pypcilib
-
-# copy the current list, so as to keep image-building rpms out
-ALL-REGULARS := $(ALL)
-
-#
-# vserver : reference image for slices
-#
-vserver-MODULES := VserverReference build
-vserver-SPEC := vserver-reference.spec
-# Package must be built as root
-vserver-RPMBUILD := sudo bash ./rpmbuild.sh
-# package requires all regular packages
-vserver-DEPENDS := $(ALL-REGULARS)
-vserver-DEPENDFILES := RPMS/yumgroups.xml
-ALL += vserver
+IN_BOOTCD += pypcilib
 
 #
 # bootcd
@@ -230,9 +222,24 @@ bootcd-MODULES := BootCD BootManager build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 # package has *some* dependencies, at least these ones
-bootcd-DEPENDS := $(ALL-REGULARS)
+bootcd-DEPENDS := $(IN_BOOTCD)
 bootcd-DEPENDFILES := RPMS/yumgroups.xml
 ALL += bootcd
+IN_MYPLC += bootcd
+
+#
+# vserver : reference image for slices
+#
+vserver-MODULES := VserverReference build
+vserver-SPEC := vserver-reference.spec
+# Package must be built as root
+vserver-RPMBUILD := sudo bash ./rpmbuild.sh
+# this list is useful for manual builds only, since nightly builds 
+# always redo all sequentially - try to keep updated
+vserver-DEPENDS := $(IN_VSERVER)
+vserver-DEPENDFILES := RPMS/yumgroups.xml
+ALL += vserver
+IN_BOOTSTRAPFS := vserver
 
 #
 # bootstrapfs
@@ -241,9 +248,10 @@ bootstrapfs-MODULES := BootstrapFS build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
-bootstrapfs-DEPENDS := $(ALL-REGULARS)
+bootstrapfs-DEPENDS := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPENDFILES := RPMS/yumgroups.xml
 ALL += bootstrapfs
+IN_MYPLC += bootstrapfs
 
 #
 # myplc : initial, chroot-based packaging
@@ -253,7 +261,7 @@ myplc-SPEC := myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 # myplc may require all packages
-myplc-DEPENDS := $(filter-out vserver,$(ALL))
+myplc-DEPENDS := $(IN_MYPLC)
 myplc-DEPENDFILES := RPMS/yumgroups.xml
 ALL += myplc
 
