@@ -198,9 +198,8 @@ endif
 
 ####################
 # gather build information for the 'About' page
-SOURCES/myplc-release:
+myplc-release:
 	@echo 'Creating myplc-release'
-	mkdir -p SOURCES
 	rm -f $@
 	(echo -n 'Build bdate: ' ; date '+%Y.%m.%d') >> $@
 	(echo -n 'Build btime: ' ; date '+%H:%M') >> $@

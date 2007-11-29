@@ -265,7 +265,7 @@ myplc-SPEC := myplc.spec
 myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 # myplc may require all packages
 myplc-DEPENDS := $(IN_MYPLC)
-myplc-DEPENDFILES := RPMS/yumgroups.xml
+myplc-DEPENDFILES := RPMS/yumgroups.xml myplc-release
 ALL += myplc
 
 #
