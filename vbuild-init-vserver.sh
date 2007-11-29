@@ -21,6 +21,7 @@ function configure_yum_in_vserver () {
 
     vserver=$1; shift
     fcdistro=$1; shift
+    repo_url=$1; shift
 
     cd /etc/vservers/.distributions/${fcdistro}
     if [ -f yum/yum.conf ] ; then
@@ -33,7 +34,7 @@ function configure_yum_in_vserver () {
 
 	# post process the various @...@ variables from this yum.conf file.
     else
-	echo "Cannot initialize yum.conf in $vserver - using $fcdistro default"
+	echo "Using $fcdistro default for yum.conf"
     fi
 
     if [ -d yum.repos.d ] ; then
@@ -42,6 +43,19 @@ function configure_yum_in_vserver () {
 	tar cf - yum.repos.d | tar -C /vservers/$vserver/etc -xvf -
     else
 	echo "Cannot initialize yum.repos.d in $vserver"
+    fi
+
+    if [ -n "$MYPLC_MODE" ] ; then
+	if [ ! -d /vservers/$vserver/etc/yum.repos.d ] ; then
+	    echo "WARNING : cannot create myplc repo"
+	else
+	    cat > /vservers/$vserver/etc/yum.repos.d/myplc.repo <<EOF
+[myplc]
+name= MyPLC
+baseurl=$repo_url
+enabled=1
+EOF
+	fi
     fi
     cd -
 }    
@@ -61,7 +75,7 @@ function setup_vserver () {
     if [ ! -d /etc/vservers/$vserver ] ; then
 	# check if we can create the vserver from a reference vserver
 	#if [ -d /vservers/${fcdistro}_reference ] ; then
-	if [ 0 -ne 0 ] ; then
+	if [ 0 -ne 0 -a -n "$VBUILD_MODE" ] ; then
 	    $personality vserver $VERBOSE $vserver build -m clone -- --source /vservers/${fcdistro}_reference
 	    CLONED=1
 	else
@@ -74,15 +88,17 @@ function setup_vserver () {
 	[ $l32 -eq 0 ] && echo $personality >> /etc/vservers/$vserver/personality
     fi
 
+    if [ -n "$VBUILD_MODE" ] ; then 
     # set up appropriate vserver capabilities to mount, mknod and IPC_LOCK
-    BCAPFILE=/etc/vservers/$vserver/bcapabilities
-    touch $BCAPFILE
-    cap=$(grep ^CAP_SYS_ADMIN /etc/vservers/$vserver/bcapabilities | wc -l)
-    [ $cap -eq 0 ] && echo 'CAP_SYS_ADMIN' >> /etc/vservers/$vserver/bcapabilities
-    cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
-    [ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
-    cap=$(grep ^CAP_IPC_LOCK /etc/vservers/$vserver/bcapabilities | wc -l)
-    [ $cap -eq 0 ] && echo 'CAP_IPC_LOCK' >> /etc/vservers/$vserver/bcapabilities
+	BCAPFILE=/etc/vservers/$vserver/bcapabilities
+	touch $BCAPFILE
+	cap=$(grep ^CAP_SYS_ADMIN /etc/vservers/$vserver/bcapabilities | wc -l)
+	[ $cap -eq 0 ] && echo 'CAP_SYS_ADMIN' >> /etc/vservers/$vserver/bcapabilities
+	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
+	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
+	cap=$(grep ^CAP_IPC_LOCK /etc/vservers/$vserver/bcapabilities | wc -l)
+	[ $cap -eq 0 ] && echo 'CAP_IPC_LOCK' >> /etc/vservers/$vserver/bcapabilities
+    fi
 
     # start the vserver so we can do the following operations
     if [ $CLONED -eq 0 ] ; then
@@ -94,7 +110,7 @@ function setup_vserver () {
     $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
     # minimal config in the vserver for yum to work
-    configure_yum_in_vserver $vserver $fcdistro
+    configure_yum_in_vserver $vserver $fcdistro $repo_url
 
     # set up resolv.conf
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
@@ -112,7 +128,11 @@ function devel_tools () {
     personality=$1; shift
 
     # check for .lst file based on pldistro
-    lst=${pldistro}-devel.lst
+    if [ -n "$VBUILD_MODE" ] ; then
+	lst=${pldistro}-devel.lst
+    else
+	lst=${pldistro}-shell.lst
+    fi
     if [ -f $lst ] ; then
 	echo "$COMMAND: Using $lst"
     else
@@ -130,6 +150,14 @@ function devel_tools () {
 }
 
 function post_install () {
+    if [ -n "$VBUILD_MODE" ] ; then
+	post_install_vbuild "$@" 
+    else
+	post_install_myplc "$@"
+    fi
+}
+
+function post_install_vbuild () {
 
     set -x 
     set -e 
@@ -189,24 +217,47 @@ EOF
 
 }
 
+function post_install_myplc  () {
+    set -x 
+    set -e 
+    trap failure ERR INT
+
+    vserver=$1; shift
+    personality=$1; shift
+
+# be careful to backslash $ in this, otherwise it's the root context that's going to do the evaluation
+    cat << EOF | $personality vserver $VERBOSE $vserver exec bash -x
+
+    # customize root's prompt
+    cat << PROFILE > /root/.profile
+export PS1="[$vserver] \\w # "
+PROFILE
+
+EOF
+}
+
+COMMAND_VBUILD="vbuild-init-vserver.sh"
+COMMAND_MYPLC="myplc-init-vserver.sh"
 function usage () {
     set +x 
-    echo "Usage: $COMMAND [-s] [-p] [-v] vserver-name distribution pldistro [personality]"
+    echo "Usage: $COMMAND_VBUILD [-s|s|p] [-v] vserver-name distribution pldistro [personality]"
+    echo "Usage: $COMMAND_MYPLC [-s|s|p] [-v] vserver-name distribution pldistro repo-url [personality]"
     echo "Requirements: you need to have a vserver-compliant kernel,"
     echo "  as well as the util-vserver RPM installed"
     echo "Description:"
-    echo "  This command creates a fresh vserver instance, with the specified name"
-    echo "  The root filesystem is created from the specified distribution, e.g. fc6"
-    echo "  The third argument denotes a pldistro, e.g. onelab"
-    echo "  The last, optional, argument defaults to linux32"
+    echo "  This command creates a fresh vserver instance"
+    echo "  . vserver-name : the vserver's name"
+    echo "  . distribution : for creating the root filesystem, e.g. fc6"
+    echo "  . pldistro: e.g. onelab"
+    echo "  . repo-url: for myplc vserver, used to create a yum repository"
+    echo "  . personality: last, optional, argument defaults to linux32"
     echo "This is done in three steps"
     echo " (*) setup phase : vserver creation, yum internalization and config (from /etc/vservers)"
-    echo " (*) tools install : the tools required for building are installed"
-    echo "    to this end we search for a .lst file that specifies the pkgs & groups"
-    echo "    assuming the above that pldistro is onelab:"
-    echo "    (*) we first check for onelab-devel-fc6.lst"
-    echo "    (*) and then for onelab-devel.lst"
-    echo " (*) post-install : create a build user, + various tunings required"
+    echo " (*) tools install the tools required for building are installed"
+    echo "     based on the folowing file for the actual set of packages and groups"
+    echo "     vbuild mode :  <pldistro>-devel.lst"
+    echo "     myplc mode :   <pldistro>-shell.lst"
+    echo " (*) post-install : various tunings required, as well as create a build user (vbuild only)"
     echo "Options:"
     echo " -s : skips the setup phase"
     echo " -t : skips the tools phase"
@@ -220,6 +271,15 @@ function main () {
 
     set -e
     trap failure ERR INT
+
+    case "$COMMAND" in
+	$COMMAND_VBUILD)
+	    VBUILD_MODE=true ;;
+	$COMMAND_MYPLC)
+	    MYPLC_MODE=true;;
+	*)
+	    usage ;;
+    esac
 
     DO_SETUP=true
     DO_TOOLS=true
@@ -243,6 +303,10 @@ function main () {
     fcdistro=$1 ; shift
     [[ -z "$@" ]] && usage
     pldistro=$1 ; shift
+    if [ -n "$MYPLC_MODE" ] ; then
+	[[ -z "$@" ]] && usage
+	repo_url=$1 ; shift
+    fi
     if [[ -z "$@" ]] ; then
 	personality=linux32
     else
