@@ -2,6 +2,7 @@
 # -*-shell-*-
 
 COMMAND=$(basename $0)
+DIRNAME=$(dirname $0)
 
 # lst parsing utilities
 PATH=$(dirname $0):$PATH . build.common
@@ -139,6 +140,9 @@ function devel_tools () {
 	lst=${pldistro}-shell.lst
     fi
     if [ -f $lst ] ; then
+	echo "$COMMAND: Using $lst"
+    elif [ -f $DIRNAME/$lst ] ; then
+	lst=$DIRNAME/$lst
 	echo "$COMMAND: Using $lst"
     else
 	echo "$COMMAND : Cannot locate $lst - exiting"
