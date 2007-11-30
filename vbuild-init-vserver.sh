@@ -76,18 +76,13 @@ function setup_vserver () {
     fcdistro=$1; shift
     personality=$1; shift
 
-    CLONED=0
-    # create the new vserver
-    if [ ! -d /etc/vservers/$vserver ] ; then
-	# check if we can create the vserver from a reference vserver
-	#if [ -d /vservers/${fcdistro}_reference ] ; then
-	if [ 0 -ne 0 -a -n "$VBUILD_MODE" ] ; then
-	    $personality vserver $VERBOSE $vserver build -m clone -- --source /vservers/${fcdistro}_reference
-	    CLONED=1
-	else
-	    $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
-        fi
+    if [ -d /etc/vservers/$vserver ] ; then
+	echo "$COMMAND : vserver $vserver seems to exist - bailing out"
+	exit 1
     fi
+
+    # create it
+    $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
 
     if [ ! -z "$personality" ] ; then
 	l32=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
