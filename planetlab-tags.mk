@@ -6,7 +6,7 @@ build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # 
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
-util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk
+util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/scholz
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/trunk
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/trunk
