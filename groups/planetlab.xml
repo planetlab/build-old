@@ -95,6 +95,8 @@
 
       <packagereq type="mandatory">schedutils</packagereq>
 
+      <packagereq type="mandatory">openvpn</packagereq>
+
       <packagereq type="default">vconfig</packagereq>
 
       <packagereq type="mandatory">util-vserver</packagereq>
