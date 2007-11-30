@@ -221,7 +221,7 @@ IN_BOOTCD += pypcilib
 #
 # bootcd
 #
-bootcd-MODULES := BootCD BootManager build
+bootcd-MODULES := BootCD build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 # package has *some* dependencies, at least these ones
