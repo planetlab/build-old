@@ -1,3 +1,5 @@
+# $Id$
+
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 # see planetlab.mk for when we use one or the other
 # linux-tree-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/2.6.20
