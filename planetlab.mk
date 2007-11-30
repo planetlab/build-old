@@ -65,8 +65,7 @@ util-vserver-DEPENDDEVELS := libnl
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPENDDEVELS := libnl
-util-vserver-pl-DEPENDDEVELRPMS := util-vserver-lib util-vserver-devel
+util-vserver-pl-DEPENDDEVELRPMS := libnl libnl-devel util-vserver-lib util-vserver-devel
 ALL += util-vserver-pl
 IN_BOOTSTRAPFS += util-vserver-pl
 
