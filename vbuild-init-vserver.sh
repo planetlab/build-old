@@ -21,7 +21,6 @@ function configure_yum_in_vserver () {
 
     vserver=$1; shift
     fcdistro=$1; shift
-    repo_url=$1; shift
 
     cd /etc/vservers/.distributions/${fcdistro}
     if [ -f yum/yum.conf ] ; then
@@ -52,7 +51,7 @@ function configure_yum_in_vserver () {
 	    cat > /vservers/$vserver/etc/yum.repos.d/myplc.repo <<EOF
 [myplc]
 name= MyPLC
-baseurl=$repo_url
+baseurl=$REPO_URL
 enabled=1
 EOF
 	fi
@@ -110,7 +109,7 @@ function setup_vserver () {
     $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
     # minimal config in the vserver for yum to work
-    configure_yum_in_vserver $vserver $fcdistro $repo_url
+    configure_yum_in_vserver $vserver $fcdistro 
 
     # set up resolv.conf
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
@@ -305,7 +304,7 @@ function main () {
     pldistro=$1 ; shift
     if [ -n "$MYPLC_MODE" ] ; then
 	[[ -z "$@" ]] && usage
-	repo_url=$1 ; shift
+	REPO_URL=$1 ; shift
     fi
     if [[ -z "$@" ]] ; then
 	personality=linux32
@@ -314,7 +313,7 @@ function main () {
     fi
     [[ -n "$@" ]] && usage
 
-    [ -n "$DO_SETUP" ] && setup_vserver $vserver $fcdistro $personality
+    [ -n "$DO_SETUP" ] && setup_vserver $vserver $fcdistro $personality 
     [ -n "$DO_TOOLS" ] && devel_tools $vserver $fcdistro $pldistro $personality
     [ -n "$DO_POST" ] && post_install $vserver $personality
 
