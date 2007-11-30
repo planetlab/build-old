@@ -420,8 +420,10 @@ ifeq "$(subst srpm,,$(1))" "$(1)"
 $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALLS) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
-	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm --force -Uvh $($(devel)-DEVEL-RPMS);))
-	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm --force -Uvh $($(rpm)-RPM-PATH);)
+	deps="$(foreach devel,$($(1)-DEPENDDEVELS),$(if $($(devel)-DEVEL-RPMS), $($(devel)-DEVEL-RPMS))) \
+	$(foreach rpm,$($(1)-DEPENDDEVELRPMS), $($(rpm)-RPM-PATH))"; \
+	if test -n "$$$${deps/ /}"; then rpm -Uvh --force $$$$deps; \
+	else :; fi
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath),
 	  $(RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath))	
