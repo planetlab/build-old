@@ -6,7 +6,6 @@ COMMAND=$(basename $0)
 dry_run=
 root=/data/fedora/linux
 rsyncurl=rsync://mirrors.kernel.org/fedora
-#rsyncurl=rsync://fr.rpmfind.net/linux/fedora
 distroname=fc6
 arch=i386
 
@@ -21,7 +20,7 @@ function usage () {
 while getopts "nvr:u:f:a:h" opt ; do
     case $opt in
 	n) dry_run=-n ;;
-	v) set -x ;;
+	v) set -x ; verbose=true ;;
 	r) root=$OPTARG ;;
 	u) rsyncurl=$OPTARG ;;
 	f) distroname=$OPTARG ;;
@@ -52,6 +51,7 @@ esac
 
 excludelist="debug/ iso/ ppc/ source/"
 options="$dry_run -avz --delete --delete-excluded --quiet"
+[ -n "$verbose" ] && options="$options --verbose"
 for e in $excludelist
 do
   options="$options --exclude $e"
