@@ -278,6 +278,6 @@ myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 # Thierry : don't depend on anything at build-time
 #myplc-native-DEPENDS :=
 # Thierry : dunno about this one, let's stay safe
-myplc-native-DEPENDFILES := $(myplc-DEPENDFILES)
+myplc-native-DEPENDFILES := myplc-release
 ALL += myplc-native
 
