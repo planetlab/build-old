@@ -504,7 +504,7 @@ endef
 define package_depends_on_package
 $(1):$(2)
 $(1):$($(2)-RPMS)
-$($(1)-RPMS):$($(2)-RPMS)
+$($(1)-SRPM):$($(2)-RPMS)
 endef
 
 define target_depends
