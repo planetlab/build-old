@@ -48,11 +48,17 @@ function configure_yum_in_vserver () {
 	if [ ! -d /vservers/$vserver/etc/yum.repos.d ] ; then
 	    echo "WARNING : cannot create myplc repo"
 	else
+            # exclude kernel from fedora repos 
+	    for i in /vservers/$vserver/etc/yum.repos.d/* ; do
+		echo "kernel* ulogd iptables" >> $i
+	    done
+	    # the build repo is not signed at this stage
 	    cat > /vservers/$vserver/etc/yum.repos.d/myplc.repo <<EOF
 [myplc]
 name= MyPLC
 baseurl=$REPO_URL
 enabled=1
+gpgcheck=0
 EOF
 	fi
     fi
