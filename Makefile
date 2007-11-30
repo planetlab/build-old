@@ -284,25 +284,34 @@ endef
 
 $(foreach package,$(ALL),$(eval $(call target_spec,$(package))))
 
-### this utility allows to extract various info from a spec file
-### and to define them in makefiles
-spec2make: spec2make.c
-	$(CC) -g -Wall $< -o $@ -lrpm -lrpmbuild
-
+###
 # Base rpmbuild in the current directory
-# trying a longer topdir 
-# http://forums.fedoraforum.org/showthread.php?t=39625
-# and more specifically post#6
-# hard-wired for now 
-export HOME := /building
+# issues on fedora 8 : see the following posts
+# http://forums.fedoraforum.org/showthread.php?t=39625 - and more specifically post#6
+# https://www.redhat.com/archives/fedora-devel-list/2007-November/msg00171.html
+REALROOT=/build
+FAKEROOT=/longbuildroot
+PWD=$(shell /bin/pwd)
+ifeq "$(PWD)" "$(REALROOT)"
+export HOME := $(FAKEROOT)
+else
+export HOME := $(PWD)
+endif
 .rpmmacros:
-	rm -f /building ; ln -s /build /building
+ifeq "$(shell pwd)" "/build"
+	rm -f $(FAKEROOT) ; ln -s $(REALROOT) $(FAKEROOT)
+endif
 	rm -f $@ 
 	echo "%_topdir $(HOME)" >> $@
 	echo "%_tmppath $(HOME)/tmp" >> $@
 	echo "%_netsharedpath /proc:/dev/pts" >> $@
 	echo "%_install_langs C:de:en:es:fr" >> $@
 	echo "%_excludedocs yes" >> $@
+
+### this utility allows to extract various info from a spec file
+### and to define them in makefiles
+spec2make: spec2make.c
+	$(CC) -g -Wall $< -o $@ -lrpm -lrpmbuild
 
 ### run spec2make on the spec file and include the result
 # usage: spec2make package
@@ -531,8 +540,19 @@ $(1)-clean-srpm:
 	rm -rf $($(1)-SRPM)
 .PHONY: $(1)-clean-srpm
 CLEANS += $(1)-clean-srpm
-$(1)-clean: $(1)-clean-codebase $(1)-clean-source $(1)-clean-tarball $(1)-clean-build $(1)-clean-rpms $(1)-clean-srpm
-.PHONY: $(1)-clean
+$(1)-codeclean: $(1)-clean-source $(1)-clean-tarball $(1)-clean-build $(1)-clean-rpms $(1)-clean-srpm
+$(1)-clean: $(1)-clean-codebase $(1)-codeclean
+.PHONY: $(1)-codeclean $(1)-clean 
+$(1)-clean-spec:
+	rm -rf $($(1)_specpath)
+.PHONY: $(1)-clean-spec
+$(1)-clean-make:
+	rm -rf MAKE/$(1).mk
+.PHONY: $(1)-clean-make
+$(1)-distclean: $(1)-distclean1 $(1)-distclean2
+$(1)-distclean1: $(1)-clean-spec $(1)-clean-make
+$(1)-distclean2: $(1)-clean
+.PHONY: $(1)-distclean $(1)-distclean1 $(1)-distclean2
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_clean,$(package))))
@@ -630,6 +650,11 @@ help:
 	@echo "  removes the files made by make"
 	@echo "$ make distclean"
 	@echo "  brute-force cleaning, removes entire directories - requires a new stage1"
+	@echo ""
+	@echo "$ make iptables-distclean"
+	@echo "$ make iptables-codeclean"
+	@echo "  run this if you've made a change in the CODEBASES area for iptables"
+	@echo ""
 	@echo "$ make util-vserver-clean"
 	@echo "  removes codebase, source, tarball, build, rpm and srpm for util-vserver"
 	@echo "$ make util-vserver-clean-codebase"
