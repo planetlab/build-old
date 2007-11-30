@@ -37,13 +37,16 @@ package+f8: popt-devel
 # kernel
 package: gnupg 
 package: diffutils 
-# util-vserver
+# util-vserver-pl
 package: vconfig 
 package: iptables 
 package: wget 
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
+package: util-vserver-lib
+package: util-vserver-devel
+package: util-vserver-core
 # ulogd
 package: libpcap libpcap-devel 
 # iptables

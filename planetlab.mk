@@ -57,8 +57,18 @@ util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
 util-vserver-RPMFLAGS:= --without dietlibc
 util-vserver-DEPENDDEVELS := libnl
-ALL += util-vserver
-IN_BOOTSTRAPFS += util-vserver
+#ALL += util-vserver
+#IN_BOOTSTRAPFS += util-vserver
+
+#
+# util-vserver-pl
+#
+util-vserver-pl-MODULES := util-vserver-pl
+util-vserver-pl-SPEC := util-vserver-pl.spec
+util-vserver-pl-DEPENDDEVELS := libnl
+util-vserver-pl-DEPENDDEVELRPMS := util-vserver-lib util-vserver-devel
+ALL += util-vserver-pl
+IN_BOOTSTRAPFS += util-vserver-pl
 
 #
 # NodeUpdate
