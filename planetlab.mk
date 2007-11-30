@@ -275,9 +275,9 @@ myplc-native-MODULES := MyPLC build
 myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-# Thierry : don't depend on these at build-time
-#myplc-native-DEPENDS := $(MyPLC-DEPENDS)
+# Thierry : don't depend on anything at build-time
+#myplc-native-DEPENDS :=
 # Thierry : dunno about this one, let's stay safe
-myplc-native-DEPENDFILES := $(MyPLC-DEPENDFILES)
+myplc-native-DEPENDFILES := $(myplc-DEPENDFILES)
 ALL += myplc-native
 
