@@ -101,6 +101,8 @@ HOSTARCH := $(shell uname -i)
 DISTRO := $(shell ./getdistro.sh)
 RELEASE := $(shell ./getrelease.sh)
 RPM-INSTALL-DEVEL := rpm --force -Uvh
+# cannot force rpm -e
+RPM-UNINSTALL-DEVEL := rpm -e
 
 #################### Makefile
 # Default target
@@ -127,32 +129,32 @@ include $(PLDISTROCONTENTS)
 PLDISTROTAGS := $(PLDISTRO)-tags.mk
 include $(PLDISTROTAGS)
 
-########## stage1 and stage2
+########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
 # make stage1=true
 # entering stage1, we compute all the spec files
-# then we use stage2 to compute the .mk iteratively, 
+# then we use stage1iter to compute the .mk iteratively, 
 # ensuring that the n-1 first makefiles are loaded when creating the n-th one
-# when stage2 is set, it is supposed to be an index (starting at 1) in $(ALL)
+# when stage1iter is set, it is supposed to be an index (starting at 1) in $(ALL)
 
 ALLMKS := $(foreach package, $(ALL), MAKE/$(package).mk)
 
-### stage2 : need some arithmetic, see
+### stage1iter : need some arithmetic, see
 # http://www.cmcrossroads.com/articles/ask-mr.-make/learning-gnu-make-functions-with-arithmetic.html
-ifneq "$(stage2)" ""
+ifneq "$(stage1iter)" ""
 # the first n packages
-packages := $(wordlist 1,$(words $(stage2)),$(ALL))
+packages := $(wordlist 1,$(words $(stage1iter)),$(ALL))
 # the n-th package
 package := $(word $(words $(packages)),$(packages))
 # the n-1 first packages
-stage2_1 := $(wordlist 2,$(words $(stage2)),$(stage2))
-previous := $(wordlist 1,$(words $(stage2_1)),$(ALL))
+stage1iter_1 := $(wordlist 2,$(words $(stage1iter)),$(stage1iter))
+previous := $(wordlist 1,$(words $(stage1iter_1)),$(ALL))
 previousmks := $(foreach package,$(previous),MAKE/$(package).mk)
 include $(previousmks)
 all: verbose
 verbose:
-	@echo "========== stage2 : $(package)"
-#	@echo "stage2 : included .mk files : $(previousmks)"
+	@echo "========== stage1iter : $(package)"
+#	@echo "stage1iter : included .mk files : $(previousmks)"
 all: $($(package).specpath)
 all: MAKE/$(package).mk
 else
@@ -163,10 +165,10 @@ verbose :
 	@echo "========== stage1"
 all : spec2make
 all : .rpmmacros
-# specs and makes are done sequentially by stage2
-all : stage2
-stage2:
-	arg=""; for n in $(ALL) ; do arg="$$arg x"; $(MAKE) --no-print-directory stage2="$$arg"; done
+# specs and makes are done sequentially by stage1iter
+all : stage1iter
+stage1iter:
+	arg=""; for n in $(ALL) ; do arg="$$arg x"; $(MAKE) --no-print-directory stage1iter="$$arg"; done
 ### regular make
 else
 ### once .mks are OK, you can run make normally
@@ -321,7 +323,20 @@ savepldistro: pldistro.mk
 # always refresh this
 all: savepldistro
 
-####################
+#################### regular make
+
+define stage2_variables
+### devel dependencies
+$(1).rpmbuild = $(if $($(1)-RPMBUILD),$($(1)-RPMBUILD),$(RPMBUILD)) $($(1)-RPMFLAGS)
+$(1).all-devel-rpm-paths := $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).rpm-path))
+$(1).depend-devel-packages := $(sort $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).package)))
+ALL-DEVEL-RPMS += $($(1)-DEPEND-DEVEL-RPMS)
+endef
+
+$(foreach package,$(ALL),$(eval $(call stage2_variables,$(package))))
+ALL-DEVEL-RPMS := $(sort $(ALL-DEVEL-RPMS))
+
+
 ### pack sources into tarballs
 ALLTARBALLS:= $(foreach package, $(ALL), $($(package).tarballs))
 tarballs: $(ALLTARBALLS)
@@ -398,12 +413,6 @@ srpms: $(ALLSRPMS)
 	@echo $(words $(ALLSRPMS)) source rpms OK
 .PHONY: srpms
 
-define compute_devel_rpm_paths
-$(1).all-devel-rpm-paths := $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).rpm-path))
-endef
-
-$(foreach package,$(ALL),$(eval $(call compute_devel_rpm_paths,$(package))))
-
 # usage: target_source_rpm package
 # select upon the package name, whether it contains srpm or not
 define target_source_rpm 
@@ -412,9 +421,8 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
-	$(if $($(1)-RPMBUILD),\
-	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1).specpath),
-	  $(RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1).specpath))	
+	$($(1).rpmbuild) -bs $($(1).specpath)
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 else
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
@@ -424,13 +432,14 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
 	make -C $($(1).codebase) srpm && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 endif
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_source_rpm,$(package))))
 
-### rpmbuild invokation
+### binary rpms are made from source rpm
 ALLRPMS:=$(foreach package,$(ALL),$($(package).rpms))
 # same as above, mention $(ALL) and not $(ALLRPMS)
 rpms: $(ALLRPMS)
@@ -439,7 +448,7 @@ rpms: $(ALLRPMS)
 
 # use tmp dirs when building binary rpm so make remains idempotent 
 # otherwise SOURCES/ or SPEC gets touched again - which leads to rebuilding
-rpm_use_tmp_dirs = --define "_sourcedir $(HOME)/tmp" --define "_specdir $(HOME)/tmp"
+RPM-USE-TMP-DIRS = --define "_sourcedir $(HOME)/tmp" --define "_specdir $(HOME)/tmp"
 
 # usage: build_binary_rpm package
 # xxx hacky - invoke createrepo if DEPEND-FILES mentions RPMS/yumgroups.xml
@@ -448,9 +457,9 @@ $($(1).rpms): $($(1).srpm)
 	mkdir -p BUILD RPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
-	$(if $($(1)-RPMBUILD),\
-	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) --rebuild $(rpm_use_tmp_dirs) $($(1).srpm), \
-	  $(RPMBUILD)  $($(1)-RPMFLAGS) --rebuild $(rpm_use_tmp_dirs) $($(1).srpm))
+	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
+	$($(1).rpmbuild) --rebuild $(RPM-USE-TMP-DIRS) $($(1).srpm)
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 endef
 
@@ -493,11 +502,6 @@ endef
 $(foreach package,$(ALL),$(eval $(call target_dependfiles,$(package))))
 
 ### package dependencies
-define compute_devel_depends
-$(1).depend-devel-packages := $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).package))
-endef
-$(foreach package,$(ALL),$(eval $(call compute_devel_depends,$(package))))
-
 define package_depends_on_package
 $(1):$(2)
 $(1):$($(2).rpms)
@@ -569,6 +573,9 @@ distclean2:
 	rm -rf CODEBASES SOURCES BUILD RPMS SRPMS tmp
 distclean: distclean1 distclean2
 .PHONY: distclean1 distclean2 distclean
+
+develclean:
+	$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
 
 # xxx tmp - I cannot use this on my mac for local testing
 ISMACOS=$(findstring Darwin,$(shell uname))
@@ -644,6 +651,8 @@ help:
 	@echo "  removes the files made by make"
 	@echo "make distclean"
 	@echo "  brute-force cleaning, removes entire directories - requires a new stage1"
+	@echo "make develclean"
+	@echo "  rpm-uninstalls all devel packages installed during build"
 	@echo ""
 	@echo "make iptables-distclean"
 	@echo "  deep clean for a given package"
