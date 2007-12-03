@@ -109,6 +109,7 @@ IN_BOOTSTRAPFS += pl_sshd
 libhttpd-MODULES := libhttpd++
 libhttpd-SPEC := libhttpd++.spec
 ALL += libhttpd
+IN_BOOTSTRAPFS += libhttpd
 
 #
 # proper: Privileged Operations Service
@@ -117,6 +118,7 @@ proper-MODULES := proper
 proper-SPEC := proper.spec
 proper-DEPEND-DEVEL-RPMS := libhttpd++-devel
 ALL += proper
+IN_BOOTSTRAPFS += proper
 
 #
 # codemux: Port 80 demux
