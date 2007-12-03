@@ -115,7 +115,7 @@ ALL += libhttpd
 #
 proper-MODULES := proper
 proper-SPEC := proper.spec
-proper-DEPENDDEVELS := libhttpd
+proper-DEPENDDEVELRPMS := libhttpd++-devel
 ALL += proper
 
 #
@@ -132,8 +132,7 @@ IN_BOOTSTRAPFS += codemux
 #
 ulogd-MODULES := ulogd
 ulogd-SPEC := ulogd.spec
-ulogd-DEPENDDEVELS := $(kernel_package)
-ulogd-DEPENDDEVELRPMS := proper-libs proper-devel
+ulogd-DEPENDDEVELRPMS := kernel-devel proper-libs proper-devel
 ALL += ulogd
 IN_VSERVER += ulogd
 
@@ -166,7 +165,7 @@ IN_BOOTSTRAPFS += pl_mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-iptables-DEPENDDEVELS := $(kernel_package)
+iptables-DEPENDDEVELRPMS := kernel-devel
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
 

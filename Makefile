@@ -60,8 +60,6 @@
 #     would let you use the %release from the kernel's package when rpmbuild'ing mydriver - see automatic below
 # (*) package-DEPENDS
 #     a set of *packages* that this package depends on
-# (*) package-DEPENDDEVELS
-#     a set of *packages* that the build will rpm-install the -devel variant before building <package>
 # (*) package-DEPENDDEVELRPMS
 #     a set of *rpms* that the build will rpm-install before building <package>
 # (*) package-DEPENDFILES
@@ -114,6 +112,7 @@
 HOSTARCH := $(shell uname -i)
 DISTRO := $(shell ./getdistro.sh)
 RELEASE := $(shell ./getrelease.sh)
+RPM-INSTALL-DEVEL := rpm --force -Uvh
 
 #################### Makefile
 # Default target
@@ -416,14 +415,12 @@ srpms: $(ALLSRPMS)
 # usage: target_source_rpm package
 # select upon the package name, whether it contains srpm or not
 define target_source_rpm 
+$(1).all-devel-rpm-paths := $(foreach rpm,$($(1)-DEPENDDEVELRPMS),$($(rpm).rpm-path))
 ifeq "$(subst srpm,,$(1))" "$(1)"
 $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-TARBALLS) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
-	deps="$(foreach devel,$($(1)-DEPENDDEVELS),$(if $($(devel)-DEVEL-RPMS), $($(devel)-DEVEL-RPMS))) \
-	$(foreach rpm,$($(1)-DEPENDDEVELRPMS), $($(rpm)-RPM-PATH))"; \
-	if test -n "$$$${deps/ /}"; then rpm -Uvh --force $$$$deps; \
-	else :; fi
+	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath),
 	  $(RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1)_specpath))	
@@ -432,8 +429,7 @@ else
 $($(1)-SRPM): $($(1)_specpath) .rpmmacros $($(1)-CODEBASE)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
-	-$(foreach devel,$($(1)-DEPENDDEVELS), $(if $($(devel)-DEVEL-RPMS),rpm --force -Uvh $($(devel)-DEVEL-RPMS);))
-	-$(foreach rpm,$($(1)-DEPENDDEVELRPMS), rpm --force -Uvh $($(rpm)-RPM-PATH);)
+	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	make -C $($(1)-CODEBASE) srpm && \
            rm -f SRPMS/$(notdir $($(1)-SRPM)) && \
            ln $($(1)-CODEBASE)/$(notdir $($(1)-SRPM)) SRPMS/$(notdir $($(1)-SRPM)) 
@@ -493,15 +489,23 @@ endef
 
 $(foreach package,$(ALL),$(eval $(call target_shorthand,$(package))))
 
-### dependencies
+### file dependencies
 define package_depends_on_file
 $(1):$(2)
-$($(1)-RPMS):$(2)
+$($(1)-SRPM):$(2)
 endef
 
 define target_dependfiles
 $(foreach file,$($(1)-DEPENDFILES),$(eval $(call package_depends_on_file,$(1),$(file))))
 endef
+
+$(foreach package,$(ALL),$(eval $(call target_dependfiles,$(package))))
+
+### package dependencies
+define compute_devel_depends
+$(1).depend-devel-packages := $(foreach rpm,$($(1)-DEPENDDEVELRPMS),$($(rpm).package))
+endef
+$(foreach package,$(ALL),$(eval $(call compute_devel_depends,$(package))))
 
 define package_depends_on_package
 $(1):$(2)
@@ -510,11 +514,10 @@ $($(1)-SRPM):$($(2)-RPMS)
 endef
 
 define target_depends
-$(foreach package,$($(1)-DEPENDS) $($(1)-DEPENDDEVELS),$(eval $(call package_depends_on_package,$(1),$(package))))
+$(foreach package,$($(1)-DEPENDS) $($(1).depend-devel-packages),$(eval $(call package_depends_on_package,$(1),$(package))))
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_depends,$(package))))
-$(foreach package,$(ALL),$(eval $(call target_dependfiles,$(package))))
 
 ### clean target
 # usage: target_clean package

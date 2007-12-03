@@ -165,15 +165,17 @@ main(int argc, char *argv[])
 	  arch=target;
 	}
       }
+      /* skip empty packages */
       if (pkg->fileList) {
+	/* attach (add) rpm path to package */
 	printf("%s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
 	       package_name, arch, name, version, release, arch);
-	printf("%s-RPM-PATH := RPMS/%s/%s-%s-%s.%s.rpm\n",
+	/* attach path to rpm name */
+	printf("%s.rpm-path := RPMS/%s/%s-%s-%s.%s.rpm\n",
 	       name,arch, name, version, release, arch);
-	if (strstr (name,"-devel")!=NULL) {
-	  printf("%s-DEVEL-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
-		 package_name, arch, name, version, release, arch);
-	}
+	/* attach package to rpm name for backward resolution - should be unique */
+	printf("%s.package := %s\n",
+	       name,package_name);
       }
     }
   }
