@@ -398,14 +398,19 @@ srpms: $(ALLSRPMS)
 	@echo $(words $(ALLSRPMS)) source rpms OK
 .PHONY: srpms
 
+define compute_devel_rpm_paths
+$(1).all-devel-rpm-paths := $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).rpm-path))
+endef
+
+$(foreach package,$(ALL),$(eval $(call compute_devel_rpm_paths,$(package))))
+
 # usage: target_source_rpm package
 # select upon the package name, whether it contains srpm or not
 define target_source_rpm 
-$(1).all-devel-rpm-paths := $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).rpm-path))
 ifeq "$(subst srpm,,$(1))" "$(1)"
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs) 
 	mkdir -p BUILD SRPMS tmp
-	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) " ; date)
+	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$(if $($(1)-RPMBUILD),\
 	  $($(1)-RPMBUILD) $($(1)-RPMFLAGS) -bs $($(1).specpath),
