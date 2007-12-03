@@ -16,14 +16,14 @@
 # so the source rpm is created by running make srpm in the codebase
 #
 
-srpm-kernel-$(HOSTARCH)-MODULES := linux-patches
-srpm-kernel-$(HOSTARCH)-SPEC := kernel-2.6-planetlab.spec
+srpm-kernel-MODULES := linux-patches
+srpm-kernel-SPEC := kernel-2.6-planetlab.spec
 ifeq ($(HOSTARCH),i386)
-srpm-kernel-$(HOSTARCH)-RPMFLAGS:= --target i686
+srpm-kernel-RPMFLAGS:= --target i686
 else
-srpm-kernel-$(HOSTARCH)-RPMFLAGS:= --target $(HOSTARCH)
+srpm-kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
-KERNELS += srpm-kernel-$(HOSTARCH)
+KERNELS += srpm-kernel
 
 kernel: $(KERNELS)
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
@@ -64,7 +64,7 @@ IN_BOOTSTRAPFS += util-vserver
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPENDDEVELRPMS := libnl libnl-devel util-vserver-lib util-vserver-devel util-vserver-core
+util-vserver-pl-DEPEND-DEVEL-RPMS := libnl libnl-devel util-vserver-lib util-vserver-devel util-vserver-core
 ALL += util-vserver-pl
 IN_BOOTSTRAPFS += util-vserver-pl
 
@@ -115,7 +115,7 @@ ALL += libhttpd
 #
 proper-MODULES := proper
 proper-SPEC := proper.spec
-proper-DEPENDDEVELRPMS := libhttpd++-devel
+proper-DEPEND-DEVEL-RPMS := libhttpd++-devel
 ALL += proper
 
 #
@@ -132,7 +132,7 @@ IN_BOOTSTRAPFS += codemux
 #
 ulogd-MODULES := ulogd
 ulogd-SPEC := ulogd.spec
-ulogd-DEPENDDEVELRPMS := kernel-devel proper-libs proper-devel
+ulogd-DEPEND-DEVEL-RPMS := kernel-devel proper-libs proper-devel
 ALL += ulogd
 IN_VSERVER += ulogd
 
@@ -165,7 +165,7 @@ IN_BOOTSTRAPFS += pl_mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-iptables-DEPENDDEVELRPMS := kernel-devel
+iptables-DEPEND-DEVEL-RPMS := kernel-devel
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
 
@@ -232,8 +232,8 @@ bootcd-MODULES := BootCD build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 # package has *some* dependencies, at least these ones
-bootcd-DEPENDS := $(IN_BOOTCD)
-bootcd-DEPENDFILES := RPMS/yumgroups.xml
+bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
+bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 ALL += bootcd
 IN_MYPLC += bootcd
 
@@ -246,8 +246,8 @@ vserver-SPEC := vserver-reference.spec
 vserver-RPMBUILD := sudo bash ./rpmbuild.sh
 # this list is useful for manual builds only, since nightly builds 
 # always redo all sequentially - try to keep updated
-vserver-DEPENDS := $(IN_VSERVER)
-vserver-DEPENDFILES := RPMS/yumgroups.xml
+vserver-DEPEND-PACKAGES := $(IN_VSERVER)
+vserver-DEPEND-FILES := RPMS/yumgroups.xml
 ALL += vserver
 IN_BOOTSTRAPFS := vserver
 
@@ -258,8 +258,8 @@ bootstrapfs-MODULES := BootstrapFS build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
-bootstrapfs-DEPENDS := $(IN_BOOTSTRAPFS)
-bootstrapfs-DEPENDFILES := RPMS/yumgroups.xml
+bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
+bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
 ALL += bootstrapfs
 IN_MYPLC += bootstrapfs
 
@@ -271,8 +271,8 @@ myplc-SPEC := myplc.spec
 # Package must be built as root
 myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 # myplc may require all packages
-myplc-DEPENDS := $(IN_MYPLC)
-myplc-DEPENDFILES := RPMS/yumgroups.xml myplc-release
+myplc-DEPEND-PACKAGES := $(IN_MYPLC)
+myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
 ALL += myplc
 
 #
@@ -283,8 +283,8 @@ myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 # Thierry : don't depend on anything at build-time
-#myplc-native-DEPENDS :=
+#myplc-native-DEPEND-PACKAGES :=
 # Thierry : dunno about this one, let's stay safe
-myplc-native-DEPENDFILES := myplc-release
+myplc-native-DEPEND-FILES := myplc-release
 ALL += myplc-native
 

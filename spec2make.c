@@ -123,7 +123,7 @@ main(int argc, char *argv[])
     char fullSource[PATH_MAX];
 
     strncpy(fullSource, source->fullSource, sizeof(fullSource));
-    printf("%s-TARBALLS += SOURCES/%s\n", package_name, basename(fullSource));
+    printf("%s.tarballs += SOURCES/%s\n", package_name, basename(fullSource));
     /* computes the SOURCEDIR variable by removing .tar.gz or .tar.bz2 */
     { 
       char *suffixes[] = {".tar.gz",".tgz",".tar.bz2", NULL};
@@ -138,8 +138,8 @@ main(int argc, char *argv[])
 	  size_t len = (size_t)(suffix_index-fullSource);
 	  strncpy(sourcename,fullSource,len);
 	  sourcename[len]='\0';
-	  printf ("%s-SOURCE := SOURCES/%s\n",package_name,basename(sourcename));
-	  printf ("%s-CODEBASE := CODEBASES/%s\n",package_name,package_name);
+	  printf ("%s.source := SOURCES/%s\n",package_name,basename(sourcename));
+	  printf ("%s.codebase := CODEBASES/%s\n",package_name,package_name);
 	  break;
 	}
       }
@@ -152,7 +152,7 @@ main(int argc, char *argv[])
   name = version = release = NULL;
   (void) headerNVR(pkg->header, &name, &version, &release);
   if (name && version && release)
-    printf("%s-SRPM := SRPMS/%s-%s-%s.src.rpm\n",
+    printf("%s.srpm := SRPMS/%s-%s-%s.src.rpm\n",
 	   package_name, name, version, release);
 
   /* Print non-empty packages */
@@ -168,8 +168,11 @@ main(int argc, char *argv[])
       /* skip empty packages */
       if (pkg->fileList) {
 	/* attach (add) rpm path to package */
-	printf("%s-RPMS += RPMS/%s/%s-%s-%s.%s.rpm\n",
+	printf("%s.rpms += RPMS/%s/%s-%s-%s.%s.rpm\n",
 	       package_name, arch, name, version, release, arch);
+	/* convenience */
+	printf("%s.rpmnames += %s\n",
+	       package_name, name);
 	/* attach path to rpm name */
 	printf("%s.rpm-path := RPMS/%s/%s-%s-%s.%s.rpm\n",
 	       name,arch, name, version, release, arch);
@@ -188,7 +191,7 @@ main(int argc, char *argv[])
     for (nav=macros; *nav; nav++) {
       sprintf(macro,"%%{%s}",*nav);
       char *value = rpmExpand(macro,NULL);
-      printf ("%s-rpm-%s := %s\n",package_name,*nav,value);
+      printf ("%s.rpm-%s := %s\n",package_name,*nav,value);
     }
   }
   
