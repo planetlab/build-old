@@ -16,14 +16,15 @@
 # so the source rpm is created by running make srpm in the codebase
 #
 
-srpm-kernel-MODULES := linux-patches
-srpm-kernel-SPEC := kernel-2.6-planetlab.spec
+kernel-MODULES := linux-patches
+kernel-SPEC := kernel-2.6-planetlab.spec
+kernel-BUILD-FROM-SRPM := yes
 ifeq ($(HOSTARCH),i386)
-srpm-kernel-RPMFLAGS:= --target i686
+kernel-RPMFLAGS:= --target i686
 else
-srpm-kernel-RPMFLAGS:= --target $(HOSTARCH)
+kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
-KERNELS += srpm-kernel
+KERNELS += kernel
 
 kernel: $(KERNELS)
 kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
@@ -38,6 +39,21 @@ IN_VSERVER += $(KERNELS)
 IN_BOOTSTRAPFS += $(KERNELS)
 # turns out myplc installs kernel-vserver
 IN_MYPLC += $(KERNELS)
+
+#
+# madwifi
+#
+# [thierry] - temporarily use onelab's svn
+#
+madwifi-MODULES := madwifi
+madwifi-SPEC := madwifi.spec
+madwifi-BUILD-FROM-SRPM := yes
+madwifi-DEPEND-DEVEL-RPMS := kernel-devel
+madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
+	kernel_release=$(kernel.rpm-release) \
+	kernel_arch=$(kernel.rpm-arch)
+IN_BOOTSTRAPFS += madwifi
+ALL += madwifi
 
 #
 # libnl

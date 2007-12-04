@@ -70,6 +70,8 @@
 #     is refreshed with createrepo prior to running rpmbuild
 # (*) package-RPMFLAGS: Miscellaneous RPM flags
 # (*) package-RPMBUILD: If not rpmbuild - mostly used for sudo'ing rpmbuild
+# (*) package-BUILD-FROM-SRPM: set this to any non-empty value, if your package is able to produce 
+#     a source rpms by running 'make srpm'
 #
 #################### modules
 # Required information about the various modules (set this in e.g. planetlab-tags.mk)
@@ -226,7 +228,7 @@ repo: RPMS/yumgroups.xml
 #
 define stage1_variables
 $(1).spec = $(notdir $($(1)-SPEC))
-$(1).specpath = SPECS/$(notdir $($(1)-SPEC))
+$(1).specpath = SPECS/$(1).spec
 $(1).module = $(firstword $($(1)-MODULES))
 endef
 
@@ -415,7 +417,7 @@ srpms: $(ALLSRPMS)
 # usage: target_source_rpm package
 # select upon the package name, whether it contains srpm or not
 define target_source_rpm 
-ifeq "$(subst srpm,,$(1))" "$(1)"
+ifeq "$($(1)-BUILD-FROM-SRPM)" ""
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
@@ -428,7 +430,7 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
-	make -C $($(1).codebase) srpm && \
+	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
 	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))

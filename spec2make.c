@@ -195,6 +195,9 @@ main(int argc, char *argv[])
     }
   }
   
+  /* export arch */
+  printf ("%s.rpm-arch := %s\n",package_name,target);
+
   spec = freeSpec(spec);
 
  done:

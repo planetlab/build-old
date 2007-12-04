@@ -5,6 +5,7 @@ build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 # linux-tree-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/2.6.20
 linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # 
+madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/scholz
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
