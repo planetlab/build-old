@@ -44,9 +44,9 @@ package: wget
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
-package: util-vserver-lib
-package: util-vserver-devel
-package: util-vserver-core
+#package: util-vserver-lib
+#package: util-vserver-devel
+#package: util-vserver-core
 # ulogd
 package: libpcap libpcap-devel 
 # iptables
