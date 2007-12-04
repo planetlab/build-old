@@ -193,12 +193,23 @@ set -e
 ## make rpms ignore installing stuff to special fs entries like /proc
 # Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 # you have to use at least one language beside 'C'
+# Prevent all locales from being installed in reference image
 mkdir -p $vroot/etc/rpm
 cat > $vroot/etc/rpm/macros <<EOF
-%_install_langs C:de:en:es:fr
+%_install_langs C:en_US:en
 %_netsharedpath /proc:/dev/pts
 %_excludedocs yes
+%__file_context_path /dev/null
 EOF
+
+# Trick rpm and yum, who read the real root /etc/rpm/macros file
+# rather than the one installed in the reference image, despite what
+# you might expect the --root and --installroot options to mean. Both
+# programs always read $HOME/.rpmmacros.
+export HOME=$vroot/tmp
+mkdir -p $vroot/tmp
+cp $vroot/etc/rpm/macros $vroot/tmp/.rpmmacros
+
 ### Checking whether this is really needed
 ### # copy to the vserver's rpm macros
 ### # xxx fixme - this must be reviewed once we get the stuff running
@@ -233,25 +244,9 @@ cat >$vroot/etc/fstab <<EOF
 EOF
 cp $vroot/etc/fstab $vroot/etc/mtab
 
-# Prevent all locales from being installed in reference image
-mkdir -p $vroot/etc/rpm
-cat >$vroot/etc/rpm/macros <<EOF
-%_install_langs en_US:en
-%_excludedocs 1
-%__file_context_path /dev/null
-EOF
-
 # Necessary for some scripts
 mkdir -p $vroot/etc/sysconfig
 echo "NETWORKING=yes" > $vroot/etc/sysconfig/network
-
-# Trick rpm and yum, who read the real root /etc/rpm/macros file
-# rather than the one installed in the reference image, despite what
-# you might expect the --root and --installroot options to mean. Both
-# programs always read $HOME/.rpmmacros.
-export HOME=$vroot/tmp
-mkdir -p $vroot/tmp
-cp $vroot/etc/rpm/macros $vroot/tmp/.rpmmacros
 
 # Initialize RPM database in reference image
 mkdir -p $vroot/var/lib/rpm
