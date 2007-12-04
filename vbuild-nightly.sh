@@ -200,7 +200,8 @@ function main () {
     MAKEOPTS=()
     DO_BUILD=true
     DO_TEST=true
-    while getopts "nf:d:b:t:r:s:om:a:w:BTvh" opt ; do
+    PERSONALITY="linux32"
+    while getopts "nf:d:b:t:r:s:om:a:w:BTvhp:" opt ; do
 	case $opt in
 	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ;;
 	    f) FCDISTRO=$OPTARG ;;
@@ -215,6 +216,7 @@ function main () {
 	    w) WEBPATH=$OPTARG ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ; USEOLD=true ;;
+	    p) PERSONALITY=$OPTARG ;;
 	    v) set -x ;;
 	    h|*) usage ;;
 	esac
@@ -299,7 +301,7 @@ function main () {
 	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
-	    ./vbuild-init-vserver.sh ${BASE} ${FCDISTRO} ${PLDISTRO}
+	    ./vbuild-init-vserver.sh ${BASE} ${FCDISTRO} ${PLDISTRO} ${PERSONALITY}
 	    # cleanup
 	    cd -
 	    rm -rf $tmpdir
