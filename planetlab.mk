@@ -53,6 +53,15 @@ IN_BOOTSTRAPFS += madwifi
 ALL += madwifi
 
 #
+# wireless-tools
+# 
+wireless-tools-MODULES := wireless-tools
+wireless-tools-SPEC := wireless-tools.spec
+wireless-tools-BUILD-FROM-SRPM := yes
+ALL += wireless-tools
+IN_BOOTSTRAPFS += wireless-tools
+
+#
 # libnl
 #
 # [daniel]    wait for latest Fedora release 
