@@ -193,15 +193,16 @@ set -e
 ## make rpms ignore installing stuff to special fs entries like /proc
 # Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
 # you have to use at least one language beside 'C'
-# xxx fixme - this must be reviewed once we get the stuff running
-cat > /etc/rpm/macros <<EOF
+mkdir -p $vroot/etc/rpm
+cat > $vroot/etc/rpm/macros <<EOF
 %_install_langs C:de:en:es:fr
 %_netsharedpath /proc:/dev/pts
 %_excludedocs yes
 EOF
-# copy to the vserver's rpm macros
-mkdir -p $vroot/etc/rpm
-cp /etc/rpm/macros $vroot/etc/rpm/macros
+### Checking whether this is really needed
+### # copy to the vserver's rpm macros
+### # xxx fixme - this must be reviewed once we get the stuff running
+### cp $vroot/etc/rpm/macros /etc/rpm/macros 
 
 # Mount in reference image
 mount -t devpts none $vroot/dev/pts
