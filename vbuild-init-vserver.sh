@@ -86,7 +86,7 @@ function setup_vserver () {
 
     if [ ! -z "$personality" ] ; then
 	registered_personality=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
-	if [ $registered_personality -eq 0 -a "$personality" != "linux64" ] ;
+	if [ $registered_personality -eq 0 -a "$personality" != "linux64" ] ; then
 	    echo $personality >> /etc/vservers/$vserver/personality
 	fi
     fi
