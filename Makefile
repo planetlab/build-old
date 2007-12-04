@@ -257,10 +257,10 @@ $($(1).specpath):
 	echo "%define distrorelease $(RELEASE)" >> $($(1).specpath)
 	echo "%define pldistro $(PLDISTRO)" >> $($(1).specpath)
 	$(if $($(1).has-date),echo "%define date $(shell date +%Y.%m.%d)" >> $($(1).specpath),)
-	echo "# included from codebase specfile" >> $($(1).specpath)
 	$(if $($(1)-SPECVARS), \
 	  $(foreach line,$($(1)-SPECVARS), \
 	    echo "%define" $(word 1,$(subst =, ,$(line))) "$(word 2,$(subst =, ,$(line)))" >> $($(1).specpath) ;))
+	echo "# included from codebase specfile" >> $($(1).specpath)
 	$(if $($($(1).module)-SVNPATH),\
           svn cat $($($(1).module)-SVNPATH)/$($(1)-SPEC) >> $($(1).specpath) || rm $($(1).specpath),\
           cvs -d $($($(1).module)-CVSROOT) checkout \
