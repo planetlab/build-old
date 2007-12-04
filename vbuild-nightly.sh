@@ -7,7 +7,8 @@ COMMAND=$(basename $0)
 # default values, tunable with command-line options
 DEFAULT_FCDISTRO=fc6
 DEFAULT_PLDISTRO=planetlab
-DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@"
+DEFAULT_PERSONALITY=linux32
+DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 
 # NOTE: do not think we want to put email addresses into scripts
@@ -200,7 +201,7 @@ function main () {
     MAKEOPTS=()
     DO_BUILD=true
     DO_TEST=true
-    PERSONALITY="linux32"
+    PERSONALITY=$DEFAULT_PERSONALITY
     while getopts "nf:d:b:t:r:s:om:a:w:BTvhp:" opt ; do
 	case $opt in
 	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ;;
@@ -242,7 +243,7 @@ function main () {
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
     ### set BASE from DISTRO, if unspecified
-    sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g"
+    sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
     BASE=$(echo ${BASE} | sed $sedargs)
     WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
