@@ -58,6 +58,7 @@ esac
 
 excludelist="debug/ iso/ ppc/ source/"
 options="--archive --compress --delete --delete-excluded $dry_run $verbose"
+[ -n "$(rsync --help | grep no-motd)" ] && options="$options --no-motd"
 for e in $excludelist; do
   options="$options --exclude $e"
 done
