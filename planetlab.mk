@@ -26,11 +26,8 @@ kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
 KERNELS += kernel
 
-kernel: $(KERNELS)
-kernel-clean: $(foreach package,$(KERNELS),$(package)-clean)
-
-# the first kernel package defined here for convenience
-kernel_package := $(word 1,$(KERNELS))
+kernels: $(KERNELS)
+kernels-clean: $(foreach package,$(KERNELS),$(package)-clean)
 
 ALL += $(KERNELS)
 # this is to mark on which image a given rpm is supposed to go
