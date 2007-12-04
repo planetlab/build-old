@@ -1,11 +1,21 @@
 Notes on using this build
 
+The PlanetLab builds has the concept of a 'distribution' that allows
+advanced user to customize the contents of the build.  If you're not
+an advanced user, please just use the regular 'planetlab'
+distribution.  
+
+If you want to take advantage of a custom distribution, see
+README-pldistros.txt for further details. Please feel free to contact
+devel@planet-lab.org, as all this is not precisely foolproof :)
+
+=====
 * install a vserver-enabled kernel and util-vserver on your build box
 * create a local fedora mirror - see vbuild-fedora-mirror.sh
 * create a vserver - see vbuild-init-vserver.sh
 * enter the vserver and svn export this build module into /build 
 * cd /build and ru
-# make stage1=true PLDISTRO=yourdistro
+# make stage1=true PLDISTRO=<yourdistro>
 # make help
 # make
 
