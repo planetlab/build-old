@@ -85,8 +85,10 @@ function setup_vserver () {
     $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
 
     if [ ! -z "$personality" ] ; then
-	l32=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
-	[ $l32 -eq 0 ] && echo $personality >> /etc/vservers/$vserver/personality
+	registered_personality=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
+	if [ $registered_personality -eq 0 -a "$personality" != "linux64" ] ;
+	    echo $personality >> /etc/vservers/$vserver/personality
+	fi
     fi
 
     if [ -n "$VBUILD_MODE" ] ; then 
