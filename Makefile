@@ -262,11 +262,10 @@ $($(1).specpath):
 	  $(foreach line,$($(1)-SPECVARS), \
 	    echo "%define" $(word 1,$(subst =, ,$(line))) "$(word 2,$(subst =, ,$(line)))" >> $($(1).specpath) ;))
 	$(if $($($(1).module)-SVNPATH),\
-          svn cat $($($(1).module)-SVNPATH)/$($(1)-SPEC) >> $($(1).specpath),\
+          svn cat $($($(1).module)-SVNPATH)/$($(1)-SPEC) >> $($(1).specpath) || rm $($(1).specpath),\
           cvs -d $($($(1).module)-CVSROOT) checkout \
 	      -r $($($(1).module)-TAG) \
 	      -p $($(1).module)/$($(1)-SPEC) >> $($(1).specpath))
-	@if [ -z $($(1).specpath) ] ; then rm $($(1).specpath) ; exit 1 ; fi
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_spec,$(package))))
