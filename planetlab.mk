@@ -234,10 +234,8 @@ IN_MYPLC += PLCWWW
 #
 # bootmanager
 #
-bootmanager-MODULES := BootManager build
+bootmanager-MODULES := BootManager
 bootmanager-SPEC := bootmanager.spec
-# Package must be built as root
-bootmanager-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += bootmanager
 IN_MYPLC += bootmanager
 
