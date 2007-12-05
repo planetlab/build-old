@@ -303,7 +303,7 @@ function main () {
 	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
-	    ./vbuild-init-vserver.sh ${BASE} -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY}
+	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE}
 	    # cleanup
 	    cd -
 	    rm -rf $tmpdir
