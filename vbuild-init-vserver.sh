@@ -7,6 +7,10 @@ DIRNAME=$(dirname $0)
 # lst parsing utilities
 PATH=$(dirname $0):$PATH . build.common
 
+DEFAULT_FCDISTRO=f7
+DEFAULT_PLDISTRO=planetlab
+DEFAULT_PERSONALITY=linux32
+
 function failure () {
     echo "$COMMAND : Bailing out"
     exit 1
@@ -82,7 +86,11 @@ function setup_vserver () {
     fi
 
     # create it
-    $personality vserver $VERBOSE $vserver build -m yum -- -d $fcdistro
+    options=""
+    [ -n "$IP_ADDR" ] && options="$options --interface $IP_ADDR"
+    [ -n "$HOSTNAME" ] && options="$options --hostname $HOSTNAME"
+    [ -n "$NET_DEV" ] && options="$options --netdev $NET_DEV"
+    $personality vserver $VERBOSE $vserver build $options -m yum -- -d $fcdistro
 
     if [ ! -z "$personality" ] ; then
 	registered_personality=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
@@ -245,29 +253,21 @@ COMMAND_VBUILD="vbuild-init-vserver.sh"
 COMMAND_MYPLC="myplc-init-vserver.sh"
 function usage () {
     set +x 
-    echo "Usage: $COMMAND_VBUILD [-s|s|p] [-v] vserver-name distribution pldistro [personality]"
-    echo "Usage: $COMMAND_MYPLC [-s|s|p] [-v] vserver-name distribution pldistro repo-url [personality]"
+    echo "Usage: $COMMAND_VBUILD [-v] vserver-name"
+    echo "Usage: $COMMAND_MYPLC [-v] vserver-name repo-url"
     echo "Requirements: you need to have a vserver-compliant kernel,"
     echo "  as well as the util-vserver RPM installed"
     echo "Description:"
-    echo "  This command creates a fresh vserver instance"
-    echo "  . vserver-name : the vserver's name"
-    echo "  . distribution : for creating the root filesystem, e.g. fc6"
-    echo "  . pldistro: e.g. onelab"
-    echo "  . repo-url: for myplc vserver, used to create a yum repository"
-    echo "  . personality: last, optional, argument defaults to linux32"
-    echo "This is done in three steps"
-    echo " (*) setup phase : vserver creation, yum internalization and config (from /etc/vservers)"
-    echo " (*) tools install the tools required for building are installed"
-    echo "     based on the folowing file for the actual set of packages and groups"
-    echo "     vbuild mode :  <pldistro>-devel.lst"
-    echo "     myplc mode :   <pldistro>-shell.lst"
-    echo " (*) post-install : various tunings required, as well as create a build user (vbuild only)"
-    echo "Options:"
-    echo " -s : skips the setup phase"
-    echo " -t : skips the tools phase"
-    echo " -p : skips the post-install"
+    echo "  This command creates a fresh vserver instance, for building, or running, myplc"
+    echo "Supported options"
+    echo " -f fcdistro - for creating the root filesystem - defaults to $DEFAULT_FCDISTRO"
+    echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
+    echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -v : passes -v to calls to vserver"
+    echo "$COMMAND_MYPLC only:"
+    echo " -h hostname: passed as vserver build --hostname"
+    echo " -i ip-address: passed as vserver build --interface"
+    echo " -d dev: passed as vserver build --netdev"
     exit 1
 }
 
@@ -286,42 +286,36 @@ function main () {
 	    usage ;;
     esac
 
-    DO_SETUP=true
-    DO_TOOLS=true
-    DO_POST=true
     VERBOSE=
-    while getopts "stpvh" opt ; do
+    while getopts "f:d:p:vu:h:i:d:" opt ; do
 	case $opt in
-	    s) DO_SETUP="" ;;
-	    t) DO_TOOLS="" ;;
-	    p) DO_POST="" ;;
+	    f) fcdistro=$OPTARG;;
+	    d) pldistro=$OPTARG;;
+	    p) personality=$OPTARG;;
+	    i) [ -z "$MYPLC_MODE" ] && usage ; IP_ADDR=$OPTARG;;
+	    h) [ -z "$MYPLC_MODE" ] && usage ; HOSTNAME=$OPTARG;;
+	    d) [ -z "$MYPLC_MODE" ] && usage ; NET_DEV==$OPTARG;;
 	    v) VERBOSE="-v" ;;
-	    h|*) usage ;;
+	    *) usage ;;
 	esac
     done
 	
     shift $(($OPTIND - 1))
-    
     [[ -z "$@" ]] && usage
     vserver=$1 ; shift
-    [[ -z "$@" ]] && usage
-    fcdistro=$1 ; shift
-    [[ -z "$@" ]] && usage
-    pldistro=$1 ; shift
     if [ -n "$MYPLC_MODE" ] ; then
 	[[ -z "$@" ]] && usage
 	REPO_URL=$1 ; shift
     fi
-    if [[ -z "$@" ]] ; then
-	personality=linux32
-    else
-	personality=$1; shift
-    fi
     [[ -n "$@" ]] && usage
 
-    [ -n "$DO_SETUP" ] && setup_vserver $vserver $fcdistro $personality 
-    [ -n "$DO_TOOLS" ] && devel_tools $vserver $fcdistro $pldistro $personality
-    [ -n "$DO_POST" ] && post_install $vserver $personality
+    [ -z "$fcdistro" ] && fcdistro=$DEFAULT_FCDISTRO
+    [ -z "$pldistro" ] && pldistro=$DEFAULT_PLDISTRO
+    [ -z "$personality" ] && personality=$DEFAULT_PERSONALITY
+
+    setup_vserver $vserver $fcdistro $personality 
+    devel_tools $vserver $fcdistro $pldistro $personality
+    post_install $vserver $personality
 
 }
 

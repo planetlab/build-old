@@ -5,7 +5,7 @@ COMMANDPATH=$0
 COMMAND=$(basename $0)
 
 # default values, tunable with command-line options
-DEFAULT_FCDISTRO=fc6
+DEFAULT_FCDISTRO=f7
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
@@ -171,17 +171,18 @@ function usage () {
     echo "This is $REVISION"
     echo "Supported options"
     echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
-    echo " -f FCDISTRO - defaults to $DEFAULT_FCDISTRO"
-    echo " -d PLDISTRO - defaults to $DEFAULT_PLDISTRO"
-    echo " -b BASE - defaults to $DEFAULT_BASE"
+    echo " -f fcdistro - defaults to $DEFAULT_FCDISTRO"
+    echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
+    echo " -p personality - defaults to $DEFAULT_PERSONALITY"
+    echo " -b base - defaults to $DEFAULT_BASE"
     echo "    @NAME@ replaced as appropriate"
-    echo " -t PLDISTROTAGS - defaults to \${PLDISTRO}-tags.mk"
-    echo " -r TAGSRELEASE - a release number that refers to PLDISTROTAGS - defaults to HEAD"
-    echo " -s SVNPATH - where to fetch the build module"
+    echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
+    echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
+    echo " -s svnpath - where to fetch the build module"
     echo " -o : overwrite - re-run in base directory, do not create vserver"
-    echo " -m MAILTO"
-    echo " -a MAKEVAR=value - space in values are not supported"
-    echo " -w WEBPATH - defaults to $DEFAULT_WEBPATH"
+    echo " -m mailto"
+    echo " -a makevar=value - space in values are not supported"
+    echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -v : be verbose"
@@ -201,12 +202,12 @@ function main () {
     MAKEOPTS=()
     DO_BUILD=true
     DO_TEST=true
-    PERSONALITY=$DEFAULT_PERSONALITY
-    while getopts "nf:d:b:t:r:s:om:a:w:BTvhp:" opt ; do
+    while getopts "nf:d:b:p:t:r:s:om:a:w:BTvh" opt ; do
 	case $opt in
 	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ;;
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
+	    p) PERSONALITY=$OPTARG ;;
 	    b) BASE=$OPTARG ;;
 	    t) PLDISTROTAGS=$OPTARG ;;
 	    r) TAGSRELEASE=$OPTARG ;;
@@ -217,7 +218,6 @@ function main () {
 	    w) WEBPATH=$OPTARG ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ; USEOLD=true ;;
-	    p) PERSONALITY=$OPTARG ;;
 	    v) set -x ;;
 	    h|*) usage ;;
 	esac
@@ -229,6 +229,7 @@ function main () {
     # set defaults
     [ -z "$FCDISTRO" ] && FCDISTRO=$DEFAULT_FCDISTRO
     [ -z "$PLDISTRO" ] && PLDISTRO=$DEFAULT_PLDISTRO
+    [ -z "$PERSONALITY" ] && PERSONALITY=$DEFAULT_PERSONALITY
     [ -z "$PLDISTROTAGS" ] && PLDISTROTAGS="${PLDISTRO}-tags.mk"
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
@@ -302,7 +303,7 @@ function main () {
 	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
-	    ./vbuild-init-vserver.sh ${BASE} ${FCDISTRO} ${PLDISTRO} ${PERSONALITY}
+	    ./vbuild-init-vserver.sh ${BASE} -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY}
 	    # cleanup
 	    cd -
 	    rm -rf $tmpdir

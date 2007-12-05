@@ -14,7 +14,7 @@ devel@planet-lab.org, as all this is not precisely foolproof :)
 * create a local fedora mirror - see vbuild-fedora-mirror.sh
 * create a vserver - see vbuild-init-vserver.sh
 * enter the vserver and svn export this build module into /build 
-* cd /build and ru
+* cd /build and run
 # make stage1=true PLDISTRO=<yourdistro>
 # make help
 # make
