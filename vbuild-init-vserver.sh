@@ -80,7 +80,7 @@ function setup_vserver () {
     fcdistro=$1; shift
     personality=$1; shift
 
-    if [ -d /etc/vservers/$vserver ] ; then
+    if [ -d /vservers/$vserver ] ; then
 	echo "$COMMAND : vserver $vserver seems to exist - bailing out"
 	exit 1
     fi
@@ -267,7 +267,7 @@ function usage () {
     echo "$COMMAND_MYPLC only:"
     echo " -h hostname: passed as vserver build --hostname"
     echo " -i ip-address: passed as vserver build --interface"
-    echo " -d dev: passed as vserver build --netdev"
+    echo " -e dev: passed as vserver build --netdev"
     exit 1
 }
 
@@ -287,14 +287,14 @@ function main () {
     esac
 
     VERBOSE=
-    while getopts "f:d:p:vu:h:i:d:" opt ; do
+    while getopts "f:d:p:vu:h:i:e:" opt ; do
 	case $opt in
 	    f) fcdistro=$OPTARG;;
 	    d) pldistro=$OPTARG;;
 	    p) personality=$OPTARG;;
 	    i) [ -z "$MYPLC_MODE" ] && usage ; IP_ADDR=$OPTARG;;
 	    h) [ -z "$MYPLC_MODE" ] && usage ; HOSTNAME=$OPTARG;;
-	    d) [ -z "$MYPLC_MODE" ] && usage ; NET_DEV==$OPTARG;;
+	    e) [ -z "$MYPLC_MODE" ] && usage ; NET_DEV==$OPTARG;;
 	    v) VERBOSE="-v" ;;
 	    *) usage ;;
 	esac
