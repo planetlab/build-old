@@ -87,9 +87,9 @@ function setup_vserver () {
 
     # create it
     options=""
-    [ -n "$IP_ADDR" ] && options="$options --interface $IP_ADDR"
-    [ -n "$HOSTNAME" ] && options="$options --hostname $HOSTNAME"
-    [ -n "$NET_DEV" ] && options="$options --netdev $NET_DEV"
+    [ -n "$V_IPADDR" ] && options="$options --interface $V_IPADDR"
+    [ -n "$V_HOSTNAME" ] && options="$options --hostname $V_HOSTNAME"
+    [ -n "$V_NET_DEV" ] && options="$options --netdev $V_NET_DEV"
     $personality vserver $VERBOSE $vserver build $options -m yum -- -d $fcdistro
 
     if [ ! -z "$personality" ] ; then
@@ -292,9 +292,9 @@ function main () {
 	    f) fcdistro=$OPTARG;;
 	    d) pldistro=$OPTARG;;
 	    p) personality=$OPTARG;;
-	    i) [ -z "$MYPLC_MODE" ] && usage ; IP_ADDR=$OPTARG;;
-	    h) [ -z "$MYPLC_MODE" ] && usage ; HOSTNAME=$OPTARG;;
-	    e) [ -z "$MYPLC_MODE" ] && usage ; NET_DEV==$OPTARG;;
+	    i) [ -z "$MYPLC_MODE" ] && usage ; V_IPADDR=$OPTARG;;
+	    h) [ -z "$MYPLC_MODE" ] && usage ; V_HOSTNAME=$OPTARG;;
+	    e) [ -z "$MYPLC_MODE" ] && usage ; V_NET_DEV==$OPTARG;;
 	    v) VERBOSE="-v" ;;
 	    *) usage ;;
 	esac
