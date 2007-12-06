@@ -65,7 +65,7 @@ function pl_getReleaseName () {
 	    fi ;;
 	*)
 	    releasename="unknown-name-for-${pl_DISTRO}-please-edit-build.common"
-	    echo 1>&2 "build.common: WARNING - releasename not set for distro=$pl_DISTRO" 
+	    echo 1>&2 "build.common: WARNING - releasename not set for distro=$distro" 
 	    return 1
 	    ;;
     esac
@@ -86,7 +86,7 @@ pl_DISTRO_URL=""
 pl_DISTRO_RELEASE=$(pl_getRelease)
 
 # the release name - for vserver build - like fc4, f8 or centos4
-pl_DISTRO_NAME=$(pl_getReleaseName)
+pl_DISTRO_NAME=$(pl_getReleaseName $pl_DISTRO $pl_DISTRO_RELEASE)
 
 # get path to appropriate yumgroups.xml file
 # Thierry: quick & dirty improvement 
@@ -311,13 +311,14 @@ function pl_locateDistroFile () {
     # locate it
     paths="$builddir/config.$pldistro/$pkgsfile $builddir/config.planetlab/$pkgsfile"
     for path in $paths; do
-	if [ -f $path/$pkgsfile ] ; then
+	if [ -f $path ] ; then
 	    pkgspath=$path
 	    break
 	fi
     done
     if [ -z "$pkgspath" ] ; then
-	echo 1>&2 "pl_locateDistroFile: cannot locate $pkgsfile in $builddir"
+	echo 1>&2 "pl_locateDistroFile - in $(pwd) : cannot locate $pkgsfile in $builddir"
+	echo 1>&2 "candidates were $paths"
 	echo "not-found-by-pl_locateDistroFile"
 	return 1
     else
