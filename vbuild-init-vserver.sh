@@ -139,7 +139,7 @@ function devel_tools () {
     else
 	pkgsname=native-shell.pkgs
     fi
-    pkgsfile=$(pl_locateDistroFile $(DIRNAME) $pldistro $pkgsname)
+    pkgsfile=$(pl_locateDistroFile $DIRNAME $pldistro $pkgsname)
 
     # install individual packages, then groups
     packages=$(pl_getPackages ${fcdistro} $pkgsfile)
