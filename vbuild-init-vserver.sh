@@ -252,6 +252,9 @@ function usage () {
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -v : passes -v to calls to vserver"
+    echo "vserver-options"
+    echo " all args after the optional -- are passed to vserver <name> build <options>"
+    echo " typical usage is e.g. --interface eth0:200.150.100.10/24"
     exit 1
 }
 
