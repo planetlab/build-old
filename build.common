@@ -303,7 +303,7 @@ function pl_getGroups() { fcdistro=$1; shift ; pl_parsePkgs group $fcdistro "$@"
 # locates a pldistro-dependant file
 # tries first in build/<pldistro>/, then in build/planetlab/
 function pl_locateDistroFile () {
-    buildir=$1; shift
+    builddir=$1; shift
     pldistro=$1; shift
     pkgsfile=$1; shift
 
