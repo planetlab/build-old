@@ -85,7 +85,7 @@ usage()
 }
 
 # Get options
-while getopts "l:r:a:g:p:x:kvh" opt ; do
+while getopts "l:r:a:g:p:x:f:kvh" opt ; do
     case $opt in
 	l)
 	    if echo $OPTARG | grep -q -i '^\(file\|http[s]*\)://' ; then
