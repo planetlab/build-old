@@ -4,7 +4,7 @@
 COMMAND=$(basename $0)
 DIRNAME=$(dirname $0)
 
-# lst parsing utilities
+# pkgs parsing utilities
 PATH=$(dirname $0):$PATH . build.common
 
 DEFAULT_FCDISTRO=f7
@@ -86,11 +86,7 @@ function setup_vserver () {
     fi
 
     # create it
-    options=""
-    [ -n "$V_IPADDR" ] && options="$options --interface $V_IPADDR"
-    [ -n "$V_HOSTNAME" ] && options="$options --hostname $V_HOSTNAME"
-    [ -n "$V_NET_DEV" ] && options="$options --netdev $V_NET_DEV"
-    $personality vserver $VERBOSE $vserver build $options -m yum -- -d $fcdistro
+    $personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS -m yum -- -d $fcdistro
 
     if [ ! -z "$personality" ] ; then
 	registered_personality=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
@@ -137,25 +133,17 @@ function devel_tools () {
     pldistro=$1; shift
     personality=$1; shift
 
-    # check for .lst file based on pldistro
+    # check for .pkgs file based on pldistro
     if [ -n "$VBUILD_MODE" ] ; then
-	lst=${pldistro}-devel.lst
+	pkgsname=devel.pkgs
     else
-	lst=${pldistro}-shell.lst
+	pkgsname=native-shell.pkgs
     fi
-    if [ -f $lst ] ; then
-	echo "$COMMAND: Using $lst"
-    elif [ -f $DIRNAME/$lst ] ; then
-	lst=$DIRNAME/$lst
-	echo "$COMMAND: Using $lst"
-    else
-	echo "$COMMAND : Cannot locate $lst - exiting"
-	usage
-    fi
+    pkgsfile=$(pl_locateDistroFile $(DIRNAME) $pldistro $pkgsname)
 
     # install individual packages, then groups
-    packages=$(pl_getPackages2 ${fcdistro} $lst)
-    groups=$(pl_getGroups2 ${fcdistro} $lst)
+    packages=$(pl_getPackages ${fcdistro} $pkgsfile)
+    groups=$(pl_getGroups ${fcdistro} $pkgsfile)
 
     [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
     [ -n "$groups" ] && $personality vserver $vserver exec yum -y groupinstall $groups
@@ -253,8 +241,8 @@ COMMAND_VBUILD="vbuild-init-vserver.sh"
 COMMAND_MYPLC="myplc-init-vserver.sh"
 function usage () {
     set +x 
-    echo "Usage: $COMMAND_VBUILD [-v] vserver-name"
-    echo "Usage: $COMMAND_MYPLC [-v] vserver-name repo-url"
+    echo "Usage: $COMMAND_VBUILD [-v] vserver-name [ -- vserver-options ]"
+    echo "Usage: $COMMAND_MYPLC [-v] vserver-name repo-url [ -- vserver-options ]"
     echo "Requirements: you need to have a vserver-compliant kernel,"
     echo "  as well as the util-vserver RPM installed"
     echo "Description:"
@@ -264,10 +252,6 @@ function usage () {
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -v : passes -v to calls to vserver"
-    echo "$COMMAND_MYPLC only:"
-    echo " -h hostname: passed as vserver build --hostname"
-    echo " -i ip-address: passed as vserver build --interface"
-    echo " -e dev: passed as vserver build --netdev"
     exit 1
 }
 
@@ -287,27 +271,35 @@ function main () {
     esac
 
     VERBOSE=
-    while getopts "f:d:p:vu:h:i:e:" opt ; do
+    while getopts "f:d:p:v" opt ; do
 	case $opt in
 	    f) fcdistro=$OPTARG;;
 	    d) pldistro=$OPTARG;;
 	    p) personality=$OPTARG;;
-	    i) [ -z "$MYPLC_MODE" ] && usage ; V_IPADDR=$OPTARG;;
-	    h) [ -z "$MYPLC_MODE" ] && usage ; V_HOSTNAME=$OPTARG;;
-	    e) [ -z "$MYPLC_MODE" ] && usage ; V_NET_DEV==$OPTARG;;
 	    v) VERBOSE="-v" ;;
 	    *) usage ;;
 	esac
     done
 	
     shift $(($OPTIND - 1))
+
+    # parse fixed arguments
     [[ -z "$@" ]] && usage
     vserver=$1 ; shift
     if [ -n "$MYPLC_MODE" ] ; then
 	[[ -z "$@" ]] && usage
 	REPO_URL=$1 ; shift
     fi
-    [[ -n "$@" ]] && usage
+
+    # parse vserver options
+    if [[ -n "$@" ]] ; then
+	if [ "$1" == "--" ] ; then
+	    shift
+	    VSERVER_OPTIONS="$@"
+	else
+	    usage
+	fi
+    fi
 
     [ -z "$fcdistro" ] && fcdistro=$DEFAULT_FCDISTRO
     [ -z "$pldistro" ] && pldistro=$DEFAULT_PLDISTRO

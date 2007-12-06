@@ -1,0 +1,56 @@
+# first draft, extracted from plc_config.xml with --packages
+####
+# kernel-vserver is intended for the vserver-reference, but
+# serves the same useful purpose for MyPLC, namely, to
+# Provide: kernel without actually installing anything. 
+package:kernel-vserver
+package:dev
+# utilities
+package:bzip2
+package:cpio
+package:tar
+package:rsync
+package:diffutils
+package:gzip
+package:findutils
+package:less
+package:curl wget
+package:vim-minimal 
+# for mkpasswd
+package:expect
+# package management
+package:rpm
+package:yum createrepo
+# cron jobs
+package:vixie-cron
+# sendmail
+package:sendmail sendmail-cf
+# dns server
+package:dnsmasq
+# python
+package:python python-devel SOAPpy PyXML
+# add ons for plcapi
+package: python-pycurl python-psycopg2
+# but not on fc4 as we provide ours
+package-fc4: python-pycurl python-psycopg2
+# postgresql
+package:postgresql postgresql-server postgresql-python
+# apache
+package:httpd mod_python mod_ssl
+# ssl 
+package:openssl xmlsec1 xmlsec1-openssl
+# php
+package:php php-pgsql
+# apache user needs root access for building node-dependent images
+package:sudo
+# for ssh-keygen
+package:openssh 
+# ssh - easily reach nodes from the chroot/vserver context
+package:openssh-clients
+# for ImageCreate
+package:gd php-gd perl-GD
+# plc-map.py uses this
+package:python-imaging
+# planetlab stuff
+package:bootcd bootmanager bootstrapfs
+package:PLCAPI PLCWWW

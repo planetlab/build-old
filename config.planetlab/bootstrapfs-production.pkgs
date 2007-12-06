@@ -1,0 +1,13 @@
+# Install the "PlanetLab" group. This requires that the PlanetLab
+# build system install the appropriate yumgroups.xml file (currently
+# build/groups/v4_yumgroups.xml) in $RPM_BUILD_DIR/../RPMS/ and that
+# mkfedora runs either yum-arch or createrepo on that directory. dev
+# is specified explicitly because of a stupid bug in its %post script
+# that causes its installation to fail; see the mkfedora script for a
+# full explanation. coreutils and python are specified explicitly
+# because groupinstall does not honor Requires(pre) dependencies
+# properly, most %pre scripts require coreutils to be installed first,
+# and some of our %post scripts require python.
+
+package: python
+group: PlanetLab

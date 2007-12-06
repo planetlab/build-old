@@ -12,11 +12,13 @@
 function pl_getDefaultDistro() {
     # FC4 is currently the default release
     echo "Fedora"
+    return 0
 }
 
 function pl_getDefaultRelease() {
     # FC4 is currently the default release
     echo "4"
+    return 0
 }
 
 function pl_getDistro() {
@@ -27,6 +29,7 @@ function pl_getDistro() {
 	distro=$defaultDistro
     fi
     echo "$distro"
+    return 0
 }
 
 function pl_getRelease() {
@@ -38,6 +41,36 @@ function pl_getRelease() {
 	release=$defaultRelease
     fi
     echo "$release"
+    return 0
+}
+
+# vserver expects something like fc4 or f7
+# for fedora and centos only for now
+function pl_getReleaseName () {
+    distro=$1; shift
+    release=$1; shift
+    case $distro in
+	[Ff]edora*)
+	    if [ "$release" -le 6 ] ; then
+		releasename=fc$release
+	    else
+		releasename=f$release
+	    fi ;;
+	[Cc]entOS*)
+	    if [ "$release" = "4.5" ] ; then
+	    # centos 4.5 is just centos4 + enhancements
+		releasename=centos4
+	    else
+		releasename=centos$release
+	    fi ;;
+	*)
+	    releasename="unknown-name-for-${pl_DISTRO}-please-edit-build.common"
+	    echo 1>&2 "build.common: WARNING - releasename not set for distro=$pl_DISTRO" 
+	    return 1
+	    ;;
+    esac
+    echo "$releasename"
+    return 0
 }
 
 # figure out which redhat distro we are using (fedora, centos, redhat)
@@ -49,33 +82,15 @@ pl_DISTRO_ARCH=$(uname -i)
 # let mkfedora select one of its mirrors
 pl_DISTRO_URL=""
 
+# the release number (plain number)
 pl_DISTRO_RELEASE=$(pl_getRelease)
 
-# vserver expects something like fc4 or f7
-# for fedora only as of now
-case $pl_DISTRO in
-    [Ff]edora*)
-	if [ "$pl_DISTRO_RELEASE" -le 6 ] ; then
-	    pl_DISTRO_NAME=fc$pl_DISTRO_RELEASE
-	else
-	    pl_DISTRO_NAME=f$pl_DISTRO_RELEASE
-	fi ;;
-    [Cc]entOS*)
-	if [ "$pl_DISTRO_RELEASE" = "4.5" ] ; then
-	    # centos 4.5 is just centos4 + enhancements
-	    pl_DISTRO_NAME=centos4
-	else
-	    pl_DISTRO_NAME=centos$pl_DISTRO_RELEASE
-	fi ;;
-    *)
-	pl_DISTRO_NAME="unknown-name-for-${pl_DISTRO}-please-edit-build.common"
-	echo 1>&2 "build.common: WARNING - pl_DISTRO_NAME not set for distro=$pl_DISTRO" 
-	;;
-esac
+# the release name - for vserver build - like fc4, f8 or centos4
+pl_DISTRO_NAME=$(pl_getReleaseName)
 
-# get patch to appropriate yumgroups.xml file
+# get path to appropriate yumgroups.xml file
 # Thierry: quick & dirty improvement 
-# this file is updated by the toplevel build, from groups/pldistro>.xml
+# this file is updated by the toplevel build, from groups/<pldistro>.xml
 pl_DISTRO_YUMGROUPS="../../../RPMS/yumgroups.xml"
 
 function pl_process_fedora_options () {
@@ -247,9 +262,8 @@ function pl_fixdirs() {
     done
 }
 
-########## .lst format
+########## .pkgs format
 # comments start with a # - this is needed only if you use a keyword in a comment
-# lst_parse keyword fcdistro lst1 .. lstn
 # for a given keyword like 'package' :
 # we support fcdistro-dependant format, for tokens (pkgname) without whitespace
 # you can e.g. use
@@ -257,10 +271,11 @@ function pl_fixdirs() {
 # package+f8: pkg1 .. pkgn
 # package-f8: pkg1 .. pkgn
 
-function lst_parse () {
+function pl_parsePkgs () {
 
     keyword=$1;shift
     fcdistro=$1; shift
+    # remaining arguments are paths to the pkgs files
 
     # grab regular descriptions
     all=$(grep -v '^#' "$@" | grep --regexp="^${keyword}:" | sed -e "s,${keyword}:,,")
@@ -278,9 +293,36 @@ function lst_parse () {
     return 0
 }
 
-function pl_getPackages2() { fcdistro=$1; shift ; lst_parse package $fcdistro "$@" ; }
-function pl_getGroups2() { fcdistro=$1; shift ; lst_parse group $fcdistro "$@" ; }
-# add -p before each package for mkfedora
-function pl_getPackagesOptions2 () { pl_getPackages2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-p " $i}}' ; }
-# add -g before each group for mkfedora
-function pl_getGroupsOptions2 () { pl_getGroups2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-g " $i}}' ; }
+function pl_getPackages() { fcdistro=$1; shift ; pl_parsePkgs package $fcdistro "$@" ; }
+function pl_getGroups() { fcdistro=$1; shift ; pl_parsePkgs group $fcdistro "$@" ; }
+### # add -p before each package for mkfedora
+### function pl_getPackagesOptions2 () { pl_getPackages2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-p " $i}}' ; }
+### # add -g before each group for mkfedora
+### function pl_getGroupsOptions2 () { pl_getGroups2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-g " $i}}' ; }
+
+# locates a pldistro-dependant file
+# tries first in build/<pldistro>/, then in build/planetlab/
+function pl_locateDistroFile () {
+    buildir=$1; shift
+    pldistro=$1; shift
+    pkgsfile=$1; shift
+
+    pkgspath=""
+    # locate it
+    paths="$builddir/config.$pldistro/$pkgsfile $builddir/config.planetlab/$pkgsfile"
+    for path in $paths; do
+	if [ -f $path/$pkgsfile ] ; then
+	    pkgspath=$path
+	    break
+	fi
+    done
+    if [ -z "$pkgspath" ] ; then
+	echo 1>&2 "pl_locateDistroFile: cannot locate $pkgsfile in $builddir"
+	echo "not-found-by-pl_locateDistroFile"
+	return 1
+    else
+	echo 1>&2 "pl_locateDistroFile: using $pkgspath"
+	echo $pkgspath
+	return 0
+    fi
+}
