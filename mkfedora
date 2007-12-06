@@ -421,14 +421,13 @@ echo "* Removing unnecessary junk" >&3
 pushd $vroot
 
 # Save precious files
-tar --ignore-failed-read -cpf precious.tar $precious
+[ -n "$precious" ] && tar --ignore-failed-read -cpf precious.tar $precious
 
 # Remove unnecessary junk
-rm -rf $junk
+[ -n "$junk" ] && rm -rf $junk
 
 # Restore precious files
-tar -xpf precious.tar
-rm -f precious.tar
+[ -n "$precious" ] && tar -xpf precious.tar && rm -f precious.tar
 
 popd
 
