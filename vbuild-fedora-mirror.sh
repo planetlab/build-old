@@ -9,26 +9,29 @@ verbose=
 skip_core=
 root=/data/fedora/linux
 rsyncurl=rsync://mirrors.kernel.org/fedora
+eu_rsyncurl=rsync://ftp-stud.hs-esslingen.de/fedora/linux
 distroname=f8
 arch=i386
 
 
 function usage () {
-    echo "Usage: $COMMAND [-n] [-v] [-c] [-r root] [-u rsyncurl] [-f distroname] [-a arch]"
+    echo "Usage: $COMMAND [-n] [-v] [-c] [-e] [-r root] [-u rsyncurl] [-f distroname] [-a arch]"
     echo "Defaults to -r $root -u $rsyncurl -f $distroname -a $arch"
     echo "Use vserver conventions for distroname, e.g. fc6 and f7"
     echo "Options:"
     echo " -n : dry run"
     echo " -v : verbose"
     echo " -c : skips core repository"
+    echo " -e : uses European mirror $eu_rsyncurl"
     exit 1
 }
 
-while getopts "nvcr:u:f:a:h" opt ; do
+while getopts "nvcer:u:f:a:h" opt ; do
     case $opt in
 	n) dry_run=--dry-run ;;
 	v) verbose=--verbose ;;
 	c) skip_core=true ;;
+	e) rsyncurl=$eu_rsyncurl ;;
 	r) root=$OPTARG ;;
 	u) rsyncurl=$OPTARG ;;
 	f) distroname=$OPTARG ;;
