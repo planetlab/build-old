@@ -184,8 +184,8 @@ mirrors=(
     )
 
 function mkfedora_usage() {
-    echo "Usage: mkfedora [OPTION]... [basedir]"
-    echo "	-l url		Fedora mirror location. Defaults to try:"
+    echo "Usage: pl_root_mkfedora [OPTION]... basedir"
+    echo "	-l url		Fedora mirror location. Default is to try:"
     for mirror in "${mirrors[@]}" ; do
 	echo "			$mirror"
     done
@@ -208,7 +208,12 @@ function mkfedora_usage() {
 
 function pl_root_mkfedora () {
 
-    echo "* Entering pl_root_mkfedora " "$@"
+    echo "* Entering pl_root_mkfedora" "$@"
+
+    if [ $UID -ne 0 ] ; then
+	echo "Error: You must run this script as root."
+	exit 1
+    fi
 
 # Verbosity
     verbose=0
@@ -275,16 +280,11 @@ function pl_root_mkfedora () {
     done
 
     shift $(($OPTIND - 1))
-    if [ ! -d "$1" ] ; then
-	mkfedora_usage
-    fi
-
-    vroot=$(cd $1 && pwd -P)
-
-    if [ $UID -ne 0 ] ; then
-	echo "Error: You must run this script as root."
-	exit 1
-    fi
+    [[ -n "$@" ]] || mkfedora_usage
+    vroot=$1 ; shift
+    vroot=$(cd $vroot && pwd -P)
+    [[ -z "$@" ]] || mkfedora_usage
+    [ -d $vroot ] || mkfedora_usage
 
     function mkfedora_fetch ()
     {
@@ -575,7 +575,7 @@ function pl_root_setup_chroot() {
     options="$@"
 
     pl_root_makedevs $root
-    pl_root_mkfedora $root $options
+    pl_root_mkfedora $options $root 
 
     # Disable all services in reference image
     chroot $root sh -c "/sbin/chkconfig --list | awk '{ print \$1 }' | xargs -i /sbin/chkconfig {} off"
