@@ -220,7 +220,7 @@ cp $vroot/etc/rpm/macros $vroot/tmp/.rpmmacros
 ### Checking whether this is really needed
 ### # copy to the vserver's rpm macros
 ### # xxx fixme - this must be reviewed once we get the stuff running
-cp $vroot/etc/rpm/macros /etc/rpm/macros 
+### cp $vroot/etc/rpm/macros /etc/rpm/macros 
 
 # Mount in reference image
 mount -t devpts none $vroot/dev/pts
