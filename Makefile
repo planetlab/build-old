@@ -204,6 +204,8 @@ myplc-release:
 	(echo    "Build trelease: $(RELEASE)") >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx modules versions info" >> $@
 	$(MAKE) --no-print-directory versions >> $@
+	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpms list" >> $@
+	$(MAKE) --no-print-directory version-rpms >> $@
 
 ### yumgroups.xml
 # the source
@@ -296,9 +298,7 @@ endif
 	rm -f $@ 
 	echo "%_topdir $(HOME)" >> $@
 	echo "%_tmppath $(HOME)/tmp" >> $@
-	echo "%_netsharedpath /proc:/dev/pts" >> $@
-	echo "%_install_langs C:de:en:es:fr" >> $@
-	echo "%_excludedocs yes" >> $@
+	getrpmmacros.sh >> $@
 
 ### this utility allows to extract various info from a spec file
 ### and to define them in makefiles
@@ -600,6 +600,15 @@ ALL-MODULES:=$(sort $(ALL-MODULES))
 $(foreach module,$(ALL-MODULES), $(eval $(call print_version,$(module))))
 
 versions: $(foreach module, $(ALL-MODULES), $(module)-version)
+
+RFORMAT="%20s :: %s\n"
+define print_rpms
+$(1)-version-rpms:
+	@$(foreach rpm,$($(1).rpms),printf $(RFORMAT) $(1) $(notdir $(rpm));)
+version-rpms: $(1)-version-rpms
+endef
+
+$(foreach package,$(sort $(ALL)), $(eval $(call print_rpms,$(package))))
 
 #################### include install Makefile
 # the default is to use the distro-dependent install file
