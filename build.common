@@ -163,6 +163,430 @@ function pl_makedevs() {
     done
 }
 
+function mkfedora_usage()
+{
+    echo "Usage: mkfedora [OPTION]... [basedir]"
+    echo "	-l url		Fedora mirror location. Defaults to try:"
+    for mirror in "${mirrors[@]}" ; do
+	echo "			$mirror"
+    done
+    echo "	-f pkgsfile	use this pkgs file for packages, groups, excludes.."
+    echo "	-k		Exclude kernel* packages from all repositories except bootstrap"
+    echo "	-v		Be verbose"
+    echo "	-h		This message"
+    echo " target selection (defaults based on current build vserver)"
+    echo "	-r release	Fedora release number (default: $releasever)"
+    echo "	-a arch		Fedora architecture (default: $basearch)"
+    echo " legacy (use -f instead)"
+    echo "	-g group1 -g group2 ..."
+    echo "			Yumgroups to install (default: none)"
+    echo "	-p package1 -p package2 ..."
+    echo "			Additional packages to install (default: none)"
+    echo "	-x package1 -x package2 ..."
+    echo "			Packages to exclude (default: none)"
+    exit 1
+}
+
+function mkfedora () {
+
+echo "* Entering mkfedora " "$@"
+
+# Verbosity
+verbose=0
+
+# Default yum repositories to try
+mirrors=(
+file:///data/fedora
+http://localhost/fedora
+http://build.planet-lab.org/fedora
+http://coblitz.codeen.org/coblitz.planet-lab.org/pub/fedora
+ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
+ftp://mirror.stanford.edu/pub/mirrors/fedora
+ftp://rpmfind.net/linux/fedora
+)
+
+# Release and architecture to install
+releasever=7
+basearch=i386
+
+# Yum groups to install
+groups=()
+
+# Packages to install
+packages=()
+
+# Packages to exclude
+exclude=()
+
+# Exclude kernel* (and related) packages from all repositories except bootstrap
+exclude_kernel=
+
+# PlanetLab development environment
+if [ -f /etc/planetlab/plc_config ] ; then
+    . /etc/planetlab/plc_config
+    if [ -n "$PLC_DEVEL_FEDORA_URL" ] ; then
+	echo "* mkfedora : setting mirrors from /etc/planetlab/config"
+	mirrors=($PLC_DEVEL_FEDORA_URL)
+    fi
+fi
+
+# Get options
+while getopts "l:r:a:g:p:x:f:kvh" opt ; do
+    case $opt in
+	l)
+	    if echo $OPTARG | grep -q -i '^\(file\|http[s]*\)://' ; then
+		mirrors=($OPTARG)
+	    else
+		mirrors=(file://$OPTARG)
+	    fi
+	    ;;
+	r)
+	    releasever=$OPTARG
+	    ;;
+	a)
+	    basearch=$OPTARG
+	    ;;
+	g)
+	    groups[${#groups[*]}]="$OPTARG"
+	    ;;
+	p)
+	    packages[${#packages[*]}]="$OPTARG"
+	    ;;
+	x)
+	    exclude[${#exclude[*]}]="$OPTARG"
+	    ;;
+	f)
+	    pkgsfile=$OPTARG
+	    ;;
+	k)
+	    exclude_kernel="exclude=kernel* ulogd iptables"
+	    ;;
+	v)
+	    verbose=1
+	    set -x
+	    ;;
+	h|*)
+	    mkfedora_usage
+	    ;;
+    esac
+done
+
+shift $(($OPTIND - 1))
+if [ ! -d "$1" ] ; then
+    mkfedora_usage
+fi
+
+vroot=$(cd $1 && pwd -P)
+
+if [ $UID -ne 0 ] ; then
+    echo "Error: You must run this script as root."
+    exit 1
+fi
+
+function mkfedora_fetch ()
+{
+    curl --fail --silent --max-time 60 "$1"
+}
+
+# hard to find two mirrors with a similar layout
+# set list of attempted locations according to releasever
+if [ $releasever -ge 7 ] ; then
+    attempts="
+linux/releases/$releasever/Everything/$basearch/os
+$releasever/Everything/$basearch/os
+core/$releasever/Everything/$basearch/os
+linux/core/$releasever/$basearch/os
+"
+else
+    attempts="
+linux/core/$releasever/$basearch/os 
+core/$releasever/$basearch/os 
+$releasever/$basearch/os
+"
+fi
+
+echo "$0: candidate mirrors"
+for mirror in "${mirrors[@]}" ; do
+    echo "* candidate mirror $mirror"
+done
+baseurl=""
+for mirror in "${mirrors[@]}" ; do
+    for attempt in $attempts; do 
+	attempturl=$mirror/$attempt
+	if mkfedora_fetch $attempturl/repodata/repomd.xml >/dev/null ; then
+	    baseurl=$attempturl
+	    break 2
+	fi
+    done
+done
+
+if [ -z "$baseurl" ] ; then
+    echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
+    echo "       could not be found in any of the following locations:"
+    echo
+    for mirror in ${mirrors[@]} ; do
+	for attempt in $attempts ; do
+	    echo $mirror/$attempt
+	done
+    done
+    echo
+    mkfedora_usage
+fi
+
+# this used to be for when mkfedora was called within myplc 
+# that is, when the bootcd was recomputed from scratch
+### exec 3>&1
+### exec 4>&2
+### if [ $verbose -eq 0 ] ; then
+###     exec 1>/dev/null
+###     exec 2>/dev/null
+### fi
+
+# Do not tolerate errors
+set -e
+
+## make rpms ignore installing stuff to special fs entries like /proc
+# Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
+# you have to use at least one language beside 'C'
+# Prevent all locales from being installed in reference image
+mkdir -p $vroot/etc/rpm
+cat > $vroot/etc/rpm/macros <<EOF
+%_install_langs C:en_US:en
+%_netsharedpath /proc:/dev/pts
+%_excludedocs 1
+%__file_context_path /dev/null
+EOF
+
+# Trick rpm and yum, who read the real root /etc/rpm/macros file
+# rather than the one installed in the reference image, despite what
+# you might expect the --root and --installroot options to mean. Both
+# programs always read $HOME/.rpmmacros.
+export HOME=$vroot/tmp
+mkdir -p $vroot/tmp
+cp $vroot/etc/rpm/macros $vroot/tmp/.rpmmacros
+
+### Checking whether this is really needed
+### # copy to the vserver's rpm macros
+### # xxx fixme - this must be reviewed once we get the stuff running
+### cp $vroot/etc/rpm/macros /etc/rpm/macros 
+
+# Mount in reference image
+mount -t devpts none $vroot/dev/pts
+mount -t tmpfs none $vroot/dev/shm
+mkdir -p $vroot/proc
+mount -t proc none $vroot/proc
+
+function mkfedora_cleanup ()
+{
+    umount -l $vroot/proc
+    umount -l $vroot/dev/shm
+    umount -l $vroot/dev/pts
+}
+
+# Clean up before exiting if anything goes wrong
+trap "mkfedora_cleanup" ERR INT
+
+# Create a /var/lib dirs for yum & rpm
+mkdir -p $vroot/var/lib/yum
+mkdir -p $vroot/var/lib/rpm
+mkdir -p $vroot/usr/share/info
+
+# Create a dummy /etc/fstab in reference image
+mkdir -p $vroot/etc
+cat >$vroot/etc/fstab <<EOF
+# This fake fstab exists only to please df and linuxconf.
+/dev/hdv1	/	ext2	defaults	1 1
+EOF
+cp $vroot/etc/fstab $vroot/etc/mtab
+
+# Necessary for some scripts
+mkdir -p $vroot/etc/sysconfig
+echo "NETWORKING=yes" > $vroot/etc/sysconfig/network
+
+# Initialize RPM database in reference image
+mkdir -p $vroot/var/lib/rpm
+rpm --root $vroot --initdb
+rpm --root $vroot --import $baseurl/RPM-GPG-KEY-fedora
+
+# Initialize yum in reference image
+mkdir -p $vroot/var/cache/yum $vroot/var/log
+if [ $releasever -lt 7 ] ; then
+	corename="Core "
+else
+	corename=""
+fi
+
+cat >$vroot/etc/yum.conf <<EOF
+[main]
+cachedir=/var/cache/yum
+debuglevel=2
+logfile=/var/log/yum.log
+pkgpolicy=newest
+distroverpkg=redhat-release
+tolerant=1
+exactarch=1
+retries=20
+obsoletes=1
+gpgcheck=0
+# Prevent yum-2.4 from loading additional repository definitions
+# (e.g., from /etc/yum.repos.d/)
+reposdir=/dev/null
+
+[base]
+name=Fedora ${corename}${releasever} - $basearch - base
+baseurl=$baseurl/
+$exclude_kernel
+EOF
+
+for optional in updates extras ; do
+    for optionalurl in \
+	$mirror/linux/core/$optional/$releasever/$basearch \
+	$mirror/core/$optional/$releasever/$basearch \
+	$mirror/linux/$optional/$releasever/$basearch \
+	$mirror/$optional/$releasever/$basearch ; do
+        if mkfedora_fetch $optionalurl/repodata/repomd.xml ; then
+	    cat >>$vroot/etc/yum.conf <<EOF
+
+[$(basename $optional)]
+name=Fedora ${corename}${releasever} - $basearch - $(basename $optional)
+baseurl=$optionalurl/
+$exclude_kernel
+EOF
+	    break
+	fi
+    done
+done
+
+# If we are being built as part of an automated RPM build, solve the
+# bootstrap problem by including any just built packages in the yum
+# configuration. This cooperates with the PlanetLab build system.
+if [ -n "$RPM_BUILD_DIR" ] ; then
+    RPM_RPMS_DIR=$(cd $(dirname $RPM_BUILD_DIR)/RPMS && pwd -P)
+    # yum-2.0.x
+    if [ -x /usr/bin/yum-arch ] ; then
+	yum-arch -q $RPM_RPMS_DIR
+    fi
+    # yum-2.4.x
+    if [ -x /usr/bin/createrepo ] ; then
+	if [ -f $RPM_RPMS_DIR/yumgroups.xml ] ; then
+	    groupfile="-g yumgroups.xml"
+	fi
+	createrepo --quiet $groupfile $RPM_RPMS_DIR
+    fi
+    # If run under sudo, allow user to delete the headers/ and
+    # repodata/ directories.
+    if [ -n "$SUDO_USER" ] ; then
+	chown -R $SUDO_USER $RPM_RPMS_DIR
+    fi
+    cat >>$vroot/etc/yum.conf <<EOF
+
+[bootstrap]
+name=Bootstrap - $basearch - $RPM_RPMS_DIR/
+baseurl=file://$RPM_RPMS_DIR/
+EOF
+fi
+
+# pkgs file
+if [ -n "$pkgsfile" ] ; then
+    # parse pkgsfile and add to local vars
+    fcdistro=$(pl_getReleaseName "Fedora" $releasever)
+    for i in $(pl_parsePkgs package $fcdistro $pkgsfile)  ; do
+	packages[${#packages[*]}]="$i"
+    done
+    for i in $(pl_parsePkgs group $fcdistro $pkgsfile) ; do
+	groups[${#groups[*]}]="$i"
+    done
+    for i in $(pl_parsePkgs exclude $fcdistro $pkgsfile) ; do
+	exclude[${#exclude[*]}]="$i"
+    done
+    junk=$(pl_parsePkgs junk $fcdistro $pkgsfile)
+    precious=$(pl_parsePkgs precious $fcdistro $pkgsfile)
+fi
+
+excludes=
+for package in "${exclude[@]}" ; do
+    excludes="$excludes --exclude=$package"
+done
+
+# glibc must be specified explicitly for the correct arch to be
+# chosen.
+echo "* Installing glibc"
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes install glibc
+
+# Go, baby, go
+if [ ${#packages[*]} -gt 0 ] ; then
+   echo "* Installing optional packages" "${packages[@]}" 
+   yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
+	  install "${packages[@]}"
+   if ! rpm --root $vroot -q "${packages[@]}" >/dev/null ; then
+       echo "* Warning: Missing packages"
+       rpm --root $vroot -q "${packages[@]}" | grep "not installed"
+   fi
+fi
+
+if [ ${#groups[*]} -gt 0 ] ; then
+   ## call yum sequentially to get finer-grained info on dependencies
+   for grp in "${groups[@]}" ; do
+      echo "* Installing optional group $grp" 
+      yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
+	groupinstall "$grp"
+   done
+fi
+
+# FC2 dev %preinstall checks /proc/mounts to make sure that /dev is
+# not currently mounted as devfs. If it thinks it is, it will refuse
+# to install the package. On a modern system running udev that mounts
+# /dev as tmpfs, this check fails. Since we are installing into a
+# chroot, whether /dev is mounted on the host system or not doesn't
+# matter. If dev was explicitly mentioned in the packages list, force
+# its installation.
+if [ "$releasever" = "2" ] ; then
+    for package in "${packages[@]}" ; do
+	if [ "$package" = "dev" ] && ! rpm --root $vroot -q dev >/dev/null 2>&1 ; then
+	    rpm --root $vroot -Uvh --noscripts $baseurl/Fedora/RPMS/dev-3.3.13-1.i386.rpm
+	    break
+	fi
+    done
+fi
+
+# Clean yum cache
+echo "* Cleaning up"
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y clean all
+
+# Clean RPM state
+rm -f $vroot/var/lib/rpm/__db*
+
+# Set time zone to UTC
+if [ -f $vroot/usr/share/zoneinfo/UTC -a -f $vroot/etc/localtime ] ; then
+    rm -f $vroot/etc/localtime
+    ln -s /usr/share/zoneinfo/UTC $vroot/etc/localtime
+fi
+
+# formerly in bootcd/prep.sh : to optimize footprint
+echo "* Removing unnecessary junk"
+
+pushd $vroot
+
+# Save precious files
+[ -n "$precious" ] && tar --ignore-failed-read -cpf precious.tar $precious
+
+# Remove unnecessary junk
+[ -n "$junk" ] && rm -rf $junk
+
+# Restore precious files
+[ -n "$precious" ] && tar -xpf precious.tar && rm -f precious.tar
+
+popd
+
+# remove trap handler, as we are about to call it directly.
+trap - ERR INT
+
+# Clean up
+mkfedora_cleanup
+
+return 0
+}
+
 function pl_mkfedora() {
     root=$1
     shift
@@ -174,7 +598,7 @@ function pl_mkfedora() {
     [ -n "$pl_DISTRO_ARCH" ] && options="$options -a $pl_DISTRO_ARCH"
     [ -n "$pl_DISTRO_RELEASE" ] && options="$options -r $pl_DISTRO_RELEASE"
     # echo "mkfedora -v $options $root"
-    eval mkfedora -v $options $root
+    mkfedora -v $options $root
 }
 
 function pl_setup_chroot() {
