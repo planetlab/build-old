@@ -86,7 +86,16 @@ function setup_vserver () {
     fi
 
     # create it
-    $personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS -m yum -- -d $fcdistro
+    # try to work around the vserver issue:
+    # vc_ctx_migrate: No such process
+    # rpm-fake.so: failed to initialize communication with resolver
+    for i in 1 2 3 4 5 ; do
+	$personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS -m yum -- -d $fcdistro && break || true
+	echo "Waiting for one minute"
+	sleep 60
+    done
+    # check success
+    [ -d /vservers/$vserver ] 
 
     if [ ! -z "$personality" ] ; then
 	registered_personality=$(grep $personality /etc/vservers/$vserver/personality | wc -l)
