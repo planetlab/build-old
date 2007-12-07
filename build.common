@@ -77,7 +77,7 @@ function pl_getReleaseName () {
 pl_DISTRO=$(pl_getDistro)
 
 # select basearch of the host devel environment - protected for macos for local tests
-pl_DISTRO_ARCH=$(uname -i 2>/dev/null|| echo unknownarch))
+pl_DISTRO_ARCH=$(uname -i 2>/dev/null|| echo unknownarch)
 
 # let mkfedora select one of its mirrors
 pl_DISTRO_URL=""
