@@ -76,8 +76,8 @@ function pl_getReleaseName () {
 # figure out which redhat distro we are using (fedora, centos, redhat)
 pl_DISTRO=$(pl_getDistro)
 
-# select basearch of the host devel environment
-pl_DISTRO_ARCH=$(uname -i)
+# select basearch of the host devel environment - protected for macos for local tests
+pl_DISTRO_ARCH=$(uname -i 2>/dev/null|| echo unknownarch))
 
 # let mkfedora select one of its mirrors
 pl_DISTRO_URL=""
@@ -124,6 +124,7 @@ function pl_process_fedora_options () {
     return $shiftcount
 }
 
+######################################## handling a root image
 function pl_makedevs() {
     vroot=$1
     # Clean ${vroot}/dev, but only when ${vroot}!=""
@@ -177,9 +178,8 @@ function pl_mkfedora() {
 }
 
 function pl_setup_chroot() {
-    root=$1
-    shift
-    options=$@
+    root=$1; shift
+    options="$@"
 
     pl_mkfedora $root $options
 
@@ -295,10 +295,6 @@ function pl_parsePkgs () {
 
 function pl_getPackages() { fcdistro=$1; shift ; pl_parsePkgs package $fcdistro "$@" ; }
 function pl_getGroups() { fcdistro=$1; shift ; pl_parsePkgs group $fcdistro "$@" ; }
-### # add -p before each package for mkfedora
-### function pl_getPackagesOptions2 () { pl_getPackages2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-p " $i}}' ; }
-### # add -g before each group for mkfedora
-### function pl_getGroupsOptions2 () { pl_getGroups2 "$@" | awk '{for (i=1;i<=NF;i++) {print "-g " $i}}' ; }
 
 # locates a pldistro-dependant file
 # tries first in build/<pldistro>/, then in build/planetlab/

@@ -190,14 +190,18 @@ endif
 
 ####################
 # gather build information for the 'About' page
+# uses INIT_CWD to try and guess the vserver location
 myplc-release:
 	@echo 'Creating myplc-release'
 	rm -f $@
 	(echo -n 'Build bdate: ' ; date '+%Y.%m.%d') >> $@
 	(echo -n 'Build btime: ' ; date '+%H:%M') >> $@
-	(echo -n 'Build hostname: ' ; hostname) >> $@
-	(echo -n 'Build location: ' ; pwd) >> $@
+	(echo -n 'Build bhostname: ' ; hostname) >> $@
+	(echo    "Build blocation: $(INIT_CWD)") >> $@
 	(echo -n 'Build tags file: ' ; fgrep '$$''Id' $(PLDISTROTAGS)) >> $@
+	(echo    "Build tarch: $(HOSTARCH)") >> $@
+	(echo    "Build tdistro: $(DISTRO)") >> $@
+	(echo    "Build trelease: $(RELEASE)") >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx modules versions info" >> $@
 	$(MAKE) --no-print-directory versions >> $@
 
@@ -578,9 +582,6 @@ distclean: distclean1 distclean2
 develclean:
 	$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
 
-# xxx tmp - I cannot use this on my mac for local testing
-ISMACOS=$(findstring Darwin,$(shell uname))
-ifneq "$(ISMACOS)" ""
 #################### produce reliable version information
 # for a given module
 VFORMAT="%30s := %s\n"
@@ -599,10 +600,6 @@ ALL-MODULES:=$(sort $(ALL-MODULES))
 $(foreach module,$(ALL-MODULES), $(eval $(call print_version,$(module))))
 
 versions: $(foreach module, $(ALL-MODULES), $(module)-version)
-else
-versions:
-	@echo "warning : the 'versions' target is not supported on macos"
-endif
 
 #################### include install Makefile
 # the default is to use the distro-dependent install file
