@@ -21,6 +21,32 @@
 
 export PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
+function mkfedora_usage()
+{
+    echo "Usage: mkfedora [OPTION]... [basedir]"
+    echo "	-l url		Fedora mirror location. Defaults to try:"
+    for mirror in "${mirrors[@]}" ; do
+	echo "			$mirror"
+    done
+    echo "	-f pkgsfile	use this pkgs file for packages, groups, excludes.."
+    echo "	-k		Exclude kernel* packages from all repositories except bootstrap"
+    echo "	-v		Be verbose"
+    echo "	-h		This message"
+    echo " target selection (defaults based on current build vserver)"
+    echo "	-r release	Fedora release number (default: $releasever)"
+    echo "	-a arch		Fedora architecture (default: $basearch)"
+    echo " legacy (use -f instead)"
+    echo "	-g group1 -g group2 ..."
+    echo "			Yumgroups to install (default: none)"
+    echo "	-p package1 -p package2 ..."
+    echo "			Additional packages to install (default: none)"
+    echo "	-x package1 -x package2 ..."
+    echo "			Packages to exclude (default: none)"
+    exit 1
+}
+
+function mkfedora () {
+
 echo "* Entering mkfedora " "$@"
 
 # Verbosity
@@ -62,28 +88,6 @@ if [ -f /etc/planetlab/plc_config ] ; then
     fi
 fi
 
-usage()
-{
-    echo "Usage: mkfedora [OPTION]... [basedir]"
-    echo "	-l url		Fedora mirror location. Defaults to try:"
-    for mirror in "${mirrors[@]}" ; do
-	echo "			$mirror"
-    done
-    echo "	-r release	Fedora release number (default: $releasever)"
-    echo "	-a arch		Fedora architecture (default: $basearch)"
-    echo "	-f pkgsfile	use this pkgs file for packages, groups, excludes.."
-    echo "	-g group1 -g group2 ..."
-    echo "			Yumgroups to install (default: none)"
-    echo "	-p package1 -p package2 ..."
-    echo "			Additional packages to install (default: none)"
-    echo "	-x package1 -x package2 ..."
-    echo "			Packages to exclude (default: none)"
-    echo "	-k		Exclude kernel* packages from all repositories except bootstrap"
-    echo "	-v		Be verbose"
-    echo "	-h		This message"
-    exit 1
-}
-
 # Get options
 while getopts "l:r:a:g:p:x:f:kvh" opt ; do
     case $opt in
@@ -120,14 +124,14 @@ while getopts "l:r:a:g:p:x:f:kvh" opt ; do
 	    set -x
 	    ;;
 	h|*)
-	    usage
+	    mkfedora_usage
 	    ;;
     esac
 done
 
 shift $(($OPTIND - 1))
 if [ ! -d "$1" ] ; then
-    usage
+    mkfedora_usage
 fi
 
 vroot=$(cd $1 && pwd -P)
@@ -137,7 +141,7 @@ if [ $UID -ne 0 ] ; then
     exit 1
 fi
 
-fetch ()
+function mkfedora_fetch ()
 {
     curl --fail --silent --max-time 60 "$1"
 }
@@ -167,7 +171,7 @@ baseurl=""
 for mirror in "${mirrors[@]}" ; do
     for attempt in $attempts; do 
 	attempturl=$mirror/$attempt
-	if fetch $attempturl/repodata/repomd.xml >/dev/null ; then
+	if mkfedora_fetch $attempturl/repodata/repomd.xml >/dev/null ; then
 	    baseurl=$attempturl
 	    break 2
 	fi
@@ -184,15 +188,17 @@ if [ -z "$baseurl" ] ; then
 	done
     done
     echo
-    usage
+    mkfedora_usage
 fi
 
-exec 3>&1
-exec 4>&2
-if [ $verbose -eq 0 ] ; then
-    exec 1>/dev/null
-    exec 2>/dev/null
-fi
+# this used to be for when mkfedora was called within myplc 
+# that is, when the bootcd was recomputed from scratch
+### exec 3>&1
+### exec 4>&2
+### if [ $verbose -eq 0 ] ; then
+###     exec 1>/dev/null
+###     exec 2>/dev/null
+### fi
 
 # Do not tolerate errors
 set -e
@@ -205,7 +211,7 @@ mkdir -p $vroot/etc/rpm
 cat > $vroot/etc/rpm/macros <<EOF
 %_install_langs C:en_US:en
 %_netsharedpath /proc:/dev/pts
-%_excludedocs yes
+%_excludedocs 1
 %__file_context_path /dev/null
 EOF
 
@@ -228,7 +234,7 @@ mount -t tmpfs none $vroot/dev/shm
 mkdir -p $vroot/proc
 mount -t proc none $vroot/proc
 
-cleanup ()
+function mkfedora_cleanup ()
 {
     umount -l $vroot/proc
     umount -l $vroot/dev/shm
@@ -236,7 +242,7 @@ cleanup ()
 }
 
 # Clean up before exiting if anything goes wrong
-trap "cleanup" ERR INT
+trap "mkfedora_cleanup" ERR INT
 
 # Create a /var/lib dirs for yum & rpm
 mkdir -p $vroot/var/lib/yum
@@ -296,7 +302,7 @@ for optional in updates extras ; do
 	$mirror/core/$optional/$releasever/$basearch \
 	$mirror/linux/$optional/$releasever/$basearch \
 	$mirror/$optional/$releasever/$basearch ; do
-        if fetch $optionalurl/repodata/repomd.xml ; then
+        if mkfedora_fetch $optionalurl/repodata/repomd.xml ; then
 	    cat >>$vroot/etc/yum.conf <<EOF
 
 [$(basename $optional)]
@@ -362,12 +368,12 @@ done
 
 # glibc must be specified explicitly for the correct arch to be
 # chosen.
-echo "* Installing glibc" >&3
+echo "* Installing glibc"
 yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes install glibc
 
 # Go, baby, go
 if [ ${#packages[*]} -gt 0 ] ; then
-   echo "* Installing optional packages" "${packages[@]}" >&3
+   echo "* Installing optional packages" "${packages[@]}" 
    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
 	  install "${packages[@]}"
    if ! rpm --root $vroot -q "${packages[@]}" >/dev/null ; then
@@ -379,7 +385,7 @@ fi
 if [ ${#groups[*]} -gt 0 ] ; then
    ## call yum sequentially to get finer-grained info on dependencies
    for grp in "${groups[@]}" ; do
-      echo "* Installing optional group $grp" >&3
+      echo "* Installing optional group $grp" 
       yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
 	groupinstall "$grp"
    done
@@ -402,9 +408,8 @@ if [ "$releasever" = "2" ] ; then
 fi
 
 # Clean yum cache
-echo "* Cleaning up" >&3
-yum -c $vroot/etc/yum.conf --installroot=$vroot -y \
-    clean all
+echo "* Cleaning up"
+yum -c $vroot/etc/yum.conf --installroot=$vroot -y clean all
 
 # Clean RPM state
 rm -f $vroot/var/lib/rpm/__db*
@@ -416,7 +421,7 @@ if [ -f $vroot/usr/share/zoneinfo/UTC -a -f $vroot/etc/localtime ] ; then
 fi
 
 # formerly in bootcd/prep.sh : to optimize footprint
-echo "* Removing unnecessary junk" >&3
+echo "* Removing unnecessary junk"
 
 pushd $vroot
 
@@ -435,6 +440,9 @@ popd
 trap - ERR INT
 
 # Clean up
-cleanup
+mkfedora_cleanup
 
-exit 0
+return 0
+}
+
+mkfedora "$@"
