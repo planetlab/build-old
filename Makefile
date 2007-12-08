@@ -298,7 +298,7 @@ endif
 	rm -f $@ 
 	echo "%_topdir $(HOME)" >> $@
 	echo "%_tmppath $(HOME)/tmp" >> $@
-	getrpmmacros.sh >> $@
+	./getrpmmacros.sh >> $@
 
 ### this utility allows to extract various info from a spec file
 ### and to define them in makefiles
