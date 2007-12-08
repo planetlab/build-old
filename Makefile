@@ -188,25 +188,6 @@ all: repo
 endif
 endif
 
-####################
-# gather build information for the 'About' page
-# uses INIT_CWD to try and guess the vserver location
-myplc-release:
-	@echo 'Creating myplc-release'
-	rm -f $@
-	(echo -n 'Build bdate: ' ; date '+%Y.%m.%d') >> $@
-	(echo -n 'Build btime: ' ; date '+%H:%M') >> $@
-	(echo -n 'Build bhostname: ' ; hostname) >> $@
-	(echo    "Build blocation: $(INIT_CWD)") >> $@
-	(echo -n 'Build tags file: ' ; fgrep '$$''Id' $(PLDISTROTAGS)) >> $@
-	(echo    "Build tarch: $(HOSTARCH)") >> $@
-	(echo    "Build tdistro: $(DISTRO)") >> $@
-	(echo    "Build trelease: $(RELEASE)") >> $@
-	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx modules versions info" >> $@
-	$(MAKE) --no-print-directory versions >> $@
-	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpms list" >> $@
-	$(MAKE) --no-print-directory version-rpms >> $@
-
 ### yumgroups.xml
 # the source
 ifndef YUMGROUPS
@@ -582,11 +563,35 @@ distclean: distclean1 distclean2
 develclean:
 	$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
 
-#################### produce reliable version information
+####################
+# gather build information for the 'About' page
+# uses INIT_CWD to try and guess the vserver location
+myplc-release:
+	@echo 'Creating myplc-release'
+	rm -f $@
+	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx build info" >> $@
+	$(MAKE) --no-print-directory version-build >> $@
+	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx svn info" >> $@
+	$(MAKE) --no-print-directory version-svns >> $@
+	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpm info" >> $@
+	$(MAKE) --no-print-directory version-rpms >> $@
+
+version-build:
+	@echo -n 'Build bdate: ' ; date '+%Y.%m.%d'
+	@echo -n 'Build btime: ' ; date '+%H:%M'
+	@echo -n 'Build bhostname: ' ; hostname
+	@echo    "Build blocation: $(INIT_CWD)"
+	@echo    "Build blocation2: $${INIT_CWD}"
+	@echo -n 'Build tags file: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
+	@echo    "Build tarch: $(HOSTARCH)"
+	@echo    "Build tdistro: $(DISTRO)"
+	@echo    "Build trelease: $(RELEASE)"	
+
+#################### 
 # for a given module
 VFORMAT="%30s := %s\n"
-define print_version
-$(1)-version:
+define svn_version_target
+$(1)-version-svn:
 	@$(if $($(1)-SVNPATH),\
 	   printf $(VFORMAT) $(1)-SVNPATH "$($(1)-SVNPATH)",\
 	   printf $(VFORMAT) $(1)-CVSROOT "$($(1)-CVSROOT)" ; printf $(VFORMAT) $(1)-TAG "$($(1)-TAG)")
@@ -597,18 +602,21 @@ ALL-MODULES :=
 $(foreach package,$(ALL), $(eval ALL-MODULES+=$($(package)-MODULES)))
 ALL-MODULES:=$(sort $(ALL-MODULES))
 
-$(foreach module,$(ALL-MODULES), $(eval $(call print_version,$(module))))
+$(foreach module,$(ALL-MODULES), $(eval $(call svn_version_target,$(module))))
 
-versions: $(foreach module, $(ALL-MODULES), $(module)-version)
+version-svns: $(foreach module, $(ALL-MODULES), $(module)-version-svn)
 
-RFORMAT="%20s :: %s\n"
-define print_rpms
-$(1)-version-rpms:
-	@$(foreach rpm,$($(1).rpms),printf $(RFORMAT) $(1) $(notdir $(rpm));)
-version-rpms: $(1)-version-rpms
+RFORMAT="%20s :: version=%s release=%s\n"
+define rpm_version_target
+$(1)-version-rpm:
+	@printf $(RFORMAT) $($(1).rpm-name) $($(1).rpm-version) $($(1).rpm-release)
+version-rpms: $(1)-version-rpm
 endef
 
-$(foreach package,$(sort $(ALL)), $(eval $(call print_rpms,$(package))))
+$(foreach package,$(sort $(ALL)), $(eval $(call rpm_version_target,$(package))))
+
+versions: version-build version-svns version-rpms
+.PHONY: versions version-build version-rpms version-svns
 
 #################### include install Makefile
 # the default is to use the distro-dependent install file
