@@ -616,7 +616,7 @@ endef
 
 $(foreach package,$(sort $(ALL)), $(eval $(call rpm_version_target,$(package))))
 
-versions: version-build version-svns version-rpms
+versions: myplc-release version-build version-svns version-rpms
 .PHONY: versions version-build version-rpms version-svns
 
 #################### include install Makefile
