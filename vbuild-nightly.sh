@@ -84,12 +84,12 @@ function build () {
     show_env
     
     echo "Running make IN $(pwd)"
-    make stage1=true "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" -C /build
-    # in case we use an older build that does not know about versions
-    set +e
-    make "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" -C /build versions
-    set -e
-    make "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" -C /build $MAKETARGETS
+    # stage1
+    make -C /build "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" stage1=true 
+    # versions
+    make -C /build "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" NIGHTLY_BASE=${BASE} versions
+    # actual stuff
+    make -C /build "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" $MAKETARGETS
 
 }
 
@@ -113,28 +113,15 @@ function runtest () {
     fi
     url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/i386/${rpm}
 
-    # checkout the system test (formerly known as plctest)
-    cd /vservers/${BASE}/build
-    rm -rf TESTS
-    svn export $TESTSVNPATH TESTS
-    # dont trust retcod
-    if [ ! -d TESTS ] ; then 
-	echo "$COMMAND: could not svn export $SVNPATH - check url"
-	exit 1
-    fi
-
-  # compute test directory name on test box
-    testdir=plctest-${BASE}
-  # rsync/push test material onto the test box - clean first
+    # compute test directory name on test box
+    testdir=test-${BASE}
+    # clean it
     ssh ${TESTBOXSSH} rm -rf ${testdir}
-    ssh ${TESTBOXSSH} mkdir -p ${testdir}
-    rsync -a -v TESTS/ ${TESTBOXSSH}:${testdir}/
-  # invoke test on testbox
-    ssh ${TESTBOXSSH} python -u ${testdir}/${TESTSCRIPT} ${url} 
-  #invoke make install from build to the testbox
-  # looks suspicious : we'd need this *during* myplc run, not at the end
-  # in addition we are not in the vserver here so running make can have weird effects
-  # make install PLCHOST=${TESTBOX}
+    # check it out
+    ssh ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
+    # invoke test on testbox
+    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/${TESTSCRIPT} ${url} 
+    # still missing - need to populate /var/www/html/install-rpms on the myplc
 	
     if [ "$?" != 0 ] ; then
 	failure

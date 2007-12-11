@@ -565,7 +565,8 @@ develclean:
 
 ####################
 # gather build information for the 'About' page
-# uses INIT_CWD to try and guess the vserver location
+# when run from crontab, INIT_CWD not properly set (says /root ..)
+# so, the nightly build passes NIGHTLY_BASE here
 myplc-release:
 	@echo 'Creating myplc-release'
 	rm -f $@
@@ -580,9 +581,9 @@ version-build:
 	@echo -n 'Build bdate: ' ; date '+%Y.%m.%d'
 	@echo -n 'Build btime: ' ; date '+%H:%M'
 	@echo -n 'Build bhostname: ' ; hostname
-	@echo    "Build blocation: $(INIT_CWD)"
-	@echo    "Build blocation2: $${INIT_CWD}"
-	@echo -n 'Build tags file: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
+	@echo    "Build base: $(NIGHTLY_BASE)"
+	@echo    "Build binit_cwd: $(INIT_CWD)"
+	@echo -n 'Build btags: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
 	@echo    "Build tarch: $(HOSTARCH)"
 	@echo    "Build tdistro: $(DISTRO)"
 	@echo    "Build trelease: $(RELEASE)"	
