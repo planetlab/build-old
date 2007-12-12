@@ -19,7 +19,7 @@
 kernel-MODULES := linux-patches
 kernel-SPEC := kernel-2.6-planetlab.spec
 kernel-BUILD-FROM-SRPM := yes
-ifeq ($(HOSTARCH),i386)
+ifeq "$(HOSTARCH)" "i386"
 kernel-RPMFLAGS:= --target i686
 else
 kernel-RPMFLAGS:= --target $(HOSTARCH)
@@ -62,8 +62,8 @@ ALL += wireless-tools
 IN_BOOTSTRAPFS += wireless-tools
 
 #################### tmp
-ifeq ($(DISTRO),"Fedora")
-ifeq ($(RELEASE),4)
+ifeq "$(DISTRO)" "Fedora"
+ifeq "$(RELEASE)" "4"
 #
 # kexec-tools
 #
@@ -222,11 +222,11 @@ IN_BOOTSTRAPFS += iproute
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
-ifeq ($(DISTRO),"Fedora")
-ifeq ($(RELEASE),7)
+ifeq "$(DISTRO)" "Fedora"
+ifeq "$(RELEASE)" "7"
 ALL += vsys
 endif
-ifeq ($(RELEASE),8)
+ifeq "$(RELEASE)" "8"
 ALL += vsys
 endif
 endif
