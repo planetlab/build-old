@@ -26,7 +26,6 @@ package: doxygen
 package: vixie-cron 
 package: xmlsec1 xmlsec1-openssl 
 package: dev 
-package: inotify-tools-devel 
 package: expat-devel
 package: db4-devel 
 package: ncurses-devel 
@@ -64,6 +63,7 @@ package: nasm
 package: mkisofs 
 package: dosfstools 
 package: mtools
+package: syslinux
 # myplc
 package: rsync 
 package: ghostscript
@@ -76,5 +76,5 @@ package: PyXML
 # for pypcilib
 package: pciutils-devel
 # for vsys
-package: ocaml ocaml-ocamldoc 
-package: syslinux
+package: ocaml ocaml-docs
+package: inotify-tools-devel 
