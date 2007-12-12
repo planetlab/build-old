@@ -61,6 +61,22 @@ wireless-tools-BUILD-FROM-SRPM := yes
 ALL += wireless-tools
 IN_BOOTSTRAPFS += wireless-tools
 
+#################### tmp
+ifeq ($(DISTRO),"Fedora")
+ifeq ($(RELEASE),4)
+#
+# kexec-tools
+#
+kexec-tools-MODULES := kexec-tools
+kexec-tools-SPEC := kexec-tools.spec
+kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+kexec-tools-TAG := planetlab-4_1-rc2
+ALL += kexec-tools
+IN_BOOTCD += kexec-tools
+endif
+endif
+#################### tmp
+
 #
 # libnl
 #
