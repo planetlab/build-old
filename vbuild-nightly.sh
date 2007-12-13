@@ -173,6 +173,7 @@ function usage () {
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -v : be verbose"
+    echo " -7 : uses weekday-@FCDISTRO@ as base"
     exit 1
 }
 
@@ -189,7 +190,7 @@ function main () {
     MAKEOPTS=()
     DO_BUILD=true
     DO_TEST=true
-    while getopts "nf:d:b:p:t:r:s:om:a:w:BTvh" opt ; do
+    while getopts "nf:d:b:p:t:r:s:om:a:w:BTvh7" opt ; do
 	case $opt in
 	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ;;
 	    f) FCDISTRO=$OPTARG ;;
@@ -206,6 +207,7 @@ function main () {
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ; USEOLD=true ;;
 	    v) set -x ;;
+	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
 	    h|*) usage ;;
 	esac
     done
