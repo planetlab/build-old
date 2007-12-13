@@ -78,3 +78,5 @@ package: pciutils-devel
 # for vsys
 package: ocaml ocaml-docs
 package: inotify-tools-devel 
+# for bootstrapfs & useradd
+package: shadow-utils
