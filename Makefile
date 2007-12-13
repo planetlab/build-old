@@ -21,15 +21,7 @@
 #     
 #################### (planetlab) distributions
 #
-# (*) the default distribution is called 'planetlab'
-# (*) you may define an alternative distribution, e.g. onelab
-# in this case you need to
-# (*) create onelab.mk that defines your *packages* (see below)
-# (*) create onelab-tags.mk that defines where to fetch your *modules*
-# (*) create your main yumgroups.xml as groups/<distro>.xml
-# (*) there are also various places where a set of modules are defined.
-#     check for .lst files in the various modules that build root images
-#     and mimic what's done for planetlab 
+# (*) see README-pldistros.txt
 # (*) then you need to run 
 #     make stage1=true PLDISTRO=onelab
 #
@@ -188,15 +180,10 @@ all: repo
 endif
 endif
 
-### yumgroups.xml
-# the source
-ifndef YUMGROUPS
-YUMGROUPS := groups/$(PLDISTRO).xml
-endif
-
-RPMS/yumgroups.xml: $(YUMGROUPS)
+### yumgroups.xml : compute from bootstrapfs.pkgs
+RPMS/yumgroups.xml: 
 	mkdir -p RPMS
-	install -D -m 644 $(YUMGROUPS) $@
+	yumgroups.sh $(PLDISTRO) bootstrapfs.pkgs > $@
 
 createrepo = createrepo --quiet -g yumgroups.xml RPMS/ 
 

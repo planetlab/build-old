@@ -717,3 +717,50 @@ function pl_locateDistroFile () {
 	return 0
     fi
 }
+
+# experimental
+function yumgroups_from_pkgs () {
+   groupname=$1; shift
+   groupdesc=$1; shift
+   pkgsfile=$1; shift
+   fcdistro=$pl_DISTRO_NAME
+   [[ -n "$@" ]] && fcdistro=$1; shift
+   if [[ -n "$@" ]] ; then 
+       echo "yumgroups_from_pkgs : wrong signature"
+       return 1
+   fi
+
+   packages=$(pl_getPackages $fcdistro $pkgsfile)
+
+   cat <<__header
+<?xml version="1.0"?>
+<!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
+<comps>
+  <group>
+    <id>$(echo $groupname|tr A-Z a-z)</id>
+    <name>$groupname</name>
+    <default>true</default>
+    <description>$groupdesc</description>
+    <uservisible>false</uservisible>
+    <packagelist>
+__header
+
+    for package in $packages; do 
+	echo "<packagereq type=\"mandatory\">$package</packagereq>"
+    done
+
+cat <<__footer
+    </packagelist>
+  </group>
+</comps>
+__footer
+}
+
+function toplevel_yumgroups () {
+    pldistro=$1; shift
+    pkgsname=$1; shift
+    builddir=$(dirname $0)
+    pkgsfile=$(pl_locateDistroFile $builddir $pldistro $pkgsname)
+    yumgroups_from_pkgs 'PlanetLab' 'PlanetLab Node Root' $pkgsfile
+}
+
