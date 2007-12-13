@@ -1,4 +1,5 @@
-# first draft, extracted from plc_config.xml with --packages
+groupname: Myplc
+groupdesc: PlanetLab ServerSide Contents @FCDISTRO@
 ####
 # kernel-vserver is intended for the vserver-reference, but
 # serves the same useful purpose for MyPLC, namely, to

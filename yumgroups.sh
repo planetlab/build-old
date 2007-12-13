@@ -7,8 +7,11 @@ function usage () {
     exit 1
 }
 
-[ "$#" = 2 ] || usage
+[ "$#" = 1 ] || usage
 pldistro=$1; shift
-pkgsname=$1; shift
 
-toplevel_yumgroups $pldistro $pkgsname
+# gather all known pkgs files
+here=$(pwd)
+all_pkgs=$( (cd $here/config.planetlab ; ls -1 *.pkgs ; cd $here/config.$pldistro; ls *.pkgs) | sort -u)
+
+yumgroups_from_pkgs $(dirname $0) $pldistro $pl_DISTRO_NAME $all_pkgs

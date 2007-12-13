@@ -1,3 +1,5 @@
+groupname: PlanetLabSlice
+groupdesc: PlanetLab Slice Reference Image
 # define packages
 package: bash
 package: coreutils

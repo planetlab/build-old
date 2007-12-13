@@ -1,3 +1,6 @@
+groupname: BootstrapfsProduction
+groupdesc: PlanetLab Production Node 
+
 # Install the "PlanetLab" group. This requires that the 
 # build system install the appropriate yumgroups.xml file 
 # -- currently build/groups/<pldistro>.xml --

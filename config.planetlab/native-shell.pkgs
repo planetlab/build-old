@@ -1,3 +1,5 @@
+groupname: PlanetLabNative
+groupdesc: Test Vserver for MyPlc Native
 package: openssh-clients curl
 package: emacs
 package: bind-utils

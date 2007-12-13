@@ -180,10 +180,10 @@ all: repo
 endif
 endif
 
-### yumgroups.xml : compute from bootstrapfs.pkgs
+### yumgroups.xml : compute from all known .pkgs files
 RPMS/yumgroups.xml: 
 	mkdir -p RPMS
-	yumgroups.sh $(PLDISTRO) bootstrapfs.pkgs > $@
+	yumgroups.sh $(PLDISTRO) > $@
 
 createrepo = createrepo --quiet -g yumgroups.xml RPMS/ 
 

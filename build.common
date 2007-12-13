@@ -658,6 +658,14 @@ function pl_fixdirs() {
 
 ########## .pkgs format
 # comments start with a # - this is needed only if you use a keyword in a comment
+
+function pl_getPkgsAttribute () {
+    keyword=$1; shift
+    file=$1; shift
+    grep -v '^#' $file | grep --regexp="^${keyword}:" | sed -e "s,${keyword}:,,"
+}
+
+
 # for a given keyword like 'package' :
 # we support fcdistro-dependant format, for tokens (pkgname) without whitespace
 # you can e.g. use
@@ -720,22 +728,32 @@ function pl_locateDistroFile () {
 
 # experimental
 function yumgroups_from_pkgs () {
-   groupname=$1; shift
-   groupdesc=$1; shift
-   pkgsfile=$1; shift
-   fcdistro=$pl_DISTRO_NAME
-   [[ -n "$@" ]] && fcdistro=$1; shift
-   if [[ -n "$@" ]] ; then 
-       echo "yumgroups_from_pkgs : wrong signature"
-       return 1
-   fi
+    builddir=$1; shift
+    pldistro=$1; shift
+    fcdistro=$1; shift
+    pkgsnames=$@
 
-   packages=$(pl_getPackages $fcdistro $pkgsfile)
+sedargs="-e s,@FCDISTRO@,$fcdistro,g"
 
    cat <<__header
 <?xml version="1.0"?>
 <!DOCTYPE comps PUBLIC "-//Red Hat, Inc.//DTD Comps info//EN" "comps.dtd">
 <comps>
+__header
+
+    for pkgsname in $pkgsnames; do
+	pkgsfile=$(pl_locateDistroFile $builddir $pldistro $pkgsname)
+	packages=$(pl_getPackages $fcdistro $pkgsfile)
+
+	groupname=$(pl_getPkgsAttribute groupname $pkgsfile | sed $sedargs)
+	groupdesc=$(pl_getPkgsAttribute groupdesc $pkgsfile | sed $sedargs)
+
+	if [ -z "$groupname" -o -z "$groupdesc" ] ; then
+	    echo "Cannot find groupname: and groupdesc: in $pkgsfile -- skipped" 1>&2
+	    continue
+	fi
+	
+	cat << __group_header
   <group>
     <id>$(echo $groupname|tr A-Z a-z)</id>
     <name>$groupname</name>
@@ -743,24 +761,18 @@ function yumgroups_from_pkgs () {
     <description>$groupdesc</description>
     <uservisible>false</uservisible>
     <packagelist>
-__header
-
-    for package in $packages; do 
-	echo "<packagereq type=\"mandatory\">$package</packagereq>"
-    done
-
-cat <<__footer
+__group_header
+        for package in $packages; do 
+	    echo "<packagereq type=\"mandatory\">$package</packagereq>"
+	done
+	cat << __group_footer
     </packagelist>
   </group>
+__group_footer
+    done
+cat <<__footer
 </comps>
 __footer
 }
 
-function toplevel_yumgroups () {
-    pldistro=$1; shift
-    pkgsname=$1; shift
-    builddir=$(dirname $0)
-    pkgsfile=$(pl_locateDistroFile $builddir $pldistro $pkgsname)
-    yumgroups_from_pkgs 'PlanetLab' 'PlanetLab Node Root' $pkgsfile
-}
 

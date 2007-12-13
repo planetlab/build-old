@@ -1,3 +1,5 @@
+groupname: PlanetLabDevel
+groupdesc: Building PlanetLab
 # general utilities
 package: sendmail sendmail-cf mailx 
 package: make install 

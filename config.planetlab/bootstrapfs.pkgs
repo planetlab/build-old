@@ -1,3 +1,7 @@
+# Keeping the old name as it might be referenced elsewhere (node update..)
+# groupname: Bootstrapfs
+groupname: PlanetLab
+groupdesc: PlanetLab Node Root
 package: kernel
 package: kernel-smp
 package: udev

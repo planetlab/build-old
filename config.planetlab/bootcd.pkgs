@@ -1,3 +1,5 @@
+groupname: PlanetLabBootcd
+groupdesc: PlanetLab BootCD
 # from prep.sh, was hardwired as packagelist
 package: filesystem
 package: udev
