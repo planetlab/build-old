@@ -31,7 +31,6 @@ package: rpm
 package: setserial
 package: setup
 package: sysklogd
-package: SysVinit
 package: termcap
 package: util-linux
 package: vim-minimal
@@ -54,7 +53,6 @@ package: logwatch
 package: mailcap
 package: nano
 package: nc
-package: netdump
 package: openssh-clients
 package: parted
 package: pciutils
@@ -82,11 +80,19 @@ package: perl
 package: python
 package: tar
 package: expect
-package: portmap
 package: nfs-utils
-package: schedutils
 package: openvpn
 package: vconfig
+package: autofs
+package: PyXML
+# not found on other platforms
+package+fc4: netdump
+package+fc4: schedutils
+package+fc4: SysVinit
+package+fc6: SysVinit
+package+fc4: portmap
+package+fc6: portmap
+# planetlab
 package: madwifi
 package: wireless-tools
 package: util-vserver
@@ -100,13 +106,12 @@ package: util-vserver-pl
 package: NodeManager
 package: NodeUpdate
 package: codemux
-package: autofs
 package: pl_sshd
 package: ipod
 package: vserver-reference
 package: vserver-system-packages
 package: pl_mom
 package: netflow-utils
-package: PyXML
 package: proper
-package: vsys
+# not ready yet
+#package: vsys
