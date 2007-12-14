@@ -183,7 +183,7 @@ endif
 ### yumgroups.xml : compute from all known .pkgs files
 RPMS/yumgroups.xml: 
 	mkdir -p RPMS
-	yumgroups.sh $(PLDISTRO) > $@
+	./yumgroups.sh $(PLDISTRO) > $@
 
 createrepo = createrepo --quiet -g yumgroups.xml RPMS/ 
 
