@@ -422,22 +422,32 @@ rpms: $(ALLRPMS)
 # use tmp dirs when building binary rpm so make remains idempotent 
 # otherwise SOURCES/ or SPEC gets touched again - which leads to rebuilding
 RPM-USE-TMP-DIRS = --define "_sourcedir $(HOME)/tmp" --define "_specdir $(HOME)/tmp"
+RPM-USE-COMPILE-DIRS = --define "_sourcedir $(HOME)/COMPILE" --define "_specdir $(HOME)/COMPILE"
 
 # usage: build_binary_rpm package
 # xxx hacky - invoke createrepo if DEPEND-FILES mentions RPMS/yumgroups.xml
 define target_binary_rpm 
 $($(1).rpms): $($(1).srpm)
-	mkdir -p BUILD RPMS tmp
+	mkdir -p RPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) --rebuild $(RPM-USE-TMP-DIRS) $($(1).srpm)
 	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
+# for manual use only - in case we need to investigate the results of an rpmbuild
+$(1).compile: $($(1).srpm)
+	mkdir -p COMPILE tmp
+	@(echo -n "XXXXXXXXXXXXXXX -- BEG compile $(1) " ; date)
+	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
+	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
+	$($(1).rpmbuild) --recompile $(RPM-USE-TMP-DIRS) $($(1).srpm)
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	@(echo -n "XXXXXXXXXXXXXXX -- END compile $(1) " ; date)
+.PHONY: $(1).compile
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_binary_rpm,$(package))))
-
 ### shorthand target
 # e.g. make proper -> does propers rpms
 # usage shorthand_target package
@@ -649,6 +659,11 @@ help:
 	@echo 'make srpms'
 	@echo 'make rpms'
 	@echo ""
+	@echo "********** Manual targets"
+	@echo "make package.compile"
+	@echo "  The regular process uses rpmbuild --rebuild, that performs"
+	@echo "  a compilation directory cleanup upon completion. If you need to investigate"
+	@echo "  the intermediate compilation directory, use the .compile targets"
 	@echo "********** Cleaning examples"
 	@echo "make clean"
 	@echo "  removes the files made by make"
