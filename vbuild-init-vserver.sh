@@ -250,20 +250,20 @@ COMMAND_VBUILD="vbuild-init-vserver.sh"
 COMMAND_MYPLC="myplc-init-vserver.sh"
 function usage () {
     set +x 
-    echo "Usage: $COMMAND_VBUILD [-v] vserver-name [ -- vserver-options ]"
-    echo "Usage: $COMMAND_MYPLC [-v] vserver-name repo-url [ -- vserver-options ]"
+    echo "Usage: $COMMAND_VBUILD [options] vserver-name [ -- vserver-options ]"
+    echo "Usage: $COMMAND_MYPLC [options] vserver-name repo-url [ -- vserver-options ]"
     echo "Requirements: you need to have a vserver-compliant kernel,"
-    echo "  as well as the util-vserver RPM installed"
+    echo "   as well as the util-vserver RPM installed"
     echo "Description:"
-    echo "  This command creates a fresh vserver instance, for building, or running, myplc"
+    echo "   This command creates a fresh vserver instance, for building, or running, myplc"
     echo "Supported options"
     echo " -f fcdistro - for creating the root filesystem - defaults to $DEFAULT_FCDISTRO"
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
-    echo " -v : passes -v to calls to vserver"
+    echo " -v : verbose - passes -v to calls to vserver"
     echo "vserver-options"
-    echo " all args after the optional -- are passed to vserver <name> build <options>"
-    echo " typical usage is e.g. --interface eth0:200.150.100.10/24"
+    echo "  all args after the optional -- are passed to vserver <name> build <options>"
+    echo "  typical usage is e.g. --interface eth0:200.150.100.10/24"
     exit 1
 }
 
