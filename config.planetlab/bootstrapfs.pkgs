@@ -115,11 +115,4 @@ package: netflow-utils
 package: proper
 # not ready yet
 #package: vsys
-##########
-# yum does not honor Requires(pre): tags
-# so e.g. even though vserver-reference needs coreutils in its %pre, 
-# and rightfully declares Requires(pre): coreutils
-# yum screws up and installs coreutils after vserver-reference
-# so the gory hack is, let's just retry the whole stuff again
-group: planetlab
 
