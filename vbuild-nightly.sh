@@ -34,7 +34,8 @@ DATE=$(date +'%Y.%m.%d')
 function summary () {
     from=$1; shift
     echo "******************** BEG SUMMARY" 
-    tr -d '\r' < $from | egrep 'BEG RPM|not installed|Installing:.*([eE]rror|[wW]arning)' 
+#   tr -d '\r' < $from | egrep 'BEG RPM|not installed|Installing:.*([eE]rror|[wW]arning)' 
+    ./summary.py < $from 
     echo "******************** END SUMMARY" 
 }
 
