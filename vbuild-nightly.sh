@@ -3,6 +3,7 @@ REVISION=$(echo '$Revision$' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
 
 COMMANDPATH=$0
 COMMAND=$(basename $0)
+DIRNAME=$(dirname $0)
 
 # default values, tunable with command-line options
 DEFAULT_FCDISTRO=f7
@@ -35,7 +36,7 @@ function summary () {
     from=$1; shift
     echo "******************** BEG SUMMARY" 
 #   tr -d '\r' < $from | egrep 'BEG RPM|not installed|Installing:.*([eE]rror|[wW]arning)' 
-    ./summary.py < $from 
+    $DIRNAME/summary.py < $from 
     echo "******************** END SUMMARY" 
 }
 
@@ -73,13 +74,10 @@ function build () {
     echo -n "============================== Starting $COMMAND:build on "
     date
 
-    cd /
-
+    cd /build
   # if TAGSRELEASE specified : update PLDISTROTAGS with this tag
     if [ -n "$TAGSRELEASE" ] ; then
-	cd build
 	svn up -r $TAGSRELEASE $PLDISTROTAGS
-	cd - 
     fi
 
     show_env
@@ -102,11 +100,9 @@ function runtest () {
     trap failure ERR INT
 
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
-    here=$(pwd)
 
     ### the URL to the myplc package
-    cd /vservers/$BASE/build/RPMS/i386
-    rpm=$(ls myplc-[0-9]*.rpm)
+    rpm=$( (cd /vservers/$BASE/build/RPMS/i386 ; ls myplc-[0-9]*.rpm) )
     if [ ${#rpm[@]} != 1 ] ; then
 	echo "$COMMAND: Cannot locate rpm for testing"
 	failure
@@ -128,7 +124,6 @@ function runtest () {
 	failure
     fi
     
-    cd $here
     echo -n "============================== End $COMMAND:runtest on $(date)"
 }
 
