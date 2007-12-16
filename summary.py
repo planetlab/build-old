@@ -2,7 +2,7 @@
 # read a full log and tries to extract the interesting stuff
 
 import sys,re
-m_beg=re.compile('.* BEG RPM.*')
+m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*")
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
@@ -18,7 +18,7 @@ def scan_log (filename):
             f=open(filename)
         echo=False
         for line in f.xreadlines():
-            if m_beg.match(line):
+            if m_show_line.match(line):
                 print line,
             elif m_installing_err.match(line):
                 (installing,error)=m_installing_err.match(line).groups()
