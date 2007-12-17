@@ -250,7 +250,7 @@ export PS1="[$vserver] \\w # "
 PROFILE
 
     # turn off some services - as they'll get started through plc
-    for i in mail postgresql ssh httpd ; do chkconfig $i off ; done
+    for i in mail postgresql ssh httpd ; do chkconfig \$i off ; done
 EOF
 }
 
