@@ -148,6 +148,7 @@ function runtest () {
 	failure
 	exit 1
     fi
+    rpms_url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/
     url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/i386/${rpm}
 
     # compute test directory name on test box
@@ -156,6 +157,12 @@ function runtest () {
     ssh ${TESTBOXSSH} rm -rf ${testdir}
     # check it out
     ssh ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
+    # store the myplc http url in the newly created test dir - for testing in chroot mode
+    echo ${url} | ssh ${TESTBOXSSH} "cat > ${testdir}/MYPLC-URL"
+    # store the build svn path in the newly created test dir - so it can perform myplc-init-vserver
+    echo ${SVNPATH} | ssh ${TESTBOXSSH} "cat > ${testdir}/BUILD-URL"
+    # store the rpms http url in the newly created test dir - for passing to myplc-init-vserver
+    echo ${rpms_url} | ssh ${TESTBOXSSH} "cat > ${testdir}/RPMS-URL"
     # invoke test on testbox
     ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/${TESTSCRIPT} ${url} 
     # still missing - need to populate /var/www/html/install-rpms on the myplc
