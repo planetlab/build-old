@@ -105,7 +105,8 @@ function setup_vserver () {
     fi
 
     if [ -n "$VBUILD_MODE" ] ; then 
-    # set up appropriate vserver capabilities to mount, mknod and IPC_LOCK
+	### capabilities required for a build vserver
+        # set up appropriate vserver capabilities to mount, mknod and IPC_LOCK
 	BCAPFILE=/etc/vservers/$vserver/bcapabilities
 	touch $BCAPFILE
 	cap=$(grep ^CAP_SYS_ADMIN /etc/vservers/$vserver/bcapabilities | wc -l)
@@ -114,6 +115,11 @@ function setup_vserver () {
 	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
 	cap=$(grep ^CAP_IPC_LOCK /etc/vservers/$vserver/bcapabilities | wc -l)
 	[ $cap -eq 0 ] && echo 'CAP_IPC_LOCK' >> /etc/vservers/$vserver/bcapabilities
+    else
+	### capabilities required for a myplc vserver
+	# for /etc/plc.d/gpg - need to init /dev/random
+	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
+	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
     fi
 
     $personality vyum $vserver -- -y install yum
@@ -243,6 +249,8 @@ function post_install_myplc  () {
 export PS1="[$vserver] \\w # "
 PROFILE
 
+    # turn off some services - as they'll get started through plc
+    for i in mail postgresql ssh httpd ; do chkconfig $i off ; done
 EOF
 }
 
