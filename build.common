@@ -128,7 +128,7 @@ function pl_process_fedora_options () {
 function pl_root_rpm_macros () {
     cat <<EOF
 %_install_langs C:en_US:en
-%_netsharedpath /proc:/dev/pts
+%_netsharedpath /proc:/dev/pts:/usr/share/info
 %_excludedocs 1
 %__file_context_path /dev/null
 EOF
