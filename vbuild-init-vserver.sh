@@ -127,7 +127,7 @@ function setup_vserver () {
 
     # start the vserver so we can do the following operations
     $personality vserver $VERBOSE $vserver start
-    $personality vserver $VERBOSE $vserver exec rm -f /var/lib/rpm/__db*
+    $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
     $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
     # minimal config in the vserver for yum to work
