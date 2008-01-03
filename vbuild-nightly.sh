@@ -11,10 +11,6 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 
-# NOTE: do not think we want to put email addresses into scripts
-# that can be harvested by spambots. --mef
-DEFAULT_MAILTO="onelab-build@one-lab.org"
-
 # web publishing results
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
@@ -35,6 +31,7 @@ function summary () {
     from=$1; shift
     echo "******************** BEG SUMMARY" 
     python - $from <<EOF
+#!/usr/bin/env python
 # read a full log and tries to extract the interesting stuff
 
 import sys,re
@@ -42,7 +39,7 @@ m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not install
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
-m_installing_doc=re.compile(".*such file or directory for /usr/share/info.*")
+m_installing_doc=re.compile("(.*)install-info: No such file or directory for /usr/share/info/\S+(.*)")
 
 def scan_log (filename):
 
@@ -54,20 +51,29 @@ def scan_log (filename):
             f=open(filename)
         echo=False
         for line in f.xreadlines():
+            # first off : discard warnings related to doc
+            if m_installing_doc.match(line):
+                (begin,end)=m_installing_doc.match(line).groups()
+                line=begin+end
+            # unconditionnally show these lines
             if m_show_line.match(line):
                 print line,
+            # an 'installing' line with messages afterwards : needs to be echoed
             elif m_installing_err.match(line):
                 (installing,error)=m_installing_err.match(line).groups()
                 print installing
                 print error
                 echo=True
+            # closing an 'installing' section
             elif m_installing_end.match(line):
                 echo=False
+            # any 'installing' line
             elif m_installing_any.match(line):
                 if echo: 
                     installing=m_installing_any.match(line).group(1)
                     print installing
                 echo=False
+            # print lines when echo is true
             else:
                 if echo: print line,
         f.close()
@@ -260,12 +266,6 @@ function main () {
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
 
-    # NOTE: suggest that by default no email is sent and that the user
-    # should explicitly invoke this script with the -m arg to pass in
-    # the appropriate email address. --mef
-    if [ "$PLDISTRO" = "onelab" ] ; then
-	[ -z "$MAILTO" ] && MAILTO="$DEFAULT_MAILTO"
-    fi
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
     ### set BASE from DISTRO, if unspecified
