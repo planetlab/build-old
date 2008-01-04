@@ -77,20 +77,19 @@ IN_BOOTSTRAPFS += wireless-tools
 # 
 # nozomi
 # 
-
+# does not compile against new kernel - waiting for Napoli & Vimercate
 nozomi-MODULES := nozomi
 nozomi-SPEC := nozomi.spec
 nozomi-DEPEND-DEVEL-RPMS := kernel-devel
 nozomi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_release=$(kernel.rpm-release) \
 	kernel_arch=$(kernel.rpm-arch)
-IN_BOOTSTRAPFS += nozomi
-ALL += nozomi
+#IN_BOOTSTRAPFS += nozomi
+#ALL += nozomi
 
 #
 # comgt
 # 
-
 comgt-MODULES := comgt
 comgt-SPEC := comgt.spec
 IN_BOOTSTRAPFS += comgt
