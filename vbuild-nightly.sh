@@ -19,7 +19,6 @@ TESTBUILDURL="http://build.one-lab.org/"
 TESTBOX=onelab-test.inria.fr
 TESTBOXSSH=root@onelab-test.inria.fr
 TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
-TESTSCRIPT=TestMain.py
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
@@ -163,7 +162,7 @@ function runtest () {
     # check it out
     ssh ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
     # invoke test on testbox - pass url and build url - so the tests can use myplc-init-vserver.sh
-    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/${TESTSCRIPT} --build ${SVNPATH} --url ${url} --all
+    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/runtest --build ${SVNPATH} --url ${url} --all
     # still missing - need to populate /var/www/html/install-rpms on the myplc
 	
     if [ "$?" != 0 ] ; then
