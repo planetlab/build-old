@@ -1,60 +1,33 @@
-# we do not use TAG directly anymore
-# this because we want the rpm's releases to reflect the date even when a tag is used
+# $Id: planetlab-tags.mk 7507 2007-12-13 09:32:33Z thierry $
 
-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-
-# this one is special : the boot script (in our case nightly-build.sh) extracts 
-# build from the trunk/HEAD. Then the various modules may need to extract build again,
-# typically when then use mkfedora, and for that purpose they use the following tag.
-build-TAG :=			planetlab-4_0-branch
-
-# the build's logic is sometimes confusing. Whether a package mentions a single or multiple modules, 
-# the variable used is different. 
-# Look for xxx-ambiguous-xxx below
-# We define both just in case (as of now only the first one is used)
-
-# xxx-ambiguous-xxx
-linux-2.6-TAG :=		planetlab-4_0-branch
-kernel-i686-TAG :=		planetlab-4_0-branch
-# we dont use this yet
-kernel-x86_64-TAG :=		planetlab-4_0-branch
-kernel-i586-TAG :=		planetlab-4_0-branch
-# end
-vnet-TAG :=			planetlab-4_0-branch
-madwifi-ng-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/madwifi-ng/tags/0.9.3
-wireless-tools-SVNPATH :=	svn+ssh://build@svn.one-lab.org/svn/wireless-tools/tags/29pre14
-ivtv-TAG := 			planetlab-4_0-branch
-util-vserver-TAG := 		planetlab-4_0-branch
-PlanetLabAccounts-TAG := 	planetlab-4_0-branch
-NodeUpdate-TAG := 		planetlab-4_0-branch
-PlanetLabConf-TAG := 		planetlab-4_0-branch
-ipod-TAG := 			planetlab-4_0-branch
-sudo-TAG := 			planetlab-4_0-branch
-pycurl-TAG := 			planetlab-4_0-branch
-BootServerRequest-TAG := 	planetlab-4_0-branch
-PlanetLabID-TAG := 		planetlab-4_0-branch
-NodeManager-TAG := 		planetlab-4_0-branch
-pl_sshd-TAG := 			planetlab-4_0-branch
-libhttpd++-TAG := 		planetlab-4_0-branch
-proper-TAG := 			planetlab-4_0-branch
-mysql-TAG := 			planetlab-4_0-branch
-ulogd-TAG := 			planetlab-4_0-branch
-netflow-TAG := 			planetlab-4_0-branch
-pl_mom-TAG := 			planetlab-4_0-branch
-iptables-TAG := 		planetlab-4_0-branch
-iproute2-TAG := 		planetlab-4_0-branch
-kexec-tools-TAG := 		planetlab-4_0-branch
-util-python-TAG := 		planetlab-4_0-branch
-# xxx-ambiguous-xxx
-PLCAPI-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
-new_plc_api-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/new_plc_api/trunk
-# end
-vserver-reference-TAG := 	planetlab-4_0-branch
-bootmanager-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootmanager/trunk
-bootcd-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/bootcd/trunk
-# xxx-ambiguous-xxx
-plcwww-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/new_plc_www/trunk
-new_plc_www-SVNPATH := 		svn+ssh://build@svn.one-lab.org/svn/new_plc_www/trunk
-# end
-myplc-SVNPATH :=		svn+ssh://build@svn.one-lab.org/svn/myplc/trunk
-plc/scripts-TAG := 		planetlab-4_0-branch
+build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
+linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
+wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/trunk
+nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/imports/2.21alpha_060917
+comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
+libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
+util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/scholz
+util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
+NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/trunk
+PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/trunk
+NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/trunk
+pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/trunk
+libhttpd++-SVNPATH		:= http://svn.planet-lab.org/svn/libhttpd++/trunk
+proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/trunk
+CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/trunk
+ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/trunk
+fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
+PlanetFlow-SVNPATH		:= http://svn.planet-lab.org/svn/PlanetFlow/trunk
+Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/trunk
+iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
+iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/trunk
+vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
+PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/trunk
+WWW-SVNPATH			:= http://svn.one-lab.org/new_plc_www/trunk
+VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
+BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
+pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
+BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/trunk
+BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/trunk
+MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/trunk

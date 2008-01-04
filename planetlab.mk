@@ -1,8 +1,9 @@
 #
 # PlanetLab standard components list
-#
+# initial version from Mark Huang
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
+# rewritten by Thierry Parmentelat - INRIA Sophia Antipolis
 #
 # $Id$
 #
@@ -17,7 +18,7 @@
 #
 
 kernel-MODULES := linux-patches
-kernel-SPEC := kernel-2.6-planetlab.spec
+kernel-SPEC := kernel-2.6.spec
 kernel-BUILD-FROM-SRPM := yes
 ifeq "$(HOSTARCH)" "i386"
 kernel-RPMFLAGS:= --target i686
@@ -38,9 +39,21 @@ IN_BOOTSTRAPFS += $(KERNELS)
 IN_MYPLC += $(KERNELS)
 
 #
-# madwifi
+# kexec-tools
 #
-# [thierry] - temporarily use onelab's svn
+ifeq "$(DISTRO)" "Fedora"
+ifeq "$(RELEASE)" "4"
+kexec-tools-MODULES := kexec-tools
+kexec-tools-SPEC := kexec-tools.spec
+kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+kexec-tools-TAG := planetlab-4_1-rc2
+ALL += kexec-tools
+IN_BOOTCD += kexec-tools
+endif
+endif
+
+#
+# madwifi
 #
 madwifi-MODULES := madwifi
 madwifi-SPEC := madwifi.spec
@@ -49,8 +62,8 @@ madwifi-DEPEND-DEVEL-RPMS := kernel-devel
 madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_release=$(kernel.rpm-release) \
 	kernel_arch=$(kernel.rpm-arch)
-IN_BOOTSTRAPFS += madwifi
 ALL += madwifi
+IN_BOOTSTRAPFS += madwifi
 
 #
 # wireless-tools
@@ -60,22 +73,6 @@ wireless-tools-SPEC := wireless-tools.spec
 wireless-tools-BUILD-FROM-SRPM := yes
 ALL += wireless-tools
 IN_BOOTSTRAPFS += wireless-tools
-
-#################### tmp
-ifeq "$(DISTRO)" "Fedora"
-ifeq "$(RELEASE)" "4"
-#
-# kexec-tools
-#
-kexec-tools-MODULES := kexec-tools
-kexec-tools-SPEC := kexec-tools.spec
-kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-kexec-tools-TAG := planetlab-4_1-rc2
-ALL += kexec-tools
-IN_BOOTCD += kexec-tools
-endif
-endif
-#################### tmp
 
 #
 # libnl

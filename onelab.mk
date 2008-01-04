@@ -1,458 +1,345 @@
 #
-# PlanetLab standard components list
-#
+# OneLab standard components list
+# initial version from Mark Huang
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
+# rewritten by Thierry Parmentelat - INRIA Sophia Antipolis
 #
 # $Id$
 #
-
+# see doc in Makefile  
 #
-# Required:
-#
-# CVSROOT or package-CVSROOT: CVSROOT to use
-# TAG or package-TAG: CVS tag to use
-# package-MODULE: CVS module name to use
-# package-SPEC: RPM spec file template
-#
-# Optional:
-#
-# package-RPMFLAGS: Miscellaneous RPM flags
-# package-RPMBUILD: If not rpmbuild
-# package-CVS_RSH: If not ssh
-#
-# Add to ALL if you want the package built as part of the default set.
-#
-
-####
-# we do not use TAG directly anymore, and let it to HEAD
-# this because we want the rpm's releases to reflect the date even when a tag is used
-# our build script defines COMMON_TAG that the various components are free to use or not
- 
-# COMMON_TAG set from the build script
-
-TAGSFILE = onelab-tags.mk
-
-include $(TAGSFILE)
-
-#
-# Default values
-#
-
-# it's useless to set this here because it's overriden on the command line by nightly-build.sh
-TAG := HEAD
-
-# Check if a tag has been checked out
-ifneq ($(wildcard CVS/Root),)
-# Check if we are able to access CVS
-CVSTAG := $(shell cvs status planetlab.mk 2>/dev/null | sed -ne 's/[[:space:]]*Sticky Tag:[[:space:]]*\([^[:space:]]*\).*/\1/p')
-ifneq ($(CVSTAG),)
-CVSROOT := $(shell cat CVS/Root)
-ifeq ($(CVSTAG),(none))
-TAG := HEAD
-else
-TAG := $(CVSTAG)
-endif
-endif
-endif
 
 #
 # kernel
 #
-
-#kernel-x86_64-MODULE := linux-2.6
-#kernel-x86_64-RPMFLAGS:= --target x86_64
-#kernel-x86_64-SPEC := linux-2.6/scripts/kernel-2.6-$(PLDISTRO).spec
-##ALL += kernel-x86_64
-
-kernel-i686-MODULE := linux-2.6
-kernel-i686-RPMFLAGS:= --target i686
-kernel-i686-SPEC := linux-2.6/scripts/kernel-2.6-$(PLDISTRO).spec
-ALL += kernel-i686
-
-#kernel-i586-MODULE := linux-2.6
-#kernel-i586-RPMFLAGS:= --target i586
-#kernel-i586-SPEC := linux-2.6/scripts/kernel-2.6-planetlab.spec
-#ALL += kernel-i586
-
-#kernel: kernel-i586 kernel-i686
-#kernel-clean: kernel-i586-clean kernel-i686-clean
-kernel: kernel-i686
-kernel-clean: kernel-i686-clean
-
-#
-# vnet
+# use a package name with srpm in it:
+# so the source rpm is created by running make srpm in the codebase
 #
 
-vnet-MODULE := vnet
-vnet-SPEC := vnet/vnet.spec
-ALL += vnet
+kernel-MODULES := linux-patches
+kernel-SPEC := kernel-2.6.spec
+kernel-BUILD-FROM-SRPM := yes
+ifeq "$(HOSTARCH)" "i386"
+kernel-RPMFLAGS:= --target i686
+else
+kernel-RPMFLAGS:= --target $(HOSTARCH)
+endif
+KERNELS += kernel
 
-# Build kernel first so we can bootstrap off of its build
-vnet: kernel
+kernels: $(KERNELS)
+kernels-clean: $(foreach package,$(KERNELS),$(package)-clean)
 
-#
-# madwifi
-#
-
-madwifi-ng-MODULE := madwifi-ng
-madwifi-ng-SPEC := madwifi.spec
-ALL += madwifi-ng
-
-# Build kernel first so we can bootstrap off of its build
-madwifi-ng: kernel
-
-# 
-# wireless-tools
-# 
-
-wireless-tools-MODULE = wireless-tools
-wireless-tools-SPEC := wireless-tools.spec
-ALL += wireless-tools
-
-#
-# ivtv 
-#
-
-#ivtv-MODULE := ivtv
-#ivtv-SPEC := ivtv/ivtv.spec
-#ALL += ivtv
-
-#
-# util-vserver
-#
-
-util-vserver-MODULE := util-vserver
-util-vserver-SPEC := util-vserver/util-vserver.spec
-util-vserver-RPMFLAGS:= --without dietlibc
-ALL += util-vserver
-
-#
-# PlanetLabAccounts
-#
-
-PlanetLabAccounts-MODULE := PlanetLabAccounts
-PlanetLabAccounts-SPEC := PlanetLabAccounts/PlanetLabAccounts.spec
-ALL += PlanetLabAccounts
-
-#
-# NodeUpdate
-#
-
-NodeUpdate-MODULE := NodeUpdate
-NodeUpdate-SPEC := NodeUpdate/NodeUpdate.spec
-ALL += NodeUpdate
-
-#
-# PlanetLabConf
-#
-
-PlanetLabConf-MODULE := PlanetLabConf
-PlanetLabConf-SPEC := PlanetLabConf/PlanetLabConf.spec
-ALL += PlanetLabConf
-
-#
-# ipod
-#
-
-ipod-MODULE := ipod
-ipod-SPEC := ipod/ipod.spec
-ALL += ipod
-
-#
-# sudo
-#
-
-sudo-MODULE := sudo
-sudo-SPEC := sudo/planetlab_sudo.spec
-ALL += sudo
-
-#
-# pycurl
-#
-
-pycurl-MODULE := pycurl
-pycurl-SPEC := pycurl/pycurl.spec
-ALL += pycurl
-
-#
-# BootServerRequest
-#
-
-BootServerRequest-MODULE := BootServerRequest
-BootServerRequest-SPEC := BootServerRequest/PLBootServerRequest.spec
-ALL += BootServerRequest
-
-#
-# PlanetLabID
-#
-
-PlanetLabID-MODULE := PlanetLabID
-PlanetLabID-SPEC := PlanetLabID/PlanetLabID.spec
-ALL += PlanetLabID
-
-#
-# Node Manager
-#
-
-NodeManager-MODULE := NodeManager
-NodeManager-SPEC := NodeManager/NodeManager.spec
-ALL += NodeManager
-
-#
-# pl_sshd
-#
-
-pl_sshd-MODULE := pl_sshd
-pl_sshd-SPEC := pl_sshd/pl_sshd.spec
-ALL += pl_sshd
-
-#
-# libhttpd++: 
-#
-
-libhttpd++-MODULE := libhttpd++
-libhttpd++-SPEC := libhttpd++/libhttpd++.spec
-ALL += libhttpd++
-
-#
-# Proper: Privileged Operations Service
-#
-
-proper-MODULE := proper
-proper-SPEC := proper/proper.spec
-ALL += proper
-
-proper: libhttpd++
-
-#
-# MySQL
-#
-
-mysql-MODULE := mysql
-mysql-SPEC := mysql/mysql.spec
-ALL += mysql
-
-#
-# ulogd
-#
-
-ulogd-MODULE := ulogd
-ulogd-SPEC := ulogd/ulogd.spec
-ALL += ulogd
-
-ulogd: kernel proper mysql
-
-#
-# netflow
-#
-
-netflow-MODULE := netflow
-netflow-SPEC := netflow/netflow.spec
-ALL += netflow
-
-netflow: mysql
-
-#
-# PlanetLab Mom: Cleans up your mess
-#
-
-pl_mom-MODULE := pl_mom
-pl_mom-SPEC := pl_mom/pl_mom.spec
-ALL += pl_mom
-
-#
-# iptables
-#
-
-iptables-MODULE := iptables
-iptables-SPEC := iptables/iptables.spec
-ALL += iptables
-
-iptables: kernel
-
-#
-# iproute
-#
-
-iproute-MODULE := iproute2
-iproute-SPEC := iproute2/iproute.spec
-ALL += iproute
+ALL += $(KERNELS)
+# this is to mark on which image a given rpm is supposed to go
+IN_BOOTCD += $(KERNELS)
+IN_VSERVER += $(KERNELS)
+IN_BOOTSTRAPFS += $(KERNELS)
+# turns out myplc installs kernel-vserver
+IN_MYPLC += $(KERNELS)
 
 #
 # kexec-tools
 #
-
-kexec-tools-MODULE := kexec-tools
-kexec-tools-SPEC := kexec-tools/kexec-tools.spec
+ifeq "$(DISTRO)" "Fedora"
+ifeq "$(RELEASE)" "4"
+kexec-tools-MODULES := kexec-tools
+kexec-tools-SPEC := kexec-tools.spec
+kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+kexec-tools-TAG := planetlab-4_1-rc2
 ALL += kexec-tools
+IN_BOOTCD += kexec-tools
+endif
+endif
 
 #
-# util-python
+# madwifi
 #
+madwifi-MODULES := madwifi
+madwifi-SPEC := madwifi.spec
+madwifi-BUILD-FROM-SRPM := yes
+madwifi-DEPEND-DEVEL-RPMS := kernel-devel
+madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
+	kernel_release=$(kernel.rpm-release) \
+	kernel_arch=$(kernel.rpm-arch)
+ALL += madwifi
+IN_BOOTSTRAPFS += madwifi
 
-util-python-MODULE := util-python
-util-python-SPEC := util-python/util-python.spec
-ALL += util-python
+#
+# wireless-tools
+# 
+wireless-tools-MODULES := wireless-tools
+wireless-tools-SPEC := wireless-tools.spec
+wireless-tools-BUILD-FROM-SRPM := yes
+ALL += wireless-tools
+IN_BOOTSTRAPFS += wireless-tools
 
-# proper and util-vserver both use scripts in util-python for building
-proper: util-python
-util-vserver: util-python
-PlanetLabAuth: util-python
+# 
+# nozomi
+# 
+
+nozomi-MODULES := nozomi
+nozomi-SPEC := nozomi.spec
+nozomi-DEPEND-DEVEL-RPMS := kernel-devel
+nozomi-SPECVARS = kernel_release=$(kernel.rpm-release) 
+IN_BOOTSTRAPFS += nozomi
+ALL += nozomi
+
+#
+# comgt
+# 
+
+comgt-MODULES := comgt
+comgt-SPEC := comgt.spec
+IN_BOOTSTRAPFS += comgt
+ALL += comgt
+
+#
+# libnl
+#
+# [daniel]    wait for latest Fedora release 
+# (03:29:46 PM) daniel_hozac: interfacing with the kernel directly when dealing with netlink was fugly, so... i had to find something nicer.
+# (03:29:53 PM) daniel_hozac: the one in Fedora is lacking certain APIs i need.
+#
+libnl-MODULES := libnl
+libnl-SPEC := libnl.spec
+ALL += libnl
+
+#
+# util-vserver
+#
+util-vserver-MODULES := util-vserver
+util-vserver-SPEC := util-vserver.spec
+util-vserver-RPMFLAGS:= --without dietlibc
+ALL += util-vserver
+IN_BOOTSTRAPFS += util-vserver
+
+#
+# util-vserver-pl
+#
+util-vserver-pl-MODULES := util-vserver-pl
+util-vserver-pl-SPEC := util-vserver-pl.spec
+util-vserver-pl-DEPEND-DEVEL-RPMS := libnl libnl-devel util-vserver-lib util-vserver-devel util-vserver-core
+ALL += util-vserver-pl
+IN_BOOTSTRAPFS += util-vserver-pl
+
+#
+# NodeUpdate
+#
+NodeUpdate-MODULES := NodeUpdate
+NodeUpdate-SPEC := NodeUpdate.spec
+ALL += NodeUpdate
+IN_BOOTSTRAPFS += NodeUpdate
+
+#
+# ipod
+#
+ipod-MODULES := PingOfDeath
+ipod-SPEC := ipod.spec
+ALL += ipod
+IN_BOOTSTRAPFS += ipod
+
+#
+# NodeManager
+#
+NodeManager-MODULES := NodeManager
+NodeManager-SPEC := NodeManager.spec
+ALL += NodeManager
+IN_BOOTSTRAPFS += NodeManager
+
+#
+# pl_sshd
+#
+pl_sshd-MODULES := pl_sshd
+pl_sshd-SPEC := pl_sshd.spec
+ALL += pl_sshd
+IN_BOOTSTRAPFS += pl_sshd
+
+#
+# libhttpd++: 
+#
+# Deprecate when vsys takes over [sapan].
+# keep in build for proper.
+#
+libhttpd-MODULES := libhttpd++
+libhttpd-SPEC := libhttpd++.spec
+ALL += libhttpd
+IN_BOOTSTRAPFS += libhttpd
+
+#
+# proper: Privileged Operations Service
+#
+proper-MODULES := proper
+proper-SPEC := proper.spec
+proper-DEPEND-DEVEL-RPMS := libhttpd++-devel
+ALL += proper
+IN_BOOTSTRAPFS += proper
+
+#
+# codemux: Port 80 demux
+#
+codemux-MODULES := CoDemux
+codemux-SPEC   := codemux.spec
+codemux-RPMBUILD := sudo bash ./rpmbuild.sh
+ALL += codemux
+IN_BOOTSTRAPFS += codemux
+
+#
+# ulogd
+#
+ulogd-MODULES := ulogd
+ulogd-SPEC := ulogd.spec
+ulogd-DEPEND-DEVEL-RPMS := kernel-devel proper-libs proper-devel
+ALL += ulogd
+IN_VSERVER += ulogd
+
+#
+# fprobe-ulog
+#
+fprobe-ulog-MODULES := fprobe-ulog
+fprobe-ulog-SPEC := fprobe-ulog.spec
+ALL += fprobe-ulog
+IN_BOOTSTRAPFS += fprobe-ulog
+
+#
+# netflow
+#
+netflow-MODULES := PlanetFlow
+netflow-SPEC := netflow.spec
+ALL += netflow
+IN_BOOTSTRAPFS += netflow
+
+#
+# PlanetLab Mom: Cleans up your mess
+#
+pl_mom-MODULES := Mom
+pl_mom-SPEC := pl_mom.spec
+ALL += pl_mom
+IN_BOOTSTRAPFS += pl_mom
+
+#
+# iptables
+#
+iptables-MODULES := iptables
+iptables-SPEC := iptables.spec
+iptables-DEPEND-DEVEL-RPMS := kernel-devel
+ALL += iptables
+IN_BOOTSTRAPFS += iptables
+
+#
+# iproute
+#
+iproute-MODULES := iproute2
+iproute-SPEC := iproute.spec
+ALL += iproute
+IN_BOOTSTRAPFS += iproute
+
+#
+# vsys
+#
+vsys-MODULES := vsys
+vsys-SPEC := vsys.spec
+ifeq "$(DISTRO)" "Fedora"
+ifeq "$(RELEASE)" "7"
+ALL += vsys
+endif
+ifeq "$(RELEASE)" "8"
+ALL += vsys
+endif
+endif
 
 #
 # PLCAPI
 #
-
-PLCAPI-MODULE := new_plc_api
+PLCAPI-MODULES := PLCAPI
 PLCAPI-SPEC := PLCAPI.spec
 ALL += PLCAPI
+IN_MYPLC += PLCAPI
 
 #
-# vserver-reference
+# PLCWWW
 #
-
-vserver-reference-MODULE := vserver-reference build
-vserver-reference-SPEC := vserver-reference/vserver-reference.spec
-# Package must be built as root
-vserver-reference-RPMBUILD := sudo rpmbuild
-ALL += vserver-reference
-
-# vserver-reference may require current packages
-vserver-reference: $(filter-out vserver-reference,$(ALL))
+PLCWWW-MODULES := WWW
+PLCWWW-SPEC := PLCWWW.spec
+ALL += PLCWWW
+IN_MYPLC += PLCWWW
 
 #
 # bootmanager
 #
-
-bootmanager-MODULE := bootmanager build
+bootmanager-MODULES := BootManager
 bootmanager-SPEC := bootmanager.spec
-bootmanager-RPMBUILD := sudo rpmbuild
 ALL += bootmanager
+IN_MYPLC += bootmanager
 
-# bootmanager requires current packages
-bootmanager: $(filter-out bootmanager,$(ALL))
-
-# ...and the yum manifest
-bootmanager: RPMS/yumgroups.xml
+#
+# pypcilib : used in bootcd
+# 
+pypcilib-MODULES := pypcilib
+pypcilib-SPEC := pypcilib.spec
+ALL += pypcilib
+IN_BOOTCD += pypcilib
 
 #
 # bootcd
 #
-
-bootcd-MODULE := bootcd build bootmanager
+bootcd-MODULES := BootCD build
 bootcd-SPEC := bootcd.spec
-bootcd-RPMBUILD := sudo rpmbuild
+bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
+# package has *some* dependencies, at least these ones
+bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
+bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 ALL += bootcd
-
-# bootcd requires current packages
-bootcd: $(filter-out bootcd,$(ALL))
+IN_MYPLC += bootcd
 
 #
-# plcwww
+# vserver : reference image for slices
 #
-
-plcwww-MODULE := new_plc_www
-plcwww-SPEC := plcwww.spec
-ALL += plcwww
+vserver-MODULES := VserverReference build
+vserver-SPEC := vserver-reference.spec
+# Package must be built as root
+vserver-RPMBUILD := sudo bash ./rpmbuild.sh
+# this list is useful for manual builds only, since nightly builds 
+# always redo all sequentially - try to keep updated
+vserver-DEPEND-PACKAGES := $(IN_VSERVER)
+vserver-DEPEND-FILES := RPMS/yumgroups.xml
+ALL += vserver
+IN_BOOTSTRAPFS := vserver
 
 #
-# MyPLC
+# bootstrapfs
 #
+bootstrapfs-MODULES := BootstrapFS build
+bootstrapfs-SPEC := bootstrapfs.spec
+bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
+# package requires all regular packages
+bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
+bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
+ALL += bootstrapfs
+IN_MYPLC += bootstrapfs
 
-myplc-MODULE := build myplc plc/scripts
+#
+# myplc : initial, chroot-based packaging
+#
+myplc-MODULES := MyPLC build
 myplc-SPEC := myplc.spec
 # Package must be built as root
-myplc-RPMBUILD := sudo rpmbuild
+myplc-RPMBUILD := sudo bash ./rpmbuild.sh
+# myplc may require all packages
+myplc-DEPEND-PACKAGES := $(IN_MYPLC)
+myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
 ALL += myplc
 
-# MyPLC may require current packages
-myplc: $(filter-out myplc,$(ALL))
-
-# ...and the yum manifest
-myplc: RPMS/yumgroups.xml
-
-# we also ship various information on the build in /etc/myplc-release
-# we cannot store this under SOURCES/myplc 
-# otherwise the code extraction phase does not take place 
-# because it depends on $SOURCES/$(package) as per Rules.mk
-myplc: SOURCES/myplc-release
-
-SOURCES/myplc-release:
-	@echo 'Creating myplc-release'
-	rm -f $@
-	(echo -n 'Build date: ' ; date '+%Y.%m.%d') >> $@
-	(echo -n 'Build hostname: ' ; hostname) >> $@
-	(echo -n 'Build location: ' ; pwd) >> $@
-	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx tags file contents" >> $@
-	cat $(TAGSFILE) >> $@
-
 #
-# MyPLC development environment
+# MyPLC native : lightweight packaging, dependencies are yum-installed in a vserver
 #
+myplc-native-MODULES := MyPLC build 
+myplc-native-SPEC := myplc-native.spec
+# Package must be built as root
+myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
+# Thierry : don't depend on anything at build-time
+#myplc-native-DEPEND-PACKAGES :=
+# Thierry : dunno about this one, let's stay safe
+myplc-native-DEPEND-FILES := myplc-release
+ALL += myplc-native
 
-###myplc-devel-MODULE := build myplc
-###myplc-devel-SPEC := myplc/myplc-devel.spec
-#### Package must be built as root
-###myplc-devel-RPMBUILD := sudo rpmbuild
-###ALL += myplc-devel
-
-#
-# Installation rules
-# 
-
-# Upload packages to boot server
-SERVER		:= root@onelab-plc.inria.fr
-RPMSAREA	:= /var/www/html/install-rpms/
-BOOTAREA	:= /var/www/html/boot/
-
-ifeq ($(PLDISTRO),planetlab)
-YUMGROUPS	:= groups/v3_yumgroups.xml
-else
-YUMGROUPS	:= groups/v4_onelab.xml
-endif
-
-#BASE		:= onelab
-BASENEW		:= build-$(notdir $(shell pwd))
-BASEBAK		:= planetlab-bak
-BASE		:= planetlab
-
-RPMS/yumgroups.xml:
-	install -D -m 644 $(YUMGROUPS) RPMS/yumgroups.xml
-
-INSTALL-TARGETS := install-rpms install-index install-adopt install-bootstrap
-install: $(INSTALL-TARGETS)
-
-install-help:
-	@echo install: $(INSTALL-TARGETS)
-
-install-rpms:RPMS/yumgroups.xml
-        # create repository
-	ssh $(SERVER) mkdir -p /plc/data/$(RPMSAREA)/$(BASENEW)
-	# populate
-	rsync -v --perms --times --group --compress --rsh=ssh \
-	   RPMS/yumgroups.xml $(wildcard RPMS/*/*.rpm) $(SERVER):/plc/data/$(RPMSAREA)/$(BASENEW)/
-
-install-index:
-	# sign and index new repository
-	ssh $(SERVER) chroot /plc/root /etc/plc.d/packages start $(RPMSAREA)/$(BASENEW)/ 2>> install-index.log
-
-install-clean-index:
-	# sign and index new repository
-	ssh $(SERVER) chroot /plc/root /etc/plc.d/packages clean $(RPMSAREA)/$(BASENEW)/ 2>> install-index.log
-
-install-adopt:
-	# cleanup former bak
-	ssh $(SERVER) rm -rf /plc/data/$(RPMSAREA)/$(BASEBAK)
-	# bak previous repo
-	ssh $(SERVER) mv /plc/data/$(RPMSAREA)/$(BASE) /plc/data/$(RPMSAREA)/$(BASEBAK)
-	# install new repo
-	ssh $(SERVER) mv /plc/data/$(RPMSAREA)/$(BASENEW) /plc/data/$(RPMSAREA)/$(BASE)
-
-install-bootstrap:
-	# install node image
-	install_bz2=$(wildcard BUILD/bootmanager-*/bootmanager/support-files/PlanetLab-Bootstrap.tar.bz2) ; \
-	  if [ -n "$$install_bz2" ] ; then rsync $$install_bz2 $(SERVER):/plc/data/$(BOOTAREA) ; fi
-#endif
-
-.PHONY: install
