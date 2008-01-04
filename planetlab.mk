@@ -284,7 +284,7 @@ vserver-RPMBUILD := sudo bash ./rpmbuild.sh
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 ALL += vserver
-IN_BOOTSTRAPFS := vserver
+IN_BOOTSTRAPFS += vserver
 
 #
 # bootstrapfs
