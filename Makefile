@@ -88,6 +88,9 @@
 #
 ####################
 
+# exported to spec files as plrelease
+PLANETLAB_RELEASE = 4.2
+
 #
 # Default values
 #
@@ -232,6 +235,7 @@ $($(1).specpath):
 	echo "%define distroname $(DISTRO)" >> $($(1).specpath)
 	echo "%define distrorelease $(RELEASE)" >> $($(1).specpath)
 	echo "%define pldistro $(PLDISTRO)" >> $($(1).specpath)
+	echo "%define plrelease $(PLANETLAB_RELEASE)" >> $($(1).specpath)
 	$(if $($(1).has-date),echo "%define date $(shell date +%Y.%m.%d)" >> $($(1).specpath),)
 	$(if $($(1)-SPECVARS), \
 	  $(foreach line,$($(1)-SPECVARS), \
