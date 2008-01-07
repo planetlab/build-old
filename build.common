@@ -333,6 +333,8 @@ linux/core/$releasever/$basearch/os
 	done
 	echo
 	mkfedora_usage
+    else
+	echo "* selecting mirror with baseurl=$baseurl"
     fi
 
     # Do not tolerate errors
