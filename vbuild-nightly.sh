@@ -38,9 +38,10 @@ m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not install
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
-m_installing_doc=re.compile("(.*)install-info: No such file or directory for /usr/share/info/\S+(.*)")
+m_installing_doc1=re.compile("(.*)install-info: No such file or directory for /usr/share/info/\S+(.*)")
+m_installing_doc2=re.compile("(.*)grep: /usr/share/info/dir: No such file or directory(.*)")
 
-def scan_log (filename):
+def summary (filename):
 
     try:
         if filename=="-":
@@ -51,17 +52,20 @@ def scan_log (filename):
         echo=False
         for line in f.xreadlines():
             # first off : discard warnings related to doc
-            if m_installing_doc.match(line):
-                (begin,end)=m_installing_doc.match(line).groups()
+            if m_installing_doc1.match(line):
+                (begin,end)=m_installing_doc1.match(line).groups()
+                line=begin+end
+            if m_installing_doc2.match(line):
+                (begin,end)=m_installing_doc2.match(line).groups()
                 line=begin+end
             # unconditionnally show these lines
             if m_show_line.match(line):
-                print line,
+                print '>>>',line,
             # an 'installing' line with messages afterwards : needs to be echoed
             elif m_installing_err.match(line):
                 (installing,error)=m_installing_err.match(line).groups()
-                print installing
-                print error
+                print '>>>',installing
+                print '>>>',error
                 echo=True
             # closing an 'installing' section
             elif m_installing_end.match(line):
@@ -70,17 +74,17 @@ def scan_log (filename):
             elif m_installing_any.match(line):
                 if echo: 
                     installing=m_installing_any.match(line).group(1)
-                    print installing
+                    print '>>>',installing
                 echo=False
             # print lines when echo is true
             else:
-                if echo: print line,
+                if echo: print '>>>',line,
         f.close()
     except:
         print 'Failed to analyze',filename
 
 for arg in sys.argv[1:]:
-    scan_log(arg)
+    summary(arg)
 EOF
     echo "******************** END SUMMARY" 
 }
