@@ -8,34 +8,26 @@ import time
 import glob
 from optparse import OptionParser
 
-####################
-# where to store user's config
-globals_storage="GLOBALS"
-svnpath_example="svn+ssh://thierry@svn.planet-lab.org/svn/"
-# what to parse in a spec file
-name_varname="name"
-major_varname="version"
-minor_varname="subversion"
-varnames = [name_varname,major_varname,minor_varname]
-varmatcher=re.compile("%define\s+(\S+)\s+(.*)")
-# 
-svn_magic_line="--This line, and those below, will be ignored--"
-####################
-
 def prompt (question,default=True):
     if default:
         question += " [y]/n ? "
     else:
         question += " y/[n] ? "
-    answer=raw_input(question)
-    if not answer:
-        return default
-    elif answer[0] in [ 'y','Y']:
-        return True
-    elif answer[0] in [ 'n','N']:
+    try:
+        answer=raw_input(question)
+        if not answer:
+            return default
+        elif answer[0] in [ 'y','Y']:
+            return True
+        elif answer[0] in [ 'n','N']:
+            return False
+        else:
+            return prompt(question,default)
+    except KeyboardInterrupt:
+        print "Aborted"
         return False
-    else:
-        return prompt(question,default)
+    except:
+        raise
 
 class Command:
     def __init__ (self,command,options):
@@ -70,17 +62,17 @@ class Command:
     # returns stdout, like bash's $(mycommand)
     def output_of (self):
         tmp="/tmp/status-%d"%os.getpid()
-        if self.options.vverbose:
+        if self.options.debug:
             print '+',self.command,' .. ',
             sys.stdout.flush()
         os.system(self.command + " &> " + tmp)
         result=file(tmp).read()
         os.unlink(tmp)
-        if self.options.vverbose:
+        if self.options.debug:
             print '+',self.command,'Done',
         return result
 
-class svnpath:
+class Svnpath:
     def __init__(self,path,options):
         self.path=path
         self.options=options
@@ -99,16 +91,26 @@ class svnpath:
         return len(Command(command,self.options).output_of()) != 0
 
 class Module:
+
+    # where to store user's config
+    config_storage="CONFIG"
+    # 
+    configKeys=[ ('svnpath',"Enter your toplevel svnpath (e.g. svn+ssh://thierry@svn.planet-lab.org/svn/)"),
+                 ('username',"Enter your firstname and lastname for changelogs"),
+                 ("email","Enter your email address for changelogs") ]
+    config={}
+
+    # what to parse in a spec file
+    varnames = ["name","version","taglevel"]
+    varmatcher=re.compile("%define\s+(\S+)\s+(.*)")
+
+    svn_magic_line="--This line, and those below, will be ignored--"
+
     def __init__ (self,name,options):
         self.name=name
         self.options=options
         self.moddir="%s/%s/%s"%(os.getenv("HOME"),options.modules,name)
         self.trunkdir="%s/trunk"%(self.moddir)
-
-    globals={}
-    globalKeys=[ ('svnpath',"Enter your toplevel svnpath (e.g. %s)"%svnpath_example),
-                 ('username',"Enter your firstname and lastname for changelogs"),
-                 ("email","Enter your email address for changelogs") ]
 
     def run (self,command):
         return Command(command,self.options).run()
@@ -127,32 +129,32 @@ class Module:
         topdir="%s/%s"%(os.getenv("HOME"),options.modules)
         if options.verbose:
             print 'Checking for',topdir
-        storage="%s/%s"%(topdir,globals_storage)
+        storage="%s/%s"%(topdir,Module.config_storage)
         if not os.path.isdir (topdir):
             # prompt for login or whatever svnpath
             print "Cannot find",topdir,"let's create it"
-            for (key,message) in Module.globalKeys:
-                Module.globals[key]=raw_input(message+" : ").strip()
-            Command("svn co -N %s %s"%(Module.globals['svnpath'],topdir),options).run_fatal()
-            # store globals
+            for (key,message) in Module.configKeys:
+                Module.config[key]=raw_input(message+" : ").strip()
+            Command("svn co -N %s %s"%(Module.config['svnpath'],topdir),options).run_fatal()
+            # store config
             f=file(storage,"w")
-            for (key,message) in Module.globalKeys:
-                f.write("%s=%s\n"%(key,Module.globals[key]))
+            for (key,message) in Module.configKeys:
+                f.write("%s=%s\n"%(key,Module.config[key]))
             f.close()
-            if options.vverbose:
+            if options.debug:
                 print 'Stored',storage
                 Command("cat %s"%storage,options).run()
         else:
-            # read globals
+            # read config
             f=open(storage)
             for line in f.readlines():
                 (key,value)=re.compile("^(.+)=(.+)$").match(line).groups()
-                Module.globals[key]=value                
+                Module.config[key]=value                
             f.close()
-            if options.vverbose:
-                print 'Using globals'
-                for (key,message) in Module.globalKeys:
-                    print key,'=',Module.globals[key]
+            if options.debug:
+                print 'Using config'
+                for (key,message) in Module.configKeys:
+                    print key,'=',Module.config[key]
 
     def init_moddir (self):
         if self.options.verbose:
@@ -172,7 +174,7 @@ class Module:
     def revert_trunkdir (self):
         if self.options.verbose:
             print 'Checking whether',self.trunkdir,'needs being reverted'
-        if svnpath(self.trunkdir,self.options).dir_needs_revert():
+        if Svnpath(self.trunkdir,self.options).dir_needs_revert():
             self.run_fatal("svn revert -R %s"%self.trunkdir)
 
     def update_trunkdir (self):
@@ -199,9 +201,9 @@ class Module:
         result={}
         f=open(specfile)
         for line in f.readlines():
-            if varmatcher.match(line):
-                (var,value)=varmatcher.match(line).groups()
-                if var in varnames:
+            if Module.varmatcher.match(line):
+                (var,value)=Module.varmatcher.match(line).groups()
+                if var in Module.varnames:
                     result[var]=value
         f.close()
         if self.options.verbose:
@@ -217,8 +219,8 @@ class Module:
         new=open(newspecfile,"w")
 
         for line in spec.readlines():
-            if varmatcher.match(line):
-                (var,value)=varmatcher.match(line).groups()
+            if Module.varmatcher.match(line):
+                (var,value)=Module.varmatcher.match(line).groups()
                 if var in patch_dict.keys():
                     new.write('%%define %s %s\n'%(var,patch_dict[var]))
                     continue
@@ -230,7 +232,7 @@ class Module:
     def unignored_lines (self, logfile):
         result=[]
         for logline in file(logfile).readlines():
-            if logline.strip() == svn_magic_line:
+            if logline.strip() == Module.svn_magic_line:
                 break
             result += logline
         return result
@@ -247,8 +249,8 @@ class Module:
             if re.compile('%changelog').match(line):
                 dateformat="* %a %b %d %Y"
                 datepart=time.strftime(dateformat)
-                logpart="%s <%s> - %s %s"%(Module.globals['username'],
-                                             Module.globals['email'],
+                logpart="%s <%s> - %s %s"%(Module.config['username'],
+                                             Module.config['email'],
                                              oldtag,newtag)
                 new.write(datepart+" "+logpart+"\n")
                 for logline in self.unignored_lines(logfile):
@@ -264,13 +266,57 @@ class Module:
                 print k,'=',v
 
     def trunk_url (self):
-        return "%s/%s/trunk"%(Module.globals['svnpath'],self.name)
+        return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
     def tag_name (self, spec_dict):
-        return "%s-%s.%s"%(spec_dict['name'],spec_dict['version'],spec_dict['subversion'])
+        return "%s-%s.%s"%(spec_dict['name'],spec_dict['version'],spec_dict['taglevel'])
     def tag_url (self, spec_dict):
-        return "%s/%s/tags/%s"%(Module.globals['svnpath'],self.name,self.tag_name(spec_dict))
+        return "%s/%s/tags/%s"%(Module.config['svnpath'],self.name,self.tag_name(spec_dict))
 
-    def diff (self):
+    # locate specfile, parse it, check it and show values
+    def do_version (self):
+        self.init_moddir()
+        self.init_trunkdir()
+        self.revert_trunkdir()
+        self.update_trunkdir()
+        for (key,message) in Module.configKeys:
+            print key,':',Module.config[key]
+        print 'module:',self.name
+        print 'specfile:',self.guess_specname()
+        spec_dict = self.spec_dict()
+        for varname in Module.varnames:
+            if not spec_dict.has_key(varname):
+                print 'Could not find %%define for %s'%varname
+                return
+            else:
+                print varname+":",spec_dict[varname]
+
+    init_warning="""WARNING
+The module-init function has the following limitations
+* it does not handle changelogs
+* it does not scan the -tags.mk files to adopt the new tags"""
+    def do_init(self):
+        if self.options.verbose:
+            print Module.init_warning
+            if not prompt('Want to proceed anyway'):
+                return
+
+        self.init_moddir()
+        self.init_trunkdir()
+        self.revert_trunkdir()
+        self.update_trunkdir()
+        spec_dict = self.spec_dict()
+
+        trunk_url=self.trunk_url()
+        tag_name=self.tag_name(spec_dict)
+        tag_url=self.tag_url(spec_dict)
+        # check the tag does not exist yet
+        if Svnpath(tag_url,self.options).url_exists():
+            print 'Module %s already has a tag %s'%(self.name,tag_name)
+            return
+
+        self.run("svn copy --editor-cmd=%s %s %s"%(self.options.editor,trunk_url,tag_url))
+
+    def do_diff (self):
         self.init_moddir()
         self.init_trunkdir()
         self.revert_trunkdir()
@@ -281,7 +327,7 @@ class Module:
         trunk_url=self.trunk_url()
         tag_url=self.tag_url(spec_dict)
         for url in [ trunk_url, tag_url ] :
-            if not svnpath(url,self.options).url_exists():
+            if not Svnpath(url,self.options).url_exists():
                 print 'Could not find svn URL %s'%url
                 sys.exit(1)
 
@@ -304,7 +350,7 @@ class Module:
         new.close()
         os.rename(newtagsfile,tagsfile)
 
-    def create_tag (self):
+    def do_tag (self):
         self.init_moddir()
         self.init_trunkdir()
         self.revert_trunkdir()
@@ -316,21 +362,21 @@ class Module:
         trunk_url=self.trunk_url()
         old_tag_name = self.tag_name(spec_dict)
         old_tag_url=self.tag_url(spec_dict)
-        # increment subversion
-        new_subversion = str ( int (spec_dict['subversion']) + 1)
-        spec_dict['subversion'] = new_subversion
+        # increment taglevel
+        new_taglevel = str ( int (spec_dict['taglevel']) + 1)
+        spec_dict['taglevel'] = new_taglevel
         new_tag_name = self.tag_name(spec_dict)
         new_tag_url=self.tag_url(spec_dict)
         for url in [ trunk_url, old_tag_url ] :
-            if not svnpath(url,self.options).url_exists():
+            if not Svnpath(url,self.options).url_exists():
                 print 'Could not find svn URL %s'%url
                 sys.exit(1)
-        if svnpath(new_tag_url,self.options).url_exists():
+        if Svnpath(new_tag_url,self.options).url_exists():
             print 'New tag\'s svn URL %s already exists ! '%url
             sys.exit(1)
 
         # side effect in trunk's specfile
-        self.patch_spec_var({"subversion":new_subversion})
+        self.patch_spec_var({"taglevel":new_taglevel})
 
         # prepare changelog file 
         # we use the standard subversion magic string (see svn_magic_line)
@@ -342,7 +388,7 @@ class Module:
 module %s
 old tag %s
 new tag %s
-"""%(svn_magic_line,self.name,old_tag_url,new_tag_url))
+"""%(Module.svn_magic_line,self.name,old_tag_url,new_tag_url))
 
         if not self.options.verbose or prompt('Want to run diff',True):
             self.run("(echo 'DIFF========='; svn diff %s %s) >> %s"%(old_tag_url,trunk_url,changelog))
@@ -370,7 +416,7 @@ new tag %s
         self.run_prompt("Commit","svn commit --file %s %s"%(changelog,paths))
         self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog,trunk_url,new_tag_url))
 
-        if self.options.vverbose:
+        if self.options.debug:
             print 'Preserving',changelog
         else:
             os.unlink(changelog)
@@ -378,29 +424,30 @@ new tag %s
 usage="""Usage: %prog options module1 [ .. modulen ]
 Purpose:
   manage subversion tags and specfile
-Behaviour:
-  show the diffs between the trunk and the latests tag
-  or, if -t or --tag is provided, the specfile is updated and the module is tagged"""
+  requires the specfile to define name, version and taglevel
+Available functions:
+  module-diff : show difference between trunk and latest tag
+  module-tag  : increment taglevel in specfile, insert changelog in specfile,
+                create new tag and and adopt it in build/*-tags.mk
+  module-init : create initial tag
+  module-version : only check specfile and print out details"""
 
 def main():
     parser=OptionParser(usage=usage,version=subversion_id)
-    diff_mode =  (sys.argv[0].find("diff") >= 0)
-    parser.add_option("-d","--diff", action="store_true", dest="diff", default=diff_mode, 
-                      help="Show diff between trunk and latest tag")
     parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
                       help="Specify editor")
     parser.add_option("-c","--changelog", action="store_false", dest="changelog", default=True,
-                      help="Does not update changelog when tagging")
+                      help="Does not update changelog section in specfile when tagging")
     parser.add_option("-m","--modules", action="store", dest="modules", default="modules",
                       help="Name for topdir - defaults to modules")
     parser.add_option("-b","--build", action="store", dest="build", default="build",
                       help="Set module name for build")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                       help="Run in verbose mode")
-    parser.add_option("-V","--veryverbose", action="store_true", dest="vverbose", default=False, 
-                      help="Very verbose mode")
+    parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
+                      help="Debug mode - mostly more verbose")
     (options, args) = parser.parse_args()
-    if options.vverbose: options.verbose=True
+    if options.debug: options.verbose=True
 
     if len(args) == 0:
         parser.print_help()
@@ -409,10 +456,18 @@ def main():
         Module.init_homedir(options)
         for modname in args:
             module=Module(modname,options)
-            if options.diff:
-                module.diff()
+            if sys.argv[0].find("diff") >= 0:
+                module.do_diff()
+            elif sys.argv[0].find("tag") >= 0:
+                module.do_tag()
+            elif sys.argv[0].find("init") >= 0:
+                module.do_init()
+            elif sys.argv[0].find("version") >= 0:
+                module.do_version()
             else:
-                module.create_tag()
+                print "Unsupported command",sys.argv[0]
+                parser.print_help()
+                sys.exit(1)
 
 # basically, we exit if anything goes wrong
 if __name__ == "__main__" :
