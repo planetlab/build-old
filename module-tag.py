@@ -169,7 +169,7 @@ class Module:
         if self.options.verbose:
             print 'Checking for',self.trunkdir
         if not os.path.isdir (self.trunkdir):
-            self.run_fatal("svn up %s"%self.trunkdir)
+            self.run_fatal("svn up -N %s"%self.trunkdir)
 
     def revert_trunkdir (self):
         if self.options.verbose:
@@ -178,6 +178,8 @@ class Module:
             self.run_fatal("svn revert -R %s"%self.trunkdir)
 
     def update_trunkdir (self):
+        if self.options.skip_update:
+            return
         if self.options.verbose:
             print 'Updating',self.trunkdir
         self.run_fatal("svn update %s"%self.trunkdir)
@@ -277,11 +279,13 @@ class Module:
         self.init_trunkdir()
         self.revert_trunkdir()
         self.update_trunkdir()
-        for (key,message) in Module.configKeys:
-            print key,':',Module.config[key]
-        print 'module:',self.name
-        print 'specfile:',self.guess_specname()
+        print '==============================',self.name
+        #for (key,message) in Module.configKeys:
+        #    print key,':',Module.config[key]
         spec_dict = self.spec_dict()
+        print 'trunk url',self.trunk_url()
+        print 'latest tag url',self.tag_url(spec_dict)
+        print 'specfile:',self.guess_specname()
         for varname in self.varnames:
             if not spec_dict.has_key(varname):
                 print 'Could not find %%define for %s'%varname
@@ -433,19 +437,25 @@ Available functions:
   module-version : only check specfile and print out details"""
 
 def main():
+    all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
+
     parser=OptionParser(usage=usage,version=subversion_id)
+    parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
+                      help="Runs all modules as found in %s"%all_modules)
     parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
                       help="Specify editor")
-    parser.add_option("-c","--changelog", action="store_false", dest="changelog", default=True,
+    parser.add_option("-u","--no-update",action="store_true",dest="skip_update",default=False,
+                      help="Skips svn updates")
+    parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                       help="Does not update changelog section in specfile when tagging")
     parser.add_option("-m","--modules", action="store", dest="modules", default="modules",
                       help="Name for topdir - defaults to modules")
     parser.add_option("-b","--build", action="store", dest="build", default="build",
                       help="Set module name for build")
     parser.add_option("-t","--taglevel",action="store",dest="taglevel",default="taglevel",
-                      help="Specify an alternate spec variable for storing taglevel")
+                      help="Specify an alternate spec variable for taglevel")
     parser.add_option("-s","--version-string",action="store",dest="version",default="version",
-                      help="Specify an alternate spec variable for storing version")
+                      help="Specify an alternate spec variable for version")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                       help="Run in verbose mode")
     parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
@@ -454,24 +464,26 @@ def main():
     if options.debug: options.verbose=True
 
     if len(args) == 0:
-        parser.print_help()
-        sys.exit(1)
-    else:
-        Module.init_homedir(options)
-        for modname in args:
-            module=Module(modname,options)
-            if sys.argv[0].find("diff") >= 0:
-                module.do_diff()
-            elif sys.argv[0].find("tag") >= 0:
-                module.do_tag()
-            elif sys.argv[0].find("init") >= 0:
-                module.do_init()
-            elif sys.argv[0].find("version") >= 0:
-                module.do_version()
-            else:
-                print "Unsupported command",sys.argv[0]
-                parser.print_help()
-                sys.exit(1)
+        if options.all_modules:
+            args=Command("grep -v '#' %s"%all_modules,options).output_of().split()
+        else:
+            parser.print_help()
+            sys.exit(1)
+    Module.init_homedir(options)
+    for modname in args:
+        module=Module(modname,options)
+        if sys.argv[0].find("diff") >= 0:
+            module.do_diff()
+        elif sys.argv[0].find("tag") >= 0:
+            module.do_tag()
+        elif sys.argv[0].find("init") >= 0:
+            module.do_init()
+        elif sys.argv[0].find("version") >= 0:
+            module.do_version()
+        else:
+            print "Unsupported command",sys.argv[0]
+            parser.print_help()
+            sys.exit(1)
 
 # basically, we exit if anything goes wrong
 if __name__ == "__main__" :

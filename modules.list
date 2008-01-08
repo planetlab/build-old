@@ -1,0 +1,35 @@
+BootCD
+BootManager
+BootstrapFS
+CoDemux
+Mom
+MyPLC
+NodeManager
+NodeUpdate
+PLCAPI
+PingOfDeath
+PlanetFlow
+VserverReference
+WWW
+fprobe-ulog
+iproute2
+iptables
+libhttpd++
+libnl
+# need to set -s sublevel
+# linux-2.6
+madwifi
+pl_sshd
+plcmdline
+proper
+pypcilib
+ulogd
+util-python
+util-vserver
+util-vserver-pl
+#svn: In directory '/Users/parmentelat/modules/vnetspec/trunk'
+#svn: Can't move source to dest
+#svn: Can't move '/Users/parmentelat/modules/vnetspec/trunk/.svn/tmp/prop-base/sliver.pl.svn-base' to '/Users/parmentelat/modules/vnetspec/trunk/.svn/prop-base/sliver.pl.svn-base': No such file or directory
+#vnetspec
+vsys
+wireless-tools
