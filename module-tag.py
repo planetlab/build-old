@@ -317,8 +317,12 @@ The module-init function has the following limitations
             print 'Module %s already has a tag %s'%(self.name,tag_name)
             return
 
+        if self.options.message:
+            svnopt='--message "%s"'%self.options.message
+        else:
+            svnopt='--editor-cmd=%s'%self.options.editor
         self.run_prompt("Create initial tag",
-                        "svn copy --editor-cmd=%s %s %s"%(self.options.editor,trunk_url,tag_url))
+                        "svn copy %s %s %s"%(svnopt,trunk_url,tag_url))
 
     def do_diff (self):
         self.init_moddir()
@@ -444,17 +448,19 @@ def main():
                       help="Runs all modules as found in %s"%all_modules)
     parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
                       help="Specify editor")
+    parser.add_option("-m","--message", action="store", dest="message", default=None,
+                      help="Specify log message")
     parser.add_option("-u","--no-update",action="store_true",dest="skip_update",default=False,
                       help="Skips svn updates")
     parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                       help="Does not update changelog section in specfile when tagging")
-    parser.add_option("-m","--modules", action="store", dest="modules", default="modules",
+    parser.add_option("-M","--modules", action="store", dest="modules", default="modules",
                       help="Name for topdir - defaults to modules")
-    parser.add_option("-b","--build", action="store", dest="build", default="build",
+    parser.add_option("-B","--build", action="store", dest="build", default="build",
                       help="Set module name for build")
-    parser.add_option("-t","--taglevel",action="store",dest="taglevel",default="taglevel",
+    parser.add_option("-T","--taglevel",action="store",dest="taglevel",default="taglevel",
                       help="Specify an alternate spec variable for taglevel")
-    parser.add_option("-s","--version-string",action="store",dest="version",default="version",
+    parser.add_option("-V","--version-string",action="store",dest="version",default="version",
                       help="Specify an alternate spec variable for version")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                       help="Run in verbose mode")
