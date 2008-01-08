@@ -5,7 +5,7 @@ subversion_id = "$Id: TestMain.py 7635 2008-01-04 09:46:06Z thierry $"
 import sys, os, os.path
 import re
 import time
-import glob
+from glob import glob
 from optparse import OptionParser
 
 def prompt (question,default=True):
@@ -187,7 +187,6 @@ class Module:
         if os.path.isfile (attempt):
             return attempt
         else:
-            from glob import glob
             try:
                 return glob("%s/*.spec"%self.trunkdir)[0]
             except:
@@ -405,9 +404,9 @@ new tag %s
         build.revert_trunkdir()
         build.update_trunkdir()
         
-        for tagsfile in glob.glob(build.trunkdir+"/*-tags.mk"):
-            print 'tagsfile : ',tagsfile
-            self.patch_tags_files(tagsfile,old_tag_name,new_tag_name)
+        for tagsfile in glob(build.trunkdir+"/*-tags.mk"):
+            if prompt("Want to check %s"%tagsfile):
+                self.patch_tags_files(tagsfile,old_tag_name,new_tag_name)
 
         paths=""
         paths += self.trunkdir + " "
