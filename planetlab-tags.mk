@@ -1,7 +1,7 @@
 # $Id$
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
-linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-1
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/trunk
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk
