@@ -109,7 +109,7 @@ class Module:
         self.trunkdir="%s/trunk"%(self.moddir)
         # what to parse in a spec file
         self.varnames = ["name",options.version,options.taglevel]
-        self.varmatcher=re.compile("%define\s+(\S+)\s+(.*)")
+        self.varmatcher=re.compile("%define\s+(\S+)\s+(\S*)\s*")
 
 
     def run (self,command):
