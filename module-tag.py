@@ -267,7 +267,7 @@ class Module:
     def trunk_url (self):
         return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
     def tag_name (self, spec_dict):
-        return "%s-%s.%s"%(spec_dict['name'],spec_dict[self.options.version],spec_dict[self.options.taglevel])
+        return "%s-%s-%s"%(spec_dict['name'],spec_dict[self.options.version],spec_dict[self.options.taglevel])
     def tag_url (self, spec_dict):
         return "%s/%s/tags/%s"%(Module.config['svnpath'],self.name,self.tag_name(spec_dict))
 
