@@ -219,6 +219,7 @@ IN_BOOTSTRAPFS += iproute
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+IN_BOOTSTRAPFS += vsys
 ifeq "$(DISTRO)" "Fedora"
 ifeq "$(RELEASE)" "7"
 ALL += vsys
