@@ -29,7 +29,7 @@ function failure() {
     cp $LOG ${WEBLOG}
     (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 20k $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
-	tail -c 20k ${WEBPATH}/${BASE}.log.txt | mail -s "Failures for test ${BASE}" $MAILTO
+	tail -c 20k ${WEBLOG} | mail -s "Failures for test ${BASE}" $MAILTO
     fi
     exit 1
 }
