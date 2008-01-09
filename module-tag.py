@@ -264,10 +264,12 @@ class Module:
 
     def unignored_lines (self, logfile):
         result=[]
+        exclude="Tagging module %s"%self.name
         for logline in file(logfile).readlines():
             if logline.strip() == Module.svn_magic_line:
                 break
-            result += logline
+            if logline.find(exclude) < 0:
+                result += [ logline ]
         return result
 
     def insert_changelog (self, logfile, oldtag, newtag):
@@ -287,7 +289,7 @@ class Module:
                                              oldtag,newtag)
                 new.write(datepart+" "+logpart+"\n")
                 for logline in self.unignored_lines(logfile):
-                    new.write(logline)
+                    new.write("- " + logline)
                 new.write("\n")
         spec.close()
         new.close()
@@ -433,14 +435,13 @@ The module-init function has the following limitations
         # so we can provide useful information, such as version numbers and diff
         # in the same file
         changelog="/tmp/%s-%d.txt"%(self.name,os.getpid())
-        file(changelog,"w").write("""
-%s
-module %s
-old tag %s
-new tag %s
-"""%(Module.svn_magic_line,self.name,old_tag_url,new_tag_url))
+        file(changelog,"w").write("""Tagging module %s  -- from %s to %s
 
-        if not self.options.verbose or prompt('Want to run diff',True):
+%s
+Please write a changelog for this new tag in the section above
+"""%(self.name,old_tag_name,new_tag_name,Module.svn_magic_line))
+
+        if not self.options.verbose or prompt('Want to see diffs while writing changelog',True):
             self.run("(echo 'DIFF========='; svn diff %s %s) >> %s"%(old_tag_url,trunk_url,changelog))
         
         if self.options.debug:
