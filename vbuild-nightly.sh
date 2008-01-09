@@ -110,7 +110,7 @@ function success () {
     summary $LOG >> ${WEBLOG}
     touch ${WEBLOG}.ok
     if [ -n "$MAILTO" ] ; then
-	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successfull build for ${BASE}" $MAILTO
+	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successful build for ${BASE}" $MAILTO
     fi
     exit 0
 }
