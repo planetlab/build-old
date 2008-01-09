@@ -132,7 +132,7 @@ function main () {
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$BUILDREPO" ] && SVNPATH="$DEFAULT_BUILDREPO"
-    [ -z "$REPOURL" ] && SVNPATH="$DEFAULT_REPOURL"
+    [ -z "$REPOURL" ] && REPOURL="$DEFAULT_REPOURL"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
