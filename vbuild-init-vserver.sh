@@ -55,7 +55,7 @@ function configure_yum_in_vserver () {
 	else
             # exclude kernel from fedora repos 
 	    for i in /vservers/$vserver/etc/yum.repos.d/* ; do
-		echo "exclude=kernel* ulogd iptables" >> $i
+		[ -f $i ] && echo "exclude=kernel* ulogd iptables" >> $i
 	    done
 	    # the build repo is not signed at this stage
 	    cat > /vservers/$vserver/etc/yum.repos.d/myplc.repo <<EOF
