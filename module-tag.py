@@ -60,12 +60,18 @@ class Command:
             raise Exception,"Command %s failed"%self.command
 
     # returns stdout, like bash's $(mycommand)
-    def output_of (self):
+    def output_of (self,with_stderr=False):
         tmp="/tmp/status-%d"%os.getpid()
         if self.options.debug:
             print '+',self.command,' .. ',
             sys.stdout.flush()
-        os.system(self.command + " &> " + tmp)
+        command=self.command
+        if with_stderr:
+            command += " &> "
+        else:
+            command += " > "
+        command += tmp
+        os.system(command)
         result=file(tmp).read()
         os.unlink(tmp)
         if self.options.debug:
@@ -84,11 +90,11 @@ class Svnpath:
 
     def dir_needs_revert (self):
         command="svn status %s"%self.path
-        return len(Command(command,self.options).output_of()) != 0
+        return len(Command(command,self.options).output_of(True)) != 0
     # turns out it's the same implem.
     def file_needs_commit (self):
         command="svn status %s"%self.path
-        return len(Command(command,self.options).output_of()) != 0
+        return len(Command(command,self.options).output_of(True)) != 0
 
 class Module:
 
@@ -101,14 +107,16 @@ class Module:
     config={}
 
     svn_magic_line="--This line, and those below, will be ignored--"
+    
+    redirectors=[ ('module_name_varname','name'),
+                  ('module_version_varname','version'),
+                  ('module_taglevel_varname','taglevel'), ]
 
     def __init__ (self,name,options):
         self.name=name
         self.options=options
         self.moddir="%s/%s/%s"%(os.getenv("HOME"),options.modules,name)
         self.trunkdir="%s/trunk"%(self.moddir)
-        # what to parse in a spec file
-        self.varnames = ["name",options.version,options.taglevel]
         self.varmatcher=re.compile("%define\s+(\S+)\s+(\S*)\s*")
 
 
@@ -195,20 +203,44 @@ class Module:
                 print 'Cannot guess specfile for module %s'%self.name
                 sys.exit(1)
 
-    def spec_dict (self):
-        specfile=self.guess_specname()
-        if self.options.verbose:
-            print 'Parsing',specfile,
+    def parse_spec (self, specfile, varnames):
+        if self.options.debug:
+            print 'parse_spec',specfile,
         result={}
         f=open(specfile)
         for line in f.readlines():
             if self.varmatcher.match(line):
                 (var,value)=self.varmatcher.match(line).groups()
-                if var in self.varnames:
+                if var in varnames:
                     result[var]=value
         f.close()
         if self.options.verbose:
             print 'found',len(result),'keys'
+        if self.options.debug:
+            for (k,v) in result.iteritems():
+                print k,'=',v
+        return result
+                
+    # stores in self.module_name_varname the rpm variable to be used for the module's name
+    # and the list of these names in self.varnames
+    def spec_dict (self):
+        specfile=self.guess_specname()
+        redirector_keys = [ varname for (varname,default) in Module.redirectors]
+        redirect_dict = self.parse_spec(specfile,redirector_keys)
+        if self.options.debug:
+            print '1st pass parsing done, redirect_dict=',redirect_dict
+        varnames=[]
+        for (varname,default) in Module.redirectors:
+            if redirect_dict.has_key(varname):
+                setattr(self,varname,redirect_dict[varname])
+                varnames += [redirect_dict[varname]]
+            else:
+                setattr(self,varname,default)
+                varnames += [ default ] 
+        self.varnames = varnames
+        result = self.parse_spec (specfile,self.varnames)
+        if self.options.debug:
+            print '2st pass parsing done, varnames=',varnames,'result=',result
         return result
 
     def patch_spec_var (self, patch_dict):
@@ -269,7 +301,9 @@ class Module:
     def trunk_url (self):
         return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
     def tag_name (self, spec_dict):
-        return "%s-%s-%s"%(spec_dict['name'],spec_dict[self.options.version],spec_dict[self.options.taglevel])
+        return "%s-%s-%s"%(spec_dict[self.module_name_varname],
+                           spec_dict[self.module_version_varname],
+                           spec_dict[self.module_taglevel_varname])
     def tag_url (self, spec_dict):
         return "%s/%s/tags/%s"%(Module.config['svnpath'],self.name,self.tag_name(spec_dict))
 
@@ -341,7 +375,7 @@ The module-init function has the following limitations
 
         self.run("svn diff %s %s"%(tag_url,trunk_url))
 
-    def patch_tags_files (self, tagsfile, oldname, newname):
+    def patch_tags_file (self, tagsfile, oldname, newname):
         newtagsfile=tagsfile+".new"
         if self.options.verbose:
             print 'Replacing %s into %s in %s'%(oldname,newname,tagsfile)
@@ -363,16 +397,24 @@ The module-init function has the following limitations
         self.init_trunkdir()
         self.revert_trunkdir()
         self.update_trunkdir()
+        # parse specfile
         spec_dict = self.spec_dict()
         self.show_dict(spec_dict)
         
-        # parse specfile, check that the old tag exists and the new one does not
+        # side effects
         trunk_url=self.trunk_url()
         old_tag_name = self.tag_name(spec_dict)
         old_tag_url=self.tag_url(spec_dict)
-        # increment taglevel
-        new_taglevel = str ( int (spec_dict[self.options.taglevel]) + 1)
-        spec_dict[self.options.taglevel] = new_taglevel
+        if (self.options.new_version):
+            # new version set on command line
+            spec_dict[self.module_version_varname] = self.options.new_version
+            spec_dict[self.module_taglevel_varname] = 0
+        else:
+            # increment taglevel
+            new_taglevel = str ( int (spec_dict[self.module_taglevel_varname]) + 1)
+            spec_dict[self.module_taglevel_varname] = new_taglevel
+
+        # sanity check
         new_tag_name = self.tag_name(spec_dict)
         new_tag_url=self.tag_url(spec_dict)
         for url in [ trunk_url, old_tag_url ] :
@@ -384,7 +426,7 @@ The module-init function has the following limitations
             sys.exit(1)
 
         # side effect in trunk's specfile
-        self.patch_spec_var({self.options.taglevel:new_taglevel})
+        self.patch_spec_var(spec_dict)
 
         # prepare changelog file 
         # we use the standard subversion magic string (see svn_magic_line)
@@ -400,6 +442,10 @@ new tag %s
 
         if not self.options.verbose or prompt('Want to run diff',True):
             self.run("(echo 'DIFF========='; svn diff %s %s) >> %s"%(old_tag_url,trunk_url,changelog))
+        
+        if self.options.debug:
+            prompt('Proceed ?')
+
         # edit it        
         self.run("%s %s"%(self.options.editor,changelog))
         # insert changelog in spec
@@ -414,8 +460,8 @@ new tag %s
         build.update_trunkdir()
         
         for tagsfile in glob(build.trunkdir+"/*-tags.mk"):
-            if prompt("Want to check %s"%tagsfile):
-                self.patch_tags_files(tagsfile,old_tag_name,new_tag_name)
+            if prompt("Want to adopt new tag in %s"%tagsfile):
+                self.patch_tags_file(tagsfile,old_tag_name,new_tag_name)
 
         paths=""
         paths += self.trunkdir + " "
@@ -433,6 +479,7 @@ usage="""Usage: %prog options module1 [ .. modulen ]
 Purpose:
   manage subversion tags and specfile
   requires the specfile to define name, version and taglevel
+  OR alternatively redirection variables like module_version_varname
 Available functions:
   module-diff : show difference between trunk and latest tag
   module-tag  : increment taglevel in specfile, insert changelog in specfile,
@@ -444,24 +491,22 @@ def main():
     all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
 
     parser=OptionParser(usage=usage,version=subversion_id)
+    parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
+                      help="When tagging, set new version and reset taglevel to 0")
     parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
                       help="Runs all modules as found in %s"%all_modules)
-    parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
-                      help="Specify editor")
-    parser.add_option("-m","--message", action="store", dest="message", default=None,
-                      help="Specify log message")
     parser.add_option("-u","--no-update",action="store_true",dest="skip_update",default=False,
                       help="Skips svn updates")
     parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                       help="Does not update changelog section in specfile when tagging")
+    parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
+                      help="Specify editor")
+    parser.add_option("-m","--message", action="store", dest="message", default=None,
+                      help="Specify log message")
     parser.add_option("-M","--modules", action="store", dest="modules", default="modules",
                       help="Name for topdir - defaults to modules")
     parser.add_option("-B","--build", action="store", dest="build", default="build",
-                      help="Set module name for build")
-    parser.add_option("-T","--taglevel",action="store",dest="taglevel",default="taglevel",
-                      help="Specify an alternate spec variable for taglevel")
-    parser.add_option("-V","--version-string",action="store",dest="version",default="version",
-                      help="Specify an alternate spec variable for version")
+                      help="Set module name for build, defaults to build")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                       help="Run in verbose mode")
     parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
