@@ -12,6 +12,9 @@ DEFAULT_BASE="@DATE@--test-@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
+DEFAULT_BUILDREPO="http://build.planet-lab.org/install-rpms/archive/"
+DEFAULT_REPOURL="@BUILDREPO@/@PLDISTRO@/@FCDISTRO@/@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@/RPMS"
+
 # for the test part
 TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
 
@@ -128,6 +131,8 @@ function main () {
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
+    [ -z "$BUILDREPO" ] && SVNPATH="$DEFAULT_BUILDREPO"
+    [ -z "$REPOURL" ] && SVNPATH="$DEFAULT_REPOURL"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
@@ -135,7 +140,10 @@ function main () {
     sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
     BASE=$(echo ${BASE} | sed $sedargs)
     WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
-
+    REPOURL=$(echo ${REPOURL} | sed $sedargs)
+    sedargs="-e s,@BUILDREPO@,${BUILDREPO},g"
+    REPOURL=$(echo ${REPOURL} | sed $sedargs)
+    
     trap failure ERR INT
     # create vserver: check it does not exist yet
     i=
@@ -163,14 +171,25 @@ function main () {
     svn export $SVNPATH $tmpdir
     # Create vserver
     cd $tmpdir
-    REPOURL="http://build.planet-lab.org/install-rpms/archive/${PLDISTRO}/${FCDISTRO}/${DATE}--${PLDISTRO}-${FCDISTRO}-${PERSONALITY}/RPMS"
-    TESTVSERVERIP="10.201.197.1"
-    ./myplc-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} ${REPOURL} -- --interface eth0:${TESTVSERVERIP}
+    ./myplc-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} ${REPOURL}
     # cleanup
     cd -
     rm -rf $tmpdir
 
+    vserver ${BASE} stop
+    rm -f /etc/vservers/${BASE}/interfaces/0/*
+    [ -z "${TESTVSERVER_IP}" ] && TESTVSERVER_DEV="eth0"
+    if [ -z "${TESTVSERVER_IP}" ] ; then
+	xid=$(cat /etc/vservers/${BASE}/context)
+	class_a=10
+	class_b=254
+	TESTVSERVER_IP=$(python -c "context=int($xid); print '%d.%d.%d.%d' % ($a,$b,(context&0xff00)>>8,context&0xff)")
+    fi
+    echo "${TESTVSERVER_IP}" > /etc/vservers/${BASE}/interfaces/0/ip
+    echo "${TESTVSERVER_DEV}" > /etc/vservers/${BASE}/interfaces/0/dev
+    vserver ${BASE} start
     echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
+
     # The log inside the vserver contains everything
     LOG2=/vservers/${BASE}/log.txt
     (echo "==================== BEG VSERVER Transcript of vserver creation" ; \
@@ -183,8 +202,9 @@ function main () {
     # redirect log again
     exec >> $LOG 2>&1 
 
-    # SVN download one or more tests and run them.  Call "failure" if
-    # the tests fail.
+    svn cat ${TESTSVNPATH}/selftest > /vservers/${BASE}/selftest
+    vserver ${BASE} exec chmod +x /selftest
+    vserver ${BASE} exec /selftest
     success 
 }  
 
