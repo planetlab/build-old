@@ -182,7 +182,7 @@ function main () {
     if [ -z "${TESTVSERVER_IP}" ] ; then
 	xid=$(cat /etc/vservers/${BASE}/context)
 	class_a=10
-	class_b=254
+	class_b=201
 	TESTVSERVER_IP=$(python -c "context=int($xid); print '%d.%d.%d.%d' % ($class_a,$class_b,(context&0xff00)>>8,context&0xff)")
     fi
     echo "${TESTVSERVER_IP}" > /etc/vservers/${BASE}/interfaces/0/ip
