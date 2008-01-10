@@ -10,7 +10,6 @@ package: filesystem
 package: bash
 package: coreutils
 package: python
-package: coreutils
 package: cpio
 package: e2fsprogs
 package: ed
@@ -34,7 +33,6 @@ package: sysklogd
 package: termcap
 package: util-linux
 package: vim-minimal
-package: authconfig
 package: shadow-utils
 package: anacron
 package: at
@@ -83,7 +81,6 @@ package: expect
 package: nfs-utils
 package: openvpn
 package: vconfig
-package: autofs
 package: PyXML
 # not found on other platforms
 package+fc4: netdump
@@ -115,4 +112,3 @@ package: netflow-utils
 package: proper
 # not ready yet
 #package: vsys
-
