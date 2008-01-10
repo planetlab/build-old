@@ -24,8 +24,8 @@ endif
 
 RPMSAREA	:= /var/www/html/install-rpms/
 
-#BASE		:= onelab
-BASENEW		:= build-$(notdir $(shell pwd))
+BUILD_BASE	:= $(shell cat .base)
+BASENEW		:= build-$(BUILD_BASE)
 BASEBAK		:= planetlab-bak
 BASE		:= planetlab
 
@@ -41,12 +41,16 @@ install: $(INSTALL-TARGETS)
 install-help:
 	@echo install: $(INSTALL-TARGETS)
 
+# compute the exact set of rpms to install - we do not need bootstrapfs nor myplc here
+node_packages=$(sort $(IN_VSERVER) $(IN_BOOTSTRAPFS))
+node_rpms=$(foreach package,$(node_packages),$($(package).rpms))
+
 install-rpms:RPMS/yumgroups.xml
         # create repository
 	ssh $(PLCSSH) mkdir -p /plc/data/$(RPMSAREA)/$(BASENEW)
 	# populate
 	+$(RSYNC) -v --perms --times --group --compress --rsh=ssh \
-	   RPMS/yumgroups.xml $(wildcard RPMS/*/*.rpm) $(PLCSSH):/plc/data/$(RPMSAREA)/$(BASENEW)/
+	   RPMS/yumgroups.xml $(node_rpms) $(PLCSSH):/plc/data/$(RPMSAREA)/$(BASENEW)/
 
 install-index:
 	# sign and index new repository
@@ -67,5 +71,3 @@ install-adopt:
 install-bootstrap:
 	# install node image
 	ssh $(PLCSSH) chroot /plc/root yum -y update bootstrapfs
-
-
