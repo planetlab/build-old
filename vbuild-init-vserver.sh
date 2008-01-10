@@ -253,7 +253,7 @@ EOF
 }
 
 COMMAND_VBUILD="vbuild-init-vserver.sh"
-COMMAND_MYPLC="myplc-init-vserver.sh"
+COMMAND_MYPLC="vtest-init-vserver.sh"
 function usage () {
     set +x 
     echo "Usage: $COMMAND_VBUILD [options] vserver-name [ -- vserver-options ]"

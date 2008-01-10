@@ -171,7 +171,7 @@ function main () {
     svn export $SVNPATH $tmpdir
     # Create vserver
     cd $tmpdir
-    ./myplc-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} ${REPOURL}
+    ./vtest-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} ${REPOURL}
     # cleanup
     cd -
     rm -rf $tmpdir
