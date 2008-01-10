@@ -84,8 +84,8 @@ nozomi-DEPEND-DEVEL-RPMS := kernel-devel
 nozomi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_release=$(kernel.rpm-release) \
 	kernel_arch=$(kernel.rpm-arch)
-#IN_BOOTSTRAPFS += nozomi
-#ALL += nozomi
+IN_BOOTSTRAPFS += nozomi
+ALL += nozomi
 
 #
 # comgt
