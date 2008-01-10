@@ -332,7 +332,7 @@ class Module:
     init_warning="""WARNING
 The module-init function has the following limitations
 * it does not handle changelogs
-* it does not scan the -tags.mk files to adopt the new tags"""
+* it does not scan the -tags*.mk files to adopt the new tags"""
     def do_init(self):
         if self.options.verbose:
             print Module.init_warning
@@ -460,7 +460,7 @@ Please write a changelog for this new tag in the section above
         build.revert_trunkdir()
         build.update_trunkdir()
         
-        for tagsfile in glob(build.trunkdir+"/*-tags.mk"):
+        for tagsfile in glob(build.trunkdir+"/*-tags*.mk"):
             if prompt("Want to adopt new tag in %s"%tagsfile):
                 self.patch_tags_file(tagsfile,old_tag_name,new_tag_name)
 
@@ -484,7 +484,7 @@ Purpose:
 Available functions:
   module-diff : show difference between trunk and latest tag
   module-tag  : increment taglevel in specfile, insert changelog in specfile,
-                create new tag and and adopt it in build/*-tags.mk
+                create new tag and and adopt it in build/*-tags*.mk
   module-init : create initial tag
   module-version : only check specfile and print out details"""
 
