@@ -23,7 +23,6 @@ PLCSSH		:= root@private.one-lab.org
 endif
 
 RPMSAREA	:= /var/www/html/install-rpms/
-BOOTAREA	:= /var/www/html/boot/
 
 #BASE		:= onelab
 BASENEW		:= build-$(notdir $(shell pwd))
@@ -67,7 +66,6 @@ install-adopt:
 
 install-bootstrap:
 	# install node image
-	install_bz2=$(wildcard BUILD/bootmanager-*/bootmanager/support-files/PlanetLab-Bootstrap.tar.bz2) ; \
-	  if [ -n "$$install_bz2" ] ; then rsync $$install_bz2 $(PLCSSH):/plc/data/$(BOOTAREA) ; fi
+	ssh $(PLCSSH) chroot /plc/root yum -y update bootstrapfs
 
 
