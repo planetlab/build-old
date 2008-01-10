@@ -568,6 +568,7 @@ develclean:
 # gather build information for the 'About' page
 # when run from crontab, INIT_CWD not properly set (says /root ..)
 # so, the nightly build passes NIGHTLY_BASE here
+# also store the nightly_base in .base for any post-processing purposes
 myplc-release:
 	@echo 'Creating myplc-release'
 	rm -f $@
@@ -577,13 +578,13 @@ myplc-release:
 	$(MAKE) --no-print-directory version-svns >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpm info" >> $@
 	$(MAKE) --no-print-directory version-rpms >> $@
+	@echo $(NIGHTLY_BASE) > .base
 
 version-build:
 	@echo -n 'Build bdate: ' ; date '+%Y.%m.%d'
 	@echo -n 'Build btime: ' ; date '+%H:%M'
 	@echo -n 'Build bhostname: ' ; hostname
 	@echo    "Build base: $(NIGHTLY_BASE)"
-	@echo    "Build binit_cwd: $(INIT_CWD)"
 	@echo -n 'Build btags: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
 	@echo    "Build tarch: $(HOSTARCH)"
 	@echo    "Build tdistro: $(DISTRO)"
