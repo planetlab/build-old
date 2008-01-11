@@ -34,5 +34,3 @@ MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/myplc-4.2-0
 # unused so far
 # http://svn.planet-lab.org/svn/plcmdline/tags/plcapilib-0.1-5
 # http://svn.planet-lab.org/svn/util-python/tags/util-python-0.1-13
-# http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.214-1
-

@@ -29,8 +29,3 @@ pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/trunk
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/trunk
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/trunk
-
-# unused so far
-# http://svn.planet-lab.org/svn/plcmdline/tags/plcapilib-0.1-5
-# http://svn.planet-lab.org/svn/util-python/tags/util-python-0.1-13
-
