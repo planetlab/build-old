@@ -31,5 +31,5 @@ missing files are searched in the planetlab distro
 	the contents of the standard vserver reference image
 ./build/config.<pldistro>/vserver-*.pkgs
 	all *.pkgs files here - produce additional vserver images
-./build/config.<pldistro>/native-shell.pkgs
+./build/config.<pldistro>/vtest.pkgs
 	used to create test vservers for myplc-native

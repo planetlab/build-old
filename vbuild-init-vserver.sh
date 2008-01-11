@@ -152,7 +152,7 @@ function devel_tools () {
     if [ -n "$VBUILD_MODE" ] ; then
 	pkgsname=devel.pkgs
     else
-	pkgsname=native-shell.pkgs
+	pkgsname=vtest.pkgs
     fi
     pkgsfile=$(pl_locateDistroFile $DIRNAME $pldistro $pkgsname)
 
