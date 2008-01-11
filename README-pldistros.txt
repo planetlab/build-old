@@ -23,8 +23,12 @@ missing files are searched in the planetlab distro
 ./build/config.<pldistro>/bootstrapfs.pkgs
 	the standard contents of the node root 
 	used to generate yumgroups.xml
+./build/config.<pldistro>/bootstrapfs.pkgs
+	specification for the contents of the core for the node
+	software
+        this results in a tarball (tar.bz2) 
 ./build/config.<pldistro>/bootstrapfs-*.pkgs
-	all *.pkgs files here - produce additional node root images (tar.bz2)
+	each of these files results in an extension tarball
 ./build/config.<pldistro>/myplc.pkgs
 	contents of the myplc image
 ./build/config.<pldistro>/vserver.pkgs
@@ -33,3 +37,16 @@ missing files are searched in the planetlab distro
 	all *.pkgs files here - produce additional vserver images
 ./build/config.<pldistro>/vtest.pkgs
 	used to create test vservers for myplc-native
+
+=== extensions
+as of this writing extensions are managed as follows:
+- at node installation, the tarball produced from bootstrapfs.pkgs is
+downloaded and untared to produce the core node setup
+- then we attempt to install an extension corresponding to each of the
+nodegroups that the node is part of
+- the first method is to try and download a tarball named after the
+extension. such tarballs are produced by the build from a .pkgs file,
+see above
+- if that fails, then the extension install is attempted through a
+ yum groupinstall  extension<nodegroup>
+
