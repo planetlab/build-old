@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python -u
 
 subversion_id = "$Id: TestMain.py 7635 2008-01-04 09:46:06Z thierry $"
 
@@ -370,11 +370,7 @@ The module-init function has the following limitations
 
         trunk_url=self.trunk_url()
         tag_url=self.tag_url(spec_dict)
-        for url in [ trunk_url, tag_url ] :
-            if not Svnpath(url,self.options).url_exists():
-                print 'Could not find svn URL %s'%url
-                sys.exit(1)
-
+        print 'x'*67,self.name
         self.run("svn diff %s %s"%(tag_url,trunk_url))
 
     def patch_tags_file (self, tagsfile, oldname, newname):
@@ -427,6 +423,13 @@ The module-init function has the following limitations
             print 'New tag\'s svn URL %s already exists ! '%url
             sys.exit(1)
 
+        # checking for diffs
+        diff_output=Command("svn diff %s %s"%(old_tag_url,trunk_url),
+                            self.options).output_of()
+        if len(diff_output) == 0:
+            if not prompt ("No difference in trunk for module %s, want to tag anyway"%self.name,False):
+                return
+
         # side effect in trunk's specfile
         self.patch_spec_var(spec_dict)
 
@@ -442,7 +445,7 @@ Please write a changelog for this new tag in the section above
 """%(self.name,old_tag_name,new_tag_name,Module.svn_magic_line))
 
         if not self.options.verbose or prompt('Want to see diffs while writing changelog',True):
-            self.run("(echo 'DIFF========='; svn diff %s %s) >> %s"%(old_tag_url,trunk_url,changelog))
+            file(changelog,"w").write('DIFF=========\n' + diff_output)
         
         if self.options.debug:
             prompt('Proceed ?')

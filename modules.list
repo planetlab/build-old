@@ -25,7 +25,8 @@ proper
 pypcilib
 ulogd
 util-python
-util-vserver
+# using branches/scholz for this module
+# util-vserver
 util-vserver-pl
 #svn: In directory '/Users/parmentelat/modules/vnetspec/trunk'
 #svn: Can't move source to dest
