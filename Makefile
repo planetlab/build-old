@@ -581,14 +581,17 @@ myplc-release:
 	@echo $(NIGHTLY_BASE) > .base
 
 version-build:
-	@echo -n 'Build bdate: ' ; date '+%Y.%m.%d'
-	@echo -n 'Build btime: ' ; date '+%H:%M'
-	@echo -n 'Build bhostname: ' ; hostname
-	@echo    "Build base: $(NIGHTLY_BASE)"
-	@echo -n 'Build btags: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
-	@echo    "Build tarch: $(HOSTARCH)"
-	@echo    "Build tdistro: $(DISTRO)"
-	@echo    "Build trelease: $(RELEASE)"	
+	@echo -n 'Build build-date: ' ; date '+%Y.%m.%d'
+	@echo -n 'Build build-time: ' ; date '+%H:%M'
+	@echo -n 'Build build-hostname: ' ; hostname
+	@echo    "Build build-base: $(NIGHTLY_BASE)"
+	@echo    "Build planetab-distro: $(PLDISTRO)"
+	@echo -n "Build planetlab-tags: $(PLDISTROTAGS)"
+	@echo -n 'Build planetlab-tagsid: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
+	@echo    "Build target-arch: $(HOSTARCH)"
+	@echo    "Build target-distro: $(DISTRO)"
+	@echo    "Build target-release: $(RELEASE)"	
+	@echo    "Build target-personality: $(NIGHTLY_PERSONALITY)"	
 
 #################### 
 # for a given module

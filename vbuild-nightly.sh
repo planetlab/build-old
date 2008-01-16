@@ -132,12 +132,19 @@ function build () {
     show_env
     
     echo "Running make IN $(pwd)"
+    
+    # stuff our own variable settings
+    MAKEVARS=("PLDISTRO=${PLDISTRO}" "${MAKEVARS[@]}")
+    MAKEVARS=("PLDISTROTAGS=${PLDISTROTAGS}" "${MAKEVARS[@]}")
+    MAKEVARS=("NIGHTLY_BASE=${BASE}" "${MAKEVARS[@]}")
+    MAKEVARS=("NIGHTLY_PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
+
     # stage1
-    make -C /build "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" stage1=true 
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
     # versions
-    make -C /build "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" NIGHTLY_BASE=${BASE} versions
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # actual stuff
-    make -C /build "${MAKEOPTS[@]}" PLDISTROTAGS=${PLDISTROTAGS} PLDISTRO=${PLDISTRO} "${MAKEVARS[@]}" $MAKETARGETS
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
 
 }
 
@@ -183,7 +190,7 @@ function show_env () {
     echo BASE=$BASE
     echo SVNPATH=$SVNPATH
     echo MAKEVARS="${MAKEVARS[@]}"
-    echo MAKEOPTS="${MAKEOPTS[@]}"
+    echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
     echo TAGSRELEASE="$TAGSRELEASE"
     echo -n "(might be unexpanded)"
@@ -232,12 +239,12 @@ function main () {
     
     # parse arguments
     MAKEVARS=()
-    MAKEOPTS=()
+    DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
     while getopts "nf:d:b:p:t:r:s:om:a:w:BTvh7" opt ; do
 	case $opt in
-	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ;;
+	    n) DRY_RUN="-n" ;;
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
 	    p) PERSONALITY=$OPTARG ;;
