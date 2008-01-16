@@ -586,7 +586,7 @@ version-build:
 	@echo -n 'Build build-hostname: ' ; hostname
 	@echo    "Build build-base: $(NIGHTLY_BASE)"
 	@echo    "Build planetab-distro: $(PLDISTRO)"
-	@echo -n "Build planetlab-tags: $(PLDISTROTAGS)"
+	@echo    "Build planetlab-tags: $(PLDISTROTAGS)"
 	@echo -n 'Build planetlab-tagsid: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
 	@echo    "Build target-arch: $(HOSTARCH)"
 	@echo    "Build target-distro: $(DISTRO)"
