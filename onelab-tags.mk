@@ -1,4 +1,4 @@
-# $Id: planetlab-tags.mk 7709 2008-01-08 20:32:49Z thierry $
+# $Id$
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
