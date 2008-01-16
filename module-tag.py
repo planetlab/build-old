@@ -1,6 +1,6 @@
 #!/usr/bin/python -u
 
-subversion_id = "$Id: TestMain.py 7635 2008-01-04 09:46:06Z thierry $"
+subversion_id = "$Id$"
 
 import sys, os, os.path
 import re

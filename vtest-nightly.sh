@@ -1,5 +1,5 @@
 #!/bin/bash
-REVISION=$(echo '$Revision: 7654 $' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
+REVISION=$(echo '$Revision$' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
 
 COMMANDPATH=$0
 COMMAND=$(basename $0)

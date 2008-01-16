@@ -1,7 +1,7 @@
 #
 # Thierry Parmentelat - INRIA Sophia Antipolis 
 #
-### $Id: onelab-install.mk 685 2007-07-19 09:01:41Z thierry $
+### $Id$
 # 
 # Installation rules
 # 
