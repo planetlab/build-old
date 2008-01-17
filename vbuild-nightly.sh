@@ -5,7 +5,7 @@ COMMANDPATH=$0
 COMMAND=$(basename $0)
 
 # default values, tunable with command-line options
-DEFAULT_FCDISTRO=f7
+DEFAULT_FCDISTRO=f8
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
