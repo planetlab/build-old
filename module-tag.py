@@ -186,7 +186,7 @@ class Module:
             self.run_fatal("svn revert -R %s"%self.trunkdir)
 
     def update_trunkdir (self):
-        if self.options.skip_update:
+        if self.options.fast_checks:
             return
         if self.options.verbose:
             print 'Updating',self.trunkdir
@@ -349,7 +349,7 @@ The module-init function has the following limitations
         tag_name=self.tag_name(spec_dict)
         tag_url=self.tag_url(spec_dict)
         # check the tag does not exist yet
-        if Svnpath(tag_url,self.options).url_exists():
+        if not self.options.fast_checks and Svnpath(tag_url,self.options).url_exists():
             print 'Module %s already has a tag %s'%(self.name,tag_name)
             return
 
@@ -416,10 +416,10 @@ The module-init function has the following limitations
         new_tag_name = self.tag_name(spec_dict)
         new_tag_url=self.tag_url(spec_dict)
         for url in [ trunk_url, old_tag_url ] :
-            if not Svnpath(url,self.options).url_exists():
+            if not self.options.fast_checks and not Svnpath(url,self.options).url_exists():
                 print 'Could not find svn URL %s'%url
                 sys.exit(1)
-        if Svnpath(new_tag_url,self.options).url_exists():
+        if not self.options.fast_checks and Svnpath(new_tag_url,self.options).url_exists():
             print 'New tag\'s svn URL %s already exists ! '%url
             sys.exit(1)
 
@@ -445,7 +445,7 @@ Please write a changelog for this new tag in the section above
 """%(self.name,old_tag_name,new_tag_name,Module.svn_magic_line))
 
         if not self.options.verbose or prompt('Want to see diffs while writing changelog',True):
-            file(changelog,"w").write('DIFF=========\n' + diff_output)
+            file(changelog,"a").write('DIFF=========\n' + diff_output)
         
         if self.options.debug:
             prompt('Proceed ?')
@@ -499,8 +499,8 @@ def main():
                       help="When tagging, set new version and reset taglevel to 0")
     parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
                       help="Runs all modules as found in %s"%all_modules)
-    parser.add_option("-u","--no-update",action="store_true",dest="skip_update",default=False,
-                      help="Skips svn updates")
+    parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
+                      help="Skips safety checks, such as svn updates -- use with care")
     parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                       help="Does not update changelog section in specfile when tagging")
     parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
