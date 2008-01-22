@@ -204,7 +204,7 @@ function main () {
 
     svn cat ${TESTSVNPATH}/selftest > /vservers/${BASE}/selftest
     vserver ${BASE} exec chmod +x /selftest
-    vserver ${BASE} exec /selftest
+    vserver ${BASE} exec /selftest ${BASE}.$(hostname) ${TESTVSERVER_IP}
     success 
 }  
 
