@@ -185,6 +185,7 @@ function main () {
 	class_b=1
 	TESTVSERVER_IP=$(python -c "context=int($xid); print '%d.%d.%d.%d' % ($class_a,$class_b,(context&0xff00)>>8,context&0xff)")
     fi
+    mkdir -p /etc/vservers/${BASE}/interfaces/0
     echo "${TESTVSERVER_IP}" > /etc/vservers/${BASE}/interfaces/0/ip
     echo "${TESTVSERVER_DEV}" > /etc/vservers/${BASE}/interfaces/0/dev
     vserver ${BASE} start
