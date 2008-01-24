@@ -200,7 +200,7 @@ function main () {
     fi
     mkdir -p /etc/vservers/${BASE}/interfaces/0
     echo "${TESTVSERVER_IP}" > /etc/vservers/${BASE}/interfaces/0/ip
-    echo "${TESTVSERVER_DEV}" > /etc/vservers/${BASE}/interfaces/0/dev
+    echo "eth${TESTVSERVER_DEV}" > /etc/vservers/${BASE}/interfaces/0/dev
     vserver ${BASE} start
     echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
 
