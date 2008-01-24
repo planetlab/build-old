@@ -636,7 +636,7 @@ function pl_make_image() {
     (cd $root && tar cpf - .) | (cd $tmp && tar xpf -)
 
     # Unmount it
-    umount -l $tmp
+    umount $tmp
     rmdir $tmp
     trap - ERR INT
 }
