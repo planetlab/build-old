@@ -15,6 +15,12 @@ DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 DEFAULT_BUILDREPO="http://build.planet-lab.org/install-rpms/archive/"
 DEFAULT_REPOURL="@BUILDREPO@/@PLDISTRO@/@FCDISTRO@/@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@/RPMS"
 
+# 10.1 subnet allocated for testing at Princeton
+DEFAULT_IPPREFIX16="10.1"
+
+# default to eth0
+DEFAULT_TESTVSERVER_DEV=0
+
 # for the test part
 TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
 
@@ -68,24 +74,31 @@ function show_env () {
 }
 
 function usage () {
+    ### set BASE from DISTRO, if unspecified
     echo "Usage: $COMMAND [option] make-targets"
     echo "This is $REVISION"
     echo "Supported options"
     echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
     echo " -f fcdistro - defaults to $DEFAULT_FCDISTRO"
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
-    echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -b base - defaults to $DEFAULT_BASE"
-    echo "    @NAME@ replaced as appropriate"
+    echo "    @NAME@ replaced as appropriate, which currently defaults to $BASE"
+    echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
     echo " -s svnpath - where to fetch the build module"
     echo " -o : overwrite - re-run in base directory, do not create vserver"
     echo " -m mailto"
     echo " -a makevar=value - space in values are not supported"
+    echo " -u repourl -- defaults to $DEFAULT_REPOURL"
+    echo "    @NAME@ replaced as appropriate, which currently defaults to $REPOURL"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
+    echo "    @NAME@ replaced as appropriate, which currently defaults to $WEBPATH"
+    echo " -j ip address ; use this to give the vserver an explicit IP address; also see -i."
+    echo " -i /16 ip subnet for auto IP address selection within the subnet -- defaults to $DEFAULT_IPPREFIX16"
+    echo "    This is only used when no explicit IP address is specified."
     echo " -v : be verbose"
-    echo " -7 : uses weekday-@FCDISTRO@ as base"
+    echo " -7 : uses weekday-@FCDISTRO@ as base -- defaults to $(date +%a|tr A-Z a-z)-$FCDISTRO"
     exit 1
 }
 
@@ -97,32 +110,6 @@ function main () {
     declare -a argv
     for arg in "$@"; do argv=(${argv[@]} "$arg") ; done
     
-    # parse arguments
-    MAKEVARS=()
-    MAKEOPTS=()
-    while getopts "nf:d:b:p:t:r:s:om:a:w:vh7" opt ; do
-	case $opt in
-	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ;;
-	    f) FCDISTRO=$OPTARG ;;
-	    d) PLDISTRO=$OPTARG ;;
-	    p) PERSONALITY=$OPTARG ;;
-	    b) BASE=$OPTARG ;;
-	    t) PLDISTROTAGS=$OPTARG ;;
-	    r) TAGSRELEASE=$OPTARG ;;
-	    s) SVNPATH=$OPTARG ;;
-	    o) OVERWRITEMODE=true ;;
-	    m) MAILTO=$OPTARG ;;
-	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
-	    w) WEBPATH=$OPTARG ;;
-	    v) set -x ;;
-	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
-	    h|*) usage ;;
-	esac
-    done
-	
-    shift $(($OPTIND - 1))
-    MAKETARGETS="$@"
-    
     # set defaults
     [ -z "$FCDISTRO" ] && FCDISTRO=$DEFAULT_FCDISTRO
     [ -z "$PLDISTRO" ] && PLDISTRO=$DEFAULT_PLDISTRO
@@ -133,9 +120,38 @@ function main () {
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$BUILDREPO" ] && BUILDREPO="$DEFAULT_BUILDREPO"
     [ -z "$REPOURL" ] && REPOURL="$DEFAULT_REPOURL"
+    [ -z "$IPPREFIX16" ] && IPPREFIX16="$DEFAULT_IPPREFIX16"
+    [ -z "$TESTVSERVER_DEV" ] && TESTVSERVER_DEV="$DEFAULT_TESTVSERVER_DEV"
 
-    [ -n "$DRY_RUN" ] && MAILTO=""
+    # parse arguments
+    MAKEVARS=()
+    MAKEOPTS=()
+    while getopts "nf:d:b:p:t:r:s:om:a:u:w:i:j:vh7" opt ; do
+	case $opt in
+	    n) DRY_RUN="true" ; MAKEOPTS=(${MAKEOPTS[@]} -n) ; MAILTO="";;
+	    f) FCDISTRO=$OPTARG ;;
+	    d) PLDISTRO=$OPTARG ;;
+	    b) BASE=$OPTARG ;;
+	    p) PERSONALITY=$OPTARG ;;
+	    t) PLDISTROTAGS=$OPTARG ;;
+	    r) TAGSRELEASE=$OPTARG ;;
+	    s) SVNPATH=$OPTARG ;;
+	    o) OVERWRITEMODE=true ;;
+	    m) MAILTO=$OPTARG ;;
+	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
+	    u) REPOURL=$OPTARG ;;
+	    w) WEBPATH=$OPTARG ;;
+	    i) IPPREFIX16=$OPTARG ;;
+	    j) TESTVSERVER_IP=$OPTARG ;;
+	    v) set -x ;;
+	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
+	    h|*) usage ;;
+	esac
+    done
 	
+    shift $(($OPTIND - 1))
+    MAKETARGETS="$@"
+    
     ### set BASE from DISTRO, if unspecified
     sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
     BASE=$(echo ${BASE} | sed $sedargs)
@@ -178,12 +194,9 @@ function main () {
 
     vserver ${BASE} stop
     rm -f /etc/vservers/${BASE}/interfaces/0/*
-    [ -z "${TESTVSERVER_IP}" ] && TESTVSERVER_DEV="eth0"
-    if [ -z "${TESTVSERVER_IP}" ] ; then
+    if [ -z "$TESTVSERVER_IP" ] ; then
 	xid=$(cat /etc/vservers/${BASE}/context)
-	class_a=10
-	class_b=1
-	TESTVSERVER_IP=$(python -c "context=int($xid); print '%d.%d.%d.%d' % ($class_a,$class_b,(context&0xff00)>>8,context&0xff)")
+	TESTVSERVER_IP=$(python -c "context=int($xid); print '%s.%d.%d' % ($IPPREFIX16,(context&0xff00)>>8,context&0xff)")
     fi
     mkdir -p /etc/vservers/${BASE}/interfaces/0
     echo "${TESTVSERVER_IP}" > /etc/vservers/${BASE}/interfaces/0/ip
