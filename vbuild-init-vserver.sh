@@ -124,6 +124,8 @@ function setup_vserver () {
 	# for /etc/plc.d/gpg - need to init /dev/random
 	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
 	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
+	cap=$(grep ^CAP_NET_BIND_SERVICE /etc/vservers/$vserver/bcapabilities | wc -l)
+	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
     fi
 
     $personality vyum $vserver -- -y install yum
@@ -195,7 +197,7 @@ function post_install_vbuild () {
     done
     
     # create symlink for /dev/fd
-    ln -fs /proc/self/fd /dev/fd
+    [ ! -e "/dev/fd" ] && ln -s /proc/self/fd /dev/fd
 
     # modify /etc/rpm/macros to not use /sbin/new-kernel-pkg
     sed -i 's,/sbin/new-kernel-pkg:,,' /etc/rpm/macros
@@ -247,6 +249,9 @@ function post_install_myplc  () {
 
 # be careful to backslash $ in this, otherwise it's the root context that's going to do the evaluation
     cat << EOF | $personality vserver $VERBOSE $vserver exec bash -x
+
+    # create symlink for /dev/fd
+    [ ! -e "/dev/fd" ] && ln -s /proc/self/fd /dev/fd
 
     # customize root's prompt
     cat << PROFILE > /root/.profile
