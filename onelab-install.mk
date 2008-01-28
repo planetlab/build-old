@@ -24,7 +24,7 @@ endif
 
 RPMSAREA	:= /var/www/html/install-rpms/
 
-BUILD_BASE	:= $(shell cat .base)
+BUILD_BASE	:= $(shell cat .base 2> /dev/null || echo base-undefined)
 BASENEW		:= build-$(BUILD_BASE)
 BASEBAK		:= planetlab-bak
 BASE		:= planetlab
