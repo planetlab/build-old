@@ -71,10 +71,6 @@ IN_BOOTSTRAPFS += madwifi
 iwlwifi-ucode-MODULES := iwlwifi
 iwlwifi-ucode-SPEC := iwlwifi-ucode.spec
 iwlwifi-ucode-BUILD-FROM-SRPM := yes
-iwlwifi-ucode-DEPEND-DEVEL-RPMS := kernel-devel
-iwlwifi-ucode-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
 ALL += iwlwifi-ucode
 # in the wireless extension
 #IN_BOOTSTRAPFS += iwlwifi-ucode
