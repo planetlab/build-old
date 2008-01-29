@@ -66,19 +66,6 @@ ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
 
 #
-# iwlwifi
-#
-iwlwifi-MODULES := iwlwifi
-iwlwifi-SPEC := iwlwifi.spec
-iwlwifi-BUILD-FROM-SRPM := yes
-iwlwifi-DEPEND-DEVEL-RPMS := kernel-devel mac80211-devel
-iwlwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
-#ALL += iwlwifi
-#IN_BOOTSTRAPFS += iwlwifi
-
-#
 # wireless-tools
 # 
 wireless-tools-MODULES := wireless-tools
