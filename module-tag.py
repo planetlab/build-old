@@ -370,7 +370,9 @@ The module-init function has the following limitations
 
         trunk_url=self.trunk_url()
         tag_url=self.tag_url(spec_dict)
-        print 'x'*67,self.name
+        print 'x'*40,'module',self.name
+        print 'x'*20,'<',tag_url
+        print 'x'*20,'>',trunk_url
         self.run("svn diff %s %s"%(tag_url,trunk_url))
 
     def patch_tags_file (self, tagsfile, oldname, newname):
