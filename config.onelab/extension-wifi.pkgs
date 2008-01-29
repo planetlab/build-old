@@ -12,8 +12,8 @@
 # at runtime, the choice between tarball-install or yum install
 # depends on whether the tarball can be downloaded or not
 #
-groupname : extensionwifi
-groupdesc : planetlab node wifi extensions
+groupname: extensionwifi
+groupdesc: planetlab node wifi extensions
 package: madwifi
 package: wireless-tools
 package: iwl3945-firmware iwl4965-firmware

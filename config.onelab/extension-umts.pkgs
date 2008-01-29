@@ -1,5 +1,5 @@
 # $Id$
-groupname : extensionumts
-groupdesc : planetlab node umts extensions
+groupname: extensionumts
+groupdesc: planetlab node umts extensions
 package: nozomi
 package: comgt
