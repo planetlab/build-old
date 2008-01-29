@@ -16,4 +16,4 @@ groupname : extensionwifi
 groupdesc : planetlab node wifi extensions
 package: madwifi
 package: wireless-tools
-package: iwlwifi-ucode
+package: iwl3945-firmware iwl4965-firmware

@@ -66,16 +66,6 @@ ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
 
 #
-# iwlwifi-ucode
-#
-iwlwifi-ucode-MODULES := iwlwifi
-iwlwifi-ucode-SPEC := iwlwifi-ucode.spec
-iwlwifi-ucode-BUILD-FROM-SRPM := yes
-ALL += iwlwifi-ucode
-# in the wireless extension
-#IN_BOOTSTRAPFS += iwlwifi-ucode
-
-#
 # wireless-tools
 # 
 wireless-tools-MODULES := wireless-tools
