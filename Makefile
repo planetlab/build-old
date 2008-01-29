@@ -81,9 +81,9 @@
 #
 # the build defines some make variables that are extracted from spec files
 # see for example
-# (*)  $ make ulogd.pkginfo
+# (*)  $ make ulogd-pkginfo
 #        to see the list f variables attached to a given package
-# (*)  $ make kernel-devel.rpminfo
+# (*)  $ make kernel-devel-rpminfo
 #        to see the list f variables attached to a given rpm
 #
 ####################
@@ -440,7 +440,7 @@ $($(1).rpms): $($(1).srpm)
 	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 # for manual use only - in case we need to investigate the results of an rpmbuild
-$(1).compile: $($(1).srpm)
+$(1)-compile: $($(1).srpm)
 	mkdir -p COMPILE tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG compile $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
@@ -448,7 +448,7 @@ $(1).compile: $($(1).srpm)
 	$($(1).rpmbuild) --recompile $(RPM-USE-TMP-DIRS) $($(1).srpm)
 	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END compile $(1) " ; date)
-.PHONY: $(1).compile
+.PHONY: $(1)-compile
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_binary_rpm,$(package))))
@@ -456,21 +456,21 @@ $(foreach package,$(ALL),$(eval $(call target_binary_rpm,$(package))))
 # e.g. make proper -> does propers rpms
 # usage shorthand_target package
 define target_shorthand 
-$(1): $($(package).rpms)
+$(1): $($(1).rpms)
 .PHONY: $(1)
-$(1)-spec: $($(package)-SPEC)
+$(1)-spec: $($(1)-SPEC)
 .PHONY: $(1)-spec
-$(1)-mk: $($(package)-MK)
+$(1)-mk: $($(1)-MK)
 .PHONY: $(1)-mk
-$(1)-tarball: $($(package).tarballs)
+$(1)-tarball: $($(1).tarballs)
 .PHONY: $(1)-tarball
-$(1)-codebase: $($(package).codebase)
+$(1)-codebase: $($(1).codebase)
 .PHONY: $(1)-source
-$(1)-source: $($(package).source)
+$(1)-source: $($(1).source)
 .PHONY: $(1)-codebase
-$(1)-rpms: $($(package).rpms)
+$(1)-rpms: $($(1).rpms)
 .PHONY: $(1)-rpms
-$(1)-srpm: $($(package).srpm)
+$(1)-srpm: $($(1).srpm)
 .PHONY: $(1)-srpm
 endef
 
@@ -668,10 +668,10 @@ help:
 	@echo 'make rpms'
 	@echo ""
 	@echo "********** Manual targets"
-	@echo "make package.compile"
+	@echo "make package-compile"
 	@echo "  The regular process uses rpmbuild --rebuild, that performs"
 	@echo "  a compilation directory cleanup upon completion. If you need to investigate"
-	@echo "  the intermediate compilation directory, use the .compile targets"
+	@echo "  the intermediate compilation directory, use the -compile targets"
 	@echo "********** Cleaning examples"
 	@echo "make clean"
 	@echo "  removes the files made by make"
@@ -694,9 +694,9 @@ help:
 	@echo "make ++ALL"
 	@echo "  Displays the value of a given variable (here ALL)"
 	@echo "  with only a single plus sign only the value is displayed"
-	@echo "make ulogd.pkginfo"
+	@echo "make ulogd-pkginfo"
 	@echo "  Displays know attributes of a package"
-	@echo "make kernel-devel.rpminfo"
+	@echo "make kernel-devel-rpminfo"
 	@echo "  Displays know attributes of an rpm"
 	@echo ""
 	@echo "********** Known pakages are"
@@ -713,11 +713,11 @@ help:
 	@echo "$($(varname))"
 ## package info
 PKGKEYS := tarballs source codebase srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
-%.pkginfo: package=$(subst .pkginfo,,$@)
-%.pkginfo: 
+%-pkginfo: package=$(subst -pkginfo,,$@)
+%-pkginfo: 
 	@$(foreach key,$(PKGKEYS),echo "$(package).$(key)=$($(package).$(key))";)
 ## rpm info
 RPMKEYS := rpm-path package
-%.rpminfo: rpm=$(subst .rpminfo,,$@)
-%.rpminfo: 
+%-rpminfo: rpm=$(subst -rpminfo,,$@)
+%-rpminfo: 
 	@$(foreach key,$(RPMKEYS),echo "$(rpm).$(key)=$($(rpm).$(key))";)
