@@ -110,5 +110,4 @@ package: vserver-system-packages
 package: pl_mom
 package: netflow-utils
 package: proper
-# not ready yet
-#package: vsys
+package: vsys
