@@ -28,7 +28,7 @@ BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/bootmanag
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.1-1
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/bootcd-3.4-3
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/bootstrapfs-0.1-2
-MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/myplc-4.2-0
+MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/myplc-4.2-2
 
 #
 # unused so far
