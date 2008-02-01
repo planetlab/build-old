@@ -115,7 +115,7 @@ class Module:
     def __init__ (self,name,options):
         self.name=name
         self.options=options
-        self.moddir="%s/%s/%s"%(os.getenv("HOME"),options.modules,name)
+        self.moddir="%s/%s"%(options.workdir,name)
         self.trunkdir="%s/trunk"%(self.moddir)
         self.varmatcher=re.compile("%define\s+(\S+)\s+(\S*)\s*")
 
@@ -134,7 +134,7 @@ class Module:
 
     @staticmethod
     def init_homedir (options):
-        topdir="%s/%s"%(os.getenv("HOME"),options.modules)
+        topdir=options.workdir
         if options.verbose:
             print 'Checking for',topdir
         storage="%s/%s"%(topdir,Module.config_storage)
@@ -370,10 +370,16 @@ The module-init function has the following limitations
 
         trunk_url=self.trunk_url()
         tag_url=self.tag_url(spec_dict)
-        print 'x'*40,'module',self.name
-        print 'x'*20,'<',tag_url
-        print 'x'*20,'>',trunk_url
-        self.run("svn diff %s %s"%(tag_url,trunk_url))
+        diff_output = Command("svn diff %s %s"%(tag_url,trunk_url),self.options).output_of()
+        if self.options.list:
+            if diff_output:
+                print self.name
+        else:
+            if not self.options.only or diff_output:
+                print 'x'*40,'module',self.name
+                print 'x'*20,'<',tag_url
+                print 'x'*20,'>',trunk_url
+                print diff_output
 
     def patch_tags_file (self, tagsfile, oldname, newname):
         newtagsfile=tagsfile+".new"
@@ -486,37 +492,64 @@ Purpose:
   manage subversion tags and specfile
   requires the specfile to define name, version and taglevel
   OR alternatively redirection variables like module_version_varname
-Available functions:
-  module-diff : show difference between trunk and latest tag
-  module-tag  : increment taglevel in specfile, insert changelog in specfile,
-                create new tag and and adopt it in build/*-tags*.mk
-  module-init : create initial tag
-  module-version : only check specfile and print out details"""
+"""
+functions={ 
+    'diff' : "show difference between trunk and latest tag",
+    'tag'  : """increment taglevel in specfile, insert changelog in specfile,
+                create new tag and and adopt it in build/*-tags*.mk""",
+    'init' : "create initial tag",
+    'version' : "only check specfile and print out details"}
 
 def main():
+
+    if sys.argv[0].find("diff") >= 0:
+        mode = "diff"
+    elif sys.argv[0].find("tag") >= 0:
+        mode = "tag"
+    elif sys.argv[0].find("init") >= 0:
+        mode = "init"
+    elif sys.argv[0].find("version") >= 0:
+        mode = "version"
+    else:
+        print "Unsupported command",sys.argv[0]
+        sys.exit(1)
+
+    global usage
+    usage += "module-%s.py : %s"%(mode,functions[mode])
     all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
 
     parser=OptionParser(usage=usage,version=subversion_id)
-    parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
-                      help="When tagging, set new version and reset taglevel to 0")
     parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
-                      help="Runs all modules as found in %s"%all_modules)
+                      help="run on all modules as found in %s"%all_modules)
     parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
-                      help="Skips safety checks, such as svn updates -- use with care")
-    parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
-                      help="Does not update changelog section in specfile when tagging")
-    parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
-                      help="Specify editor")
-    parser.add_option("-m","--message", action="store", dest="message", default=None,
-                      help="Specify log message")
-    parser.add_option("-M","--modules", action="store", dest="modules", default="modules",
-                      help="Name for topdir - defaults to modules")
+                      help="skip safety checks, such as svn updates -- use with care")
+    if mode == "tag" :
+        parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
+                          help="set new version and reset taglevel to 0")
+    if mode == "tag" :
+        parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
+                          help="do not update changelog section in specfile when tagging")
+    if mode == "tag" or mode == "init" :
+        parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
+                          help="specify editor")
+    if mode == "init" :
+        parser.add_option("-m","--message", action="store", dest="message", default=None,
+                          help="specify log message")
+    if mode == "diff" :
+        parser.add_option("-o","--only", action="store_true", dest="only", default=False,
+                          help="report diff only for modules that exhibit differences")
+    if mode == "diff" :
+        parser.add_option("-l","--list", action="store_true", dest="list", default=False,
+                          help="just list modules that exhibit differences")
+    parser.add_option("-w","--workdir", action="store", dest="workdir", 
+                      default="%s/%s"%(os.getenv("HOME"),"modules"),
+                      help="name for workdir - defaults to ~/modules")
     parser.add_option("-B","--build", action="store", dest="build", default="build",
-                      help="Set module name for build, defaults to build")
+                      help="set module name for build, defaults to build")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
-                      help="Run in verbose mode")
+                      help="run in verbose mode")
     parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
-                      help="Debug mode - mostly more verbose")
+                      help="debug mode - mostly more verbose")
     (options, args) = parser.parse_args()
     if options.debug: options.verbose=True
 
