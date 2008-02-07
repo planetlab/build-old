@@ -190,7 +190,7 @@ class Module:
             return
         if self.options.verbose:
             print 'Updating',self.trunkdir
-        self.run_fatal("svn update %s"%self.trunkdir)
+        self.run_fatal("svn update -N %s"%self.trunkdir)
 
     def guess_specname (self):
         attempt="%s/%s.spec"%(self.trunkdir,self.name)
