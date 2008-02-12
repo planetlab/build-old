@@ -18,7 +18,7 @@ DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 TESTBUILDURL="http://build.one-lab.org/"
 TESTBOX=onelab-test.inria.fr
 TESTBOXSSH=root@onelab-test.inria.fr
-TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
+TESTSVNPATH="http://svn.planet-lab.org/svn/tests/tags/2008-02-11-last-vmware-support/system/"
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
