@@ -219,9 +219,9 @@ $(foreach package, $(ALL), $(eval $(call stage1_variables,$(package))))
 # 
 define package_hasdate
 $(1).has-date = $(if $(subst myplc,,$(1)), \
-	          $(if $($(1)-SVNPATH),\
-		     $(if $(findstring /trunk,$($(1)-SVNPATH)),yes,),\
-		     $(if $(findstring HEAD,$($(1)-TAG)),yes,)), \
+	          $(if $($($(1).module)-SVNPATH),\
+		     $(if $(findstring /trunk,$($($(1).module)-SVNPATH)),yes,),\
+		     $(if $(findstring HEAD,$($($(1).module)-TAG)),yes,)), \
 		yes)
 endef
 
