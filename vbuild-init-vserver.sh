@@ -129,7 +129,12 @@ function setup_vserver () {
     fi
 
     $personality vyum $vserver -- -y install yum
-    $personality vserver $VERBOSE $vserver pkgmgmt internalize
+    # ditto
+    for i in 1 2 3 4 5 ; do
+	$personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
+	echo "Waiting for one minute"
+	sleep 60
+    done
 
     # start the vserver so we can do the following operations
     $personality vserver $VERBOSE $vserver start
