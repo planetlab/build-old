@@ -103,7 +103,8 @@ class Module:
     # 
     configKeys=[ ('svnpath',"Enter your toplevel svnpath (e.g. svn+ssh://thierry@svn.planet-lab.org/svn/)"),
                  ('username',"Enter your firstname and lastname for changelogs"),
-                 ("email","Enter your email address for changelogs") ]
+                 ("email","Enter your email address for changelogs"),
+                 ("build", "Enter the name of your build module - in general 'build'") ]
     config={}
 
     svn_magic_line="--This line, and those below, will be ignored--"
@@ -203,6 +204,9 @@ class Module:
                 print 'Cannot guess specfile for module %s'%self.name
                 sys.exit(1)
 
+    def all_specnames (self):
+        return glob("%s/*.spec"%self.trunkdir)
+
     def parse_spec (self, specfile, varnames):
         if self.options.debug:
             print 'parse_spec',specfile,
@@ -244,23 +248,23 @@ class Module:
         return result
 
     def patch_spec_var (self, patch_dict):
-        specfile=self.guess_specname()
-        newspecfile=specfile+".new"
-        if self.options.verbose:
-            print 'Patching',specfile,'for',patch_dict.keys()
-        spec=open (specfile)
-        new=open(newspecfile,"w")
+        for specfile in self.all_specnames():
+            newspecfile=specfile+".new"
+            if self.options.verbose:
+                print 'Patching',specfile,'for',patch_dict.keys()
+            spec=open (specfile)
+            new=open(newspecfile,"w")
 
-        for line in spec.readlines():
-            if self.varmatcher.match(line):
-                (var,value)=self.varmatcher.match(line).groups()
-                if var in patch_dict.keys():
-                    new.write('%%define %s %s\n'%(var,patch_dict[var]))
-                    continue
-            new.write(line)
-        spec.close()
-        new.close()
-        os.rename(newspecfile,specfile)
+            for line in spec.readlines():
+                if self.varmatcher.match(line):
+                    (var,value)=self.varmatcher.match(line).groups()
+                    if var in patch_dict.keys():
+                        new.write('%%define %s %s\n'%(var,patch_dict[var]))
+                        continue
+                new.write(line)
+            spec.close()
+            new.close()
+            os.rename(newspecfile,specfile)
 
     def unignored_lines (self, logfile):
         result=[]
@@ -273,27 +277,27 @@ class Module:
         return result
 
     def insert_changelog (self, logfile, oldtag, newtag):
-        specfile=self.guess_specname()
-        newspecfile=specfile+".new"
-        if self.options.verbose:
-            print 'Inserting changelog from %s into %s'%(logfile,specfile)
-        spec=open (specfile)
-        new=open(newspecfile,"w")
-        for line in spec.readlines():
-            new.write(line)
-            if re.compile('%changelog').match(line):
-                dateformat="* %a %b %d %Y"
-                datepart=time.strftime(dateformat)
-                logpart="%s <%s> - %s %s"%(Module.config['username'],
-                                             Module.config['email'],
-                                             oldtag,newtag)
-                new.write(datepart+" "+logpart+"\n")
-                for logline in self.unignored_lines(logfile):
-                    new.write("- " + logline)
-                new.write("\n")
-        spec.close()
-        new.close()
-        os.rename(newspecfile,specfile)
+        for specfile in self.all_specnames():
+            newspecfile=specfile+".new"
+            if self.options.verbose:
+                print 'Inserting changelog from %s into %s'%(logfile,specfile)
+            spec=open (specfile)
+            new=open(newspecfile,"w")
+            for line in spec.readlines():
+                new.write(line)
+                if re.compile('%changelog').match(line):
+                    dateformat="* %a %b %d %Y"
+                    datepart=time.strftime(dateformat)
+                    logpart="%s <%s> - %s %s"%(Module.config['username'],
+                                                 Module.config['email'],
+                                                 oldtag,newtag)
+                    new.write(datepart+" "+logpart+"\n")
+                    for logline in self.unignored_lines(logfile):
+                        new.write("- " + logline)
+                    new.write("\n")
+            spec.close()
+            new.close()
+            os.rename(newspecfile,specfile)
             
     def show_dict (self, spec_dict):
         if self.options.verbose:
@@ -321,7 +325,8 @@ class Module:
         spec_dict = self.spec_dict()
         print 'trunk url',self.trunk_url()
         print 'latest tag url',self.tag_url(spec_dict)
-        print 'specfile:',self.guess_specname()
+        print 'main specfile:',self.guess_specname()
+        print 'specfiles:',self.all_specnames()
         for varname in self.varnames:
             if not spec_dict.has_key(varname):
                 print 'Could not find %%define for %s'%varname
@@ -446,11 +451,11 @@ The module-init function has the following limitations
         # so we can provide useful information, such as version numbers and diff
         # in the same file
         changelog="/tmp/%s-%d.txt"%(self.name,os.getpid())
-        file(changelog,"w").write("""Tagging module %s  -- from %s to %s
+        file(changelog,"w").write("""Tagging module %s - %s
 
 %s
 Please write a changelog for this new tag in the section above
-"""%(self.name,old_tag_name,new_tag_name,Module.svn_magic_line))
+"""%(self.name,new_tag_name,Module.svn_magic_line))
 
         if not self.options.verbose or prompt('Want to see diffs while writing changelog',True):
             file(changelog,"a").write('DIFF=========\n' + diff_output)
@@ -465,7 +470,11 @@ Please write a changelog for this new tag in the section above
             self.insert_changelog (changelog,old_tag_name,new_tag_name)
 
         ## update build
-        build = Module(self.options.build,self.options)
+        try:
+            buildname=Module.config['build']
+        except:
+            buildname="build"
+        build = Module(buildname,self.options)
         build.init_moddir()
         build.init_trunkdir()
         build.revert_trunkdir()
@@ -544,8 +553,6 @@ def main():
     parser.add_option("-w","--workdir", action="store", dest="workdir", 
                       default="%s/%s"%(os.getenv("HOME"),"modules"),
                       help="name for workdir - defaults to ~/modules")
-    parser.add_option("-B","--build", action="store", dest="build", default="build",
-                      help="set module name for build, defaults to build")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                       help="run in verbose mode")
     parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
