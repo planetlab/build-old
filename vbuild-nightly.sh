@@ -10,6 +10,7 @@ DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
+DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
 
 # web publishing results
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
@@ -18,7 +19,6 @@ DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 TESTBUILDURL="http://build.one-lab.org/"
 TESTBOX=onelab-test.inria.fr
 TESTBOXSSH=root@onelab-test.inria.fr
-TESTSVNPATH="http://svn.planet-lab.org/svn/tests/tags/2008-02-11-last-vmware-support/system/"
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
@@ -224,6 +224,7 @@ function usage () {
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -B : run build only"
     echo " -T : run test only"
+    echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
     echo " -v : be verbose"
     echo " -7 : uses weekday-@FCDISTRO@ as base"
     exit 1
@@ -258,6 +259,7 @@ function main () {
 	    w) WEBPATH=$OPTARG ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ; OVERWRITEMODE=true ;;
+	    x) TESTSVNPATH=$OPTARG ;;
 	    v) set -x ;;
 	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
 	    h|*) usage ;;
@@ -275,6 +277,7 @@ function main () {
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
+    [ -z "$TESTSVNPATH" ] && TESTSVNPATH="$DEFAULT_TESTSVNPATH"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
