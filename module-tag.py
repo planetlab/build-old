@@ -139,6 +139,15 @@ class Module:
         if options.verbose:
             print 'Checking for',topdir
         storage="%s/%s"%(topdir,Module.config_storage)
+        # sanity check. Either the topdir exists AND we have a config/storage
+        # or topdir does not exist and we create it
+        # to avoid people use their own daily svn repo
+        if os.path.isdir(topdir) and not os.path.isfile(storage):
+            print """The directory %s exists and has no CONFIG file
+If this is your regular working directory, please provide another one as the
+module-* commands need a fresh working dir. Make sure that you do not use 
+that for other purposes than tagging"""%topdir
+            sys.exit(1)
         if not os.path.isdir (topdir):
             # prompt for login or whatever svnpath
             print "Cannot find",topdir,"let's create it"
