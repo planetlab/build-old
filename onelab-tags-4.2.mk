@@ -29,6 +29,6 @@ WWW-SVNPATH			:= http://svn.one-lab.org/new_plc_www/tags/PLCWWW-4.2-5
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/vserver-4.2-1
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/bootmanager-3.2-4
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.1-1
-BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/bootcd-3.4-3
+BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/bootcd-3.4-4
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/bootstrapfs-0.1-2
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/myplc-4.2.2
