@@ -98,20 +98,31 @@ class Svnpath:
 
 class Module:
 
-    # where to store user's config
-    config_storage="CONFIG"
-    # 
-    configKeys=[ ('svnpath',"Enter your toplevel svnpath (e.g. svn+ssh://thierry@svn.planet-lab.org/svn/)"),
-                 ('username',"Enter your firstname and lastname for changelogs"),
-                 ("email","Enter your email address for changelogs"),
-                 ("build", "Enter the name of your build module - in general 'build'") ]
-    config={}
-
     svn_magic_line="--This line, and those below, will be ignored--"
     
     redirectors=[ ('module_name_varname','name'),
                   ('module_version_varname','version'),
                   ('module_taglevel_varname','taglevel'), ]
+
+    # where to store user's config
+    config_storage="CONFIG"
+    # 
+    config={}
+
+    import commands
+    configKeys=[ ('svnpath',"Enter your toplevel svnpath",
+                  "svn+ssh://%s@svn.planet-lab.org/svn/"%commands.getoutput("id -un")),
+                 ("build", "Enter the name of your build module","build"),
+                 ('username',"Enter your firstname and lastname for changelogs",""),
+                 ("email","Enter your email address for changelogs",""),
+                 ]
+
+    @staticmethod
+    def prompt_config ():
+        for (key,message,default) in Module.configKeys:
+            Module.config[key]=""
+            while not Module.config[key]:
+                Module.config[key]=raw_input("%s [%s] : "%(message,default)).strip() or default
 
     def __init__ (self,name,options):
         self.name=name
@@ -149,14 +160,19 @@ module-* commands need a fresh working dir. Make sure that you do not use
 that for other purposes than tagging"""%topdir
             sys.exit(1)
         if not os.path.isdir (topdir):
-            # prompt for login or whatever svnpath
             print "Cannot find",topdir,"let's create it"
-            for (key,message) in Module.configKeys:
-                Module.config[key]=raw_input(message+" : ").strip()
+            Module.prompt_config()
+            print "Checking ...",
             Command("svn co -N %s %s"%(Module.config['svnpath'],topdir),options).run_fatal()
+            Command("svn co -N %s/%s %s/%s"%(Module.config['svnpath'],
+                                             Module.config['build'],
+                                             topdir,
+                                             Module.config['build']),options).run_fatal()
+            print "OK"
+            
             # store config
             f=file(storage,"w")
-            for (key,message) in Module.configKeys:
+            for (key,message,default) in Module.configKeys:
                 f.write("%s=%s\n"%(key,Module.config[key]))
             f.close()
             if options.debug:
@@ -169,10 +185,10 @@ that for other purposes than tagging"""%topdir
                 (key,value)=re.compile("^(.+)=(.+)$").match(line).groups()
                 Module.config[key]=value                
             f.close()
-            if options.debug:
-                print 'Using config'
-                for (key,message) in Module.configKeys:
-                    print key,'=',Module.config[key]
+        if options.verbose:
+            print '******** Using config'
+            for (key,message,default) in Module.configKeys:
+                print '\t',key,'=',Module.config[key]
 
     def init_moddir (self):
         if self.options.verbose:
@@ -329,8 +345,6 @@ that for other purposes than tagging"""%topdir
         self.revert_trunkdir()
         self.update_trunkdir()
         print '==============================',self.name
-        #for (key,message) in Module.configKeys:
-        #    print key,':',Module.config[key]
         spec_dict = self.spec_dict()
         print 'trunk url',self.trunk_url()
         print 'latest tag url',self.tag_url(spec_dict)
