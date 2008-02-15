@@ -582,7 +582,7 @@ myplc-release:
 
 version-build:
 	@echo -n 'Build build-date: ' ; date '+%Y.%m.%d'
-	@echo -n 'Build build-time: ' ; date '+%H:%M'
+	@echo -n 'Build build-time: ' ; date '+%H:%M-%Z'
 	@echo -n 'Build build-hostname: ' ; hostname
 	@echo    "Build build-base: $(NIGHTLY_BASE)"
 	@echo    "Build planetab-distro: $(PLDISTRO)"
