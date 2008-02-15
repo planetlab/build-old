@@ -100,7 +100,7 @@ class Module:
 
     svn_magic_line="--This line, and those below, will be ignored--"
     
-    redirectors=[ ('module_name_varname','name'),
+    redirectors=[ # ('module_name_varname','name'),
                   ('module_version_varname','version'),
                   ('module_taglevel_varname','taglevel'), ]
 
@@ -218,7 +218,7 @@ that for other purposes than tagging"""%topdir
             print 'Updating',self.trunkdir
         self.run_fatal("svn update -N %s"%self.trunkdir)
 
-    def guess_specname (self):
+    def main_specname (self):
         attempt="%s/%s.spec"%(self.trunkdir,self.name)
         if os.path.isfile (attempt):
             return attempt
@@ -253,7 +253,7 @@ that for other purposes than tagging"""%topdir
     # stores in self.module_name_varname the rpm variable to be used for the module's name
     # and the list of these names in self.varnames
     def spec_dict (self):
-        specfile=self.guess_specname()
+        specfile=self.main_specname()
         redirector_keys = [ varname for (varname,default) in Module.redirectors]
         redirect_dict = self.parse_spec(specfile,redirector_keys)
         if self.options.debug:
@@ -332,7 +332,8 @@ that for other purposes than tagging"""%topdir
     def trunk_url (self):
         return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
     def tag_name (self, spec_dict):
-        return "%s-%s-%s"%(spec_dict[self.module_name_varname],
+        return "%s-%s-%s"%(#spec_dict[self.module_name_varname],
+                           self.name,
                            spec_dict[self.module_version_varname],
                            spec_dict[self.module_taglevel_varname])
     def tag_url (self, spec_dict):
@@ -348,7 +349,7 @@ that for other purposes than tagging"""%topdir
         spec_dict = self.spec_dict()
         print 'trunk url',self.trunk_url()
         print 'latest tag url',self.tag_url(spec_dict)
-        print 'main specfile:',self.guess_specname()
+        print 'main specfile:',self.main_specname()
         print 'specfiles:',self.all_specnames()
         for varname in self.varnames:
             if not spec_dict.has_key(varname):
@@ -522,8 +523,9 @@ Please write a changelog for this new tag in the section above
 usage="""Usage: %prog options module1 [ .. modulen ]
 Purpose:
   manage subversion tags and specfile
-  requires the specfile to define name, version and taglevel
-  OR alternatively redirection variables like module_version_varname
+  requires the specfile to define version and taglevel
+  OR alternatively 
+  redirection variables module_version_varname / module_taglevel_varname
 """
 functions={ 
     'diff' : "show difference between trunk and latest tag",
@@ -575,7 +577,8 @@ def main():
                           help="just list modules that exhibit differences")
     parser.add_option("-w","--workdir", action="store", dest="workdir", 
                       default="%s/%s"%(os.getenv("HOME"),"modules"),
-                      help="name for workdir - defaults to ~/modules")
+                      help="""name for dedicated working dir - defaults to ~/modules
+** THIS MUST NOT ** be your usual working directory""")
     parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                       help="run in verbose mode")
     parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
