@@ -16,8 +16,7 @@ iproute2
 iptables
 libhttpd++
 libnl
-# need to set -s sublevel
-# linux-2.6
+linux-2.6
 madwifi
 pl_sshd
 plcmdline
