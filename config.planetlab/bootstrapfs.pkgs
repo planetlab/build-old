@@ -110,4 +110,8 @@ package: vserver-system-packages
 package: pl_mom
 package: netflow-utils
 package: proper
+package: fprobe-ulog
+# for vsys
+package: ocaml ocaml-docs
+package: inotify-tools-devel 
 package: vsys
