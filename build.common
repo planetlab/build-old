@@ -609,7 +609,7 @@ function pl_move_dirs() {
 	fi
 	rm -rf ${root}/${datadir}
 	mkdir -p $(dirname ${root}/${datadir})
-	ln -nsf /${store}/${datadir} ${root}/${datadir}
+	ln -nsf ${store}/${datadir} ${root}/${datadir}
     done
 }
 
@@ -684,9 +684,9 @@ function pl_parsePkgs () {
     # grab regular descriptions
     all=$(grep -v '^#' "$@" | grep --regexp="^${keyword}:" | sed -e "s,${keyword}:,,")
     # grab additions
-    add=$(grep -v '^#' "$@" | grep --regexp="^${keyword}+${fcdistro}:" | sed -e "s,${keyword}\+${fcdistro}:,,")
+    add=$(grep -v '^#' "$@" | grep --regexp="^${keyword}+${fcdistro}:" | sed -e "s,${keyword}+${fcdistro}:,,")
     # grab exclusions
-    sub=$(grep -v '^#' "$@" | grep --regexp="^${keyword}\-${fcdistro}:" | sed -e "s,${keyword}\-${fcdistro}:,,")
+    sub=$(grep -v '^#' "$@" | grep --regexp="^${keyword}-${fcdistro}:" | sed -e "s,${keyword}-${fcdistro}:,,")
 
     for i in $all $add; do
 	for exclude in $sub; do
