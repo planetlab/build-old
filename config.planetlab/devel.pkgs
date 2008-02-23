@@ -27,7 +27,7 @@ package: python python-devel
 package: doxygen  
 package: vixie-cron 
 package: xmlsec1 xmlsec1-openssl 
-package: dev 
+package: udev 
 package: expat-devel
 package: db4-devel 
 package: ncurses-devel 
