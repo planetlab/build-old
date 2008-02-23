@@ -113,5 +113,5 @@ package: proper
 package+f8: fprobe-ulog
 # for vsys
 #package+f8: ocaml ocaml-docs
-package+f8: inotify-tools-devel 
-#package+f8: vsys
+#package+f8: inotify-tools-devel 
+package+f8: vsys
