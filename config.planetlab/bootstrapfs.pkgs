@@ -30,7 +30,10 @@ package: setserial
 package: setup
 package: sysklogd
 package: termcap
-package: util-linux
+package+fc4: util-linux
+package+fc6: util-linux
+package+f7: util-linux
+package+f8: util-linux-ng
 package: vim-minimal
 package: shadow-utils
 package: anacron
