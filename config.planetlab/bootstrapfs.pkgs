@@ -3,7 +3,6 @@
 groupname: PlanetLab
 groupdesc: PlanetLab Node Root
 package: kernel
-package: kernel-smp
 package: udev
 package: basesystem
 package: filesystem
