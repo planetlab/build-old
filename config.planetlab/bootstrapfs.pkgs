@@ -28,7 +28,10 @@ package: rootfiles
 package: rpm
 package: setserial
 package: setup
-package: sysklogd
+package+fc4: sysklogd
+package+fc6: sysklogd
+package+f7: sysklogd
+package+f8: rsyslog
 package: termcap
 package+fc4: util-linux
 package+fc6: util-linux
