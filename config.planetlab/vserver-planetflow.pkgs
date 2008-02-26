@@ -1,3 +1,4 @@
 groupname: PlanetFlowReference
 groupdesc: PlanetFlow Reference Image
-package: netflow
+package: rsync
+package: pf2slice
