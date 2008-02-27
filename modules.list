@@ -11,6 +11,7 @@ PingOfDeath
 PlanetFlow
 VserverReference
 PLCWWW
+nodeconfig
 fprobe-ulog
 iproute2
 iptables
@@ -27,9 +28,5 @@ util-python
 # using branches/scholz for this module
 # util-vserver
 util-vserver-pl
-#svn: In directory '/Users/parmentelat/modules/vnetspec/trunk'
-#svn: Can't move source to dest
-#svn: Can't move '/Users/parmentelat/modules/vnetspec/trunk/.svn/tmp/prop-base/sliver.pl.svn-base' to '/Users/parmentelat/modules/vnetspec/trunk/.svn/prop-base/sliver.pl.svn-base': No such file or directory
-#vnetspec
 vsys
 wireless-tools

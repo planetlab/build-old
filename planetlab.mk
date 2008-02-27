@@ -246,6 +246,14 @@ ALL += PLCWWW
 IN_MYPLC += PLCWWW
 
 #
+# nodeconfig
+#
+nodeconfig-MODULES := nodeconfig
+nodeconfig-SPEC := nodeconfig.spec
+ALL += nodeconfig
+IN_MYPLC += nodeconfig
+
+#
 # bootmanager
 #
 bootmanager-MODULES := BootManager

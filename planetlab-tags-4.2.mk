@@ -23,14 +23,10 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-3
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-3
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-4.1-3
-VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-2
+nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-1
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-3.2-4
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.1-1
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-3.4-4
+VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-2
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-0.1-2
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.2-3
-
-#
-# unused so far
-# http://svn.planet-lab.org/svn/plcmdline/tags/plcapilib-0.1-5
-# http://svn.planet-lab.org/svn/util-python/tags/util-python-0.1-13
