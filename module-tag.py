@@ -75,7 +75,7 @@ class Command:
         result=file(tmp).read()
         os.unlink(tmp)
         if self.options.debug:
-            print '+',self.command,'Done',
+            print 'Done',
         return result
 
 class Svnpath:
