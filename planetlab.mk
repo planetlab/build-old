@@ -182,6 +182,14 @@ ALL += fprobe-ulog
 IN_BOOTSTRAPFS += fprobe-ulog
 
 #
+# pf2slice
+#
+pf2slice-MODULES := pf2slice
+pf2slice-SPEC := pf2slice.spec
+ALL += pf2slice
+
+
+#
 # netflow
 #
 netflow-MODULES := PlanetFlow
