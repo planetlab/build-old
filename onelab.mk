@@ -329,6 +329,26 @@ ALL += bootstrapfs
 IN_MYPLC += bootstrapfs
 
 #
+# noderepo
+#
+# all rpms resulting from packages marked as being in bootstrapfs and vserver
+NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_VSERVER),$($(package).rpms))
+# replace space with +++
+SPACE=$(subst x, ,x)
+NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
+
+noderepo-MODULES := BootstrapFS build
+noderepo-SPEC := noderepo.spec
+noderepo-RPMBUILD := sudo bash ./rpmbuild.sh
+# package requires all regular packages
+noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
+noderepo-DEPEND-FILES := RPMS/yumgroups.xml noderepo.list
+noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
+# not yet
+ALL += noderepo
+#IN_MYPLC += noderepo
+
+#
 # myplc : initial, chroot-based packaging
 #
 myplc-MODULES := MyPLC build
