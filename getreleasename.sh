@@ -2,5 +2,5 @@
 
 . build.common
 
-echo $pl_DISTRO
+echo $pl_DISTRO_NAME
 
