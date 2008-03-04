@@ -19,6 +19,7 @@ libhttpd++
 libnl
 linux-2.6
 madwifi
+pf2slice
 pl_sshd
 plcmdline
 proper

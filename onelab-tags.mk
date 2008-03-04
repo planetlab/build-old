@@ -19,6 +19,7 @@ proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/trunk
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/trunk
 ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/trunk
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
+pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/trunk
 PlanetFlow-SVNPATH		:= http://svn.planet-lab.org/svn/PlanetFlow/trunk
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/trunk
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
