@@ -29,15 +29,18 @@ case $(hostname) in
 esac
 
 function usage () {
-    echo "Usage: $COMMAND [-n] [-v] [-c] [-e] [-r root] [-u rsyncurl] [-f distroname] [-a arch]"
+    echo "Usage: $COMMAND [-n] [-v] [-c] [-r root] [-u rsyncurl|-e] [-f distroname|-F] [-a arch|-A]"
     echo "Defaults to -r $root -u $rsyncurl -f $default_distroname -a $default_arch"
-    echo "Use vserver conventions for distroname, e.g. fc6 and f7"
     echo "Options:"
     echo " -n : dry run"
     echo " -v : verbose"
     echo " -c : skips core repository"
+    echo " -r root (default is $root)"
+    echo " -u rsyncurl (default is $rsyncurl)"
     echo " -e : uses European mirror $eu_rsyncurl"
+    echo " -f distroname - use vserver convention, e.g. fc6 and f7"
     echo " -F : for distroname in $all_distronames"
+    echo " -a arch - use yum convention"
     echo " -A : for arch in $all_archs"
     exit 1
 }
@@ -129,14 +132,14 @@ function mirror_distro_arch () {
 function main () {
     distronames=""
     archs=""
-    while getopts "nvcer:u:f:Fa:Ah" opt ; do
+    while getopts "nvcr:u:ef:Fa:Ah" opt ; do
 	case $opt in
 	    n) dry_run=--dry-run ; verbose=--verbose ;;
 	    v) verbose=--verbose ;;
 	    c) skip_core=true ;;
-	    e) rsyncurl=$eu_rsyncurl ;;
 	    r) root=$OPTARG ;;
 	    u) rsyncurl=$OPTARG ;;
+	    e) rsyncurl=$eu_rsyncurl ;;
 	    f) distronames="$distronames $OPTARG" ;;
 	    F) distronames="$distronames $all_distronames" ;;
 	    a) archs="$archs $OPTARG" ;;
