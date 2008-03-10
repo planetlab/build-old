@@ -241,7 +241,8 @@ function pl_root_mkfedora () {
     pkgs_kexcludes=$(pl_parsePkgs kexclude $fcdistro $pldistro $pkgsfile)
     # get mirrors if not specified with -l
     if [ -z "$mirrors" ] ; then
-	mirrors=$(pl_parsePkgs mirror $fcdistro $pldistro "$pldistro.mirrors")
+	mirrorsfile=$(pl_locateDistroFile ../build/ $pldistro "$pldistro.mirrors")
+	mirrors=$(pl_parsePkgs mirror $fcdistro $pldistro $mirrorsfile)
     fi
 
     exclude_kernel=""
