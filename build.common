@@ -254,8 +254,8 @@ function pl_root_mkfedora () {
 
     # parse pkgsfile and add to local vars
     fcdistro=${pl_DISTRO_NAME}
-    pkgs_packages=(pl_parsePkgs package $fcdistro $pldistro $pkgsfile) 
-    pkgs_groups=(pl_parsePkgs group $fcdistro $pldistro $pkgsfile)
+    pkgs_packages=$(pl_parsePkgs package $fcdistro $pldistro $pkgsfile) 
+    pkgs_groups=$(pl_parsePkgs group $fcdistro $pldistro $pkgsfile)
     # packages to exclude - obsolete, was maybe useful when installing a group
     pkgs_excludes=$(pl_parsePkgs exclude $fcdistro $pldistro $pkgsfile) 
     pkgs_junk=$(pl_parsePkgs junk $fcdistro $pldistro $pkgsfile)
