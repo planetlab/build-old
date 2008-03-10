@@ -6,6 +6,11 @@
 # Installation rules
 # 
 
+install:
+	@echo WARNING: this target is deprecated
+	@echo you might siwh to use the noderepo rpm instead
+	@echo former behaviour is available throuhg make install-obsolete
+
 # make install :
 # 	uses $(PLCSSH) as an ssh address for the destination host
 # 	first copies everything on a separate rpm repo, prepares it, 
@@ -35,11 +40,11 @@ RSYNC_COND_DRY_RUN	:= $(if $(findstring n,$(MAKEFLAGS)),--dry-run,)
 RSYNC			:= rsync $(RSYNC_COND_DRY_RUN) 
 
 INSTALL-TARGETS := install-rpms install-index install-adopt install-bootstrap
-install: $(INSTALL-TARGETS)
-.PHONY: install $(INSTALL-TARGETS)
+install-obsolete: $(INSTALL-TARGETS)
+.PHONY: install install-obsolete $(INSTALL-TARGETS)
 
 install-help:
-	@echo install: $(INSTALL-TARGETS)
+	@echo install-obsolete: $(INSTALL-TARGETS)
 
 # compute the exact set of rpms to install - we do not need bootstrapfs nor myplc here
 node_packages=$(sort $(IN_VSERVER) $(IN_BOOTSTRAPFS))

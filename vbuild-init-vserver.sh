@@ -148,7 +148,7 @@ function setup_vserver () {
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
 }
 
-function devel_tools () {
+function devel_or_vtest_tools () {
 
     set -x 
     set -e 
@@ -168,8 +168,8 @@ function devel_tools () {
     pkgsfile=$(pl_locateDistroFile $DIRNAME $pldistro $pkgsname)
 
     # install individual packages, then groups
-    packages=$(pl_getPackages ${fcdistro} $pkgsfile)
-    groups=$(pl_getGroups ${fcdistro} $pkgsfile)
+    packages=$(pl_getPackages $fcdistro $pldistro $pkgsfile)
+    groups=$(pl_getGroups $fcdistro $pldistro $pkgsfile)
 
     [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
     [ -n "$groups" ] && $personality vserver $vserver exec yum -y groupinstall $groups
@@ -338,7 +338,7 @@ function main () {
     [ -z "$personality" ] && personality=$DEFAULT_PERSONALITY
 
     setup_vserver $vserver $fcdistro $personality 
-    devel_tools $vserver $fcdistro $pldistro $personality
+    devel_or_vtest_tools $vserver $fcdistro $pldistro $personality
     post_install $vserver $personality
 
 }

@@ -2,6 +2,10 @@
 # groupname: Bootstrapfs
 groupname: PlanetLab
 groupdesc: PlanetLab Node Root
+# This is the replacement for the former mkfedora -k. The following packages
+# will get excluded from the stock fedora repos, as we need to use ours
+kexclude: kernel* ulogd iptables
+#
 package: kernel
 package: udev
 package: basesystem

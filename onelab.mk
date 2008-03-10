@@ -353,9 +353,8 @@ noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
 noderepo-DEPEND-FILES := RPMS/yumgroups.xml
 #export rpm list to the specfile
 noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
-# not yet
 ALL += noderepo
-#IN_MYPLC += noderepo
+IN_MYPLC += noderepo
 
 #
 # myplc : initial, chroot-based packaging

@@ -184,25 +184,16 @@ mirrors=(
     )
 
 function mkfedora_usage() {
-    echo "Usage: pl_root_mkfedora [OPTION]... basedir"
+    echo "Usage: pl_root_mkfedora [OPTION]... basedir pldistro pkgsfile(s)"
     echo "	-l url		Fedora mirror location. Default is to try:"
     for mirror in "${mirrors[@]}" ; do
 	echo "			$mirror"
     done
-    echo "	-f pkgsfile	use this pkgs file for packages, groups, excludes.."
-    echo "	-k		Exclude kernel* packages from all repositories except bootstrap"
     echo "	-v		Be verbose"
     echo "	-h		This message"
     echo " target selection (defaults based on current build vserver)"
     echo "	-r release	Fedora release number (default: $releasever)"
     echo "	-a arch		Fedora architecture (default: $basearch)"
-    echo " legacy (use -f instead)"
-    echo "	-g group1 -g group2 ..."
-    echo "			Yumgroups to install (default: none)"
-    echo "	-p package1 -p package2 ..."
-    echo "			Additional packages to install (default: none)"
-    echo "	-x package1 -x package2 ..."
-    echo "			Packages to exclude (default: none)"
     exit 1
 }
 
@@ -223,20 +214,8 @@ function pl_root_mkfedora () {
     basearch=$pl_DISTRO_ARCH
     [ -n "$pl_DISTRO_URL" ] && mirrors=($pl_DISTRO_URL)
 
-# Yum groups to install
-    groups=()
-
-# Packages to install
-    packages=()
-
-# Packages to exclude
-    exclude=()
-
-# Exclude kernel* (and related) packages from all repositories except bootstrap
-    exclude_kernel=
-
 # Get options
-    while getopts "l:r:a:g:p:x:f:kvh" opt ; do
+    while getopts "l:r:a:vh" opt ; do
 	case $opt in
 	    l)
 		if echo $OPTARG | grep -q -i '^\(file\|http[s]*\)://' ; then
@@ -244,7 +223,7 @@ function pl_root_mkfedora () {
 		else
 		    # xxx rather use this as a .mirrors file, searched in config.pldistro/
 		    # that would use the pkgs syntax with mirror:
-		    #mirrors=($(pl_parsePkgs mirror <fcdistro> $(pl_locateDistroFile ../build/ <pldistro> $OPTARG.mirrors)))
+		    #mirrors=($(pl_parsePkgs mirror <fcdistro> <pldistro> $(pl_locateDistroFile ../build/ <pldistro> $OPTARG.mirrors)))
 		    mirrors=(file://$OPTARG)
 		fi
 		;;
@@ -253,21 +232,6 @@ function pl_root_mkfedora () {
 		;;
 	    a)
 		basearch=$OPTARG
-		;;
-	    g)
-		groups[${#groups[*]}]="$OPTARG"
-		;;
-	    p)
-		packages[${#packages[*]}]="$OPTARG"
-		;;
-	    x)
-		exclude[${#exclude[*]}]="$OPTARG"
-		;;
-	    f)
-		pkgsfile=$OPTARG
-		;;
-	    k)
-		exclude_kernel="exclude=kernel* ulogd iptables"
 		;;
 	    v)
 		verbose=1
@@ -280,11 +244,27 @@ function pl_root_mkfedora () {
     done
 
     shift $(($OPTIND - 1))
-    [[ -n "$@" ]] || mkfedora_usage
+    [[ "$#" -lt 3 ]] && mkfedora_usage
     vroot=$1 ; shift
+    pldistro=$1 ; shift
+    pkgsfile="$@"
     vroot=$(cd $vroot && pwd -P)
-    [[ -z "$@" ]] || mkfedora_usage
     [ -d $vroot ] || mkfedora_usage
+
+
+    # parse pkgsfile and add to local vars
+    fcdistro=${pl_DISTRO_NAME}
+    pkgs_packages=(pl_parsePkgs package $fcdistro $pldistro $pkgsfile) 
+    pkgs_groups=(pl_parsePkgs group $fcdistro $pldistro $pkgsfile)
+    # packages to exclude - obsolete, was maybe useful when installing a group
+    pkgs_excludes=$(pl_parsePkgs exclude $fcdistro $pldistro $pkgsfile) 
+    pkgs_junk=$(pl_parsePkgs junk $fcdistro $pldistro $pkgsfile)
+    pkgs_precious=$(pl_parsePkgs precious $fcdistro $pldistro $pkgsfile)
+    # formerly related to mkfedora -k
+    pkgs_kexcludes=$(pl_parsePkgs kexclude $fcdistro $pldistro $pkgsfile)
+
+    exclude_kernel=""
+    [ -n "$pkgs_kexcludes" ] && exclude_kernel="exclude=$pkgs_excludes"
 
     function mkfedora_fetch ()
     {
@@ -444,20 +424,8 @@ EOF
     # If we are being built as part of an automated RPM build, solve the
     # bootstrap problem by including any just built packages in the yum
     # configuration. This cooperates with the PlanetLab build system.
-### make takes care of that
     if [ -n "$RPM_BUILD_DIR" ] ; then
 	RPM_RPMS_DIR=$(cd $(dirname $RPM_BUILD_DIR)/RPMS && pwd -P)
-###        # yum-2.0.x
-###	if [ -x /usr/bin/yum-arch ] ; then
-###	    yum-arch -q $RPM_RPMS_DIR
-###	fi
-###        # yum-2.4.x
-###	if [ -x /usr/bin/createrepo ] ; then
-###	    if [ -f $RPM_RPMS_DIR/yumgroups.xml ] ; then
-###		groupfile="-g yumgroups.xml"
-###	    fi
-###	    createrepo --quiet $groupfile $RPM_RPMS_DIR
-###	fi
         # If run under sudo, allow user to delete the headers/ and
         # repodata/ directories.
 	if [ -n "$SUDO_USER" ] ; then
@@ -471,84 +439,48 @@ baseurl=file://$RPM_RPMS_DIR/
 EOF
 fi
 
-    # pkgs file
-    if [ -n "$pkgsfile" ] ; then
-        # parse pkgsfile and add to local vars
-	fcdistro=$(pl_getReleaseName "Fedora" $releasever)
-	for i in $(pl_parsePkgs package $fcdistro $pkgsfile)  ; do
-	    packages[${#packages[*]}]="$i"
-	done
-	for i in $(pl_parsePkgs group $fcdistro $pkgsfile) ; do
-	    groups[${#groups[*]}]="$i"
-	done
-	for i in $(pl_parsePkgs exclude $fcdistro $pkgsfile) ; do
-	    exclude[${#exclude[*]}]="$i"
-	done
-	junk=$(pl_parsePkgs junk $fcdistro $pkgsfile)
-	precious=$(pl_parsePkgs precious $fcdistro $pkgsfile)
-    fi
-
-    excludes=
-    for package in "${exclude[@]}" ; do
-	excludes="$excludes --exclude=$package"
+    exclude_arg=""
+    for exclude in $pkgs_excludes; do
+	exclude_arg="$exclude_arg --exclude $exclude"
     done
 
     # glibc must be specified explicitly for the correct arch to be
     # chosen.
     echo "* Installing glibc"
-    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes install glibc
+    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $exclude_arg install glibc
 
     # Go, baby, go
-    if [ ${#packages[*]} -gt 0 ] ; then
-	echo "* Installing optional packages" "${packages[@]}" 
-	yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
-	    install "${packages[@]}"
-	if ! rpm --root $vroot -q "${packages[@]}" >/dev/null ; then
+    if [ -n "$pkgs_packages" ] ; then
+	echo "* Installing optional packages" "$pkgs_packages" 
+	yum -c $vroot/etc/yum.conf --installroot=$vroot -y $exclude_arg \
+	    install "$pkgs_packages"
+	if ! rpm --root $vroot -q "$pkgs_packages" >/dev/null ; then
 	    echo "* Warning: Missing packages"
-	    rpm --root $vroot -q "${packages[@]}" | grep "not installed"
+	    rpm --root $vroot -q "$pkgs_packages" | grep "not installed"
 	fi
     fi
 
-    if [ ${#groups[*]} -gt 0 ] ; then
+    if [ -n "$pkgs_groups" ] ; then
        ## call yum sequentially to get finer-grained info on dependencies
-	for grp in "${groups[@]}" ; do
+	for grp in "$pkgs_groups" ; do
 	    echo "* Installing optional group $grp" 
-	    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $excludes \
+	    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $exclude_arg \
 		groupinstall "$grp"
 	done
     fi
 
     # formerly in bootcd/prep.sh : to optimize footprint
-    echo "* Removing unnecessary junk"
-
-    pushd $vroot
-
-    # Save precious files
-    [ -n "$precious" ] && tar --ignore-failed-read -cpf precious.tar $precious
-
-    # Remove unnecessary junk
-    [ -n "$junk" ] && rm -rf $junk
-
-    # Restore precious files
-    [ -n "$precious" ] && tar -xpf precious.tar && rm -f precious.tar
-
-    popd
-
-###    # FC2 dev %preinstall checks /proc/mounts to make sure that /dev is
-###    # not currently mounted as devfs. If it thinks it is, it will refuse
-###    # to install the package. On a modern system running udev that mounts
-###    # /dev as tmpfs, this check fails. Since we are installing into a
-###    # chroot, whether /dev is mounted on the host system or not doesn't
-###    # matter. If dev was explicitly mentioned in the packages list, force
-###    # its installation.
-###    if [ "$releasever" = "2" ] ; then
-###	for package in "${packages[@]}" ; do
-###	    if [ "$package" = "dev" ] && ! rpm --root $vroot -q dev >/dev/null 2>&1 ; then
-###		rpm --root $vroot -Uvh --noscripts $baseurl/Fedora/RPMS/dev-3.3.13-1.i386.rpm
-###		break
-###	    fi
-###	done
-###    fi
+    if [ -n "$pkgs_junk" ] ; then
+	echo "* Removing unnecessary junk"
+	pushd $vroot
+        # Save precious files
+	[ -n "$pkgs_precious" ] && tar --ignore-failed-read -cpf precious.tar $pkgs_precious
+        # Remove unnecessary junk
+	[ -n "$pkgs_junk" ] && rm -rf $pkgs_junk
+        # Restore precious files
+	[ -n "$pkgs_precious" ] && tar -xpf precious.tar && rm -f precious.tar
+	popd
+    fi
 
     # Clean yum cache
     echo "* Cleaning up"
@@ -572,12 +504,8 @@ fi
     return 0
 }
 
-function pl_root_setup_chroot() {
+function pl_root_tune_image () {
     root=$1; shift
-    options="$@"
-
-    pl_root_makedevs $root
-    pl_root_mkfedora $options $root 
 
     # Disable all services in reference image
     chroot $root sh -c "/sbin/chkconfig --list | awk '{ print \$1 }' | xargs -i /sbin/chkconfig {} off"
@@ -667,18 +595,20 @@ function pl_getPkgsAttribute () {
     grep -v '^#' $file | grep --regexp="^${keyword}:" | sed -e "s,${keyword}:,,"
 }
 
-
 # for a given keyword like 'package' :
 # we support fcdistro-dependant format, for tokens (pkgname) without whitespace
 # you can e.g. use
 # package: pkg1 .. pkgn 
 # package+f8: pkg1 .. pkgn
 # package-f8: pkg1 .. pkgn
-
+# 
+# values can contain @arch@, @fcdistro@ or @pldistro@ that are replaced with the current values
+#
 function pl_parsePkgs () {
 
     keyword=$1;shift
     fcdistro=$1; shift
+    pldistro=$1; shift
     # remaining arguments are paths to the pkgs files
 
     # grab regular descriptions
@@ -692,13 +622,13 @@ function pl_parsePkgs () {
 	for exclude in $sub; do
 	    [ "$i" = "$exclude" ] && continue 2
 	done
-	echo "$i "
+	echo "$i " | sed -e "s,@arch@,$pl_DISTRO_ARCH,g" -e "s,@fcdistro@,$fcdistro,g" -e "s,@pldistro@,$pldistro,g"
     done
     return 0
 }
 
-function pl_getPackages() { fcdistro=$1; shift ; pl_parsePkgs package $fcdistro "$@" ; }
-function pl_getGroups() { fcdistro=$1; shift ; pl_parsePkgs group $fcdistro "$@" ; }
+function pl_getPackages() { fcdistro=$1; shift ; pldistro=$1; shift ; pl_parsePkgs package $fcdistro $pldistro "$@" ; }
+function pl_getGroups() { fcdistro=$1; shift ; pldistro=$1; shift ; pl_parsePkgs group $fcdistro $pldistro "$@" ; }
 
 # locates a pldistro-dependant file
 # tries first in build/<pldistro>/, then in build/planetlab/
@@ -745,7 +675,7 @@ __header
 
     for pkgsname in $pkgsnames; do
 	pkgsfile=$(pl_locateDistroFile $builddir $pldistro $pkgsname)
-	packages=$(pl_getPackages $fcdistro $pkgsfile)
+	packages=$(pl_getPackages $fcdistro $pldistro $pkgsfile)
 
 	groupname=$(pl_getPkgsAttribute groupname $pkgsfile | sed $sedargs)
 	groupdesc=$(pl_getPkgsAttribute groupdesc $pkgsfile | sed $sedargs)
@@ -776,5 +706,3 @@ cat <<__footer
 </comps>
 __footer
 }
-
-
