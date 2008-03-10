@@ -79,9 +79,6 @@ pl_DISTRO=$(pl_getDistro)
 # select basearch of the host devel environment - protected for macos for local tests
 pl_DISTRO_ARCH=$(uname -i 2>/dev/null|| echo unknownarch)
 
-# let mkfedora select one of its mirrors
-pl_DISTRO_URL=""
-
 # the release number (plain number)
 pl_DISTRO_RELEASE=$(pl_getRelease)
 
@@ -172,23 +169,10 @@ function pl_root_makedevs() {
     done
 }
 
-# Default yum repositories to try
-mirrors=(
-    file:///data/fedora
-    http://localhost/fedora
-    http://build.planet-lab.org/fedora
-    http://coblitz.codeen.org/coblitz.planet-lab.org/pub/fedora
-    ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
-    ftp://mirror.stanford.edu/pub/mirrors/fedora
-    ftp://rpmfind.net/linux/fedora
-    )
-
 function mkfedora_usage() {
     echo "Usage: pl_root_mkfedora [OPTION]... basedir pldistro pkgsfile(s)"
-    echo "	-l url		Fedora mirror location. Default is to try:"
-    for mirror in "${mirrors[@]}" ; do
-	echo "			$mirror"
-    done
+    echo "	-l url		Fedora mirror location."
+    echo "                      Defaults are searched in <pldistro>.mirrors"
     echo "	-v		Be verbose"
     echo "	-h		This message"
     echo " target selection (defaults based on current build vserver)"
@@ -212,20 +196,13 @@ function pl_root_mkfedora () {
 # Release and architecture to install : defaults to current vserver's settings or previously parsed fedora_options
     releasever=$pl_DISTRO_RELEASE
     basearch=$pl_DISTRO_ARCH
-    [ -n "$pl_DISTRO_URL" ] && mirrors=($pl_DISTRO_URL)
 
 # Get options
+    mirrors=""
     while getopts "l:r:a:vh" opt ; do
 	case $opt in
 	    l)
-		if echo $OPTARG | grep -q -i '^\(file\|http[s]*\)://' ; then
-		    mirrors=($OPTARG)
-		else
-		    # xxx rather use this as a .mirrors file, searched in config.pldistro/
-		    # that would use the pkgs syntax with mirror:
-		    #mirrors=($(pl_parsePkgs mirror <fcdistro> <pldistro> $(pl_locateDistroFile ../build/ <pldistro> $OPTARG.mirrors)))
-		    mirrors=(file://$OPTARG)
-		fi
+		mirrors="$mirrors $OPTARG"
 		;;
 	    r)
 		releasever=$OPTARG
@@ -262,6 +239,10 @@ function pl_root_mkfedora () {
     pkgs_precious=$(pl_parsePkgs precious $fcdistro $pldistro $pkgsfile)
     # formerly related to mkfedora -k
     pkgs_kexcludes=$(pl_parsePkgs kexclude $fcdistro $pldistro $pkgsfile)
+    # get mirrors if not specified with -l
+    if [ -n "$mirrors" ] ; then
+	mirrors=$(pl_parsePkgs mirror $fcdistro $pldistro "$pldistro.mirrors")
+    fi
 
     exclude_kernel=""
     [ -n "$pkgs_kexcludes" ] && exclude_kernel="exclude=$pkgs_excludes"
@@ -288,11 +269,11 @@ linux/core/$releasever/$basearch/os
     fi
 
     echo "$0: candidate mirrors"
-    for mirror in "${mirrors[@]}" ; do
+    for mirror in $mirrors ; do
 	echo "* candidate mirror $mirror"
     done
     baseurl=""
-    for mirror in "${mirrors[@]}" ; do
+    for mirror in $mirrors ; do
 	for attempt in $attempts; do 
 	    attempturl=$mirror/$attempt
 	    if mkfedora_fetch $attempturl/repodata/repomd.xml >/dev/null ; then
@@ -306,7 +287,7 @@ linux/core/$releasever/$basearch/os
 	echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
 	echo "       could not be found in any of the following locations:"
 	echo
-	for mirror in ${mirrors[@]} ; do
+	for mirror in $mirrors ; do
 	    for attempt in $attempts ; do
 		echo $mirror/$attempt
 	    done
