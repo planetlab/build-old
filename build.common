@@ -590,7 +590,7 @@ function pl_root_setup_chroot() {
     # This tells the Boot Manager that it is okay to update
     # /etc/resolv.conf and /etc/hosts whenever the network configuration
     # changes. Users are free to delete this file.
-    touch $vroot/etc/AUTO_UPDATE_NET_FILES
+    touch $root/etc/AUTO_UPDATE_NET_FILES
 }
 
 # Move specified directories out of a src tree into a dst tree, and
