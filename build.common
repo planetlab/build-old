@@ -246,7 +246,7 @@ function pl_root_mkfedora () {
     fi
 
     exclude_kernel=""
-    [ -n "$pkgs_kexcludes" ] && exclude_kernel="exclude=$pkgs_excludes"
+    [ -n "$pkgs_kexcludes" ] && exclude_kernel="exclude=$pkgs_kexcludes"
 
     function mkfedora_fetch ()
     {
