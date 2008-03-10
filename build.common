@@ -246,7 +246,13 @@ function pl_root_mkfedora () {
     fi
 
     exclude_kernel=""
-    [ -n "$pkgs_kexcludes" ] && exclude_kernel="exclude=$pkgs_kexcludes"
+    # add them manually as the output of pl_parsePkgs is line-separated
+    if [ -n "$pkgs_kexcludes" ] ; then
+	exclude_kernel="exclude="
+	for kexclude in $pkgs_kexcludes ; do
+	    exclude_kernel="$exclude_kernel $kexclude"
+	done
+    fi
 
     function mkfedora_fetch ()
     {
