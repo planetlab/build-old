@@ -20,6 +20,8 @@ package: gd
 package: httpd mod_python mod_ssl 
 package: openssl 
 package: openssl-devel
+package: zlib
+package: zlib-devel
 package: bison flex
 package: libtool 
 package: metadata 
