@@ -94,6 +94,7 @@ EOF
 function failure() {
     set -x
     WEBLOG=${WEBPATH}/${BASE}.log.txt
+    mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 20k $WEBLOG) > ${WEBLOG}.ko
@@ -106,6 +107,7 @@ function failure() {
 function success () {
     set -x
     WEBLOG=${WEBPATH}/${BASE}.log.txt
+    mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     touch ${WEBLOG}.ok
