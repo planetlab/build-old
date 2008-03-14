@@ -11,6 +11,7 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
+DEFAULT_IFNAME=lo
 
 # web publishing results
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
@@ -115,6 +116,34 @@ function success () {
 	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successful build for ${BASE}" $MAILTO
     fi
     exit 0
+}
+
+# parses ifconfig's output to find out ip address and mask
+# will then be passed to vserver as e.g. --interface 138.96.250.126/255.255.0.0
+# default is to use lo, that's enough for local mirrors
+# use -i eth0 in case your fedora mirror is on a separate box on the network
+function vserverIfconfig () {
+    ifname=$1; shift
+    local result="" 
+    line=$(ifconfig $ifname 2> /dev/null | grep 'inet addr')
+    if [ -n "$line" ] ; then
+	set $line
+	for word in "$@" ; do
+	    addr=$(echo $word | sed -e s,[aA][dD][dD][rR]:,,)
+	    mask=$(echo $word | sed -e s,[mM][aA][sS][kK]:,,)
+	    if [ "$word" != "$addr" ] ; then
+		result="${addr}"
+	    elif [ "$word" != "$mask" ] ; then
+		result="${result}/${mask}"
+	    fi
+	done
+    fi
+    if [ -z "$result" ] ; then 
+	echo "vserverIfconfig failed to locate $ifname"
+	exit 1
+    else
+	echo $result
+    fi
 }
 
 # run in the vserver - do not manage success/failure, will be done from the root ctx
@@ -223,6 +252,7 @@ function usage () {
     echo " -m mailto"
     echo " -a makevar=value - space in values are not supported"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
+    echo " -i ifname - defaults to $DEFAULT_IFNAME - set to e.g. eth0 for non-local mirrors"
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
@@ -244,7 +274,7 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
-    while getopts "nf:d:b:p:t:r:s:om:a:w:BTvh7" opt ; do
+    while getopts "nf:d:b:p:t:r:s:om:a:w:i:BTvh7" opt ; do
 	case $opt in
 	    n) DRY_RUN="-n" ;;
 	    f) FCDISTRO=$OPTARG ;;
@@ -258,6 +288,7 @@ function main () {
 	    m) MAILTO=$OPTARG ;;
 	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
 	    w) WEBPATH=$OPTARG ;;
+	    i) IFNAME=$OPTARG ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ; OVERWRITEMODE=true ;;
 	    x) TESTSVNPATH=$OPTARG ;;
@@ -277,6 +308,7 @@ function main () {
     [ -z "$PLDISTROTAGS" ] && PLDISTROTAGS="${PLDISTRO}-tags.mk"
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
+    [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$TESTSVNPATH" ] && TESTSVNPATH="$DEFAULT_TESTSVNPATH"
 
@@ -342,7 +374,8 @@ function main () {
 	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
-	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE}
+	    localip=$(vserverIfconfig $IFNAME)
+	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} -- --interface $localip
 	    # cleanup
 	    cd -
 	    rm -rf $tmpdir

@@ -146,6 +146,8 @@ function setup_vserver () {
 
     # set up resolv.conf
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
+    # and /etc/hosts for at least localhost
+    [ -f /vservers/$vserver/etc/hosts ] || echo "127.0.0.1 localhost localhost.localdomain" > /vservers/$vserver/etc/hosts
 }
 
 function devel_or_vtest_tools () {
