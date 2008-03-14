@@ -11,7 +11,7 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
-DEFAULT_IFNAME=lo
+DEFAULT_IFNAME=eth0
 
 # web publishing results
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
