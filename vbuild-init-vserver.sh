@@ -156,10 +156,14 @@ function setup_vserver () {
 	    vdevmap --set --xid $ctx --open --create --target /dev/null
 	    vdevmap --set --xid $ctx --open --create --target /dev/root
 	else
-	    mkdir -p /etc/vservers/$vserver/apps/vdevmap/default-{block,char}
-	    touch /etc/vservers/$vserver/apps/vdevmap/default-{block,char}/{open,create}
-	    echo /dev/root > /etc/vservers/$vserver/apps/vdevmap/default-block/target
-	    echo /dev/null > /etc/vservers/$vserver/apps/vdevmap/default-char/target
+	    echo "You seem to be running vs2.3 with util-vserver < 0.30.215"
+	    echo "This combination is not supported by $COMMAND"
+	    echo "Please upgrade our environment"
+	    exit 1
+#	    mkdir -p /etc/vservers/$vserver/apps/vdevmap/default-{block,char}
+#	    touch /etc/vservers/$vserver/apps/vdevmap/default-{block,char}/{open,create}
+#	    echo /dev/root > /etc/vservers/$vserver/apps/vdevmap/default-block/target
+#	    echo /dev/null > /etc/vservers/$vserver/apps/vdevmap/default-char/target
 	fi
     fi
 	    
