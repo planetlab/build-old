@@ -189,13 +189,13 @@ function runtest () {
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
 
     ### the URL to the myplc package
-    rpm=$( (cd /vservers/$BASE/build/RPMS/i386 ; ls myplc-[0-9]*.rpm) )
+    rpm=$( find /vservers/$BASE/build/RPMS -name 'myplc-[0-9]*' )
     if [ ${#rpm[@]} != 1 ] ; then
 	echo "$COMMAND: Cannot locate rpm for testing"
 	failure
 	exit 1
     fi
-    url=${TESTBUILDURL}${PLDISTRO}/${BASE}/RPMS/i386/${rpm}
+    url=$(echo $rpm | sed -e "s,/vservers/$BASE/build,${TESTBUILDURL}${PLDISTRO}/${BASE},")
 
     # compute test directory name on test box
     testdir=test-${BASE}
