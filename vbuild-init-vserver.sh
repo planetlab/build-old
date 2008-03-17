@@ -128,6 +128,28 @@ function setup_vserver () {
 	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
     fi
 
+    # with vserver 2.3, granting the vserver CAP_MKNOD is not enough
+    # check whether we run vs2.3 or above
+    vs_version=$(uname -a  | sed -e 's,.*[\.\-]vs\([0-9]\)\.\([0-9]\)\..*,\1\2,')
+    # at this stage we have here 22 or 23
+    need_vdevmap=$(( $vs_version >= 23 ))
+
+    if [ "$need_vdevmap" == 1 ] ; then
+	util_vserver_215=0
+	vdevmap --help | grep -- --set &> /dev/null && util_vserver_215=1
+	
+	if [ "$util_vserver_215" == 1 ] ; then
+	    ctx=$(cat /etc/vservers/$vserver/context)
+	    vdevmap --set --xid $ctx --open --create --target /dev/null
+	    vdevmap --set --xid $ctx --open --create --target /dev/root
+	else
+	    mkdir -p /etc/vservers/$vserver/apps/vdevmap/default-{block,char}
+	    touch /etc/vservers/$vserver/apps/vdevmap/default-{block,char}/{open,create}
+	    echo /dev/root > /etc/vservers/$vserver/apps/vdevmap/default-block/target
+	    echo /dev/null > /etc/vservers/$vserver/apps/vdevmap/default-char/target
+	fi
+    fi
+	    
     $personality vyum $vserver -- -y install yum
     # ditto
     for i in 1 2 3 4 5 ; do
