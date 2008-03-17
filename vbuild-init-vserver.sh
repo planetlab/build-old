@@ -128,6 +128,19 @@ function setup_vserver () {
 	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
     fi
 
+    $personality vyum $vserver -- -y install yum
+    # ditto
+    for i in 1 2 3 4 5 ; do
+	$personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
+	echo "Waiting for one minute"
+	sleep 60
+    done
+
+    # start the vserver so we can do the following operations
+    $personality vserver $VERBOSE $vserver start
+    $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
+    $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
+
     # with vserver 2.3, granting the vserver CAP_MKNOD is not enough
     # check whether we run vs2.3 or above
     vs_version=$(uname -a  | sed -e 's,.*[\.\-]vs\([0-9]\)\.\([0-9]\)\..*,\1\2,')
@@ -150,19 +163,6 @@ function setup_vserver () {
 	fi
     fi
 	    
-    $personality vyum $vserver -- -y install yum
-    # ditto
-    for i in 1 2 3 4 5 ; do
-	$personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
-	echo "Waiting for one minute"
-	sleep 60
-    done
-
-    # start the vserver so we can do the following operations
-    $personality vserver $VERBOSE $vserver start
-    $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
-    $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
-
     # minimal config in the vserver for yum to work
     configure_yum_in_vserver $vserver $fcdistro 
 
