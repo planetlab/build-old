@@ -30,7 +30,7 @@ function do_init () {
     dir=/etc/vservers/.distributions/$distro/yum.repos.d/
     if [ ! -d $dir ] ; then
 	[ -n "$VERBOSE" ] && echo Creating dir $dir
-	mkdir -p -d $dir
+	mkdir -p $dir
     fi
     [ -n "$VERBOSE" ] && echo "Creating $repo"
     do_repo $distro > $repo
