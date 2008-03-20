@@ -3,6 +3,7 @@
 # see http://svn.planet-lab.org/wiki/VserverCentos for howto setup localhost mirroring
 mirror: file:///data/fedora
 mirror: http://localhost/fedora
+mirror: http://localhost/mirror
 mirror: http://build.planet-lab.org/fedora
 mirror: http://coblitz.codeen.org/coblitz.planet-lab.org/pub/fedora
 mirror: ftp://mirror.cs.princeton.edu/pub/mirrors/fedora
