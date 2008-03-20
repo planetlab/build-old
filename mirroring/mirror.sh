@@ -61,7 +61,7 @@ function do_display () {
     fi
 }
 
-function do_clear () {
+function do_clean () {
     local distro=$1; shift
     repo=/etc/vservers/.distributions/$distro/yum.repos.d/building.repo
     [ -n "$VERBOSE" ] && echo Removing $repo
@@ -129,7 +129,7 @@ function main () {
 		disp*) action=display ;;
 		init*) action=init ;;
 		diff*) action=diff ;;
-		clea*) action=clear ;;
+		clea*) action=clean ;;
 		super*) action=superclean ;;
 		*) usage ;;
 	    esac ;;
