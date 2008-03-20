@@ -27,7 +27,7 @@ function configure_yum_in_vserver () {
     vserver=$1; shift
     fcdistro=$1; shift
 
-    cd /etc/vservers/.distributions/${fcdistro}
+    pushd /etc/vservers/.distributions/${fcdistro}
     if [ -f yum/yum.conf ] ; then
 	echo "Initializing yum.conf in $vserver from $(pwd)/yum"
         sed -e "s!@YUMETCDIR@!/etc!g;
@@ -67,7 +67,7 @@ gpgcheck=0
 EOF
 	fi
     fi
-    cd -
+    popd
 }    
 
 function setup_vserver () {
@@ -158,8 +158,10 @@ function setup_vserver () {
 	else
 	    echo "You seem to be running vs2.3 with util-vserver < 0.30.215"
 	    echo "This combination is not supported by $COMMAND"
-	    echo "Please upgrade our environment"
+	    echo "Please upgrade your environment"
 	    exit 1
+# this supposedly is an equivalent to using vdevmap as invoked above
+# but it's not going to work in this case
 #	    mkdir -p /etc/vservers/$vserver/apps/vdevmap/default-{block,char}
 #	    touch /etc/vservers/$vserver/apps/vdevmap/default-{block,char}/{open,create}
 #	    echo /dev/root > /etc/vservers/$vserver/apps/vdevmap/default-block/target
