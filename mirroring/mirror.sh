@@ -55,7 +55,7 @@ function do_display () {
     dir=/etc/vservers/.distributions/$distro/yum.repos.d/
     if [ -d $dir ] ; then
 	echo "====================" Contents of $dir
-	find $dir -name '*.repo' | xargs head --verbose --lines=1000
+	ls $dir/*.repo 2> /dev/null | xargs head --verbose --lines=1000
     else
 	echo "====================" $dir does not exist
     fi
