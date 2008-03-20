@@ -208,6 +208,7 @@ define stage1_variables
 $(1).spec = $(notdir $($(1)-SPEC))
 $(1).specpath = SPECS/$(1).spec
 $(1).module = $(firstword $($(1)-MODULES))
+$(1)-SVNPATH = $(strip $($(1)-SVNPATH))
 endef
 
 $(foreach package, $(ALL), $(eval $(call stage1_variables,$(package))))
@@ -592,6 +593,7 @@ version-build:
 	@echo -n 'Build planetlab-tagsid: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
 	@echo    "Build target-arch: $(HOSTARCH)"
 	@echo    "Build target-distro: $(DISTRO)"
+	@echo    "Build target-distroname: $(DISTRONAME)"
 	@echo    "Build target-release: $(RELEASE)"	
 	@echo    "Build target-personality: $(NIGHTLY_PERSONALITY)"	
 
