@@ -10,11 +10,18 @@ all_distros="fc4 fc6 f7 f8 centos5"
 
 function check_distro () {
     local distro=$1; shift
-    if [ ! -d $DIRNAME/$distro ] ; then
+    if [ ! -d $DIRNAME/$distro/yum.repos.d ] ; then
 	echo "Distro $distro not supported - skipped"
 	return 1
     fi
     return 0
+}
+
+function do_repo () {
+    local distro=$1; shift
+    sedargs="-e s,@MIRRORURL@,$URL,"
+    [ -n "$GPGOFF" ] && sedargs="$sedargs -e "'s,gpgcheck\W*=\W*1,gpgcheck=0,'
+    sed $sedargs $DIRNAME/$distro/yum.repos.d/building.repo.in
 }
 
 function do_init () { 
@@ -26,7 +33,21 @@ function do_init () {
 	mkdir -p -d $dir
     fi
     [ -n "$VERBOSE" ] && echo "Creating $repo"
-    sed -e "s,@MIRRORURL@,$URL," < $DIRNAME/$distro/building.repo.in > $repo
+    do_repo $distro > $repo
+}
+
+function do_diff () {
+    local distro=$1; shift
+    repo=/etc/vservers/.distributions/$distro/yum.repos.d/building.repo
+    if [ ! -f $repo ] ; then
+	echo "Cannot find $repo"
+    else
+	would=/tmp/$COMMAND.$$
+	do_repo $distro > $would
+	echo "==================== DIFF for $distro" '(current <-> would be)'
+	diff $repo $would 
+	rm $would
+    fi
 }
 
 function do_display () {
@@ -58,15 +79,17 @@ function usage () {
     echo "Usage $COMMAND [options] <command>"
     echo "  a help to manage the yum.repos.d template in /etc/vservers/.distributions/<distro>"
     echo "Available commands"
+    echo "  display: shows content (default if missing)"
     echo "  init: creates /etc/vservers/.distributions/<distro>/yum.repos.d/building.repo"
     echo "       default is to use mirror root at $default_url"
     echo "       use -u URL to specify another location"
-    echo "  display: shows content"
+    echo "  diff: shows diff between current and what init would do"
     echo "  clean: removes building.repo"
     echo "  superclean: removes yum.repos.d altogether"
     echo "Options"
     echo "  -f <distro> : defaults to $default_distro"
     echo "  -a : runs on all distros $all_distros"
+    echo "  -0 : turns off gpgcheck"
     echo "  -v : verbose"
     echo "Examples"
     echo "  $COMMAND -a display "
@@ -79,14 +102,16 @@ function usage () {
 DISTROS=""
 URL=""
 VERBOSE=""
+GPGOFF=""
 
 function main () {
 
-    while getopts "u:f:av" opt; do
+    while getopts "u:f:a0v" opt; do
 	case $opt in
 	    u) URL=$OPTARG ;;
 	    f) DISTROS="$DISTROS $OPTARG" ;;
 	    a) DISTROS="$DISTROS $all_distros" ;;
+	    0) GPGOFF=true ;;
 	    v) VERBOSE=true ;;
 	    *) usage ;;
 	esac
@@ -101,8 +126,9 @@ function main () {
 	1) 
 	    action=$1; shift
 	    case $action in
+		disp*) action=display ;;
 		init*) action=init ;;
-		dis*) action=display ;;
+		diff*) action=diff ;;
 		clea*) action=clear ;;
 		super*) action=superclean ;;
 		*) usage ;;
