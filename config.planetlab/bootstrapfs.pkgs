@@ -114,8 +114,8 @@ package: NodeUpdate
 package: codemux
 package: pl_sshd
 package: ipod
-package: vserver-@pldistro@-@fcdistro@-@arch@-reference
-package: vserver-@pldistro@-@fcdistro@-@arch@-system-packages
+package: vserver-reference
+package: vserver-system-packages
 package: pl_mom
 package: netflow-utils
 package: proper
