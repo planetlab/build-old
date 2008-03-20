@@ -259,21 +259,48 @@ function pl_root_mkfedora () {
 	curl --fail --silent --max-time 60 "$1"
     }
 
-    # set list of attempted locations according to releasever
-    if [ $releasever -ge 7 ] ; then
-	attempts="
+    # set list of attempted locations according to target distro
+    # xxx all this should go into mirroring/ somehow
+    case $pl_DISTRO in
+	Fedora)
+	    if [ $releasever -ge 7 ] ; then
+	        # Plain Fedora comes with a new layout
+		attempts="
+fedora/releases/$releasever/Everything/$basearch/os
 linux/releases/$releasever/Everything/$basearch/os
 $releasever/Everything/$basearch/os
 core/$releasever/Everything/$basearch/os
 linux/core/$releasever/$basearch/os
 "
-    else
-	attempts="
-	linux/core/$releasever/$basearch/os 
-	core/$releasever/$basearch/os 
-	$releasever/$basearch/os
-	"
-    fi
+	    else
+		# Fedora Core
+		attempts="
+fedora/core/$releasever/$basearch/os 
+linux/core/$releasever/$basearch/os 
+core/$releasever/$basearch/os 
+$releasever/$basearch/os
+"
+	    fi 
+	    public_gpg_key=RPM-GPG-KEY-fedora
+	    ;;
+	CentOS)
+	    # xxx hacky for now
+	    # you can use vbuild-fedora-mirror with -f centos5.1
+	    # which is hard-coded in mirroring/centos as well
+	    # for now I do the mapping here, mmhh
+	    case $releasever in
+		4) actual=4.6 ;;
+		5) actual=5.1 ;;
+		*) actual=$releasever ;;
+	    esac
+	    attempts="
+centos/$actual/os/$basearch
+"
+	    public_gpg_key=RPM-GPG-KEY-CentOS-$releasever
+	    ;;
+	*)
+	    echo "distro $pl_DISTRO not supported in build.common / mkfedora" ; exit 1
+    esac
 
     echo "$0: candidate mirrors"
     for mirror in $mirrors ; do
@@ -358,7 +385,7 @@ EOF
     # Initialize RPM database in reference image
     mkdir -p $vroot/var/lib/rpm
     rpm --root $vroot --initdb
-    rpm --root $vroot --import $baseurl/RPM-GPG-KEY-fedora
+    rpm --root $vroot --import $baseurl/$public_gpg_key
 
     # Initialize yum in reference image
     mkdir -p $vroot/var/cache/yum $vroot/var/log
