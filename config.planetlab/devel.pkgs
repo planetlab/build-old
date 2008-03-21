@@ -55,7 +55,6 @@ package: gcc-c++
 package: libpcap libpcap-devel 
 # iptables
 package: linuxdoc-tools 
-# vserver-reference
 package: sudo 
 package: yum createrepo 
 # mysql
