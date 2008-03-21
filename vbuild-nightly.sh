@@ -17,7 +17,7 @@ DEFAULT_IFNAME=eth0
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
 # for the test part
-TESTBUILDURL="http://build32.one-lab.org/"
+TESTBUILDURL="http://build.one-lab.org/"
 TESTBOXSSH=root@onelab-test.inria.fr
 ####################
 # assuming vserver runs in UTC
