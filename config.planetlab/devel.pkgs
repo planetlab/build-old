@@ -80,5 +80,7 @@ package: PyXML
 # for pypcilib
 package: pciutils-devel
 # for vsys
-package: ocaml ocaml-docs
-package: inotify-tools-devel 
+package: ocaml ocaml-docs inotify-tools-devel 
+package-fc4: ocaml ocaml-docs inotify-tools-devel 
+package-fc6: ocaml ocaml-docs inotify-tools-devel 
+package-centos5: ocaml ocaml-docs inotify-tools-devel 

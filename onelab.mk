@@ -244,17 +244,21 @@ IN_BOOTSTRAPFS += iproute
 #
 # vsys
 #
+vsys_support=yes
+ifeq "$(DISTRONAME)" "fc4"
+vsys_support=
+endif
+ifeq "$(DISTRONAME)" "fc6"
+vsys_support=
+endif
+# cannot find the required packages (see devel.pkgs) on centos5
+ifeq "$(DISTRONAME)" "centos5"
+vsys_support=
+endif
+
+ifeq "$(vsys_support)" "yes"
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
-ifeq "$(DISTRONAME)" "f7"
-IN_BOOTSTRAPFS += vsys
-ALL += vsys
-endif
-ifeq "$(DISTRONAME)" "f8"
-IN_BOOTSTRAPFS += vsys
-ALL += vsys
-endif
-ifeq "$(DISTRONAME)" "centos5"
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
 endif

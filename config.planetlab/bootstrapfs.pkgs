@@ -32,15 +32,7 @@ package: rootfiles
 package: rpm
 package: setserial
 package: setup
-package+fc4: sysklogd
-package+fc6: sysklogd
-package+f7: sysklogd
-package+f8: rsyslog
 package: termcap
-package+fc4: util-linux
-package+fc6: util-linux
-package+f7: util-linux
-package+f8: util-linux-ng
 package: vim-minimal
 package: shadow-utils
 package: anacron
@@ -91,14 +83,32 @@ package: nfs-utils
 package: openvpn
 package: vconfig
 package: PyXML
+#
+# platform-dependent
+#
+package+fc4: sysklogd
+package+fc6: sysklogd
+package+f7: sysklogd
+package+f8: rsyslog
+package+centos5: sysklogd
+
+package+fc4: util-linux
+package+fc6: util-linux
+package+f7: util-linux
+package+f8: util-linux-ng
+package+centos5: util-linux
+
 # not found on other platforms
 package+fc4: netdump
 package+fc4: schedutils
 package+fc4: SysVinit
-package+fc6: SysVinit
 package+fc4: portmap
+# 
+package+fc6: SysVinit
 package+fc6: portmap
+#
 # planetlab
+#
 package: madwifi
 package: wireless-tools
 package: util-vserver
@@ -123,4 +133,6 @@ package+f8: fprobe-ulog
 # for vsys
 #package+f8: ocaml ocaml-docs
 #package+f8: inotify-tools-devel 
-package+f8: vsys
+package: vsys
+package-fc4: vsys
+package-fc6: vsys
