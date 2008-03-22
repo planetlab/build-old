@@ -264,10 +264,6 @@ function main () {
 
     set -e
 
-    # preserve arguments for passing them again later
-    declare -a argv
-    for arg in "$@"; do argv=(${argv[@]} "$arg") ; done
-    
     # parse arguments
     MAKEVARS=()
     DRY_RUN=
@@ -297,7 +293,11 @@ function main () {
 	esac
     done
 	
-    shift $(($OPTIND - 1))
+    # preserve options for passing them again later, together with expanded base
+    declare -a options
+    toshift=$(($OPTIND - 1))
+    arg=1; while [ $arg -le $toshift ] ; do options=(${options[@]} "$1") ; shift; arg=$(($arg+1)) ; done
+
     MAKETARGETS="$@"
     
     # set defaults
@@ -401,7 +401,7 @@ function main () {
 
 	    # invoke this command in the vserver for building (-T)
 	    vserver ${BASE} exec chmod +x /build/$COMMAND
-	    vserver ${BASE} exec /build/$COMMAND "${argv[@]}" -b "${BASE}"
+	    vserver ${BASE} exec /build/$COMMAND "${options[@]}" -b "${BASE}" $MAKETARGETS
 	fi
 
 	# publish to the web so runtest can find them
