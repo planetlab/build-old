@@ -41,15 +41,13 @@ IN_MYPLC += $(KERNELS)
 #
 # kexec-tools
 #
-ifeq "$(DISTRO)" "Fedora"
-ifeq "$(RELEASE)" "4"
+ifeq "$(DISTRONAME)" "fc4"
 kexec-tools-MODULES := kexec-tools
 kexec-tools-SPEC := kexec-tools.spec
 kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
 kexec-tools-TAG := planetlab-4_1-rc2
 ALL += kexec-tools
 IN_BOOTCD += kexec-tools
-endif
 endif
 
 #
@@ -248,14 +246,17 @@ IN_BOOTSTRAPFS += iproute
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+ifeq "$(DISTRONAME)" "f7"
 IN_BOOTSTRAPFS += vsys
-ifeq "$(DISTRO)" "Fedora"
-ifeq "$(RELEASE)" "7"
 ALL += vsys
 endif
-ifeq "$(RELEASE)" "8"
+ifeq "$(DISTRONAME)" "f8"
+IN_BOOTSTRAPFS += vsys
 ALL += vsys
 endif
+ifeq "$(DISTRONAME)" "centos5"
+IN_BOOTSTRAPFS += vsys
+ALL += vsys
 endif
 
 #
