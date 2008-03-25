@@ -18,7 +18,7 @@ DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
 # for the test part
 TESTBUILDURL="http://build.one-lab.org/"
-TESTBOXSSH=root@onelab-test.inria.fr
+TESTBOXSSH=root@testbox1.one-lab.org
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
