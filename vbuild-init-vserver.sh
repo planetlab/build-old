@@ -91,8 +91,8 @@ function setup_vserver () {
     # rpm-fake.so: failed to initialize communication with resolver
     for i in 1 2 3 4 5 ; do
 	$personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS -m yum -- -d $fcdistro && break || true
-	echo "Waiting for one minute"
-	sleep 60
+	echo "Waiting for 30 seconds"
+	sleep 30
     done
     # check success
     [ -d /vservers/$vserver ] 
@@ -132,8 +132,8 @@ function setup_vserver () {
     # ditto
     for i in 1 2 3 4 5 ; do
 	$personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
-	echo "Waiting for one minute"
-	sleep 60
+	echo "Waiting for 30 seconds"
+	sleep 30
     done
 
     # start the vserver so we can do the following operations
