@@ -89,10 +89,10 @@ function setup_vserver () {
     # try to work around the vserver issue:
     # vc_ctx_migrate: No such process
     # rpm-fake.so: failed to initialize communication with resolver
-    for i in 1 2 3 4 5 ; do
+    for i in $(seq 20) ; do
 	$personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS -m yum -- -d $fcdistro && break || true
-	echo "Waiting for 30 seconds"
-	sleep 30
+	echo "* ${i}-th attempt to 'vserver build' failed - waiting for 3 seconds"
+	sleep 3
     done
     # check success
     [ -d /vservers/$vserver ] 
@@ -130,10 +130,10 @@ function setup_vserver () {
 
     $personality vyum $vserver -- -y install yum
     # ditto
-    for i in 1 2 3 4 5 ; do
+    for i in $(seq 20) ; do
 	$personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
-	echo "Waiting for 30 seconds"
-	sleep 30
+	echo "* ${i}-th attempt to 'vserver pkgmgmt internalize' failed - waiting for 3 seconds"
+	sleep 3
     done
 
     # start the vserver so we can do the following operations
