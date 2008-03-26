@@ -25,7 +25,7 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-2
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-0
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-1
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-3
-PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-3
+PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-4
 # need tagging tool
 #PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-4.2-8
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/branches/onelab
