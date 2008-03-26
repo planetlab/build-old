@@ -117,34 +117,6 @@ function success () {
     exit 0
 }
 
-# parses ifconfig's output to find out ip address and mask
-# will then be passed to vserver as e.g. --interface 138.96.250.126/255.255.0.0
-# default is to use lo, that's enough for local mirrors
-# use -i eth0 in case your fedora mirror is on a separate box on the network
-function vserverIfconfig () {
-    ifname=$1; shift
-    local result="" 
-    line=$(ifconfig $ifname 2> /dev/null | grep 'inet addr')
-    if [ -n "$line" ] ; then
-	set $line
-	for word in "$@" ; do
-	    addr=$(echo $word | sed -e s,[aA][dD][dD][rR]:,,)
-	    mask=$(echo $word | sed -e s,[mM][aA][sS][kK]:,,)
-	    if [ "$word" != "$addr" ] ; then
-		result="${addr}"
-	    elif [ "$word" != "$mask" ] ; then
-		result="${result}/${mask}"
-	    fi
-	done
-    fi
-    if [ -z "$result" ] ; then 
-	echo "vserverIfconfig failed to locate $ifname"
-	exit 1
-    else
-	echo $result
-    fi
-}
-
 # run in the vserver - do not manage success/failure, will be done from the root ctx
 function build () {
     set -x
@@ -251,7 +223,7 @@ function usage () {
     echo " -m mailto"
     echo " -a makevar=value - space in values are not supported"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
-    echo " -i ifname - defaults to $DEFAULT_IFNAME - set to e.g. eth0 for non-local mirrors"
+    echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
@@ -373,8 +345,7 @@ function main () {
 	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
-	    localip=$(vserverIfconfig $IFNAME)
-	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} -- --interface $localip
+	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} -i ${IFNAME} ${BASE} -- --interface $localip
 	    # cleanup
 	    cd -
 	    rm -rf $tmpdir

@@ -10,6 +10,10 @@ PATH=$(dirname $0):$PATH . build.common
 DEFAULT_FCDISTRO=f8
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
+DEFAULT_IFNAME=eth0
+
+COMMAND_VBUILD="vbuild-init-vserver.sh"
+COMMAND_MYPLC="vtest-init-vserver.sh"
 
 function failure () {
     echo "$COMMAND : Bailing out"
@@ -296,8 +300,34 @@ PROFILE
 EOF
 }
 
-COMMAND_VBUILD="vbuild-init-vserver.sh"
-COMMAND_MYPLC="vtest-init-vserver.sh"
+# parses ifconfig's output to find out ip address and mask
+# will then be passed to vserver as e.g. --interface 138.96.250.126/255.255.0.0
+# default is to use lo, that's enough for local mirrors
+# use -i eth0 in case your fedora mirror is on a separate box on the network
+function vserverIfconfig () {
+    ifname=$1; shift
+    local result="" 
+    line=$(ifconfig $ifname 2> /dev/null | grep 'inet addr')
+    if [ -n "$line" ] ; then
+	set $line
+	for word in "$@" ; do
+	    addr=$(echo $word | sed -e s,[aA][dD][dD][rR]:,,)
+	    mask=$(echo $word | sed -e s,[mM][aA][sS][kK]:,,)
+	    if [ "$word" != "$addr" ] ; then
+		result="${addr}"
+	    elif [ "$word" != "$mask" ] ; then
+		result="${result}/${mask}"
+	    fi
+	done
+    fi
+    if [ -z "$result" ] ; then 
+	echo "vserverIfconfig failed to locate $ifname"
+	exit 1
+    else
+	echo $result
+    fi
+}
+
 function usage () {
     set +x 
     echo "Usage: $COMMAND_VBUILD [options] vserver-name [ -- vserver-options ]"
@@ -310,6 +340,7 @@ function usage () {
     echo " -f fcdistro - for creating the root filesystem - defaults to $DEFAULT_FCDISTRO"
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
+    echo " -i ifname: determines ip and netmask attached to ifname, and passes it to the vserver"
     echo " -v : verbose - passes -v to calls to vserver"
     echo "vserver-options"
     echo "  all args after the optional -- are passed to vserver <name> build <options>"
@@ -333,11 +364,14 @@ function main () {
     esac
 
     VERBOSE=
-    while getopts "f:d:p:v" opt ; do
+    IFNAME=""
+    VSERVER_OPTIONS=""
+    while getopts "f:d:p:i:v" opt ; do
 	case $opt in
 	    f) fcdistro=$OPTARG;;
 	    d) pldistro=$OPTARG;;
 	    p) personality=$OPTARG;;
+	    i) IFNAME=$OPTARG;;
 	    v) VERBOSE="-v" ;;
 	    *) usage ;;
 	esac
@@ -361,6 +395,15 @@ function main () {
 	else
 	    usage
 	fi
+    fi
+
+    # with new util-vserver, it is mandatory to provide an IP even for building
+    if [ -n "$VBUILD_MODE" ] ; then
+	[ -z "$IFNAME" ] && IFNAME=$DEFAULT_IFNAME
+    fi
+    if [ -n "$IFNAME" ] ; then
+	localip=$(vserverIfconfig $IFNAME)
+	VSERVER_OPTIONS="$VSERVER_OPTIONS --interface $localip"
     fi
 
     [ -z "$fcdistro" ] && fcdistro=$DEFAULT_FCDISTRO
