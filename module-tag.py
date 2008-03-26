@@ -579,12 +579,13 @@ def main():
                       default="%s/%s"%(os.getenv("HOME"),"modules"),
                       help="""name for dedicated working dir - defaults to ~/modules
 ** THIS MUST NOT ** be your usual working directory""")
-    parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
+    parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=True, 
                       help="run in verbose mode")
+    parser.add_option("-q","--quiet", action="store_false", dest="verbose", 
+                      help="run in quiet (non-verbose) mode")
     parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
                       help="debug mode - mostly more verbose")
     (options, args) = parser.parse_args()
-    if options.debug: options.verbose=True
 
     if len(args) == 0:
         if options.all_modules:
