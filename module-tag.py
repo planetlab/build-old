@@ -332,10 +332,15 @@ that for other purposes than tagging"""%topdir
     def trunk_url (self):
         return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
     def tag_name (self, spec_dict):
-        return "%s-%s-%s"%(#spec_dict[self.module_name_varname],
-                           self.name,
-                           spec_dict[self.module_version_varname],
-                           spec_dict[self.module_taglevel_varname])
+        try:
+            return "%s-%s-%s"%(#spec_dict[self.module_name_varname],
+                self.name,
+                spec_dict[self.module_version_varname],
+                spec_dict[self.module_taglevel_varname])
+        except KeyError,err:
+            print 'Something is wrong with module %s, cannot determine %s - exiting'%(self.name,err)
+            sys.exit(1)
+
     def tag_url (self, spec_dict):
         return "%s/%s/tags/%s"%(Module.config['svnpath'],self.name,self.tag_name(spec_dict))
 
