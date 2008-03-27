@@ -84,8 +84,6 @@ class Svnpath:
         self.options=options
 
     def url_exists (self):
-        if self.options.verbose:
-            print 'Checking url',self.path
         return os.system("svn list %s &> /dev/null"%self.path) == 0
 
     def dir_needs_revert (self):
@@ -124,13 +122,33 @@ class Module:
             while not Module.config[key]:
                 Module.config[key]=raw_input("%s [%s] : "%(message,default)).strip() or default
 
-    def __init__ (self,name,options):
-        self.name=name
-        self.options=options
-        self.moddir="%s/%s"%(options.workdir,name)
-        self.trunkdir="%s/trunk"%(self.moddir)
-        self.varmatcher=re.compile("%define\s+(\S+)\s+(\S*)\s*")
 
+    # for parsing module spec name:branch
+    matcher_branch_spec=mbq=re.compile("\A(?P<name>\w+):(?P<branch>[\w\.]+)\Z")
+    matcher_rpm_define=re.compile("%define\s+(\S+)\s+(\S*)\s*")
+
+    def __init__ (self,module_spec,options):
+        # parse module spec
+        attempt=Module.matcher_branch_spec.match(module_spec)
+        if attempt:
+            self.name=attempt.group('name')
+            self.branch=attempt.group('branch')
+        else:
+            self.name=module_spec
+            self.branch=None
+
+        self.options=options
+        self.moddir="%s/%s"%(options.workdir,self.name)
+        ### xxx cut this
+        if self.branch:
+            print 'Support for branches is experimental & disabled'
+            sys.exit(1)
+
+    def edge_dir (self):
+        if not self.branch:
+            return "%s/trunk"%(self.moddir)
+        else:
+            return "%s/branches/%s"%(self.moddir,self.branch)
 
     def run (self,command):
         return Command(command,self.options).run()
@@ -199,38 +217,43 @@ that for other purposes than tagging"""%topdir
             print 'Cannot find %s - check module name'%self.moddir
             sys.exit(1)
 
-    def init_trunkdir (self):
+    def init_edge_dir (self):
         if self.options.verbose:
-            print 'Checking for',self.trunkdir
-        if not os.path.isdir (self.trunkdir):
-            self.run_fatal("svn up -N %s"%self.trunkdir)
+            print 'Checking for',self.edge_dir()
+        # if branch, edge_dir is two steps down
+        if self.branch:
+            intermediate="%s/branches"%self.moddir
+            if not os.path.isdir (intermediate):
+                self.run_fatal("svn up -N %s"%intermediate)
+        if not os.path.isdir (self.edge_dir()):
+            self.run_fatal("svn up -N %s"%self.edge_dir())
 
-    def revert_trunkdir (self):
+    def revert_edge_dir (self):
         if self.options.verbose:
-            print 'Checking whether',self.trunkdir,'needs being reverted'
-        if Svnpath(self.trunkdir,self.options).dir_needs_revert():
-            self.run_fatal("svn revert -R %s"%self.trunkdir)
+            print 'Checking whether',self.edge_dir(),'needs being reverted'
+        if Svnpath(self.edge_dir(),self.options).dir_needs_revert():
+            self.run_fatal("svn revert -R %s"%self.edge_dir())
 
-    def update_trunkdir (self):
+    def update_edge_dir (self):
         if self.options.fast_checks:
             return
         if self.options.verbose:
-            print 'Updating',self.trunkdir
-        self.run_fatal("svn update -N %s"%self.trunkdir)
+            print 'Updating',self.edge_dir()
+        self.run_fatal("svn update -N %s"%self.edge_dir())
 
     def main_specname (self):
-        attempt="%s/%s.spec"%(self.trunkdir,self.name)
+        attempt="%s/%s.spec"%(self.edge_dir(),self.name)
         if os.path.isfile (attempt):
             return attempt
         else:
             try:
-                return glob("%s/*.spec"%self.trunkdir)[0]
+                return glob("%s/*.spec"%self.edge_dir())[0]
             except:
                 print 'Cannot guess specfile for module %s'%self.name
                 sys.exit(1)
 
     def all_specnames (self):
-        return glob("%s/*.spec"%self.trunkdir)
+        return glob("%s/*.spec"%self.edge_dir())
 
     def parse_spec (self, specfile, varnames):
         if self.options.debug:
@@ -238,8 +261,9 @@ that for other purposes than tagging"""%topdir
         result={}
         f=open(specfile)
         for line in f.readlines():
-            if self.varmatcher.match(line):
-                (var,value)=self.varmatcher.match(line).groups()
+            attempt=Module.matcher_rpm_define.match(line)
+            if attempt:
+                (var,value)=attempt.groups()
                 if var in varnames:
                     result[var]=value
         f.close()
@@ -281,8 +305,9 @@ that for other purposes than tagging"""%topdir
             new=open(newspecfile,"w")
 
             for line in spec.readlines():
-                if self.varmatcher.match(line):
-                    (var,value)=self.varmatcher.match(line).groups()
+                attempt=Module.matcher_rpm_define.match(line)
+                if attempt:
+                    (var,value)=attempt.groups()
                     if var in patch_dict.keys():
                         new.write('%%define %s %s\n'%(var,patch_dict[var]))
                         continue
@@ -329,8 +354,12 @@ that for other purposes than tagging"""%topdir
             for (k,v) in spec_dict.iteritems():
                 print k,'=',v
 
-    def trunk_url (self):
-        return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
+    def edge_url (self):
+        if not self.branch:
+            return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
+        else:
+            return "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,self.branch)
+
     def tag_name (self, spec_dict):
         try:
             return "%s-%s-%s"%(#spec_dict[self.module_name_varname],
@@ -344,15 +373,40 @@ that for other purposes than tagging"""%topdir
     def tag_url (self, spec_dict):
         return "%s/%s/tags/%s"%(Module.config['svnpath'],self.name,self.tag_name(spec_dict))
 
+    def check_svnpath_exists (self, url, message):
+        if self.options.fast_checks:
+            return
+        if self.options.verbose:
+            print 'Checking url (%s) %s'%(url,message),
+        ok=Svnpath(url,self.options).url_exists()
+        if ok:
+            if self.options.verbose: print 'exists - OK'
+        else:
+            if self.options.verbose: print 'KO'
+            print 'Could not find %s URL %s'%(message,url)
+            sys.exit(1)
+    def check_svnpath_not_exists (self, url, message):
+        if self.options.fast_checks:
+            return
+        if self.options.verbose:
+            print 'Checking url (%s) %s'%(url,message),
+        ok=not Svnpath(url,self.options).url_exists()
+        if ok:
+            if self.options.verbose: print 'does not exist - OK'
+        else:
+            if self.options.verbose: print 'KO'
+            print '%s URL %s already exists - exiting'%(message,url)
+            sys.exit(1)
+
     # locate specfile, parse it, check it and show values
     def do_version (self):
         self.init_moddir()
-        self.init_trunkdir()
-        self.revert_trunkdir()
-        self.update_trunkdir()
+        self.init_edge_dir()
+        self.revert_edge_dir()
+        self.update_edge_dir()
         print '==============================',self.name
         spec_dict = self.spec_dict()
-        print 'trunk url',self.trunk_url()
+        print 'edge url',self.edge_url()
         print 'latest tag url',self.tag_url(spec_dict)
         print 'main specfile:',self.main_specname()
         print 'specfiles:',self.all_specnames()
@@ -374,37 +428,37 @@ The module-init function has the following limitations
                 return
 
         self.init_moddir()
-        self.init_trunkdir()
-        self.revert_trunkdir()
-        self.update_trunkdir()
+        self.init_edge_dir()
+        self.revert_edge_dir()
+        self.update_edge_dir()
         spec_dict = self.spec_dict()
 
-        trunk_url=self.trunk_url()
+        edge_url=self.edge_url()
         tag_name=self.tag_name(spec_dict)
         tag_url=self.tag_url(spec_dict)
         # check the tag does not exist yet
-        if not self.options.fast_checks and Svnpath(tag_url,self.options).url_exists():
-            print 'Module %s already has a tag %s'%(self.name,tag_name)
-            return
+        self.check_svnpath_not_exists(tag_url,"new tag")
 
         if self.options.message:
             svnopt='--message "%s"'%self.options.message
         else:
             svnopt='--editor-cmd=%s'%self.options.editor
         self.run_prompt("Create initial tag",
-                        "svn copy %s %s %s"%(svnopt,trunk_url,tag_url))
+                        "svn copy %s %s %s"%(svnopt,edge_url,tag_url))
 
     def do_diff (self):
         self.init_moddir()
-        self.init_trunkdir()
-        self.revert_trunkdir()
-        self.update_trunkdir()
+        self.init_edge_dir()
+        self.revert_edge_dir()
+        self.update_edge_dir()
         spec_dict = self.spec_dict()
         self.show_dict(spec_dict)
 
-        trunk_url=self.trunk_url()
+        edge_url=self.edge_url()
         tag_url=self.tag_url(spec_dict)
-        diff_output = Command("svn diff %s %s"%(tag_url,trunk_url),self.options).output_of()
+        self.check_svnpath_exists(edge_url,"edge track")
+        self.check_svnpath_exists(tag_url,"latest tag")
+        diff_output = Command("svn diff %s %s"%(tag_url,edge_url),self.options).output_of()
         if self.options.list:
             if diff_output:
                 print self.name
@@ -412,7 +466,7 @@ The module-init function has the following limitations
             if not self.options.only or diff_output:
                 print 'x'*40,'module',self.name
                 print 'x'*20,'<',tag_url
-                print 'x'*20,'>',trunk_url
+                print 'x'*20,'>',edge_url
                 print diff_output
 
     def patch_tags_file (self, tagsfile, oldname, newname):
@@ -434,15 +488,15 @@ The module-init function has the following limitations
 
     def do_tag (self):
         self.init_moddir()
-        self.init_trunkdir()
-        self.revert_trunkdir()
-        self.update_trunkdir()
+        self.init_edge_dir()
+        self.revert_edge_dir()
+        self.update_edge_dir()
         # parse specfile
         spec_dict = self.spec_dict()
         self.show_dict(spec_dict)
         
         # side effects
-        trunk_url=self.trunk_url()
+        edge_url=self.edge_url()
         old_tag_name = self.tag_name(spec_dict)
         old_tag_url=self.tag_url(spec_dict)
         if (self.options.new_version):
@@ -457,16 +511,12 @@ The module-init function has the following limitations
         # sanity check
         new_tag_name = self.tag_name(spec_dict)
         new_tag_url=self.tag_url(spec_dict)
-        for url in [ trunk_url, old_tag_url ] :
-            if not self.options.fast_checks and not Svnpath(url,self.options).url_exists():
-                print 'Could not find svn URL %s'%url
-                sys.exit(1)
-        if not self.options.fast_checks and Svnpath(new_tag_url,self.options).url_exists():
-            print 'New tag\'s svn URL %s already exists ! '%url
-            sys.exit(1)
+        self.check_svnpath_exists (edge_url,"edge track")
+        self.check_svnpath_exists (old_tag_url,"previous tag")
+        self.check_svnpath_not_exists (new_tag_url,"new tag")
 
         # checking for diffs
-        diff_output=Command("svn diff %s %s"%(old_tag_url,trunk_url),
+        diff_output=Command("svn diff %s %s"%(old_tag_url,edge_url),
                             self.options).output_of()
         if len(diff_output) == 0:
             if not prompt ("No difference in trunk for module %s, want to tag anyway"%self.name,False):
@@ -505,33 +555,50 @@ Please write a changelog for this new tag in the section above
             buildname="build"
         build = Module(buildname,self.options)
         build.init_moddir()
-        build.init_trunkdir()
-        build.revert_trunkdir()
-        build.update_trunkdir()
+        build.init_edge_dir()
+        build.revert_edge_dir()
+        build.update_edge_dir()
         
-        for tagsfile in glob(build.trunkdir+"/*-tags*.mk"):
+        for tagsfile in glob(build.edge_dir()+"/*-tags*.mk"):
             if prompt("Want to adopt new tag in %s"%tagsfile):
                 self.patch_tags_file(tagsfile,old_tag_name,new_tag_name)
 
         paths=""
-        paths += self.trunkdir + " "
-        paths += build.trunkdir + " "
+        paths += self.edge_dir() + " "
+        paths += build.edge_dir() + " "
         self.run_prompt("Check","svn diff " + paths)
         self.run_prompt("Commit","svn commit --file %s %s"%(changelog,paths))
-        self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog,trunk_url,new_tag_url))
+        self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog,edge_url,new_tag_url))
 
         if self.options.debug:
             print 'Preserving',changelog
         else:
             os.unlink(changelog)
             
-usage="""Usage: %prog options module1 [ .. modulen ]
+usage="""Usage: %prog options module_desc [ .. module_desc ]
 Purpose:
   manage subversion tags and specfile
-  requires the specfile to define version and taglevel
+  requires the specfile to define *version* and *taglevel*
   OR alternatively 
   redirection variables module_version_varname / module_taglevel_varname
+Trunk:
+  by default, the trunk of modules is taken into account
+  in this case, just mention the module name as <module_desc>
+Branches:
+  if you wish to work on a branch rather than on the trunk, 
+  you can use the following syntax for <module_desc>
+  Mom:2.1
+      works on Mom/branches/2.1 
 """
+# unsupported yet
+#"""
+#  branch:Mom
+#      the branch_id is deduced from the current *version* in the trunk's specfile
+#      e.g. if Mom/trunk/Mom.spec specifies %define version 2.3, then this script
+#      would use Mom/branches/2.2
+#      if if stated %define version 3.0, then the script fails
+#"""
+
 functions={ 
     'diff' : "show difference between trunk and latest tag",
     'tag'  : """increment taglevel in specfile, insert changelog in specfile,
