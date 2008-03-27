@@ -21,7 +21,8 @@ linux-2.6
 madwifi
 pf2slice
 pl_sshd
-plcmdline
+# not used during build - taking out
+#plcmdline
 proper
 pypcilib
 ulogd
