@@ -2,7 +2,7 @@
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/trunk
-pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/trunk
+pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-1
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
@@ -21,13 +21,13 @@ libhttpd++-SVNPATH		:= http://svn.planet-lab.org/svn/libhttpd++/tags/libhttpd++-
 proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/tags/proper-0.3-37
 ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/tags/ulogd-1.24-4
 PlanetFlow-SVNPATH		:= http://svn.planet-lab.org/svn/PlanetFlow/tags/PlanetFlow-4.0-3
-Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-2
+Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-5
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-1
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-4
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-4.2-1
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-2
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-3.2-5
-pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.1-1
+pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.1-2
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-3.4-5
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-3
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-1.0-0
