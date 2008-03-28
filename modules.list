@@ -4,7 +4,7 @@ BootstrapFS
 CoDemux
 Mom
 MyPLC
-NodeManager
+NodeManager:1.7
 NodeUpdate
 PLCAPI
 PingOfDeath

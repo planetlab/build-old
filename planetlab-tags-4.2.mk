@@ -11,8 +11,7 @@ util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vs
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-2
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-# not stable yet
-NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/trunk
+NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/tags/NodeManager-1.7-3
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-10
 libhttpd++-SVNPATH		:= http://svn.planet-lab.org/svn/libhttpd++/tags/libhttpd++-0.1.4-1
 proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/tags/proper-0.3-37
