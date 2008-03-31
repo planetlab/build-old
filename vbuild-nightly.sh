@@ -177,7 +177,11 @@ function runtest () {
     # check it out
     ssh ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
-    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/runtest --build ${SVNPATH} --url ${url} --config "${TESTCONFIG}" --all 
+    configs=""
+    for config in ${TESTCONFIG} ; do
+	configs="$configs --config $config"
+    done
+    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all 
 	
     if [ "$?" != 0 ] ; then
 	failure
