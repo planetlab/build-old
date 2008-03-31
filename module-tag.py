@@ -139,16 +139,15 @@ class Module:
 
         self.options=options
         self.moddir="%s/%s"%(options.workdir,self.name)
-        ### xxx cut this
-        if self.branch:
-            print 'Support for branches is experimental & disabled'
-            sys.exit(1)
 
     def edge_dir (self):
         if not self.branch:
             return "%s/trunk"%(self.moddir)
         else:
             return "%s/branches/%s"%(self.moddir,self.branch)
+
+    def tags_dir (self):
+        return "%s/tags"%(self.moddir)
 
     def run (self,command):
         return Command(command,self.options).run()
@@ -217,29 +216,40 @@ that for other purposes than tagging"""%topdir
             print 'Cannot find %s - check module name'%self.moddir
             sys.exit(1)
 
-    def init_edge_dir (self):
+    def init_subdir (self,fullpath):
         if self.options.verbose:
-            print 'Checking for',self.edge_dir()
-        # if branch, edge_dir is two steps down
-        if self.branch:
-            intermediate="%s/branches"%self.moddir
-            if not os.path.isdir (intermediate):
-                self.run_fatal("svn up -N %s"%intermediate)
-        if not os.path.isdir (self.edge_dir()):
-            self.run_fatal("svn up -N %s"%self.edge_dir())
+            print 'Checking for',fullpath
+        if not os.path.isdir (fullpath):
+            self.run_fatal("svn up -N %s"%fullpath)
 
-    def revert_edge_dir (self):
-        if self.options.verbose:
-            print 'Checking whether',self.edge_dir(),'needs being reverted'
-        if Svnpath(self.edge_dir(),self.options).dir_needs_revert():
-            self.run_fatal("svn revert -R %s"%self.edge_dir())
-
-    def update_edge_dir (self):
+    def revert_subdir (self,fullpath):
         if self.options.fast_checks:
+            if self.options.verbose: print 'Skipping revert of %s'%fullpath
             return
         if self.options.verbose:
-            print 'Updating',self.edge_dir()
-        self.run_fatal("svn update -N %s"%self.edge_dir())
+            print 'Checking whether',fullpath,'needs being reverted'
+        if Svnpath(fullpath,self.options).dir_needs_revert():
+            self.run_fatal("svn revert -R %s"%fullpath)
+
+    def update_subdir (self,fullpath):
+        if self.options.fast_checks:
+            if self.options.verbose: print 'Skipping update of %s'%fullpath
+            return
+        if self.options.verbose:
+            print 'Updating',fullpath
+        self.run_fatal("svn update -N %s"%fullpath)
+
+    def init_edge_dir (self):
+        # if branch, edge_dir is two steps down
+        if self.branch:
+            self.init_subdir("%s/branches"%self.moddir)
+        self.init_subdir(self.edge_dir())
+
+    def revert_edge_dir (self):
+        self.revert_subdir(self.edge_dir())
+
+    def update_edge_dir (self):
+        self.update_subdir(self.edge_dir())
 
     def main_specname (self):
         attempt="%s/%s.spec"%(self.edge_dir(),self.name)
@@ -354,11 +364,14 @@ that for other purposes than tagging"""%topdir
             for (k,v) in spec_dict.iteritems():
                 print k,'=',v
 
+    def mod_url (self):
+        return "%s/%s"%(Module.config['svnpath'],self.name)
+
     def edge_url (self):
         if not self.branch:
-            return "%s/%s/trunk"%(Module.config['svnpath'],self.name)
+            return "%s/trunk"%(self.mod_url())
         else:
-            return "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,self.branch)
+            return "%s/branches/%s"%(self.mod_url(),self.branch)
 
     def tag_name (self, spec_dict):
         try:
@@ -371,7 +384,7 @@ that for other purposes than tagging"""%topdir
             sys.exit(1)
 
     def tag_url (self, spec_dict):
-        return "%s/%s/tags/%s"%(Module.config['svnpath'],self.name,self.tag_name(spec_dict))
+        return "%s/tags/%s"%(self.mod_url(),self.tag_name(spec_dict))
 
     def check_svnpath_exists (self, url, message):
         if self.options.fast_checks:
@@ -399,28 +412,30 @@ that for other purposes than tagging"""%topdir
             sys.exit(1)
 
     # locate specfile, parse it, check it and show values
+##############################
     def do_version (self):
         self.init_moddir()
         self.init_edge_dir()
         self.revert_edge_dir()
         self.update_edge_dir()
-        print '==============================',self.name
         spec_dict = self.spec_dict()
-        print 'edge url',self.edge_url()
-        print 'latest tag url',self.tag_url(spec_dict)
-        print 'main specfile:',self.main_specname()
-        print 'specfiles:',self.all_specnames()
         for varname in self.varnames:
             if not spec_dict.has_key(varname):
                 print 'Could not find %%define for %s'%varname
                 return
             else:
                 print varname+":",spec_dict[varname]
+        print 'edge url',self.edge_url()
+        print 'latest tag url',self.tag_url(spec_dict)
+        if self.options.verbose:
+            print 'main specfile:',self.main_specname()
+            print 'specfiles:',self.all_specnames()
 
     init_warning="""WARNING
 The module-init function has the following limitations
 * it does not handle changelogs
 * it does not scan the -tags*.mk files to adopt the new tags"""
+##############################
     def do_init(self):
         if self.options.verbose:
             print Module.init_warning
@@ -446,6 +461,7 @@ The module-init function has the following limitations
         self.run_prompt("Create initial tag",
                         "svn copy %s %s %s"%(svnopt,edge_url,tag_url))
 
+##############################
     def do_diff (self):
         self.init_moddir()
         self.init_edge_dir()
@@ -469,6 +485,7 @@ The module-init function has the following limitations
                 print 'x'*20,'>',edge_url
                 print diff_output
 
+##############################
     def patch_tags_file (self, tagsfile, oldname, newname):
         newtagsfile=tagsfile+".new"
         if self.options.verbose:
@@ -575,6 +592,67 @@ Please write a changelog for this new tag in the section above
         else:
             os.unlink(changelog)
             
+##############################
+    def do_branch (self):
+
+        print 'module-branch is experimental - exiting'
+        sys.exit(1)
+
+        if self.branch:
+            print 'Cannot create a branch from another branch - exiting'
+            sys.exit(1)
+        self.init_moddir()
+        
+        # xxx - tmp
+        import readline
+        answer = raw_input ("enter tag name [trunk]").strip()
+        if answer == "" or answer == "trunk":
+            ref="/trunk"
+            from_trunk=True
+        else:
+            ref="/tags/%s-%s"%(self.name,answer)
+            from_trunk=False
+
+        ref_url = "%s/%s"%(self.mod_url(),ref)
+        self.check_svnpath_exists (ref_url,"branch creation point")
+        print "Using starting point %s"%ref_url
+        
+        spec=self.main_specname()
+        if not from_trunk:
+            self.init_subdir(self.tags_dir())
+            workdir="%s/%s"%(self.moddir,ref)
+        else:
+            workdir=self.edge_dir()
+
+        self.init_subdir(workdir)
+        self.revert_subdir(workdir)
+        self.update_subdir(workdir)
+
+        print 'got spec',spec
+        if not os.path.isfile(spec):
+            print 'cannot find spec'
+        
+        # read version & taglevel from the origin specfile
+        print 'parsing',spec
+        origin=self.spec_dict()
+        self.show_dict(origin)
+
+        default_branch=self.options.new_version
+        if not default_branch:
+#            try:
+                match=re.compile("\A(?P<main>.*[\.-_])(?P<subid>[0-9]+)\Z").match(origin['version'])
+                new_subid=int(match.group('subid'))+1
+                default_branch="%s%d"%(match.group('main'),new_subid)
+#            except:
+#                default_branch="not found"
+        new_branch_name=raw_input("Enter branch name [%s] "%default_branch) or default_branch
+        
+        new_branch_url="%s/branches/%s"%(self.mod_url(),new_branch_name)
+        self.check_svnpath_not_exists(new_branch_url,"new branch")
+        print new_branch_name
+        
+
+##############################
 usage="""Usage: %prog options module_desc [ .. module_desc ]
 Purpose:
   manage subversion tags and specfile
@@ -604,19 +682,19 @@ functions={
     'tag'  : """increment taglevel in specfile, insert changelog in specfile,
                 create new tag and and adopt it in build/*-tags*.mk""",
     'init' : "create initial tag",
-    'version' : "only check specfile and print out details"}
+    'version' : "only check specfile and print out details",
+    'branch' : """create a branch for this module. 
+                either from trunk, or from a tag""",
+}
 
 def main():
 
-    if sys.argv[0].find("diff") >= 0:
-        mode = "diff"
-    elif sys.argv[0].find("tag") >= 0:
-        mode = "tag"
-    elif sys.argv[0].find("init") >= 0:
-        mode = "init"
-    elif sys.argv[0].find("version") >= 0:
-        mode = "version"
-    else:
+    mode=None
+    for function in functions.keys():
+        if sys.argv[0].find(function) >= 0:
+            mode = function
+            break
+    if not mode:
         print "Unsupported command",sys.argv[0]
         sys.exit(1)
 
@@ -629,7 +707,7 @@ def main():
                       help="run on all modules as found in %s"%all_modules)
     parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
                       help="skip safety checks, such as svn updates -- use with care")
-    if mode == "tag" :
+    if mode == "tag" or mode == 'branch':
         parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
                           help="set new version and reset taglevel to 0")
     if mode == "tag" :
@@ -668,18 +746,10 @@ def main():
     Module.init_homedir(options)
     for modname in args:
         module=Module(modname,options)
-        if sys.argv[0].find("diff") >= 0:
-            module.do_diff()
-        elif sys.argv[0].find("tag") >= 0:
-            module.do_tag()
-        elif sys.argv[0].find("init") >= 0:
-            module.do_init()
-        elif sys.argv[0].find("version") >= 0:
-            module.do_version()
-        else:
-            print "Unsupported command",sys.argv[0]
-            parser.print_help()
-            sys.exit(1)
+        print '==============================',module.name
+        # call the method called do_<mode>
+        method=Module.__dict__["do_%s"%mode]
+        method(module)
 
 # basically, we exit if anything goes wrong
 if __name__ == "__main__" :
