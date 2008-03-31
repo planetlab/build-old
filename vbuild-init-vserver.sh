@@ -216,6 +216,9 @@ function post_install () {
     else
 	post_install_myplc "$@"
     fi
+    # setup localtime from the host
+    vserver=$1; shift 
+    cp /etc/localtime /vserver/$vserver/etc/localtime
 }
 
 function post_install_vbuild () {
