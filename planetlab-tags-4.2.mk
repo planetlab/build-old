@@ -23,7 +23,8 @@ fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
 # not stable yet
 pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-1
 PlanetFlow-SVNPATH		:= http://svn.planet-lab.org/svn/PlanetFlow/tags/PlanetFlow-4.0-3
-Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-5
+Mom-branch			:= 2.2
+Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-3
 # not stable yet
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-1
