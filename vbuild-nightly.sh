@@ -171,7 +171,9 @@ function runtest () {
     url=$(echo $rpm | sed -e "s,/vservers/$BASE/build,${TESTBUILDURL}${PLDISTRO}/${BASE},")
 
     # compute test directory name on test box
-    testdir=test-${BASE}
+    testdir=chroot-${BASE}
+    # use another name if any config contains vserver
+    echo $TESTCONFIG | grep vserver &> /dev/null && testdir=vserver-${BASE}
     # clean it
     ssh ${TESTBOXSSH} rm -rf ${testdir}
     # check it out
