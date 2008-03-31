@@ -218,7 +218,7 @@ function post_install () {
     fi
     # setup localtime from the host
     vserver=$1; shift 
-    cp /etc/localtime /vserver/$vserver/etc/localtime
+    cp /etc/localtime /vservers/$vserver/etc/localtime
 }
 
 function post_install_vbuild () {
