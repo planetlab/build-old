@@ -116,7 +116,7 @@ function mirror_distro_arch () {
     else
 	for repopath in $paths; do
 	    echo "============================== $distro -> $distroindex $repopath"
-	    [ -z "$dry_run" ] && mkdir -p ${root}/${repopath}
+	    [ -z "$dry_run" ] && mkdir -p ${root}/${localpath}/${repopath}
 	    command="rsync $options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
 	    echo $command
 	    $command
