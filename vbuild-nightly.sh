@@ -11,6 +11,8 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
+DEFAULT_TESTCONFIG32="onelab onelab_testbox32"
+DEFAULT_TESTCONFIG64="onelab onelab_testbox64"
 DEFAULT_IFNAME=eth0
 
 # web publishing results
@@ -175,7 +177,7 @@ function runtest () {
     # check it out
     ssh ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
-    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/runtest --build ${SVNPATH} --url ${url} --all
+    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/runtest --build ${SVNPATH} --url ${url} --config "%{TESTCONFIG}" --all 
 	
     if [ "$?" != 0 ] ; then
 	failure
@@ -210,7 +212,6 @@ function usage () {
     echo "Usage: $COMMAND [option] make-targets"
     echo "This is $REVISION"
     echo "Supported options"
-    echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
     echo " -f fcdistro - defaults to $DEFAULT_FCDISTRO"
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
@@ -219,16 +220,18 @@ function usage () {
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
     echo " -s svnpath - where to fetch the build module"
-    echo " -o : overwrite - re-run in base directory, do not create vserver"
-    echo " -m mailto"
-    echo " -a makevar=value - space in values are not supported"
+    echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
+    echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG32 or $DEFAULT_TESTCONFIG64"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
-    echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
+    echo " -m mailto - no default"
+    echo " -O : overwrite - re-run in base directory, do not re-create vserver"
     echo " -B : run build only"
     echo " -T : run test only"
-    echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
+    echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
     echo " -v : be verbose"
     echo " -7 : uses weekday-@FCDISTRO@ as base"
+    echo " -a makevar=value - space in values are not supported"
+    echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
     exit 1
 }
 
@@ -241,9 +244,8 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
-    while getopts "nf:d:b:p:t:r:s:om:a:w:i:BTvh7" opt ; do
+    while getopts "f:d:p:b:t:r:s:x:c:w:m:OBTnv7a:i:" opt ; do
 	case $opt in
-	    n) DRY_RUN="-n" ;;
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
 	    p) PERSONALITY=$OPTARG ;;
@@ -251,16 +253,18 @@ function main () {
 	    t) PLDISTROTAGS=$OPTARG ;;
 	    r) TAGSRELEASE=$OPTARG ;;
 	    s) SVNPATH=$OPTARG ;;
-	    o) OVERWRITEMODE=true ;;
-	    m) MAILTO=$OPTARG ;;
-	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
+	    x) TESTSVNPATH=$OPTARG ;;
+	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
-	    i) IFNAME=$OPTARG ;;
+	    m) MAILTO=$OPTARG ;;
+	    O) OVERWRITEMODE=true ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ; OVERWRITEMODE=true ;;
-	    x) TESTSVNPATH=$OPTARG ;;
+	    n) DRY_RUN="-n" ;;
 	    v) set -x ;;
 	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
+	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
+	    i) IFNAME=$OPTARG ;;
 	    h|*) usage ;;
 	esac
     done
@@ -282,6 +286,8 @@ function main () {
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$TESTSVNPATH" ] && TESTSVNPATH="$DEFAULT_TESTSVNPATH"
+    [ "$PERSONALITY" == linux32] && [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG32"
+    [ "$PERSONALITY" == linux64] && [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG64"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
