@@ -11,8 +11,8 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
-DEFAULT_TESTCONFIG32="onelab onelab_testbox32"
-DEFAULT_TESTCONFIG64="onelab onelab_testbox64"
+DEFAULT_TESTCONFIG32="main 1vnodes 1testbox32"
+DEFAULT_TESTCONFIG64="main 1vnodes 1testbox64"
 DEFAULT_IFNAME=eth0
 
 # web publishing results
