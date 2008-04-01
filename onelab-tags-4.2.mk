@@ -1,7 +1,8 @@
 # $Id$
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
-linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-1
+# not stable yet
+linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
 nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/tags/nozomi-2.21-1
