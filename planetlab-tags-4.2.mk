@@ -6,7 +6,7 @@ linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.0-11
-util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/scholz
+util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-1
 # not stable yet
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-2
