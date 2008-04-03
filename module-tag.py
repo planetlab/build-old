@@ -140,6 +140,12 @@ class Module:
         self.options=options
         self.moddir="%s/%s"%(options.workdir,self.name)
 
+    def friendly_name (self):
+        if not self.branch:
+            return self.name
+        else:
+            return "%s:%s"%(self.name,self.branch)
+
     def edge_dir (self):
         if not self.branch:
             return "%s/trunk"%(self.moddir)
@@ -482,7 +488,7 @@ The module-init function has the following limitations
                 print self.name
         else:
             if not self.options.only or diff_output:
-                print 'x'*40,'module',self.name
+                print 'x'*30,'module',self.friendly_name()
                 print 'x'*20,'<',tag_url
                 print 'x'*20,'>',edge_url
                 print diff_output
@@ -748,7 +754,7 @@ def main():
     Module.init_homedir(options)
     for modname in args:
         module=Module(modname,options)
-        print '==============================',module.name
+        print '========================================',module.friendly_name()
         # call the method called do_<mode>
         method=Module.__dict__["do_%s"%mode]
         method(module)
