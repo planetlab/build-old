@@ -4,8 +4,8 @@ BootstrapFS
 CoDemux
 # 4.2
 Mom:2.2
-Mom
 MyPLC
+# 4.2
 NodeManager:1.7
 NodeUpdate
 PLCAPI
@@ -30,7 +30,7 @@ pypcilib
 ulogd
 util-python
 # using branches/scholz for this module
-# util-vserver
+util-vserver:scholz
 util-vserver-pl
 vsys
 wireless-tools

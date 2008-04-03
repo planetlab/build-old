@@ -124,8 +124,8 @@ class Module:
 
 
     # for parsing module spec name:branch
-    matcher_branch_spec=mbq=re.compile("\A(?P<name>\w+):(?P<branch>[\w\.]+)\Z")
-    matcher_rpm_define=re.compile("%define\s+(\S+)\s+(\S*)\s*")
+    matcher_branch_spec=re.compile("\A(?P<name>[\w-]+):(?P<branch>[\w\.]+)\Z")
+    matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
     def __init__ (self,module_spec,options):
         # parse module spec
@@ -266,20 +266,22 @@ that for other purposes than tagging"""%topdir
         return glob("%s/*.spec"%self.edge_dir())
 
     def parse_spec (self, specfile, varnames):
-        if self.options.debug:
-            print 'parse_spec',specfile,
+        if self.options.verbose:
+            print 'Parsing',specfile,
+            for var in varnames:
+                print "[%s]"%var,
+            print ""
         result={}
         f=open(specfile)
         for line in f.readlines():
             attempt=Module.matcher_rpm_define.match(line)
             if attempt:
-                (var,value)=attempt.groups()
+                (define,var,value)=attempt.groups()
                 if var in varnames:
                     result[var]=value
         f.close()
-        if self.options.verbose:
-            print 'found',len(result),'keys'
         if self.options.debug:
+            print 'found',len(result),'keys'
             for (k,v) in result.iteritems():
                 print k,'=',v
         return result
@@ -317,9 +319,9 @@ that for other purposes than tagging"""%topdir
             for line in spec.readlines():
                 attempt=Module.matcher_rpm_define.match(line)
                 if attempt:
-                    (var,value)=attempt.groups()
+                    (define,var,value)=attempt.groups()
                     if var in patch_dict.keys():
-                        new.write('%%define %s %s\n'%(var,patch_dict[var]))
+                        new.write('%%%s %s %s\n'%(define,var,patch_dict[var]))
                         continue
                 new.write(line)
             spec.close()

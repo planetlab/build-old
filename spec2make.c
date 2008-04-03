@@ -184,8 +184,9 @@ main(int argc, char *argv[])
   }
 
   /* export some macros to make */
+  /* note : this relies on pl-specific conventions and might be wrong */
   { 
-    char *macros[] = { "release" , "name" , "version" , "subversion" , NULL } ;
+    char *macros[] = { "release" , "name" , "version" , "taglevel" , NULL } ;
     char **nav;
     char *macro=malloc(32);
     for (nav=macros; *nav; nav++) {
