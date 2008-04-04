@@ -18,7 +18,7 @@ pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-10
 libhttpd++-SVNPATH		:= http://svn.planet-lab.org/svn/libhttpd++/tags/libhttpd++-0.1.4-1
 proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/tags/proper-0.3-37
 # not stable yet
-CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/trunk
+CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-9
 ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/tags/ulogd-1.24-4
 # not stable yet
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
