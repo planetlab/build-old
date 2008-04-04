@@ -112,7 +112,12 @@ function success () {
     mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
-    touch ${WEBLOG}.ok
+    if [ -n "DO_TEST"] ; then
+	echo "Successfully built and tested - see testlogs for details" > ${WEBLOG}.pass
+	rm -f ${WEBLOG}.ok
+    else
+	echo "Successfully built"> ${WEBLOG}.ok
+    fi
     if [ -n "$MAILTO" ] ; then
 	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successful build for ${BASE}" $MAILTO
     fi
@@ -183,9 +188,16 @@ function runtest () {
     for config in ${TESTCONFIG} ; do
 	configs="$configs --config $config"
     done
-    ssh 2>&1 ${TESTBOXSSH} python -u ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all 
-	
-    if [ "$?" != 0 ] ; then
+    
+    # proceed despite of set -e
+    success=true
+    ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
+
+    # gather logs in the vserver
+    mkdir -p /vservers/$BASE/build/testlogs
+    ssh 2>&1 ${TESTBOXSSH} tar -C ${testdir}/logs -cf . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+
+    if [ -z "$success" ] ; then
 	failure
     fi
     
@@ -394,6 +406,7 @@ function main () {
 	
 	if [ -n "$DO_TEST" ] ; then 
 	    runtest
+	    rsync --archive --delete --verbose /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
 	fi
 
 	success 
