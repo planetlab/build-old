@@ -197,7 +197,7 @@ function runtest () {
     mkdir -p /vservers/$BASE/build/testlogs
     ssh 2>&1 ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
     # push them to the build web
-    rsync --archive --delete --verbose /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
+    rsync --archive --delete /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
     chmod -R a+r $WEBPATH/$BASE/testlogs/
 
     if [ -z "$success" ] ; then
