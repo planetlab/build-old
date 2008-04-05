@@ -189,13 +189,15 @@ function runtest () {
 	configs="$configs --config $config"
     done
     
-    # proceed despite of set -e
+    # need to proceed despite of set -e
     success=true
     ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
-    ssh 2>&1 ${TESTBOXSSH} tar -C ${testdir}/logs -cf . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+    ssh 2>&1 ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+    # push them to the build web
+    rsync --archive --delete --verbose /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
 
     if [ -z "$success" ] ; then
 	failure
@@ -406,7 +408,6 @@ function main () {
 	
 	if [ -n "$DO_TEST" ] ; then 
 	    runtest
-	    rsync --archive --delete --verbose /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
 	fi
 
 	success 
