@@ -8,24 +8,41 @@ import time
 from glob import glob
 from optparse import OptionParser
 
-def prompt (question,default=True):
-    if default:
-        question += " [y]/n ? "
-    else:
-        question += " y/[n] ? "
+# e.g. other_choices = [ ('d','iff') , ('g','uess') ] - lowercase 
+def prompt (question,default=True,other_choices=[]):
+    if not isinstance (other_choices,list):
+        other_choices = [ other_choices ]
+    chars = [ c for (c,rest) in other_choices ]
+
+    the_prompt = []
+    if 'y' not in chars:
+        if default is True: the_prompt.append('[y]')
+        else : the_prompt.append('y')
+    if 'n' not in chars:
+        if default is False: the_prompt.append('[n]')
+        else : the_prompt.append('n')
+
+    for (char,choice) in other_choices:
+        if default == char:
+            the_prompt.append("["+char+"]"+choice)
+        else:
+            the_prompt.append("<"+char+">"+choice)
     try:
-        answer=raw_input(question)
+        answer=raw_input(question + " " + "/".join(the_prompt) + " ? ")
         if not answer:
             return default
-        elif answer[0] in [ 'y','Y']:
-            return True
-        elif answer[0] in [ 'n','N']:
-            return False
-        else:
-            return prompt(question,default)
-    except KeyboardInterrupt:
-        print "Aborted"
-        return False
+        answer=answer[0].lower()
+        if answer == 'y':
+            if 'y' in chars: return 'y'
+            else: return True
+        elif answer == 'n':
+            if 'n' in chars: return 'n'
+            else: return False
+        elif other_choices:
+            for (char,choice) in other_choices:
+                if answer == char:
+                    return char
+        return prompt(question,default,other_choices)
     except:
         raise
 
@@ -163,7 +180,7 @@ class Module:
         if not self.options.verbose:
             question=message
         else:
-            question="Want to run " + command
+            question=message+" - want to run " + command
         if prompt(question,True):
             self.run(command)            
 
@@ -439,12 +456,12 @@ that for other purposes than tagging"""%topdir
             print 'main specfile:',self.main_specname()
             print 'specfiles:',self.all_specnames()
 
-    init_warning="""WARNING
+    init_warning="""*** WARNING
 The module-init function has the following limitations
 * it does not handle changelogs
 * it does not scan the -tags*.mk files to adopt the new tags"""
 ##############################
-    def do_init(self):
+    def do_sync(self):
         if self.options.verbose:
             print Module.init_warning
             if not prompt('Want to proceed anyway'):
@@ -470,7 +487,7 @@ The module-init function has the following limitations
                         "svn copy %s %s %s"%(svnopt,edge_url,tag_url))
 
 ##############################
-    def do_diff (self):
+    def do_diff (self,compute_only=False):
         self.init_moddir()
         self.init_edge_dir()
         self.revert_edge_dir()
@@ -482,7 +499,14 @@ The module-init function has the following limitations
         tag_url=self.tag_url(spec_dict)
         self.check_svnpath_exists(edge_url,"edge track")
         self.check_svnpath_exists(tag_url,"latest tag")
-        diff_output = Command("svn diff %s %s"%(tag_url,edge_url),self.options).output_of()
+        command="svn diff %s %s"%(tag_url,edge_url)
+        if compute_only:
+            print 'Getting diff with %s'%command
+        diff_output = Command(command,self.options).output_of()
+        # if used as a utility
+        if compute_only:
+            return (spec_dict,edge_url,tag_url,diff_output)
+        # otherwise print the result
         if self.options.list:
             if diff_output:
                 print self.name
@@ -494,22 +518,47 @@ The module-init function has the following limitations
                 print diff_output
 
 ##############################
-    def patch_tags_file (self, tagsfile, oldname, newname):
+    # using fine_grain means replacing only those instances that currently refer to this tag
+    # otherwise, <module>-SVNPATH is replaced unconditionnally
+    def patch_tags_file (self, tagsfile, oldname, newname,fine_grain=True):
         newtagsfile=tagsfile+".new"
-        if self.options.verbose:
-            print 'Replacing %s into %s in %s'%(oldname,newname,tagsfile)
         tags=open (tagsfile)
         new=open(newtagsfile,"w")
-        matcher=re.compile("^(.*)%s(.*)"%oldname)
-        for line in tags.readlines():
-            if not matcher.match(line):
-                new.write(line)
-            else:
-                (begin,end)=matcher.match(line).groups()
-                new.write(begin+newname+end+"\n")
+
+        matches=0
+        # fine-grain : replace those lines that refer to oldname
+        if fine_grain:
+            if self.options.verbose:
+                print 'Replacing %s into %s\n\tin %s .. '%(oldname,newname,tagsfile),
+            matcher=re.compile("^(.*)%s(.*)"%oldname)
+            for line in tags.readlines():
+                if not matcher.match(line):
+                    new.write(line)
+                else:
+                    (begin,end)=matcher.match(line).groups()
+                    new.write(begin+newname+end+"\n")
+                    matches += 1
+        # brute-force : change uncommented lines that define <module>-SVNPATH
+        else:
+            if self.options.verbose:
+                print 'Setting %s-SVNPATH for using %s\n\tin %s .. '%(self.name,newname,tagsfile),
+            pattern="\A\s*%s-SVNPATH\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s/[^\s]+"\
+                                          %(self.name,self.name)
+            matcher_module=re.compile(pattern)
+            for line in tags.readlines():
+                attempt=matcher_module.match(line)
+                if attempt:
+                    svnpath="%s-SVNPATH"%self.name
+                    replacement = "%-32s:= %s/%s/tags/%s\n"%(svnpath,attempt.group('url_main'),self.name,newname)
+                    new.write(replacement)
+                    matches += 1
+                else:
+                    new.write(line)
         tags.close()
         new.close()
         os.rename(newtagsfile,tagsfile)
+        if self.options.verbose: print "%d changes"%matches
+        return matches
 
     def do_tag (self):
         self.init_moddir()
@@ -584,9 +633,37 @@ Please write a changelog for this new tag in the section above
         build.revert_edge_dir()
         build.update_edge_dir()
         
-        for tagsfile in glob(build.edge_dir()+"/*-tags*.mk"):
-            if prompt("Want to adopt new tag in %s"%tagsfile):
-                self.patch_tags_file(tagsfile,old_tag_name,new_tag_name)
+        tagsfiles=glob(build.edge_dir()+"/*-tags*.mk")
+        tagsdict=dict( [ (x,'todo') for x in tagsfiles ] )
+        while True:
+            for (tagsfile,status) in tagsdict.iteritems():
+                while tagsdict[tagsfile] == 'todo' :
+                    choice = prompt ("Want to adopt %s in %s    "%(new_tag_name,os.path.basename(tagsfile)),'a',
+                                     [ ('n', 'ext'), ('a','uto'), ('d','iff'), ('r','evert'), ('h','elp') ] )
+                    if choice is True:
+                        self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=False)
+                    elif choice is 'n':
+                        print 'Done with %s'%os.path.basename(tagsfile)
+                        tagsdict[tagsfile]='done'
+                    elif choice == 'a':
+                        self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=True)
+                    elif choice == 'd':
+                        self.run("svn diff %s"%tagsfile)
+                    elif choice == 'r':
+                        self.run("svn revert %s"%tagsfile)
+                    elif choice == 'h':
+                        name=self.name
+                        print """y: unconditionnally changes any line setting %(name)s-SVNPATH to using %(new_tag_name)s
+a: changes the definition of %(name)s only if it currently refers to %(old_tag_name)s
+d: shows current diff for this tag file
+r: reverts that tag file
+n: move to next file"""%locals()
+                    else:
+                        print 'unexpected'
+            if prompt("Want to review changes on tags files",False):
+                tagsdict = dict ( [ (x, 'todo') for tagsfile in tagsfiles ] )
+            else:
+                break
 
         paths=""
         paths += self.edge_dir() + " "
@@ -603,62 +680,75 @@ Please write a changelog for this new tag in the section above
 ##############################
     def do_branch (self):
 
-        print 'module-branch is experimental - exiting'
-        sys.exit(1)
-
+        # save self.branch if any, as a hint for the new branch 
+        # do this before anything else and restore .branch to None, 
+        # as this is part of the class's logic
+        new_branch_name=None
         if self.branch:
-            print 'Cannot create a branch from another branch - exiting'
-            sys.exit(1)
-        self.init_moddir()
-        
-        # xxx - tmp
-        import readline
-        answer = raw_input ("enter tag name [trunk]").strip()
-        if answer == "" or answer == "trunk":
-            ref="/trunk"
-            from_trunk=True
-        else:
-            ref="/tags/%s-%s"%(self.name,answer)
-            from_trunk=False
+            new_branch_name=self.branch
+            self.branch=None
 
-        ref_url = "%s/%s"%(self.mod_url(),ref)
-        self.check_svnpath_exists (ref_url,"branch creation point")
-        print "Using starting point %s"%ref_url
-        
-        spec=self.main_specname()
-        if not from_trunk:
-            self.init_subdir(self.tags_dir())
-            workdir="%s/%s"%(self.moddir,ref)
-        else:
-            workdir=self.edge_dir()
+        # check module-diff is empty
+        # used in do_diff, and should be options for diff only
+        (spec_dict,edge_url,tag_url,diff_listing) = self.do_diff(compute_only=True)
+        if diff_listing:
+            print '*** WARNING : Module %s has pending diffs on its trunk'%self.name
+            while True:
+                answer = prompt ('Are you sure you want to proceed with branching',False,('d','iff'))
+                if answer is True:
+                    break
+                elif answer is False:
+                    sys.exit(1)
+                elif answer == 'd':
+                    print '<<<< %s'%tag_url
+                    print '>>>> %s'%edge_url
+                    print diff_listing
 
-        self.init_subdir(workdir)
-        self.revert_subdir(workdir)
-        self.update_subdir(workdir)
+        # do_diff already does edge_dir initialization
+        # and it checks that edge_url and tag_url exist as well
+        print "Using starting point %s"%tag_url
 
-        print 'got spec',spec
-        if not os.path.isfile(spec):
-            print 'cannot find spec'
-        
-        # read version & taglevel from the origin specfile
-        print 'parsing',spec
-        origin=self.spec_dict()
-        self.show_dict(origin)
+        # figure new branch name
+        if not new_branch_name:
+            # heuristic is to assume 'version' is a dot-separated name
+            # we isolate the rightmost part and try incrementing it by 1
+            print 'Trying to guess a new branch name for the trunk'
+            version=spec_dict[self.module_version_varname]
+            try:
+                m=re.compile("\A(?P<leftpart>.+)\.(?P<rightmost>[^\.]+)\Z")
+                (leftpart,rightmost)=m.match(version).groups()
+                incremented = int(rightmost)+1
+                new_branch_name="%s.%d"%(leftpart,incremented)
+            except:
+                print 'Cannot figure next branch name from %s - exiting'%version
+                sys.exit(1)
 
-        default_branch=self.options.new_version
-        if not default_branch:
-#            try:
-                match=re.compile("\A(?P<main>.*[\.-_])(?P<subid>[0-9]+)\Z").match(origin['version'])
-                new_subid=int(match.group('subid'))+1
-                default_branch="%s%d"%(match.group('main'),new_subid)
-#            except:
-#                default_branch="not found"
-        new_branch_name=raw_input("Enter branch name [%s] "%default_branch) or default_branch
+        branch_url = "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,new_branch_name)
+        self.check_svnpath_not_exists (branch_url,"new branch")
         
-        new_branch_url="%s/branches/%s"%(self.mod_url(),new_branch_name)
-        self.check_svnpath_not_exists(new_branch_url,"new branch")
-        print new_branch_name
+        # record starting point tagname
+        old_tag_name = self.tag_name(spec_dict)
+
+        # patching trunk
+        spec_dict[self.module_version_varname]=new_branch_name
+        spec_dict[self.module_taglevel_varname]='0'
         
+        self.patch_spec_var(spec_dict)
+        
+        # create commit log file
+        tmp="/tmp/branching-%d"%os.getpid()
+        f=open(tmp,"w")
+        f.write("Branch %s for module %s created from tag %s\n"%(new_branch_name,self.name,old_tag_name))
+        f.close()
+
+        # we're done, let's commit the stuff
+        command="svn diff %s"%self.edge_dir()
+        self.run_prompt("Check trunk",command)
+        command="svn copy %s %s"%(self.edge_dir(),branch_url)
+        self.run_prompt("Create branch",command)
+        command="svn commit --file %s %s"%(tmp,self.edge_dir())
+        self.run_prompt("Commit trunk",command)
+        os.unlink(tmp)
 
 ##############################
 usage="""Usage: %prog options module_desc [ .. module_desc ]
@@ -672,27 +762,21 @@ Trunk:
   in this case, just mention the module name as <module_desc>
 Branches:
   if you wish to work on a branch rather than on the trunk, 
-  you can use the following syntax for <module_desc>
-  Mom:2.1
-      works on Mom/branches/2.1 
+  you can use something like e.g. Mom:2.1 as <module_desc>
+More help:
+  see http://svn.planet-lab.org/wiki/ModuleTools
 """
-# unsupported yet
-#"""
-#  branch:Mom
-#      the branch_id is deduced from the current *version* in the trunk's specfile
-#      e.g. if Mom/trunk/Mom.spec specifies %define version 2.3, then this script
-#      would use Mom/branches/2.2
-#      if if stated %define version 3.0, then the script fails
-#"""
 
 functions={ 
+    'version' : "only check specfile and print out details",
     'diff' : "show difference between trunk and latest tag",
     'tag'  : """increment taglevel in specfile, insert changelog in specfile,
-                create new tag and and adopt it in build/*-tags*.mk""",
-    'init' : "create initial tag",
-    'version' : "only check specfile and print out details",
-    'branch' : """create a branch for this module. 
-                either from trunk, or from a tag""",
+                create new tag and and monitor its adoption in build/*-tags*.mk""",
+    'branch' : """create a branch for this module, from the latest tag on the trunk, 
+                  and change trunk's version number to reflect the new branch name;
+                  you can specify the new branch name by using module:branch""",
+    'sync' : """create a tag from the trunk
+                this is a last resort option, mostly for repairs""",
 }
 
 def main():
@@ -707,7 +791,7 @@ def main():
         sys.exit(1)
 
     global usage
-    usage += "module-%s.py : %s"%(mode,functions[mode])
+    usage += "\nmodule-%s : %s"%(mode,functions[mode])
     all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
 
     parser=OptionParser(usage=usage,version=subversion_id)
@@ -721,10 +805,10 @@ def main():
     if mode == "tag" :
         parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                           help="do not update changelog section in specfile when tagging")
-    if mode == "tag" or mode == "init" :
+    if mode == "tag" or mode == "sync" :
         parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
                           help="specify editor")
-    if mode == "init" :
+    if mode == "sync" :
         parser.add_option("-m","--message", action="store", dest="message", default=None,
                           help="specify log message")
     if mode == "diff" :
@@ -761,4 +845,8 @@ def main():
 
 # basically, we exit if anything goes wrong
 if __name__ == "__main__" :
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print '\nBye'
+        
