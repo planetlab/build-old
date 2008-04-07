@@ -331,8 +331,10 @@ that for other purposes than tagging"""%topdir
             print '2st pass parsing done, varnames=',varnames,'result=',result
         return result
 
-    def patch_spec_var (self, patch_dict):
+    def patch_spec_var (self, patch_dict,define_missing=False):
         for specfile in self.all_specnames():
+            # record the keys that were changed
+            changed = dict ( [ (x,False) for x in patch_dict.keys() ] )
             newspecfile=specfile+".new"
             if self.options.verbose:
                 print 'Patching',specfile,'for',patch_dict.keys()
@@ -344,9 +346,18 @@ that for other purposes than tagging"""%topdir
                 if attempt:
                     (define,var,value)=attempt.groups()
                     if var in patch_dict.keys():
+                        if self.options.debug:
+                            print 'rewriting %s as %s'%(var,patch_dict[var])
                         new.write('%%%s %s %s\n'%(define,var,patch_dict[var]))
+                        changed[var]=True
                         continue
                 new.write(line)
+            if define_missing:
+                for (key,was_changed) in changed.iteritems():
+                    if not was_changed:
+                        if self.options.debug:
+                            print 'rewriting missed %s as %s'%(key,patch_dict[key])
+                        new.write('%%define %s %s\n'%(key,patch_dict[key]))
             spec.close()
             new.close()
             os.rename(newspecfile,specfile)
@@ -706,13 +717,12 @@ n: move to next file"""%locals()
 
         # do_diff already does edge_dir initialization
         # and it checks that edge_url and tag_url exist as well
-        print "Using starting point %s"%tag_url
 
         # figure new branch name
+        old_branch_name = spec_dict[self.module_version_varname]
         if not new_branch_name:
             # heuristic is to assume 'version' is a dot-separated name
             # we isolate the rightmost part and try incrementing it by 1
-            print 'Trying to guess a new branch name for the trunk'
             version=spec_dict[self.module_version_varname]
             try:
                 m=re.compile("\A(?P<leftpart>.+)\.(?P<rightmost>[^\.]+)\Z")
@@ -723,7 +733,13 @@ n: move to next file"""%locals()
                 print 'Cannot figure next branch name from %s - exiting'%version
                 sys.exit(1)
 
-        branch_url = "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,new_branch_name)
+        print "**********"
+        print "Using starting point %s"%tag_url
+        print "Using branch name %s"%old_branch_name
+        print "Moving trunk to %s"%new_branch_name
+        print "**********"
+
+        branch_url = "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,old_branch_name)
         self.check_svnpath_not_exists (branch_url,"new branch")
         
         # record starting point tagname
@@ -732,8 +748,9 @@ n: move to next file"""%locals()
         # patching trunk
         spec_dict[self.module_version_varname]=new_branch_name
         spec_dict[self.module_taglevel_varname]='0'
-        
-        self.patch_spec_var(spec_dict)
+        # remember this in the trunk for easy location of the current branch
+        spec_dict['module_current_branch']=old_branch_name
+        self.patch_spec_var(spec_dict,True)
         
         # create commit log file
         tmp="/tmp/branching-%d"%os.getpid()
@@ -743,11 +760,14 @@ n: move to next file"""%locals()
 
         # we're done, let's commit the stuff
         command="svn diff %s"%self.edge_dir()
-        self.run_prompt("Check trunk",command)
-        command="svn copy %s %s"%(self.edge_dir(),branch_url)
+        self.run_prompt("Changes in trunk",command)
+        command="svn copy --file %s %s %s"%(tmp,self.edge_url(),branch_url)
         self.run_prompt("Create branch",command)
         command="svn commit --file %s %s"%(tmp,self.edge_dir())
         self.run_prompt("Commit trunk",command)
+        new_tag_url=self.tag_url(spec_dict)
+        command="svn copy --file %s %s %s"%(tmp,self.edge_url(),new_tag_url)
+        self.run_prompt("Create initial tag in trunk",command)
         os.unlink(tmp)
 
 ##############################
