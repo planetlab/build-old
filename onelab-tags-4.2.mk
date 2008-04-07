@@ -8,7 +8,7 @@ wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wir
 nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.0-11
-util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-1
+util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-2
 # not stable yet
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-2
