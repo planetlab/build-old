@@ -29,8 +29,7 @@ proper
 pypcilib
 ulogd
 util-python
-# using branches/scholz for this module - not compliant with the module-tools
-#util-vserver:scholz
+util-vserver:scholz
 util-vserver-pl
 vsys
 wireless-tools
