@@ -28,6 +28,8 @@ package:vixie-cron
 package:sendmail sendmail-cf
 # dns server
 package:dnsmasq
+# nmap for gui
+package:nmap
 # python
 package:python python-devel SOAPpy PyXML
 # add ons for plcapi
