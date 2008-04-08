@@ -9,26 +9,26 @@ from glob import glob
 from optparse import OptionParser
 
 # e.g. other_choices = [ ('d','iff') , ('g','uess') ] - lowercase 
-def prompt (question,default=True,other_choices=[]):
+def prompt (question,default=True,other_choices=[],allow_outside=False):
     if not isinstance (other_choices,list):
         other_choices = [ other_choices ]
     chars = [ c for (c,rest) in other_choices ]
 
-    the_prompt = []
+    choices = []
     if 'y' not in chars:
-        if default is True: the_prompt.append('[y]')
-        else : the_prompt.append('y')
+        if default is True: choices.append('[y]')
+        else : choices.append('y')
     if 'n' not in chars:
-        if default is False: the_prompt.append('[n]')
-        else : the_prompt.append('n')
+        if default is False: choices.append('[n]')
+        else : choices.append('n')
 
     for (char,choice) in other_choices:
         if default == char:
-            the_prompt.append("["+char+"]"+choice)
+            choices.append("["+char+"]"+choice)
         else:
-            the_prompt.append("<"+char+">"+choice)
+            choices.append("<"+char+">"+choice)
     try:
-        answer=raw_input(question + " " + "/".join(the_prompt) + " ? ")
+        answer=raw_input(question + " " + "/".join(choices) + " ? ")
         if not answer:
             return default
         answer=answer[0].lower()
@@ -42,6 +42,8 @@ def prompt (question,default=True,other_choices=[]):
             for (char,choice) in other_choices:
                 if answer == char:
                     return char
+            if allow_outside:
+                return answer
         return prompt(question,default,other_choices)
     except:
         raise
@@ -53,7 +55,7 @@ class Command:
         self.tmp="/tmp/command-%d"%os.getpid()
 
     def run (self):
-        if self.options.verbose:
+        if self.options.verbose and self.options.mode not in Main.silent_modes:
             print '+',self.command
             sys.stdout.flush()
         return os.system(self.command)
@@ -178,16 +180,24 @@ class Module:
         return Command(command,self.options).run_fatal()
     def run_prompt (self,message,command):
         if not self.options.verbose:
-            question=message
+            while True:
+                choice=prompt(message,True,('s','how'))
+                if choice is True:
+                    self.run(command)
+                    return
+                elif choice is False:
+                    return
+                else:
+                    print 'About to run:',command
         else:
             question=message+" - want to run " + command
-        if prompt(question,True):
-            self.run(command)            
+            if prompt(question,True):
+                self.run(command)            
 
     @staticmethod
     def init_homedir (options):
         topdir=options.workdir
-        if options.verbose:
+        if options.verbose and options.mode not in Main.silent_modes:
             print 'Checking for',topdir
         storage="%s/%s"%(topdir,Module.config_storage)
         # sanity check. Either the topdir exists AND we have a config/storage
@@ -225,7 +235,7 @@ that for other purposes than tagging"""%topdir
                 (key,value)=re.compile("^(.+)=(.+)$").match(line).groups()
                 Module.config[key]=value                
             f.close()
-        if options.verbose:
+        if options.verbose and options.mode not in Main.silent_modes:
             print '******** Using config'
             for (key,message,default) in Module.configKeys:
                 print '\t',key,'=',Module.config[key]
@@ -448,6 +458,7 @@ that for other purposes than tagging"""%topdir
             sys.exit(1)
 
     # locate specfile, parse it, check it and show values
+
 ##############################
     def do_version (self):
         self.init_moddir()
@@ -460,21 +471,66 @@ that for other purposes than tagging"""%topdir
                 print 'Could not find %%define for %s'%varname
                 return
             else:
-                print varname+":",spec_dict[varname]
-        print 'edge url',self.edge_url()
-        print 'latest tag url',self.tag_url(spec_dict)
+                print "%-16s %s"%(varname,spec_dict[varname])
+        if self.options.show_urls:
+            print "%-16s %s"%('edge url',self.edge_url())
+            print "%-16s %s"%('latest tag url',self.tag_url(spec_dict))
         if self.options.verbose:
-            print 'main specfile:',self.main_specname()
-            print 'specfiles:',self.all_specnames()
+            print "%-16s %s"%('main specfile:',self.main_specname())
+            print "%-16s %s"%('specfiles:',self.all_specnames())
 
-    init_warning="""*** WARNING
+##############################
+    def do_list (self):
+#        print 'verbose',self.options.verbose
+#        print 'list_tags',self.options.list_tags
+#        print 'list_branches',self.options.list_branches
+#        print 'all_modules',self.options.all_modules
+        
+        (verbose,branches,pattern,exact) = (self.options.verbose,self.options.list_branches,
+                                            self.options.list_pattern,self.options.list_exact)
+
+        extra_command=""
+        extra_message=""
+        if self.branch:
+            pattern=self.branch
+        if pattern or exact:
+            if exact:
+                if verbose: grep="%s/$"%exact
+                else: grep="^%s$"%exact
+            else:
+                grep=pattern
+            extra_command=" | grep %s"%grep
+            extra_message=" matching %s"%grep
+
+        if not branches:
+            message="==================== tags for %s"%self.friendly_name()
+            command="svn list "
+            if verbose: command+="--verbose "
+            command += "%s/tags"%self.mod_url()
+            command += extra_command
+            message += extra_message
+            if verbose: print message
+            self.run(command)
+
+        else:
+            message="==================== branches for %s"%self.friendly_name()
+            command="svn list "
+            if verbose: command+="--verbose "
+            command += "%s/branches"%self.mod_url()
+            command += extra_command
+            message += extra_message
+            if verbose: print message
+            self.run(command)
+
+##############################
+    sync_warning="""*** WARNING
 The module-init function has the following limitations
 * it does not handle changelogs
 * it does not scan the -tags*.mk files to adopt the new tags"""
-##############################
+
     def do_sync(self):
         if self.options.verbose:
-            print Module.init_warning
+            print Module.sync_warning
             if not prompt('Want to proceed anyway'):
                 return
 
@@ -512,7 +568,8 @@ The module-init function has the following limitations
         self.check_svnpath_exists(tag_url,"latest tag")
         command="svn diff %s %s"%(tag_url,edge_url)
         if compute_only:
-            print 'Getting diff with %s'%command
+            if self.options.verbose:
+                print 'Getting diff with %s'%command
         diff_output = Command(command,self.options).output_of()
         # if used as a utility
         if compute_only:
@@ -646,41 +703,46 @@ Please write a changelog for this new tag in the section above
         
         tagsfiles=glob(build.edge_dir()+"/*-tags*.mk")
         tagsdict=dict( [ (x,'todo') for x in tagsfiles ] )
+        default_answer = 'y'
         while True:
             for (tagsfile,status) in tagsdict.iteritems():
+                basename=os.path.basename(tagsfile)
+                print ".................... Dealing with %s"%basename
                 while tagsdict[tagsfile] == 'todo' :
-                    choice = prompt ("Want to adopt %s in %s    "%(new_tag_name,os.path.basename(tagsfile)),'a',
-                                     [ ('n', 'ext'), ('a','uto'), ('d','iff'), ('r','evert'), ('h','elp') ] )
-                    if choice is True:
-                        self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=False)
-                    elif choice is 'n':
+                    choice = prompt ("insert %s in %s    "%(new_tag_name,basename),default_answer,
+                                     [ ('y','es'), ('n', 'ext'), ('f','orce'), 
+                                       ('d','iff'), ('r','evert'), ('h','elp') ] ,
+                                     allow_outside=True)
+                    if choice == 'y':
+                        self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=True)
+                    elif choice == 'n':
                         print 'Done with %s'%os.path.basename(tagsfile)
                         tagsdict[tagsfile]='done'
-                    elif choice == 'a':
-                        self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=True)
+                    elif choice == 'f':
+                        self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=False)
                     elif choice == 'd':
                         self.run("svn diff %s"%tagsfile)
                     elif choice == 'r':
                         self.run("svn revert %s"%tagsfile)
-                    elif choice == 'h':
-                        name=self.name
-                        print """y: unconditionnally changes any line setting %(name)s-SVNPATH to using %(new_tag_name)s
-a: changes the definition of %(name)s only if it currently refers to %(old_tag_name)s
-d: shows current diff for this tag file
-r: reverts that tag file
-n: move to next file"""%locals()
                     else:
-                        print 'unexpected'
+                        name=self.name
+                        print """y: change %(name)s-SVNPATH only if it currently refers to %(old_tag_name)s
+f: unconditionnally change any line setting %(name)s-SVNPATH to using %(new_tag_name)s
+d: show current diff for this tag file
+r: revert that tag file
+n: move to next file"""%locals()
+
             if prompt("Want to review changes on tags files",False):
                 tagsdict = dict ( [ (x, 'todo') for tagsfile in tagsfiles ] )
+                default_answer='d'
             else:
                 break
 
         paths=""
         paths += self.edge_dir() + " "
         paths += build.edge_dir() + " "
-        self.run_prompt("Check","svn diff " + paths)
-        self.run_prompt("Commit","svn commit --file %s %s"%(changelog,paths))
+        self.run_prompt("Review trunk and build","svn diff " + paths)
+        self.run_prompt("Commit trunk and build","svn commit --file %s %s"%(changelog,paths))
         self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog,edge_url,new_tag_url))
 
         if self.options.debug:
@@ -694,18 +756,48 @@ n: move to next file"""%locals()
         # save self.branch if any, as a hint for the new branch 
         # do this before anything else and restore .branch to None, 
         # as this is part of the class's logic
-        new_branch_name=None
+        new_trunk_name=None
         if self.branch:
-            new_branch_name=self.branch
+            new_trunk_name=self.branch
             self.branch=None
 
-        # check module-diff is empty
-        # used in do_diff, and should be options for diff only
+        # compute diff - a way to initialize the whole stuff
+        # do_diff already does edge_dir initialization
+        # and it checks that edge_url and tag_url exist as well
         (spec_dict,edge_url,tag_url,diff_listing) = self.do_diff(compute_only=True)
+
+        # the version name in the trunk becomes the new branch name
+        branch_name = spec_dict[self.module_version_varname]
+
+        # figure new branch name (the one for the trunk) if not provided on the command line
+        if not new_trunk_name:
+            # heuristic is to assume 'version' is a dot-separated name
+            # we isolate the rightmost part and try incrementing it by 1
+            version=spec_dict[self.module_version_varname]
+            try:
+                m=re.compile("\A(?P<leftpart>.+)\.(?P<rightmost>[^\.]+)\Z")
+                (leftpart,rightmost)=m.match(version).groups()
+                incremented = int(rightmost)+1
+                new_trunk_name="%s.%d"%(leftpart,incremented)
+            except:
+                print 'Cannot figure next branch name from %s - exiting'%version
+                sys.exit(1)
+
+        # record starting point tagname
+        latest_tag_name = self.tag_name(spec_dict)
+
+        print "**********"
+        print "Using starting point %s (%s)"%(tag_url,latest_tag_name)
+        print "Creating branch %s  &  moving trunk to %s"%(branch_name,new_trunk_name)
+        print "**********"
+
+        # print warning if pending diffs
         if diff_listing:
-            print '*** WARNING : Module %s has pending diffs on its trunk'%self.name
+            print """*** WARNING : Module %s has pending diffs on its trunk
+It is safe to proceed, but please note that branch %s
+will be based on latest tag %s and *not* on the current trunk"""%(self.name,branch_name,latest_tag_name)
             while True:
-                answer = prompt ('Are you sure you want to proceed with branching',False,('d','iff'))
+                answer = prompt ('Are you sure you want to proceed with branching',True,('d','iff'))
                 if answer is True:
                     break
                 elif answer is False:
@@ -715,52 +807,25 @@ n: move to next file"""%locals()
                     print '>>>> %s'%edge_url
                     print diff_listing
 
-        # do_diff already does edge_dir initialization
-        # and it checks that edge_url and tag_url exist as well
-
-        # figure new branch name
-        old_branch_name = spec_dict[self.module_version_varname]
-        if not new_branch_name:
-            # heuristic is to assume 'version' is a dot-separated name
-            # we isolate the rightmost part and try incrementing it by 1
-            version=spec_dict[self.module_version_varname]
-            try:
-                m=re.compile("\A(?P<leftpart>.+)\.(?P<rightmost>[^\.]+)\Z")
-                (leftpart,rightmost)=m.match(version).groups()
-                incremented = int(rightmost)+1
-                new_branch_name="%s.%d"%(leftpart,incremented)
-            except:
-                print 'Cannot figure next branch name from %s - exiting'%version
-                sys.exit(1)
-
-        print "**********"
-        print "Using starting point %s"%tag_url
-        print "Using branch name %s"%old_branch_name
-        print "Moving trunk to %s"%new_branch_name
-        print "**********"
-
-        branch_url = "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,old_branch_name)
+        branch_url = "%s/%s/branches/%s"%(Module.config['svnpath'],self.name,branch_name)
         self.check_svnpath_not_exists (branch_url,"new branch")
         
-        # record starting point tagname
-        old_tag_name = self.tag_name(spec_dict)
-
         # patching trunk
-        spec_dict[self.module_version_varname]=new_branch_name
+        spec_dict[self.module_version_varname]=new_trunk_name
         spec_dict[self.module_taglevel_varname]='0'
         # remember this in the trunk for easy location of the current branch
-        spec_dict['module_current_branch']=old_branch_name
+        spec_dict['module_current_branch']=branch_name
         self.patch_spec_var(spec_dict,True)
         
         # create commit log file
         tmp="/tmp/branching-%d"%os.getpid()
         f=open(tmp,"w")
-        f.write("Branch %s for module %s created from tag %s\n"%(new_branch_name,self.name,old_tag_name))
+        f.write("Branch %s for module %s created from tag %s\n"%(new_trunk_name,self.name,latest_tag_name))
         f.close()
 
         # we're done, let's commit the stuff
         command="svn diff %s"%self.edge_dir()
-        self.run_prompt("Changes in trunk",command)
+        self.run_prompt("Review changes in trunk",command)
         command="svn copy --file %s %s %s"%(tmp,self.edge_url(),branch_url)
         self.run_prompt("Create branch",command)
         command="svn commit --file %s %s"%(tmp,self.edge_dir())
@@ -771,7 +836,9 @@ n: move to next file"""%locals()
         os.unlink(tmp)
 
 ##############################
-usage="""Usage: %prog options module_desc [ .. module_desc ]
+class Main:
+
+    usage="""Usage: %prog options module_desc [ .. module_desc ]
 Purpose:
   manage subversion tags and specfile
   requires the specfile to define *version* and *taglevel*
@@ -787,86 +854,108 @@ More help:
   see http://svn.planet-lab.org/wiki/ModuleTools
 """
 
-functions={ 
-    'version' : "only check specfile and print out details",
-    'diff' : "show difference between trunk and latest tag",
-    'tag'  : """increment taglevel in specfile, insert changelog in specfile,
+    modes={ 
+        'list' : "displays a list of available tags or branches",
+        'version' : "check latest specfile and print out details",
+        'diff' : "show difference between trunk and latest tag",
+        'tag'  : """increment taglevel in specfile, insert changelog in specfile,
                 create new tag and and monitor its adoption in build/*-tags*.mk""",
-    'branch' : """create a branch for this module, from the latest tag on the trunk, 
+        'branch' : """create a branch for this module, from the latest tag on the trunk, 
                   and change trunk's version number to reflect the new branch name;
                   you can specify the new branch name by using module:branch""",
-    'sync' : """create a tag from the trunk
+        'sync' : """create a tag from the trunk
                 this is a last resort option, mostly for repairs""",
-}
+        }
 
-def main():
+    silent_modes = ['list']
 
-    mode=None
-    for function in functions.keys():
-        if sys.argv[0].find(function) >= 0:
-            mode = function
-            break
-    if not mode:
-        print "Unsupported command",sys.argv[0]
-        sys.exit(1)
+    def run(self):
 
-    global usage
-    usage += "\nmodule-%s : %s"%(mode,functions[mode])
-    all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
-
-    parser=OptionParser(usage=usage,version=subversion_id)
-    parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
-                      help="run on all modules as found in %s"%all_modules)
-    parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
-                      help="skip safety checks, such as svn updates -- use with care")
-    if mode == "tag" or mode == 'branch':
-        parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
-                          help="set new version and reset taglevel to 0")
-    if mode == "tag" :
-        parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
-                          help="do not update changelog section in specfile when tagging")
-    if mode == "tag" or mode == "sync" :
-        parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
-                          help="specify editor")
-    if mode == "sync" :
-        parser.add_option("-m","--message", action="store", dest="message", default=None,
-                          help="specify log message")
-    if mode == "diff" :
-        parser.add_option("-o","--only", action="store_true", dest="only", default=False,
-                          help="report diff only for modules that exhibit differences")
-    if mode == "diff" :
-        parser.add_option("-l","--list", action="store_true", dest="list", default=False,
-                          help="just list modules that exhibit differences")
-    parser.add_option("-w","--workdir", action="store", dest="workdir", 
-                      default="%s/%s"%(os.getenv("HOME"),"modules"),
-                      help="""name for dedicated working dir - defaults to ~/modules
-** THIS MUST NOT ** be your usual working directory""")
-    parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=True, 
-                      help="run in verbose mode")
-    parser.add_option("-q","--quiet", action="store_false", dest="verbose", 
-                      help="run in quiet (non-verbose) mode")
-    parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
-                      help="debug mode - mostly more verbose")
-    (options, args) = parser.parse_args()
-
-    if len(args) == 0:
-        if options.all_modules:
-            args=Command("grep -v '#' %s"%all_modules,options).output_of().split()
-        else:
-            parser.print_help()
+        mode=None
+        for function in Main.modes.keys():
+            if sys.argv[0].find(function) >= 0:
+                mode = function
+                break
+        if not mode:
+            print "Unsupported command",sys.argv[0]
             sys.exit(1)
-    Module.init_homedir(options)
-    for modname in args:
-        module=Module(modname,options)
-        print '========================================',module.friendly_name()
-        # call the method called do_<mode>
-        method=Module.__dict__["do_%s"%mode]
-        method(module)
 
-# basically, we exit if anything goes wrong
+        Main.usage += "\nmodule-%s : %s"%(mode,Main.modes[mode])
+        all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
+
+        parser=OptionParser(usage=Main.usage,version=subversion_id)
+        
+        if mode == 'list':
+            parser.add_option("-b","--branches",action="store_true",dest="list_branches",default=False,
+                              help="list branches")
+            parser.add_option("-t","--tags",action="store_false",dest="list_branches",
+                              help="list tags")
+            parser.add_option("-m","--match",action="store",dest="list_pattern",default=None,
+                               help="grep pattern for filtering output")
+            parser.add_option("-x","--exact-match",action="store",dest="list_exact",default=None,
+                               help="exact grep pattern for filtering output")
+        if mode == "tag" or mode == 'branch':
+            parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
+                              help="set new version and reset taglevel to 0")
+        if mode == "tag" :
+            parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
+                              help="do not update changelog section in specfile when tagging")
+        if mode == "tag" or mode == "sync" :
+            parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
+                              help="specify editor")
+        if mode == "sync" :
+            parser.add_option("-m","--message", action="store", dest="message", default=None,
+                              help="specify log message")
+        if mode == "diff" :
+            parser.add_option("-o","--only", action="store_true", dest="only", default=False,
+                              help="report diff only for modules that exhibit differences")
+        if mode == "diff" :
+            parser.add_option("-l","--list", action="store_true", dest="list", default=False,
+                              help="just list modules that exhibit differences")
+
+        if mode  == 'version':
+            parser.add_option("-u","--url", action="store_true", dest="show_urls", default=False,
+                              help="display URLs")
+            
+        # default verbosity depending on function - temp
+        parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
+                          help="run on all modules as found in %s"%all_modules)
+        verbose_default=False
+        if mode in ['tag','sync'] : verbose_default = True
+        parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=verbose_default, 
+                          help="run in verbose mode")
+        if mode not in ['version','list']:
+            parser.add_option("-q","--quiet", action="store_false", dest="verbose", 
+                              help="run in quiet (non-verbose) mode")
+        parser.add_option("-w","--workdir", action="store", dest="workdir", 
+                          default="%s/%s"%(os.getenv("HOME"),"modules"),
+                          help="""name for dedicated working dir - defaults to ~/modules
+** THIS MUST NOT ** be your usual working directory""")
+        parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
+                          help="skip safety checks, such as svn updates -- use with care")
+        parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
+                          help="debug mode - mostly more verbose")
+        (options, args) = parser.parse_args()
+        options.mode=mode
+
+        if len(args) == 0:
+            if options.all_modules:
+                args=Command("grep -v '#' %s"%all_modules,options).output_of().split()
+            else:
+                parser.print_help()
+                sys.exit(1)
+        Module.init_homedir(options)
+        for modname in args:
+            module=Module(modname,options)
+            if len(args)>1 and mode not in Main.silent_modes:
+                print '========================================',module.friendly_name()
+            # call the method called do_<mode>
+            method=Module.__dict__["do_%s"%mode]
+            method(module)
+
 if __name__ == "__main__" :
     try:
-        main()
+        Main().run()
     except KeyboardInterrupt:
         print '\nBye'
         
