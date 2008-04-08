@@ -136,3 +136,4 @@ package+f8: fprobe-ulog
 package: vsys
 package-fc4: vsys
 package-fc6: vsys
+package: monitor
