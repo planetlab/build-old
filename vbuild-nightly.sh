@@ -99,9 +99,9 @@ function failure() {
     mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
-    (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 20k $WEBLOG) > ${WEBLOG}.ko
+    (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 30k $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
-	tail -c 20k ${WEBLOG} | mail -s "Failures for build ${BASE}" $MAILTO
+	tail -c 30k ${WEBLOG} | mail -s "Failures for build ${BASE}" $MAILTO
     fi
     exit 1
 }
