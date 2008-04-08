@@ -261,10 +261,10 @@ IN_MYPLC += PLCWWW
 #
 # monitor
 #
-monitor-MODULES := Monitor
-monitor-SPEC := monitor.spec
-ALL += monitor
-IN_BOOTSTRAPFS += monitor
+Monitor-MODULES := Monitor
+Monitor-SPEC := Monitor.spec
+ALL += Monitor
+IN_BOOTSTRAPFS += Monitor
 
 #
 # nodeconfig
