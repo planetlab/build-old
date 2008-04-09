@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# redirect this into modules.list to get it refreshed
+
+for tags in *tags*mk ; do make stage1=true PLDISTROTAGS=$tags module-tools ; done | sort -u

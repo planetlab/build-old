@@ -2,34 +2,34 @@ BootCD
 BootManager
 BootstrapFS
 CoDemux
-# 4.2
+Mom
 Mom:2.2
+Monitor
 MyPLC
-# 4.2
+NodeManager
 NodeManager:1.7
 NodeUpdate
 PLCAPI
+PLCWWW
+PLCWWW:onelab.4.2
 PingOfDeath
 PlanetFlow
 VserverReference
-PLCWWW
-nodeconfig
+build
 fprobe-ulog
 iproute2
 iptables
+kexec-tools
 libhttpd++
 libnl
-linux-2.6
+linux-patches
 madwifi
+nodeconfig
 pf2slice
 pl_sshd
-# not used during build - taking out
-#plcmdline
 proper
 pypcilib
 ulogd
-util-python
-util-vserver:scholz
+util-vserver
 util-vserver-pl
-vsys
 wireless-tools

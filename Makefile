@@ -94,7 +94,8 @@ PLANETLAB_RELEASE = 4.2
 #
 # Default values
 #
-HOSTARCH := $(shell uname -i)
+# minimal compat with macos, just so this does not complain 
+HOSTARCH := $(shell uname -i 2> /dev/null || uname -m 2> /dev/null)
 DISTRO := $(shell ./getdistro.sh)
 RELEASE := $(shell ./getrelease.sh)
 DISTRONAME := $(shell ./getdistroname.sh)
@@ -642,6 +643,37 @@ endif
 # only if present
 -include $(PLDISTROINSTALL)
 
+#################### package info
+PKGKEYS := tarballs source codebase srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
+%-pkginfo: package=$(subst -pkginfo,,$@)
+%-pkginfo: 
+	@$(foreach key,$(PKGKEYS),echo "$(package).$(key)=$($(package).$(key))";)
+## rpm info
+RPMKEYS := rpm-path package
+%-rpminfo: rpm=$(subst -rpminfo,,$@)
+%-rpminfo: 
+	@$(foreach key,$(RPMKEYS),echo "$(rpm).$(key)=$($(rpm).$(key))";)
+
+#################### various lists - designed to run with stage1=true
+packages:
+	@$(foreach package,$(ALL), echo package=$(package) ref_module=$($(package).module) modules=$($(package)-MODULES); )
+
+modules:
+	@$(foreach module,$(ALL-MODULES), echo modules=$(module) svnpath=$($(module)-SVNPATH); )
+
+branches:
+	@$(foreach module,$(ALL-MODULES), \
+	  $(if $($(module)-SVNBRANCH),echo module=$(module) branch=$($(module)-SVNBRANCH);))
+
+module-tools:
+	@$(foreach module,$(ALL-MODULES), \
+	  echo $(module); \
+	  $(if $($(module)-SVNBRANCH),echo $(module):$($(module)-SVNBRANCH);))
+
+info: packages modules branches 
+
+.PHONY: info packages modules branches module-tools
+
 ####################
 help:
 	@echo "********** Run make in two stages:"
@@ -720,13 +752,3 @@ help:
 +%: varname=$(subst +,,$@)
 +%:
 	@echo "$($(varname))"
-## package info
-PKGKEYS := tarballs source codebase srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
-%-pkginfo: package=$(subst -pkginfo,,$@)
-%-pkginfo: 
-	@$(foreach key,$(PKGKEYS),echo "$(package).$(key)=$($(package).$(key))";)
-## rpm info
-RPMKEYS := rpm-path package
-%-rpminfo: rpm=$(subst -rpminfo,,$@)
-%-rpminfo: 
-	@$(foreach key,$(RPMKEYS),echo "$(rpm).$(key)=$($(rpm).$(key))";)
