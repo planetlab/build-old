@@ -26,6 +26,7 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/trunk
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/branches/dummynet-4.2-2
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/branches/onelab.4.2
+Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/trunk
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
