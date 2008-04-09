@@ -246,8 +246,7 @@ that for other purposes than tagging"""%topdir
         if not os.path.isdir (self.moddir):
             self.run_fatal("svn up -N %s"%self.moddir)
         if not os.path.isdir (self.moddir):
-            print 'Cannot find %s - check module name'%self.moddir
-            sys.exit(1)
+            raise Exception, 'Cannot find %s - check module name'%self.moddir
 
     def init_subdir (self,fullpath):
         if self.options.verbose:
@@ -292,8 +291,7 @@ that for other purposes than tagging"""%topdir
             try:
                 return glob("%s/*.spec"%self.edge_dir())[0]
             except:
-                print 'Cannot guess specfile for module %s'%self.name
-                sys.exit(1)
+                raise Exception, 'Cannot guess specfile for module %s'%self.name
 
     def all_specnames (self):
         return glob("%s/*.spec"%self.edge_dir())
@@ -426,8 +424,7 @@ that for other purposes than tagging"""%topdir
                 spec_dict[self.module_version_varname],
                 spec_dict[self.module_taglevel_varname])
         except KeyError,err:
-            print 'Something is wrong with module %s, cannot determine %s - exiting'%(self.name,err)
-            sys.exit(1)
+            raise Exception, 'Something is wrong with module %s, cannot determine %s - exiting'%(self.name,err)
 
     def tag_url (self, spec_dict):
         return "%s/tags/%s"%(self.mod_url(),self.tag_name(spec_dict))
@@ -442,8 +439,8 @@ that for other purposes than tagging"""%topdir
             if self.options.verbose: print 'exists - OK'
         else:
             if self.options.verbose: print 'KO'
-            print 'Could not find %s URL %s'%(message,url)
-            sys.exit(1)
+            raise Exception, 'Could not find %s URL %s'%(message,url)
+
     def check_svnpath_not_exists (self, url, message):
         if self.options.fast_checks:
             return
@@ -454,8 +451,7 @@ that for other purposes than tagging"""%topdir
             if self.options.verbose: print 'does not exist - OK'
         else:
             if self.options.verbose: print 'KO'
-            print '%s URL %s already exists - exiting'%(message,url)
-            sys.exit(1)
+            raise Exception, '%s URL %s already exists - exiting'%(message,url)
 
     # locate specfile, parse it, check it and show values
 
@@ -780,8 +776,7 @@ n: move to next file"""%locals()
                 incremented = int(rightmost)+1
                 new_trunk_name="%s.%d"%(leftpart,incremented)
             except:
-                print 'Cannot figure next branch name from %s - exiting'%version
-                sys.exit(1)
+                raise Exception, 'Cannot figure next branch name from %s - exiting'%version
 
         # record starting point tagname
         latest_tag_name = self.tag_name(spec_dict)
@@ -801,7 +796,7 @@ will be based on latest tag %s and *not* on the current trunk"""%(self.name,bran
                 if answer is True:
                     break
                 elif answer is False:
-                    sys.exit(1)
+                    raise Exception,"User quit"
                 elif answer == 'd':
                     print '<<<< %s'%tag_url
                     print '>>>> %s'%edge_url
@@ -951,7 +946,10 @@ More help:
                 print '========================================',module.friendly_name()
             # call the method called do_<mode>
             method=Module.__dict__["do_%s"%mode]
-            method(module)
+            try:
+                method(module)
+            except Exception,e:
+                print 'Skipping failed %s - %r'%(modname,e)
 
 if __name__ == "__main__" :
     try:
