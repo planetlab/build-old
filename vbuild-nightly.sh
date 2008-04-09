@@ -112,7 +112,7 @@ function success () {
     mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
-    if [ -n "DO_TEST" ] ; then
+    if [ -n "$DO_TEST" ] ; then
 	echo "Successfully built and tested - see testlogs for details" > ${WEBLOG}.pass
 	rm -f ${WEBLOG}.ok
     else
