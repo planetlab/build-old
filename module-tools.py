@@ -48,6 +48,13 @@ def prompt (question,default=True,other_choices=[],allow_outside=False):
     except:
         raise
 
+def default_editor():
+    try:
+        editor = os.environ['EDITOR']
+    except:
+        editor = "emacs"
+    return editor
+
 class Command:
     def __init__ (self,command,options):
         self.command=command
@@ -392,9 +399,9 @@ that for other purposes than tagging"""%topdir
                 if re.compile('%changelog').match(line):
                     dateformat="* %a %b %d %Y"
                     datepart=time.strftime(dateformat)
-                    logpart="%s <%s> - %s %s"%(Module.config['username'],
+                    logpart="%s <%s> - %s"%(Module.config['username'],
                                                  Module.config['email'],
-                                                 oldtag,newtag)
+                                                 newtag)
                     new.write(datepart+" "+logpart+"\n")
                     for logline in self.unignored_lines(logfile):
                         new.write("- " + logline)
@@ -896,7 +903,7 @@ More help:
             parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                               help="do not update changelog section in specfile when tagging")
         if mode == "tag" or mode == "sync" :
-            parser.add_option("-e","--editor", action="store", dest="editor", default="emacs",
+            parser.add_option("-e","--editor", action="store", dest="editor", default=default_editor(),
                               help="specify editor")
         if mode == "sync" :
             parser.add_option("-m","--message", action="store", dest="message", default=None,
