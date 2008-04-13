@@ -57,12 +57,12 @@ function pl_getReleaseName () {
 		releasename=f$release
 	    fi ;;
 	[Cc]entOS*)
-	    if [ "$release" = "4.5" ] ; then
-	    # centos 4.5 is just centos4 + enhancements
-		releasename=centos4
-	    else
-		releasename=centos$release
-	    fi ;;
+	    old_IFS="$IFS"
+	    IFS="."
+	    set -- $release
+	    IFS="$old_IFS"
+	    releasename=centos$1
+	    ;;
 	*)
 	    releasename="unknown-name-for-${pl_DISTRO}-please-edit-build.common"
 	    echo 1>&2 "build.common: WARNING - releasename not set for distro=$distro" 
