@@ -187,12 +187,10 @@ function runtest () {
     for config in ${TESTCONFIG} ; do
 	configs="$configs --config $config"
     done
-    [ "$PERSONALITY" == linux64 ] && personality="--personality linux64"
-    
     
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs $personality --all || success=
+    ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
