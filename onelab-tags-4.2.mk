@@ -5,12 +5,13 @@
 # that serves as the default for module-tools -a
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
-linux-patches-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
 nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.0-11
+util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-3
 util-vserver-pl-SVNPATH         := http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-2
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-2

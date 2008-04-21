@@ -2,11 +2,8 @@ BootCD
 BootManager
 BootstrapFS
 CoDemux
-Mom
 Mom:2.2
-Monitor
 MyPLC
-NodeManager
 NodeManager:1.7
 NodeUpdate
 PLCAPI
@@ -15,14 +12,12 @@ PLCWWW:onelab.4.2
 PingOfDeath
 PlanetFlow
 VserverReference
-build
 fprobe-ulog
 iproute2
 iptables
-kexec-tools
 libhttpd++
 libnl
-linux-patches
+linux-2.6
 madwifi
 nodeconfig
 pf2slice
@@ -30,6 +25,6 @@ pl_sshd
 proper
 pypcilib
 ulogd
-util-vserver
 util-vserver-pl
+util-vserver:scholz
 wireless-tools

@@ -2,4 +2,4 @@
 
 # redirect this into modules.list to get it refreshed
 
-for tags in *tags*mk ; do make stage1=true PLDISTROTAGS=$tags module-tools ; done | sort -u
+for tags in *tags*4.2.mk ; do make stage1=true PLDISTROTAGS=$tags module-tools ; done | sort -u | grep -v '^build$'

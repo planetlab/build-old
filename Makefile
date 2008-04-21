@@ -667,8 +667,10 @@ branches:
 
 module-tools:
 	@$(foreach module,$(ALL-MODULES), \
-	  echo $(module); \
-	  $(if $($(module)-SVNBRANCH),echo $(module):$($(module)-SVNBRANCH);))
+ 	 $(if $($(module)-SVNPATH), \
+	  $(if $($(module)-SVNBRANCH), \
+	     echo $(module):$($(module)-SVNBRANCH); , \
+	     echo $(module); )))
 
 info: packages modules branches 
 

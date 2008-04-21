@@ -17,7 +17,7 @@
 # so the source rpm is created by running make srpm in the codebase
 #
 
-kernel-MODULES := linux-patches
+kernel-MODULES := linux-2.6
 kernel-SPEC := kernel-2.6.spec
 kernel-BUILD-FROM-SRPM := yes
 ifeq "$(HOSTARCH)" "i386"
