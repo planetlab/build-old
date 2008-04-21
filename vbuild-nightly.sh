@@ -11,8 +11,7 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
-DEFAULT_TESTCONFIG32="main 1vnodes 1testbox32"
-DEFAULT_TESTCONFIG64="main 1vnodes 1testbox64"
+DEFAULT_TESTCONFIG="default"
 DEFAULT_IFNAME=eth0
 
 # web publishing results
@@ -188,10 +187,12 @@ function runtest () {
     for config in ${TESTCONFIG} ; do
 	configs="$configs --config $config"
     done
+    [ "$PERSONALITY" == linux64 ] && personality="--personality linux64"
+    
     
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
+    ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs $personality --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
@@ -242,7 +243,7 @@ function usage () {
     echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
     echo " -s svnpath - where to fetch the build module"
     echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
-    echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG32 or $DEFAULT_TESTCONFIG64"
+    echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -m mailto - no default"
     echo " -O : overwrite - re-run in base directory, do not re-create vserver"
@@ -307,8 +308,7 @@ function main () {
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$TESTSVNPATH" ] && TESTSVNPATH="$DEFAULT_TESTSVNPATH"
-    [ "$PERSONALITY" == linux32 ] && [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG32"
-    [ "$PERSONALITY" == linux64 ] && [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG64"
+    [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
