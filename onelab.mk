@@ -25,6 +25,7 @@ kernel-RPMFLAGS:= --target i686
 else
 kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
+kernel-SPECVARS := iwlwifi=1
 KERNELS += kernel
 
 kernels: $(KERNELS)
