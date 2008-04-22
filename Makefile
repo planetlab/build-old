@@ -659,7 +659,7 @@ packages:
 	@$(foreach package,$(ALL), echo package=$(package) ref_module=$($(package).module) modules=$($(package)-MODULES); )
 
 modules:
-	@$(foreach module,$(ALL-MODULES), echo modules=$(module) svnpath=$($(module)-SVNPATH); )
+	@$(foreach module,$(ALL-MODULES), echo module=$(module) svnpath=$($(module)-SVNPATH); )
 
 branches:
 	@$(foreach module,$(ALL-MODULES), \
