@@ -564,7 +564,7 @@ clean-help:
 
 ### brute force clean
 distclean1:
-	rm -rf pldistro.mk .rpmmacros spec2make SPECS MAKE 
+	rm -rf pldistro.mk .rpmmacros spec2make header.spec SPECS MAKE 
 distclean2:
 	rm -rf CODEBASES SOURCES BUILD RPMS SRPMS tmp
 distclean: distclean1 distclean2
@@ -741,6 +741,8 @@ help:
 	@echo "  Displays know attributes of a package"
 	@echo "make kernel-devel-rpminfo"
 	@echo "  Displays know attributes of an rpm"
+	@echo "make stage1=true PLDISTROTAGS=planetlab-tags-4.2.mk packages modules branches module-tools"
+	@echo "  Lists mentioned items - module-tools is used in modules.update"
 	@echo ""
 	@echo "********** Known pakages are"
 	@echo "$(ALL)"
