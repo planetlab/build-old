@@ -35,7 +35,7 @@ PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-4
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-4.2-1
 # not yet built
 #Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
-nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-3
+nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-4
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-3.2-5
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-1
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-3.4-5
