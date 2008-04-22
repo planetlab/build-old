@@ -55,7 +55,7 @@ package:gd php-gd perl-GD
 # plc-map.py uses this
 package:python-imaging
 # planetlab stuff
-package:bootcd bootmanager 
+package:bootcd-@pldistro@-@arch@ bootmanager 
 # embed the bootstrafs rpm for this distribution & arch
 # use a qualified name so other variants can be installed as well
 package: bootstrapfs-@pldistro@-@arch@ 
