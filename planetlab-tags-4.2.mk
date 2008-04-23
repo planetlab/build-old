@@ -31,7 +31,7 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16
 # not stable yet
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-4
-PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-4.2-1
+PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-4.2-2
 # not yet built
 #Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-4
