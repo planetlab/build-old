@@ -150,7 +150,7 @@ class Module:
 
 
     # for parsing module spec name:branch
-    matcher_branch_spec=re.compile("\A(?P<name>[\w-]+):(?P<branch>[\w\.]+)\Z")
+    matcher_branch_spec=re.compile("\A(?P<name>[\w-]+):(?P<branch>[\w\.-]+)\Z")
     matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
     def __init__ (self,module_spec,options):
