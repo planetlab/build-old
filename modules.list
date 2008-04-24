@@ -3,10 +3,12 @@ BootManager
 BootstrapFS
 CoDemux
 Mom:2.2
+Monitor
 MyPLC
 NodeManager:1.7
 NodeUpdate
 PLCAPI
+PLCAPI:dummynet-4.2-2
 PLCWWW
 PLCWWW:onelab.4.2
 PingOfDeath
