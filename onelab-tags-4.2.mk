@@ -35,9 +35,8 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-3
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-1
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-1
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-4
-# xxx should use the dummynet branch, need to check that
-PLCAPI-SVNBRANCH		:= dummynet-4.2-2
-PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.2-5
+PLCAPI-SVNBRANCH		:= dummynet
+PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-dummynet-1
 PLCWWW-SVNBRANCH		:= onelab.4.2
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-onelab.4.2-9
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-1.0-1
