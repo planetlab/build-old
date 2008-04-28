@@ -402,6 +402,8 @@ function main () {
 	rm -rf $WEBPATH/$BASE ; mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
 	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
 	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
+	# publish myplc-release
+	rsync --verbose /vservers/$BASE/build/myplc-release $WEBPATH/$BASE
 	
 	if [ -n "$DO_TEST" ] ; then 
 	    runtest
