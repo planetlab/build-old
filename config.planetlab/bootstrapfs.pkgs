@@ -128,7 +128,7 @@ package: vserver-@pldistro@-@fcdistro@-@arch@
 package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
 package: netflow-utils
-package: proper
+#package: proper
 package+f8: fprobe-ulog
 # for vsys
 #package+f8: ocaml ocaml-docs
