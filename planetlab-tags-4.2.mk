@@ -20,7 +20,7 @@ proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/tags/proper-0.3-37
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-10
 ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/tags/ulogd-1.24-4
 # needs 'get_name' to work with NodeManager
-fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.2-2
+fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.2-3
 # not stable yet
 pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-1
 PlanetFlow-SVNPATH		:= http://svn.planet-lab.org/svn/PlanetFlow/tags/PlanetFlow-4.0-3
