@@ -165,14 +165,21 @@ function runtest () {
 
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
 
-    ### the URL to the myplc package
-    rpm=$( find /vservers/$BASE/build/RPMS -name 'myplc-[0-9]*' )
-    if [ ${#rpm[@]} != 1 ] ; then
-	echo "$COMMAND: Cannot locate rpm for testing"
+    ### the URL to the RPMS/<arch> location
+    url=""
+    for a in i386 x86_64; do
+	archdir=/vservers/$BASE/build/RPMS/$a
+	if [ -d $archdir ] ; then
+	    url=$(echo $archdir | sed -e "s,/vservers/$BASE/build,${TESTBUILDURL}${PLDISTRO}/${BASE},")
+	    break
+	fi
+    done
+
+    if [ -z "$url" ] ; then
+	echo "$COMMAND: Cannot locate arch URL for testing"
 	failure
 	exit 1
     fi
-    url=$(echo $rpm | sed -e "s,/vservers/$BASE/build,${TESTBUILDURL}${PLDISTRO}/${BASE},")
 
     # test directory name on test box
     testdir=${BASE}
