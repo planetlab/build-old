@@ -321,6 +321,7 @@ bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 # package has *some* dependencies, at least these ones
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
 bootcd-DEPEND-FILES := RPMS/yumgroups.xml
+bootcd-RPMDATE := yes
 ALL += bootcd
 IN_MYPLC += bootcd
 
@@ -335,6 +336,7 @@ vserver-RPMBUILD := sudo bash ./rpmbuild.sh
 # always redo all sequentially - try to keep updated
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
+vserver-RPMDATE := yes
 ALL += vserver
 IN_BOOTSTRAPFS += vserver
 
@@ -347,6 +349,7 @@ bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
+bootstrapfs-RPMDATE := yes
 ALL += bootstrapfs
 IN_MYPLC += bootstrapfs
 
@@ -367,6 +370,7 @@ noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
 noderepo-DEPEND-FILES := RPMS/yumgroups.xml
 #export rpm list to the specfile
 noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
+noderepo-RPMDATE := yes
 ALL += noderepo
 IN_MYPLC += noderepo
 
@@ -380,6 +384,7 @@ myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 # myplc may require all packages
 myplc-DEPEND-PACKAGES := $(IN_MYPLC)
 myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
+myplc-RPMDATE := yes
 ALL += myplc
 
 #

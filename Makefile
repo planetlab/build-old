@@ -64,6 +64,9 @@
 # (*) package-RPMBUILD: If not rpmbuild - mostly used for sudo'ing rpmbuild
 # (*) package-BUILD-FROM-SRPM: set this to any non-empty value, if your package is able to produce 
 #     a source rpms by running 'make srpm'
+# (*) package-RPMDATE: set this to any non-empty value to get the rpm package's release field hold the current date
+#     this is useful for container packages, like e.g. bootstrapfs or vserver, that contains much more than the
+#     correspondng module
 #
 #################### modules
 # Required information about the various modules (set this in e.g. planetlab-tags.mk)
@@ -84,7 +87,7 @@
 # (*)  $ make ulogd-pkginfo
 #        to see the list f variables attached to a given package
 # (*)  $ make kernel-devel-rpminfo
-#        to see the list f variables attached to a given rpm
+#        to see the list of variables attached to a given rpm
 #
 ####################
 
@@ -215,17 +218,17 @@ endef
 $(foreach package, $(ALL), $(eval $(call stage1_variables,$(package))))
 
 #
-# for each package, compute whether we need to set date (i.e. whether we use the trunk)
-# the myplc package is forced to have a date, because it is more convenient
-# (we cannot bump its number everytime something changes in the system)
-# myplc-native does not need this trick
+# for each package, compute whether we need to set date 
+# the heuristic is that we mention the date as part of the rpm release flag if
+# (*) the package has requested it by setting package-RPMDATE (container packages should do that)
+# (*) or SVNPATH contains 'trunk' or 'branches' 
 # 
 define package_hasdate
-$(1).has-date = $(if $(subst myplc,,$(1)), \
-	          $(if $($($(1).module)-SVNPATH),\
-		     $(if $(findstring /trunk,$($($(1).module)-SVNPATH)),yes,),\
-		     $(if $(findstring HEAD,$($($(1).module)-TAG)),yes,)), \
-		yes)
+$(1).has-date = $(if $($(1)-RPMDATE),yes, \
+                  $(if $($($(1).module)-SVNPATH), \
+		     $(if $(findstring /trunk,$($($(1).module)-SVNPATH)),yes, \
+			$(if $(findstring /branches,$($($(1).module)-SVNPATH)),yes,)), \
+		     $(if $(findstring HEAD,$($($(1).module)-TAG)),yes,)))
 endef
 
 $(foreach package, $(ALL), $(eval $(call package_hasdate,$(package))))
@@ -656,7 +659,7 @@ RPMKEYS := rpm-path package
 
 #################### various lists - designed to run with stage1=true
 packages:
-	@$(foreach package,$(ALL), echo package=$(package) ref_module=$($(package).module) modules=$($(package)-MODULES); )
+	@$(foreach package,$(ALL), echo package=$(package) ref_module=$($(package).module) modules=$($(package)-MODULES) rpmnames=$($(package).rpmnames); )
 
 modules:
 	@$(foreach module,$(ALL-MODULES), echo module=$(module) svnpath=$($(module)-SVNPATH); )
@@ -737,6 +740,9 @@ help:
 	@echo "make ++ALL"
 	@echo "  Displays the value of a given variable (here ALL)"
 	@echo "  with only a single plus sign only the value is displayed"
+	@echo "make info"
+	@echo "  is equivalent to make packages modules branches"
+	@echo "  provides various info on these objects"
 	@echo "make ulogd-pkginfo"
 	@echo "  Displays know attributes of a package"
 	@echo "make kernel-devel-rpminfo"
