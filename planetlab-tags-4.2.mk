@@ -1,7 +1,6 @@
 # $Id$
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
-# not stable yet ; needs one more 'sign off' from Andy
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
@@ -11,7 +10,6 @@ util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vs
 util-vserver-pl-SVNPATH         := http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-3
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-2
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-# not stable yet ; needs 'set_name' to work with fprobe-ulog
 NodeManager-SVNBRANCH		:= 1.7
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/tags/NodeManager-1.7-7
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-10
@@ -19,7 +17,6 @@ libhttpd++-SVNPATH		:= http://svn.planet-lab.org/svn/libhttpd++/tags/libhttpd++-
 proper-SVNPATH			:= http://svn.planet-lab.org/svn/proper/tags/proper-0.3-37
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-10
 ulogd-SVNPATH			:= http://svn.planet-lab.org/svn/ulogd/tags/ulogd-1.24-4
-# needs 'get_name' to work with NodeManager
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.2-3
 # not stable yet
 pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-1
