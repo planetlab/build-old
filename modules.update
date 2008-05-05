@@ -1,5 +1,6 @@
 #!/bin/bash
 
 # redirect this into modules.list to get it refreshed
-
-for tags in *tags*4.2.mk ; do make stage1=true PLDISTROTAGS=$tags module-tools ; done | sort -u | grep -v '^build$'
+#
+# we set DISTRONAME as this cannot be correctly guessed from the build box root context
+for tags in *tags*4.2.mk ; do make stage1=true PLDISTROTAGS=$tags DISTRONAME=f8 module-tools ; done | sort -u | grep -v '^build$'
