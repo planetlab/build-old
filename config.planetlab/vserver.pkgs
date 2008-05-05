@@ -29,6 +29,7 @@ package: curl
 package: gzip
 package: perl
 package: python
+package: python-devel
 package: tar
 package: findutils
 package: filesystem
