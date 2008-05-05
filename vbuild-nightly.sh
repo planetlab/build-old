@@ -339,6 +339,8 @@ function main () {
 	    set -x
 	    echo "XXXXXXXXXX $COMMAND: using existing vserver $BASE" $(date)
 	    show_env
+	    # start in case e.g. we just rebooted
+	    vserver ${BASE} start || :
 	    # update build
 	    vserver ${BASE} exec svn update /build
 	else
