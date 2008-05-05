@@ -318,7 +318,6 @@ IN_BOOTCD += pypcilib
 bootcd-MODULES := BootCD build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
-# package has *some* dependencies, at least these ones
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
 bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 bootcd-RPMDATE := yes
@@ -332,8 +331,6 @@ vserver-MODULES := VserverReference build
 vserver-SPEC := vserver-reference.spec
 # Package must be built as root
 vserver-RPMBUILD := sudo bash ./rpmbuild.sh
-# this list is useful for manual builds only, since nightly builds 
-# always redo all sequentially - try to keep updated
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 vserver-RPMDATE := yes
@@ -346,7 +343,6 @@ IN_BOOTSTRAPFS += vserver
 bootstrapfs-MODULES := BootstrapFS build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
-# package requires all regular packages
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
 bootstrapfs-RPMDATE := yes
@@ -375,28 +371,25 @@ ALL += noderepo
 IN_MYPLC += noderepo
 
 #
-# myplc : initial, chroot-based packaging
-#
-myplc-MODULES := MyPLC build
-myplc-SPEC := myplc.spec
-# Package must be built as root
-myplc-RPMBUILD := sudo bash ./rpmbuild.sh
-# myplc may require all packages
-myplc-DEPEND-PACKAGES := $(IN_MYPLC)
-myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
-myplc-RPMDATE := yes
-ALL += myplc
-
-#
 # MyPLC native : lightweight packaging, dependencies are yum-installed in a vserver
 #
 myplc-native-MODULES := MyPLC build 
 myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-# Thierry : don't depend on anything at build-time
-#myplc-native-DEPEND-PACKAGES :=
-# Thierry : dunno about this one, let's stay safe
 myplc-native-DEPEND-FILES := myplc-release
 ALL += myplc-native
+
+## #
+## # myplc : old-fashioned, chroot-based packaging
+## #
+## myplc-MODULES := MyPLC build
+## myplc-SPEC := myplc.spec
+## # Package must be built as root
+## myplc-RPMBUILD := sudo bash ./rpmbuild.sh
+## # myplc may require all packages
+## myplc-DEPEND-PACKAGES := $(IN_MYPLC)
+## myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
+## myplc-RPMDATE := yes
+## ALL += myplc
 
