@@ -12,7 +12,6 @@ PLCAPI:dummynet
 PLCWWW
 PLCWWW:onelab.4.2
 PingOfDeath
-PlanetFlow
 VserverReference
 fprobe-ulog
 iproute2

@@ -157,15 +157,6 @@ pf2slice-MODULES := pf2slice
 pf2slice-SPEC := pf2slice.spec
 ALL += pf2slice
 
-
-#
-# netflow
-#
-netflow-MODULES := PlanetFlow
-netflow-SPEC := netflow.spec
-ALL += netflow
-IN_BOOTSTRAPFS += netflow
-
 #
 # PlanetLab Mom: Cleans up your mess
 #

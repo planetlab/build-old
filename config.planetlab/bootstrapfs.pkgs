@@ -127,7 +127,6 @@ package: ipod
 package: vserver-@pldistro@-@fcdistro@-@arch@
 package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
-package: netflow-utils
 package+f8: fprobe-ulog
 package: vsys
 package-fc4: vsys
