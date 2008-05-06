@@ -17,16 +17,13 @@ VserverReference
 fprobe-ulog
 iproute2
 iptables
-libhttpd++
 libnl
 linux-2.6
 madwifi
 nodeconfig
 pf2slice
 pl_sshd
-proper
 pypcilib
-ulogd
 util-vserver-pl
 util-vserver:scholz
 vsys

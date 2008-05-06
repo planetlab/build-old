@@ -4,7 +4,7 @@ groupname: PlanetLab
 groupdesc: PlanetLab Node Root
 # This is the replacement for the former mkfedora -k. The following packages
 # will get excluded from the stock fedora repos, as we need to use ours
-kexclude: kernel* ulogd iptables
+kexclude: kernel* iptables
 #
 package: kernel
 package: udev
@@ -128,11 +128,7 @@ package: vserver-@pldistro@-@fcdistro@-@arch@
 package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
 package: netflow-utils
-#package: proper
 package+f8: fprobe-ulog
-# for vsys
-#package+f8: ocaml ocaml-docs
-#package+f8: inotify-tools-devel 
 package: vsys
 package-fc4: vsys
 package-fc6: vsys

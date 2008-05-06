@@ -156,26 +156,6 @@ ALL += pl_sshd
 IN_BOOTSTRAPFS += pl_sshd
 
 #
-# libhttpd++: 
-#
-# Deprecate when vsys takes over [sapan].
-# keep in build for proper.
-#
-libhttpd-MODULES := libhttpd++
-libhttpd-SPEC := libhttpd++.spec
-ALL += libhttpd
-IN_BOOTSTRAPFS += libhttpd
-
-#
-# proper: Privileged Operations Service
-#
-proper-MODULES := proper
-proper-SPEC := proper.spec
-proper-DEPEND-DEVEL-RPMS := libhttpd++-devel
-ALL += proper
-IN_BOOTSTRAPFS += proper
-
-#
 # codemux: Port 80 demux
 #
 codemux-MODULES := CoDemux
@@ -183,15 +163,6 @@ codemux-SPEC   := codemux.spec
 codemux-RPMBUILD := sudo bash ./rpmbuild.sh
 ALL += codemux
 IN_BOOTSTRAPFS += codemux
-
-#
-# ulogd
-#
-ulogd-MODULES := ulogd
-ulogd-SPEC := ulogd.spec
-ulogd-DEPEND-DEVEL-RPMS := kernel-devel proper-libs proper-devel
-ALL += ulogd
-IN_VSERVER += ulogd
 
 #
 # fprobe-ulog
