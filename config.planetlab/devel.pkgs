@@ -51,8 +51,6 @@ package: gcc-c++
 #package: util-vserver-lib
 #package: util-vserver-devel
 #package: util-vserver-core
-# ulogd
-package: libpcap libpcap-devel 
 # iptables
 package: linuxdoc-tools 
 package: sudo 
