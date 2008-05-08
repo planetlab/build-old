@@ -356,3 +356,6 @@ ALL += myplc-native
 ## myplc-RPMDATE := yes
 ## ALL += myplc
 
+myplc-docs-MODULES := MyPLC PLCAPI NodeManager
+myplc-docs-SPEC := myplc-docs.spec
+ALL := myplc-docs

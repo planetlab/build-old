@@ -340,3 +340,6 @@ myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
 myplc-native-DEPEND-FILES := myplc-release
 ALL += myplc-native
 
+myplc-docs-MODULES := MyPLC PLCAPI NodeManager
+myplc-docs-SPEC := myplc-docs.spec
+ALL := myplc-docs
