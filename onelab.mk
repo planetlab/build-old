@@ -358,4 +358,4 @@ ALL += myplc-native
 
 myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
-#ALL += myplc-docs
+ALL += myplc-docs
