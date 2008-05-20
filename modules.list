@@ -7,7 +7,7 @@ Monitor
 MyPLC
 NodeManager:1.7
 NodeUpdate
-PLCAPI
+PLCAPI:4.2
 PLCAPI:dummynet
 PLCWWW
 PLCWWW:onelab.4.2
