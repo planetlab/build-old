@@ -371,8 +371,8 @@ that for other purposes than tagging"""%topdir
                 for (key,was_changed) in changed.iteritems():
                     if not was_changed:
                         if self.options.debug:
-                            print 'rewriting missed %s as %s'%(key,patch_dict[key])
-                        new.write('%%define %s %s\n'%(key,patch_dict[key]))
+                            print 'rewriting missing %s as %s'%(key,patch_dict[key])
+                        new.write('\n%%define %s %s\n'%(key,patch_dict[key]))
             spec.close()
             new.close()
             os.rename(newspecfile,specfile)
