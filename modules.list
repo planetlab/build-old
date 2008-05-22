@@ -4,7 +4,7 @@ BootstrapFS
 CoDemux
 Mom:2.2
 Monitor
-MyPLC
+MyPLC:4.2
 NodeManager:1.7
 NodeUpdate
 PLCAPI:4.2
