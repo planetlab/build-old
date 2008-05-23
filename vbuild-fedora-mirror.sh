@@ -22,7 +22,7 @@ jp_fedora_url="need-to-be-defined"
 jp_centos_url="need-to-be-defined"
 
 default_distroname=f8
-all_distronames="f7 f8 centos5.1"
+all_distronames="f7 f8 f9 centos5.1"
 default_arch=i386
 all_archs="i386 x86_64"
 
@@ -46,7 +46,7 @@ function mirror_distro_arch () {
 	    distro="Fedora Core"
 	    rsyncurl=$fedora_url
 	    ;;
-	f*[7-8])
+	f*[7-9])
 	    distroindex=$(echo $distroname | sed -e "s,f,,g")
 	    distro="Fedora"
 	    rsyncurl=$fedora_url
@@ -89,7 +89,7 @@ function mirror_distro_arch () {
 		    paths="$paths core/updates/$distroindex/$arch/ extras/$distroindex/$arch/"
 		    RES=0
 		    ;;
-		7|8)
+		[7-9])
 		    [ -z "$skip_core" ] && paths="releases/$distroindex/Everything/$arch/os/"
 		    paths="$paths updates/$distroindex/$arch/"
 		    RES=0
