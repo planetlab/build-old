@@ -680,6 +680,11 @@ info: packages modules branches
 .PHONY: info packages modules branches module-tools
 
 ####################
+testsvnpath:
+	@$(if $(TESTS_SVNPATH), echo $(TESTS_SVNPATH) > $@, \
+	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
+
+####################
 help:
 	@echo "********** Run make in two stages:"
 	@echo ""

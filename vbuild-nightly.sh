@@ -10,7 +10,7 @@ DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
-DEFAULT_TESTSVNPATH="http://svn.planet-lab.org/svn/tests/trunk/system/"
+# TESTSVNPATH to be computed from the -tags.mk file - no default anymore
 DEFAULT_TESTCONFIG="default"
 DEFAULT_IFNAME=eth0
 
@@ -153,6 +153,8 @@ function build () {
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # actual stuff
     make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
+    # store TESTSVNPATH
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true testsvnpath
 
 }
 
@@ -164,6 +166,17 @@ function runtest () {
     trap failure ERR INT
 
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
+
+    # where to find TESTSVNPATH
+    stamp=/vserver/$BASE/build/testsvnpath
+    if [ ! -f $stamp ] ; then
+	echo "$COMMAND: Cannot figure TESTSVNPATH from missing $stamp"
+	failure
+	exit 1
+    fi
+    TESTSVNPATH=$(cat $stamp)
+    # use only this pat of the tests right now
+    TESTSVNPATH=${TESTSVNPATH}/system
 
     ### the URL to the RPMS/<arch> location
     url=""
@@ -245,7 +258,6 @@ function usage () {
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
     echo " -s svnpath - where to fetch the build module"
-    echo " -x testsvnpath - defaults to $DEFAULT_TESTSVNPATH"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -m mailto - no default"
@@ -278,7 +290,6 @@ function main () {
 	    t) PLDISTROTAGS=$OPTARG ;;
 	    r) TAGSRELEASE=$OPTARG ;;
 	    s) SVNPATH=$OPTARG ;;
-	    x) TESTSVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
 	    m) MAILTO=$OPTARG ;;
@@ -310,7 +321,6 @@ function main () {
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
-    [ -z "$TESTSVNPATH" ] && TESTSVNPATH="$DEFAULT_TESTSVNPATH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
