@@ -151,10 +151,10 @@ function build () {
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
     # versions
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
+    # store testsvnpath
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true testsvnpath
     # actual stuff
     make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
-    # store TESTSVNPATH
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true testsvnpath
 
 }
 
