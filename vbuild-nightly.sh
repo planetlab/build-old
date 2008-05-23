@@ -168,7 +168,7 @@ function runtest () {
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
 
     # where to find TESTSVNPATH
-    stamp=/vserver/$BASE/build/testsvnpath
+    stamp=/vservers/$BASE/build/testsvnpath
     if [ ! -f $stamp ] ; then
 	echo "$COMMAND: Cannot figure TESTSVNPATH from missing $stamp"
 	failure
