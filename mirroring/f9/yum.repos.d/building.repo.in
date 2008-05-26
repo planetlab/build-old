@@ -2,12 +2,12 @@
 name=Fedora 9 - $basearch
 baseurl=@MIRRORURL@/fedora/releases/9/Everything/$basearch/os/
 enabled=1
-gpgcheck=1
-gpgkey=http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/9/Everything/$basearch/os/RPM-GPG-KEY-fedora http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/9/Everything/$basearch/os/RPM-GPG-KEY
+gpgcheck=0
+#gpgkey=http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/9/Everything/$basearch/os/RPM-GPG-KEY-fedora http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/9/Everything/$basearch/os/RPM-GPG-KEY
 
 [updates]
 name=Fedora 9 - $basearch - Updates
 baseurl=@MIRRORURL@/fedora/updates/9/$basearch/
 enabled=1
-gpgcheck=1
-gpgkey=http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/9/Everything/$basearch/os/RPM-GPG-KEY-fedora
+gpgcheck=0
+#gpgkey=http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/9/Everything/$basearch/os/RPM-GPG-KEY-fedora
