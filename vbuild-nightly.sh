@@ -197,9 +197,9 @@ function runtest () {
     # test directory name on test box
     testdir=${BASE}
     # clean it
-    ssh ${TESTBOXSSH} rm -rf ${testdir}
+    ssh -n ${TESTBOXSSH} rm -rf ${testdir}
     # check it out
-    ssh ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
+    ssh -n ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
     for config in ${TESTCONFIG} ; do
@@ -208,11 +208,11 @@ function runtest () {
     
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
+    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
-    ssh 2>&1 ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+    ssh 2>&1 -n ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
     # push them to the build web
     rsync --archive --delete /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
     chmod -R a+r $WEBPATH/$BASE/testlogs/
