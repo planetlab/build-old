@@ -1,7 +1,7 @@
 # $Id$
 
 build-SVNPATH			:= http://svn.planet-lab.org/svn/build/trunk
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-7
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-8
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.0-11
@@ -13,7 +13,7 @@ PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDea
 NodeManager-SVNBRANCH		:= 1.7
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/tags/NodeManager-1.7-11
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
-CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-11
+CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-12
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.2-3
 # not stable yet
 pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
