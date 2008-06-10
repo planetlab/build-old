@@ -73,7 +73,7 @@ class Command:
             sys.stdout.flush()
         retcod=os.system(self.command + " &> " + self.tmp)
         if retcod != 0:
-            print "FAILED ! -- output quoted below "
+            print "FAILED ! -- out+err below (command was %s)"%self.command
             os.system("cat " + self.tmp)
             print "FAILED ! -- end of quoted output"
         elif self.options.verbose:
@@ -956,7 +956,7 @@ More help:
             try:
                 method(module)
             except Exception,e:
-                print 'Skipping failed %s - %r'%(modname,e)
+                print 'Skipping failed %s: '%modname,e
 
 if __name__ == "__main__" :
     try:
