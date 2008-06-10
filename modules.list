@@ -1,5 +1,5 @@
 BootCD
-BootManager
+BootManager:3.2
 BootstrapFS
 CoDemux
 Mom:2.2
@@ -19,7 +19,7 @@ iptables
 libnl
 linux-2.6
 madwifi
-nodeconfig
+nodeconfig:4.2
 pf2slice
 pl_sshd
 pypcilib
