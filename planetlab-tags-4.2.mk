@@ -1,6 +1,6 @@
 # $Id$
 
-build-SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc6
+build-SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc7
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-8
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
@@ -11,7 +11,7 @@ util-vserver-pl-SVNPATH         := http://svn.planet-lab.org/svn/util-vserver-pl
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-2
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 NodeManager-SVNBRANCH		:= 1.7
-NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/tags/NodeManager-1.7-11
+NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/tags/NodeManager-1.7-12
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-12
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.2-3
@@ -37,3 +37,4 @@ MyPLC-SVNBRANCH			:= 4.2
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.2-15
 # locating the right test directory - see make testsvnpath
 TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.2-5
+BUILD_SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc7
