@@ -698,6 +698,8 @@ Please write a changelog for this new tag in the section above
             buildname=Module.config['build']
         except:
             buildname="build"
+        if self.options.build_branch:
+            buildname+=":"+self.options.build_branch
         build = Module(buildname,self.options)
         build.init_moddir()
         build.init_edge_dir()
@@ -902,6 +904,8 @@ More help:
         if mode == "tag" :
             parser.add_option("-c","--no-changelog", action="store_false", dest="changelog", default=True,
                               help="do not update changelog section in specfile when tagging")
+            parser.add_option("-b","--build-branch", action="store", dest="build_branch", default=None,
+                              help="specify a build branch; used for locating the *tags*.mk files where adoption is to take place")
         if mode == "tag" or mode == "sync" :
             parser.add_option("-e","--editor", action="store", dest="editor", default=default_editor(),
                               help="specify editor")
