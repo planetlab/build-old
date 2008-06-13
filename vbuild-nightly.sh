@@ -146,6 +146,7 @@ function build () {
     MAKEVARS=("PLDISTROTAGS=${PLDISTROTAGS}" "${MAKEVARS[@]}")
     MAKEVARS=("NIGHTLY_BASE=${BASE}" "${MAKEVARS[@]}")
     MAKEVARS=("NIGHTLY_PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
+    MAKEVARS=("build-SVNPATH=${SVNPATH}" "${MAKEVARS[@]}")
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 

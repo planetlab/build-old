@@ -131,6 +131,19 @@ include $(PLDISTROCONTENTS)
 PLDISTROTAGS := $(PLDISTRO)-tags.mk
 include $(PLDISTROTAGS)
 
+# this used to be set in the -tags.mk files, but that turned out to require
+# error-prone duplicate changes 
+# so now the nightly build script sets this to what it is currently using
+# we set a default in case we run the build manually:
+# if the local directory was svn checked out, then use the corresponding URL
+default-build-SVNPATH := $(shell svn info 2> /dev/null | grep URL: | awk '{print $2;}')
+# otherwise, use this hard-coded default
+ifeq "$(default-build-SVNPATH)" ""
+default-build-SVNPATH := http://svn.planet-lab.org/svn/build/trunk
+endif
+# use default if necessary
+build-SVNPATH ?= $(default-build-SVNPATH)
+
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
 # make stage1=true
