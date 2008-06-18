@@ -15,6 +15,13 @@ done
 # Disable splaying of cron.
 echo > ${vdir}/etc/sysconfig/crontab
 
+# sss
+# update /etc/sysconfig/network-scripts/ifup
+#  #if ! arping -q -c 2 -w 3 -D -I ${REALDEVICE} ${IPADDR} ; then
+      #echo $"Error, some other host already uses address ${IPADDR}."
+      #exit 1
+   #fi
+
 # Add site_admin account
 chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
@@ -32,4 +39,25 @@ chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
  action $"Sending all processes the KILL signal..."  /sbin/killall5 -9
 
  # Write to wtmp file before unmounting /var
+EOF
+
+
+( cat <<EOF ) | patch -d ${vdir}/etc/sysconfig/network-scripts/
+--- ifup-eth    2008-05-30 13:20:17.382681663 +0000
++++ ifup-eth-fixed      2008-06-03 16:41:25.284200756 +0000
+@@ -214,10 +214,10 @@
+         /sbin/ethtool -s ${REALDEVICE} $ETHTOOL_OPTS
+     fi
+
+-    if ! arping -q -c 2 -w 3 -D -I ${REALDEVICE} ${IPADDR} ; then
+-       echo $"Error, some other host already uses address ${IPADDR}."
+-       exit 1
+-    fi
++#    if ! arping -q -c 2 -w 3 -D -I ${REALDEVICE} ${IPADDR} ; then
++#      echo $"Error, some other host already uses address ${IPADDR}."
++#      exit 1
++#    fi
+
+     if [ "${DEVICE}" = "lo" ]; then
+        SCOPE="scope host"
 EOF
