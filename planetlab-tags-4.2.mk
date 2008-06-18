@@ -1,6 +1,6 @@
 # $Id$
 
-build-SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc7
+build-SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc9
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-8
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
@@ -37,4 +37,4 @@ MyPLC-SVNBRANCH			:= 4.2
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.2-15
 # locating the right test directory - see make testsvnpath
 TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.2-5
-BUILD_SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc7
+BUILD_SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc9
