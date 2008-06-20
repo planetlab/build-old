@@ -380,11 +380,16 @@ that for other purposes than tagging"""%topdir
     def unignored_lines (self, logfile):
         result=[]
         exclude="Tagging module %s"%self.name
+        white_line_matcher = re.compile("\A\s*\Z")
         for logline in file(logfile).readlines():
             if logline.strip() == Module.svn_magic_line:
                 break
-            if logline.find(exclude) < 0:
-                result += [ logline ]
+            if logline.find(exclude) >= 0:
+                continue
+            elif white_line_matcher.match(logline):
+                continue
+            else:
+                result.append(logline.strip()+'\n')
         return result
 
     def insert_changelog (self, logfile, oldtag, newtag):
