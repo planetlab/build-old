@@ -4,10 +4,8 @@
 # but by modules.update to refresh modules.list 
 # that serves as the default for module-tools -a
 
-build-SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc9
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-8
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
-wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/tags/wireless-tools-29-0
 nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.0-11
@@ -44,4 +42,3 @@ MyPLC-SVNBRANCH			:= 4.2
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.2-15
 # locating the right test directory - see make testsvnpath
 TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.2-5
-BUILD_SVNPATH			:= http://svn.planet-lab.org/svn/build/tags/4.2-rc9
