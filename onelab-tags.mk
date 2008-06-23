@@ -3,7 +3,6 @@
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
-wireless-tools-SVNPATH		:= http://svn.planet-lab.org/svn/wireless-tools/trunk
 nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/trunk
 comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/trunk

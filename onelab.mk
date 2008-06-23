@@ -64,19 +64,9 @@ madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
 
-#
-# wireless-tools
-# 
-wireless-tools-MODULES := wireless-tools
-wireless-tools-SPEC := wireless-tools.spec
-wireless-tools-BUILD-FROM-SRPM := yes
-ALL += wireless-tools
-IN_BOOTSTRAPFS += wireless-tools
-
 # 
 # nozomi
 # 
-# does not compile against new kernel - waiting for Napoli & Vimercate
 nozomi-MODULES := nozomi
 nozomi-SPEC := nozomi.spec
 nozomi-DEPEND-DEVEL-RPMS := kernel-devel
