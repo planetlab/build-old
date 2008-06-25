@@ -650,15 +650,6 @@ $(foreach package,$(sort $(ALL)), $(eval $(call rpm_version_target,$(package))))
 versions: myplc-release version-build version-svns version-rpms
 .PHONY: versions version-build version-rpms version-svns
 
-#################### include install Makefile
-# the default is to use the distro-dependent install file
-# however the main distro file can redefine PLDISTROINSTALL
-ifndef PLDISTROINSTALL
-PLDISTROINSTALL := $(PLDISTRO)-install.mk
-endif
-# only if present
--include $(PLDISTROINSTALL)
-
 #################### package info
 PKGKEYS := tarballs source codebase srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
 %-pkginfo: package=$(subst -pkginfo,,$@)
