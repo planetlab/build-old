@@ -290,7 +290,7 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
-    while getopts "f:d:p:b:t:r:s:x:c:w:y:g:um:OBTnv7a:i:" opt ; do
+    while getopts "f:d:p:b:t:r:s:x:c:w:g:u:m:OBTnyv7a:i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
@@ -331,6 +331,8 @@ function main () {
     [ -z "$PLDISTROTAGS" ] && PLDISTROTAGS="${PLDISTRO}-tags.mk"
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
+    [ -z "$GPGPATH" ] && GPGPATH="$DEFAULT_GPGPATH"
+    [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
