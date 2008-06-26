@@ -489,7 +489,6 @@ reaterepo=true
                 --define "_gpg_path $GPGPATH" \
                 --define "_gpg_name $GPGUID" \
                 --resign $new_rpms && touch $new_stamps
-            check
         fi
 
          # Update repository index / yum metadata. 
@@ -499,7 +498,6 @@ reaterepo=true
             # .oldheaders and .olddata directories accidentally.
             rm -rf $repository/{.oldheaders,.olddata}
             yum-arch $repository
-            check
         fi
 
         if [ -n "$need_createrepo" ] ; then
@@ -508,7 +506,6 @@ reaterepo=true
             else
                 createrepo --quiet $repository
             fi
-            check
         fi
 
     fi
