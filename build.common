@@ -395,7 +395,9 @@ EOF
 	corename=""
     fi
 
-    cat >$vroot/etc/yum.conf <<EOF
+# yum.conf is for building only - store in different location than /etc/yum.conf
+    yum_conf=$vroot/etc/mkfedora-yum.conf
+    cat > $yum_conf <<EOF
 [main]
 cachedir=/var/cache/yum
 debuglevel=2
@@ -424,7 +426,7 @@ EOF
 	    $mirror/linux/$optional/$releasever/$basearch \
 	    $mirror/$optional/$releasever/$basearch ; do
             if mkfedora_fetch $optionalurl/repodata/repomd.xml ; then
-		cat >>$vroot/etc/yum.conf <<EOF
+		cat >> $yum_conf <<EOF
 
 [$(basename $optional)]
 name=Fedora ${corename}${releasever} - $basearch - $(basename $optional)
@@ -446,13 +448,23 @@ EOF
 	if [ -n "$SUDO_USER" ] ; then
 	    chown -R $SUDO_USER $RPM_RPMS_DIR
 	fi
-	cat >>$vroot/etc/yum.conf <<EOF
+	cat >> $yum_conf <<EOF
 
 [bootstrap]
 name=Bootstrap - $basearch - $RPM_RPMS_DIR/
 baseurl=file://$RPM_RPMS_DIR/
 EOF
 fi
+
+    echo "========== Dumping $yum_conf"
+    cat $yum_conf
+    echo "========== EndDump $yum_conf"
+
+    yum_options=""
+    yum --help | grep verbose &> /dev/null && yum_options="$yum_options --verbose"
+    yum_options="$yum_options -y"
+    yum_options="$yum_options -c $yum_conf"
+    yum_options="$yum_options --installroot=$vroot"
 
     exclude_arg=""
     for exclude in $pkgs_excludes; do
@@ -462,13 +474,12 @@ fi
     # glibc must be specified explicitly for the correct arch to be
     # chosen.
     echo "* Installing glibc"
-    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $exclude_arg install glibc
+    yum $yum_options $exclude_arg install glibc
 
     # Go, baby, go
     if [ -n "$pkgs_packages" ] ; then
 	echo "* Installing optional packages" $pkgs_packages
-	yum -c $vroot/etc/yum.conf --installroot=$vroot -y $exclude_arg \
-	    install $pkgs_packages
+	yum $yum_options $exclude_arg install $pkgs_packages
 	if ! rpm --root $vroot -q $pkgs_packages >/dev/null ; then
 	    echo "* Warning: Missing packages"
 	    rpm --root $vroot -q $pkgs_packages | grep "not installed"
@@ -479,8 +490,7 @@ fi
        ## call yum sequentially to get finer-grained info on dependencies
 	for grp in $pkgs_groups ; do
 	    echo "* Installing optional group $grp" 
-	    yum -c $vroot/etc/yum.conf --installroot=$vroot -y $exclude_arg \
-		groupinstall "$grp"
+	    yum $yum_options $exclude_arg groupinstall "$grp"
 	done
     fi
 
@@ -499,7 +509,7 @@ fi
 
     # Clean yum cache
     echo "* Cleaning up"
-    yum -c $vroot/etc/yum.conf --installroot=$vroot -y clean all
+    yum $yum_options clean all
 
     # Clean RPM state
     rm -f $vroot/var/lib/rpm/__db*
@@ -509,6 +519,9 @@ fi
 	rm -f $vroot/etc/localtime
 	ln -s /usr/share/zoneinfo/UTC $vroot/etc/localtime
     fi
+
+    echo "Dumping current list of rpms in /etc/mkfedora-rpms.txt"
+    chroot $vroot rpm -aq | sort > $vroot/etc/mkfedora-rpms.txt
 
     # remove trap handler, as we are about to call it directly.
     trap - ERR INT
