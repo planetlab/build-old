@@ -194,6 +194,7 @@ iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
+IN_VSERVER += iproute
 
 #
 # vsys
