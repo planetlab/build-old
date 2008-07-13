@@ -421,6 +421,7 @@ EOF
 
     for optional in updates extras ; do
 	for optionalurl in \
+	    $mirror/fedora/$optional/$releasever/$basearch \
 	    $mirror/linux/core/$optional/$releasever/$basearch \
 	    $mirror/core/$optional/$releasever/$basearch \
 	    $mirror/linux/$optional/$releasever/$basearch \
