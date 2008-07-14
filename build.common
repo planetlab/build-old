@@ -264,39 +264,55 @@ function pl_root_mkfedora () {
     case $pl_DISTRO in
 	Fedora)
 	    if [ $releasever -ge 7 ] ; then
+		public_gpg_key=RPM-GPG-KEY-fedora
 	        # Plain Fedora comes with a new layout
-		attempts="
+		attempts_base="
 fedora/releases/$releasever/Everything/$basearch/os
 linux/releases/$releasever/Everything/$basearch/os
-$releasever/Everything/$basearch/os
-core/$releasever/Everything/$basearch/os
-linux/core/$releasever/$basearch/os
+"
+		optionals="updates"
+		attempts_optional="
+fedora/@optional@/$releasever/$basearch
 "
 	    else
 		# Fedora Core
-		attempts="
+		public_gpg_key=RPM-GPG-KEY-fedora
+		attempts_base="
 fedora/core/$releasever/$basearch/os 
 linux/core/$releasever/$basearch/os 
 core/$releasever/$basearch/os 
 $releasever/$basearch/os
 "
+		optionals="updates extras"
+		attempts_optional="
+linux/core/@optional@/$releasever/$basearch \
+core/@optional@/$releasever/$basearch \
+linux/@optional@/$releasever/$basearch \
+@optional@/$releasever/$basearch \
+"
 	    fi 
-	    public_gpg_key=RPM-GPG-KEY-fedora
 	    ;;
 	CentOS)
 	    # xxx hacky for now
 	    # you can use vbuild-fedora-mirror with -f centos5.1
 	    # which is hard-coded in mirroring/centos as well
 	    # for now I do the mapping here, mmhh
+	    public_gpg_key=RPM-GPG-KEY-CentOS-$releasever
 	    case $releasever in
 		4) actual=4.6 ;;
 		5) actual=5.1 ;;
 		*) actual=$releasever ;;
 	    esac
-	    attempts="
+	    attempts_base="
 centos/$actual/os/$basearch
 "
-	    public_gpg_key=RPM-GPG-KEY-CentOS-$releasever
+	    optionals="updates extras"
+	    attempts_optional="
+linux/core/@optional@/$releasever/$basearch \
+core/@optional@/$releasever/$basearch \
+linux/@optional@/$releasever/$basearch \
+@optional@/$releasever/$basearch \
+"
 	    ;;
 	*)
 	    echo "distro $pl_DISTRO not supported in build.common / mkfedora" ; exit 1
@@ -308,7 +324,7 @@ centos/$actual/os/$basearch
     done
     baseurl=""
     for mirror in $mirrors ; do
-	for attempt in $attempts; do 
+	for attempt in $attempts_base; do 
 	    attempturl=$mirror/$attempt
 	    if mkfedora_fetch $attempturl/repodata/repomd.xml >/dev/null ; then
 		baseurl=$attempturl
@@ -322,7 +338,7 @@ centos/$actual/os/$basearch
 	echo "       could not be found in any of the following locations:"
 	echo
 	for mirror in $mirrors ; do
-	    for attempt in $attempts ; do
+	    for attempt in $attempts_base ; do
 		echo $mirror/$attempt
 	    done
 	done
@@ -419,13 +435,15 @@ baseurl=$baseurl/
 $exclude_kernel
 EOF
 
-    for optional in updates extras ; do
-	for optionalurl in \
-	    $mirror/linux/core/$optional/$releasever/$basearch \
-	    $mirror/core/$optional/$releasever/$basearch \
-	    $mirror/linux/$optional/$releasever/$basearch \
-	    $mirror/$optional/$releasever/$basearch ; do
+    for optional in $optionals ; do
+	found=""
+	# locating updates/extras
+	attempts=$(echo $attempts_optional | sed -e s,@optional@,$optional,g)
+	for attempt in $attemps; do
+	    optionalurl=$mirror/$attempt
+	    echo "* $optional : Trying to fetch $optionalurl"
             if mkfedora_fetch $optionalurl/repodata/repomd.xml ; then
+		echo "* FOUND!"
 		cat >> $yum_conf <<EOF
 
 [$(basename $optional)]
@@ -433,9 +451,14 @@ name=Fedora ${corename}${releasever} - $basearch - $(basename $optional)
 baseurl=$optionalurl/
 $exclude_kernel
 EOF
-                break
+	        found=true
+		break
 	    fi
 	done
+	if [ -z "$found" ] ; then
+	    echo "pl_root_mkfedora cannot find repository for $optional"
+	    exit 1
+	fi
     done
 
     # If we are being built as part of an automated RPM build, solve the
