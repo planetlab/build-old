@@ -285,12 +285,12 @@ $releasever/$basearch/os
 	    ;;
 	CentOS)
 	    # xxx hacky for now
-	    # you can use vbuild-fedora-mirror with -f centos5.1
+	    # you can use vbuild-fedora-mirror with -f centos5.2
 	    # which is hard-coded in mirroring/centos as well
 	    # for now I do the mapping here, mmhh
 	    case $releasever in
 		4) actual=4.6 ;;
-		5) actual=5.1 ;;
+		5) actual=5.2 ;;
 		*) actual=$releasever ;;
 	    esac
 	    attempts="
