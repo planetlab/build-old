@@ -47,7 +47,6 @@ package: diffutils
 package: ethtool
 package: logrotate
 package: lsof
-package: logwatch
 package: mailcap
 package: nano
 package: nc
