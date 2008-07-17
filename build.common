@@ -439,7 +439,7 @@ EOF
 	found=""
 	# locating updates/extras
 	attempts=$(echo $attempts_optional | sed -e s,@optional@,$optional,g)
-	for attempt in $attemps; do
+	for attempt in $attempts; do
 	    optionalurl=$mirror/$attempt
 	    echo "* $optional : Trying to fetch $optionalurl"
             if mkfedora_fetch $optionalurl/repodata/repomd.xml ; then
