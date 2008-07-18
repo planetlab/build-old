@@ -9,6 +9,10 @@
 # $Id$
 #
 
+### xxx thierry : looks like we should bump this to fedora 8
+### however, rather than the actual default,
+### this looks more like the bottom of what we're able to build
+### so I leave it with fc4
 function pl_getDefaultDistro() {
     # FC4 is currently the default release
     echo "Fedora"
@@ -32,6 +36,9 @@ function pl_getDistro() {
     return 0
 }
 
+### xxx thierry : when running in a centOS box, this issues a warning message
+### because 5.2 is not an integer and bash cannot compare that
+### seems harmless though
 function pl_getRelease() {
     defaultRelease=$(pl_getDefaultRelease)
     if [ -f "/etc/redhat-release" ] ; then
@@ -198,25 +205,15 @@ function pl_root_mkfedora () {
     basearch=$pl_DISTRO_ARCH
 
 # Get options
-    mirrors=""
-    while getopts "l:r:a:vh" opt ; do
+###    mirrors=""
+###    while getopts "l:r:a:vh" opt ; do
+    while getopts "vh" opt ; do
 	case $opt in
-	    l)
-		mirrors="$mirrors $OPTARG"
-		;;
-	    r)
-		releasever=$OPTARG
-		;;
-	    a)
-		basearch=$OPTARG
-		;;
-	    v)
-		verbose=1
-		set -x
-		;;
-	    h|*)
-		mkfedora_usage
-		;;
+###	    l) mirrors="$mirrors $OPTARG" ;;
+###	    r) releasever=$OPTARG ;;
+###	    a) basearch=$OPTARG ;;
+	    v) verbose=1; set -x ;;
+	    h|*) mkfedora_usage ;;
 	esac
     done
 
@@ -245,108 +242,27 @@ function pl_root_mkfedora () {
 	mirrors=$(pl_parsePkgs mirror $fcdistro $pldistro $mirrorsfile)
     fi
 
-    exclude_kernel=""
+    exclude_line=""
     # add them manually as the output of pl_parsePkgs is line-separated
     if [ -n "$pkgs_kexcludes" ] ; then
-	exclude_kernel="exclude="
+	exclude_line="exclude="
 	for kexclude in $pkgs_kexcludes ; do
-	    exclude_kernel="$exclude_kernel $kexclude"
+	    exclude_line="$exclude_line $kexclude"
 	done
     fi
-
-    function mkfedora_fetch ()
-    {
-	curl --fail --silent --max-time 60 "$1"
-    }
-
-    # set list of attempted locations according to target distro
-    # xxx all this should go into mirroring/ somehow
-    case $pl_DISTRO in
-	Fedora)
-	    if [ $releasever -ge 7 ] ; then
-		public_gpg_key=RPM-GPG-KEY-fedora
-	        # Plain Fedora comes with a new layout
-		attempts_base="
-fedora/releases/$releasever/Everything/$basearch/os
-linux/releases/$releasever/Everything/$basearch/os
-"
-		optionals="updates"
-		attempts_optional="
-fedora/@optional@/$releasever/$basearch
-"
-	    else
-		# Fedora Core
-		public_gpg_key=RPM-GPG-KEY-fedora
-		attempts_base="
-fedora/core/$releasever/$basearch/os 
-linux/core/$releasever/$basearch/os 
-core/$releasever/$basearch/os 
-$releasever/$basearch/os
-"
-		optionals="updates extras"
-		attempts_optional="
-linux/core/@optional@/$releasever/$basearch \
-core/@optional@/$releasever/$basearch \
-linux/@optional@/$releasever/$basearch \
-@optional@/$releasever/$basearch \
-"
-	    fi 
-	    ;;
-	CentOS)
-	    # xxx hacky for now
-	    # you can use vbuild-fedora-mirror with -f centos5.2
-	    # which is hard-coded in mirroring/centos as well
-	    # for now I do the mapping here, mmhh
-	    public_gpg_key=RPM-GPG-KEY-CentOS-$releasever
-	    case $releasever in
-		4) actual=4.6 ;;
-		5) actual=5.2 ;;
-		*) actual=$releasever ;;
-	    esac
-	    attempts_base="
-centos/$actual/os/$basearch
-"
-	    optionals="updates extras"
-	    attempts_optional="
-linux/core/@optional@/$releasever/$basearch \
-core/@optional@/$releasever/$basearch \
-linux/@optional@/$releasever/$basearch \
-@optional@/$releasever/$basearch \
-"
-	    ;;
-	*)
-	    echo "distro $pl_DISTRO not supported in build.common / mkfedora" ; exit 1
-    esac
 
     echo "$0: candidate mirrors"
     for mirror in $mirrors ; do
 	echo "* candidate mirror $mirror"
     done
-    baseurl=""
-    for mirror in $mirrors ; do
-	for attempt in $attempts_base; do 
-	    attempturl=$mirror/$attempt
-	    if mkfedora_fetch $attempturl/repodata/repomd.xml >/dev/null ; then
-		baseurl=$attempturl
-		break 2
-	    fi
-	done
-    done
 
-    if [ -z "$baseurl" ] ; then
-	echo "Error: $releasever/$basearch/os/repodata/repomd.xml"
-	echo "       could not be found in any of the following locations:"
-	echo
-	for mirror in $mirrors ; do
-	    for attempt in $attempts_base ; do
-		echo $mirror/$attempt
-	    done
-	done
-	echo
-	mkfedora_usage
-    else
-	echo "* selecting mirror with baseurl=$baseurl"
+    # the repo part of the final yum.conf
+    yum_conf_repos=$vroot/xxxmkfedora-repos.confxxx
+    if ! yumconf_mirrors $yum_conf_repos ../build/ $fcdistro "$exclude_line" $mirrors ; then
+	echo xxx -- error ; return 1
     fi
+    
+    public_gpg_key=$(yumconf_gpgkey $yum_conf_repos)
 
     # Do not tolerate errors
     set -e
@@ -401,15 +317,10 @@ EOF
     # Initialize RPM database in reference image
     mkdir -p $vroot/var/lib/rpm
     rpm --root $vroot --initdb
-    rpm --root $vroot --import $baseurl/$public_gpg_key
+    rpm --root $vroot --import $public_gpg_key
 
     # Initialize yum in reference image
     mkdir -p $vroot/var/cache/yum $vroot/var/log
-    if [ $releasever -lt 7 ] ; then
-	corename="Core "
-    else
-	corename=""
-    fi
 
 # yum.conf is for building only - store in different location than /etc/yum.conf
     yum_conf=$vroot/etc/mkfedora-yum.conf
@@ -428,38 +339,9 @@ gpgcheck=0
 # Prevent yum-2.4 from loading additional repository definitions
 # (e.g., from /etc/yum.repos.d/)
 reposdir=/dev/null
-
-[base]
-name=Fedora ${corename}${releasever} - $basearch - base
-baseurl=$baseurl/
-$exclude_kernel
 EOF
-
-    for optional in $optionals ; do
-	found=""
-	# locating updates/extras
-	attempts=$(echo $attempts_optional | sed -e s,@optional@,$optional,g)
-	for attempt in $attempts; do
-	    optionalurl=$mirror/$attempt
-	    echo "* $optional : Trying to fetch $optionalurl"
-            if mkfedora_fetch $optionalurl/repodata/repomd.xml ; then
-		echo "* FOUND!"
-		cat >> $yum_conf <<EOF
-
-[$(basename $optional)]
-name=Fedora ${corename}${releasever} - $basearch - $(basename $optional)
-baseurl=$optionalurl/
-$exclude_kernel
-EOF
-	        found=true
-		break
-	    fi
-	done
-	if [ -z "$found" ] ; then
-	    echo "pl_root_mkfedora cannot find repository for $optional"
-	    exit 1
-	fi
-    done
+    
+    cat $yum_conf_repos >> $yum_conf
 
     # If we are being built as part of an automated RPM build, solve the
     # bootstrap problem by including any just built packages in the yum
@@ -755,4 +637,82 @@ __group_footer
 cat <<__footer
 </comps>
 __footer
+}
+
+
+function build_fetch () {
+    curl --fail --silent --max-time 60 --output /dev/null "$1" 
+}
+
+# tries to compute a valid yum.conf for that pldistro from the template in mirroring/
+# returns 0 and writes <dest_yumconf> on success
+# returns 1 on failure, in which case <dest_yumconf> is deleted
+function yumconf_mirrors () {
+    dest_yumconf=$1; shift
+    builddir=$1; shift
+    fcdistro=$1; shift
+    exclude_line="$1" ; shift
+    mirrors="$@"
+
+    template=$builddir/mirroring/$fcdistro/yum.repos.d/building.repo.in
+    
+    if [ ! -f $template ] ; then
+	echo "yumconf_mirrors: cannot locate template $template"
+	rm -f $dest_yumconf
+	return 1
+    fi
+
+    for mirror in $mirrors; do
+	if yumconf_mirror $dest_yumconf $template "$exclude_line" $mirror; then
+	    return 0
+	fi
+    done
+    rm -f $dest_yumconf
+    return 1
+}
+
+# computes a yum.conf from the template, and checks that all baseurl defined in there are valid repos
+# returns 0 on success and 1 on failure
+function yumconf_mirror () {
+    dest_yumconf=$1; shift
+    template=$1; shift
+    exclude_line="$1" ; shift
+    mirror=$1; shift
+
+    sed -e "s,@MIRRORURL@,$mirror,g" \
+	-e "/baseurl=/i\\
+$exclude_line" $template > $dest_yumconf
+    
+    # capture all lines defining baseurl
+    baseurl_defs=$(grep '^baseurl=' $dest_yumconf)
+    if [ -z "$baseurl_defs" ] ; then
+	return 1
+    fi
+
+    for baseurl_def in $baseurl_defs; do
+	baseurl=$(echo $baseurl_def | sed \
+	    -e s,baseurl=,, \
+	    -e 's,$basearch,'"$pl_DISTRO_ARCH",g)
+	repomd=$baseurl/repodata/repomd.xml
+
+	echo "* Trying to fetch $repomd"
+	if ! build_fetch $repomd ; then
+	    echo "* Failed to fetch $repomd"
+	    return 1
+	fi
+    done
+    echo "* Selected mirror $mirror"
+    return 0
+}
+
+# from a yum.conf as generated above, computes the (first) gpgkey url
+function yumconf_gpgkey () {
+    dest_yumconf=$1; shift
+
+    first_line=$(grep '^gpgkey=' $dest_yumconf | head -1)
+    values=$(echo $first_line | sed -e s,gpgkey=,,)
+    value=$(echo $values | awk '{print $1;}' | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g)
+    [ -n "$value" ] || return 1
+    echo $value
+    return 0
 }
