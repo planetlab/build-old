@@ -242,7 +242,7 @@ function show_env () {
     echo TAGSRELEASE="$TAGSRELEASE"
     echo -n "(might be unexpanded)"
     echo WEBPATH="$WEBPATH"
-    if [ -d /vservers ] ; then
+    if [ -d /etc/vservers ] ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
     else
 	echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
@@ -344,7 +344,7 @@ function main () {
     BASE=$(echo ${BASE} | sed $sedargs)
     WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
-    if [ ! -d /vservers ] ; then
+    if [ ! -d /etc/vservers ] ; then
         # in the vserver
 	echo "==================== Within vserver BEG $(date)"
 	build
