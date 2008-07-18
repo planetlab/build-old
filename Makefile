@@ -136,7 +136,8 @@ include $(PLDISTROTAGS)
 # so now the nightly build script sets this to what it is currently using
 # we set a default in case we run the build manually:
 # if the local directory was svn checked out, then use the corresponding URL
-default-build-SVNPATH := $(shell svn info 2> /dev/null | grep URL: | awk '{print $2;}')
+svn-info-url-line := $(shell svn info 2> /dev/null | grep URL:)
+default-build-SVNPATH := $(lastword $(svn-info-url-line))
 # otherwise, use this hard-coded default
 ifeq "$(default-build-SVNPATH)" ""
 default-build-SVNPATH := http://svn.planet-lab.org/svn/build/trunk
