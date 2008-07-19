@@ -230,6 +230,10 @@ function runtest () {
     echo -n "============================== End $COMMAND:runtest on $(date)"
 }
 
+function in_root_context () {
+    rpm -q util-vserver > /dev/null 
+}
+
 function show_env () {
     set +x
     echo FCDISTRO=$FCDISTRO
@@ -242,7 +246,7 @@ function show_env () {
     echo TAGSRELEASE="$TAGSRELEASE"
     echo -n "(might be unexpanded)"
     echo WEBPATH="$WEBPATH"
-    if [ -d /etc/vservers ] ; then
+    if in_root_context ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
     else
 	echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
@@ -344,7 +348,7 @@ function main () {
     BASE=$(echo ${BASE} | sed $sedargs)
     WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
-    if [ ! -d /etc/vservers ] ; then
+    if ! in_root_context ; then
         # in the vserver
 	echo "==================== Within vserver BEG $(date)"
 	build
