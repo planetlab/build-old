@@ -355,8 +355,8 @@ EOF
 	fi
 	cat >> $yum_conf <<EOF
 
-[bootstrap]
-name=Bootstrap - $basearch - $RPM_RPMS_DIR/
+[building]
+name=Building - $basearch - $RPM_RPMS_DIR/
 baseurl=file://$RPM_RPMS_DIR/
 EOF
 fi
