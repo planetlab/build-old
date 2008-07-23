@@ -187,7 +187,7 @@ function main () {
     svn export $SVNPATH $tmpdir
     # Create vserver
     cd $tmpdir
-    ./vtest-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} ${REPOURL}
+    ./vtest-init-vserver.sh -i eth${TESTVSERVER_DEV} -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} ${BASE} ${REPOURL}
     # cleanup
     cd -
     rm -rf $tmpdir
