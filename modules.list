@@ -9,7 +9,7 @@ NodeManager:1.7
 NodeUpdate
 PLCAPI:4.2
 PLCAPI:dummynet
-PLCWWW
+PLCWWW:4.2
 PLCWWW:onelab.4.2
 PingOfDeath
 VserverReference
