@@ -28,7 +28,7 @@ vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-18
 # needs tagging
 dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/trunk
 PLCAPI-SVNBRANCH		:= dummynet
-PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-dummynet-7
+PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-dummynet-8
 PLCWWW-SVNBRANCH		:= onelab.4.2
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-onelab.4.2-14
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-1.0-2
