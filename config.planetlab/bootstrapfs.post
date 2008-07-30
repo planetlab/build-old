@@ -15,13 +15,6 @@ done
 # Disable splaying of cron.
 echo > ${vdir}/etc/sysconfig/crontab
 
-# sss
-# update /etc/sysconfig/network-scripts/ifup
-#  #if ! arping -q -c 2 -w 3 -D -I ${REALDEVICE} ${IPADDR} ; then
-      #echo $"Error, some other host already uses address ${IPADDR}."
-      #exit 1
-   #fi
-
 # Add site_admin account
 chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
@@ -66,4 +59,3 @@ cat <<\EOF | patch -d ${vdir}/etc/sysconfig/network-scripts/
  	    brd ${BROADCAST:-+} dev ${REALDEVICE} ${SCOPE} label ${DEVICE}; then
  	    echo $"Error adding address ${IPADDR} for ${DEVICE}."
 EOF
-
