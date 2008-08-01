@@ -1,6 +1,6 @@
 # $Id$
 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-20
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-21
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 libnl-SVNPATH 			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.0-11
 util-vserver-SVNBRANCH		:= scholz
