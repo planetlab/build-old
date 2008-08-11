@@ -24,6 +24,7 @@ Mom-SVNBRANCH			:= 2.2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-6
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-7
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
+vsys-SVNBRANCH			:= 0.7
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-19
 # needs tagging
 dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/trunk
