@@ -10,7 +10,6 @@ DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
-# TESTSVNPATH to be computed from the -tags.mk file - no default anymore
 DEFAULT_TESTCONFIG="default"
 DEFAULT_IFNAME=eth0
 
@@ -157,8 +156,8 @@ function build () {
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
     # versions
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
-    # store testsvnpath
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true testsvnpath
+    # store tests_svnpath
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_svnpath
     # actual stuff
     make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
 
@@ -173,16 +172,18 @@ function runtest () {
 
     echo -n "============================== Starting $COMMAND:runtest on $(date)"
 
-    # where to find TESTSVNPATH
-    stamp=/vservers/$BASE/build/testsvnpath
+    # where to find TESTS_SVNPATH
+    stamp=/vservers/$BASE/build/tests_svnpath
     if [ ! -f $stamp ] ; then
-	echo "$COMMAND: Cannot figure TESTSVNPATH from missing $stamp"
+	echo "$COMMAND: Cannot figure TESTS_SVNPATH from missing $stamp"
 	failure
 	exit 1
     fi
-    TESTSVNPATH=$(cat $stamp)
-    # use only this pat of the tests right now
-    TESTSVNPATH=${TESTSVNPATH}/system
+    TESTS_SVNPATH=$(cat $stamp)
+    # xxx - Thierry - need to rework the test framework in tests/system so it can work
+    # with the entire tests/ module checked out, rather than only tests/system/ 
+    # ugly workaround for now
+    SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
 
     ### the URL to the RPMS/<arch> location
     url=""
@@ -204,8 +205,10 @@ function runtest () {
     testdir=${BASE}
     # clean it
     ssh -n ${TESTBOXSSH} rm -rf ${testdir}
-    # check it out
-    ssh -n ${TESTBOXSSH} svn co ${TESTSVNPATH} ${testdir}
+    # check it out 
+    ssh -n ${TESTBOXSSH} svn co ${SYSTEM_SVNPATH} ${testdir}
+    # check out the entire tests/ module (with system/ duplicated) as a subdir - see xxx above
+    ssh -n ${TESTBOXSSH} svn co ${TESTS_SVNPATH} ${testdir}/tests
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
     for config in ${TESTCONFIG} ; do

@@ -685,7 +685,7 @@ info: packages modules branches
 .PHONY: info packages modules branches module-tools
 
 ####################
-testsvnpath:
+tests_svnpath:
 	@$(if $(TESTS_SVNPATH), echo $(TESTS_SVNPATH) > $@, \
 	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
 
