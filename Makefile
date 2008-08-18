@@ -308,7 +308,7 @@ spec2make: spec2make.c
 define target_mk
 MAKE/$(1).mk: $($(1).specpath) spec2make .rpmmacros
 	mkdir -p MAKE
-	./spec2make $($(1)-RPMFLAGS) $($(1).specpath) $(1) > MAKE/$(1).mk || rm MAKE/$(1).mk
+	./spec2make $($(1)-RPMFLAGS) $($(1).specpath) $(1) > MAKE/$(1).mk || { rm MAKE/$(1).mk; exit 1; }
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
