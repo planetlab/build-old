@@ -25,4 +25,4 @@ pl_sshd
 pypcilib
 util-vserver-pl
 util-vserver:scholz
-vsys
+vsys:0.7
