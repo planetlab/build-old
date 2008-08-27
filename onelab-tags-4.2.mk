@@ -4,7 +4,7 @@
 # but by modules.update to refresh modules.list 
 # that serves as the default for module-tools -a
 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-24
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-25
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
 nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
@@ -27,12 +27,12 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16
 vsys-SVNBRANCH			:= 0.7
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-20
 # needs tagging
-dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/trunk
+dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-0
 PLCAPI-SVNBRANCH		:= dummynet
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-dummynet-8
 PLCWWW-SVNBRANCH		:= onelab.4.2
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-onelab.4.2-14
-Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-1.0-2
+Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-1.0-6
 nodeconfig-SVNBRANCH		:= 4.2
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-11
 BootManager-SVNBRANCH		:= 3.2
