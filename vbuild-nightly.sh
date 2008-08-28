@@ -477,11 +477,9 @@ function main () {
                 new_stamps="$new_stamps $stamp"
             fi
             # Or than yum-arch headers
-            [ -n "$have_yum_arch" ] && [ $package -nt $repository/headers/header.info ] && need_yum
-_arch=true
+            [ -n "$have_yum_arch" ] && [ $package -nt $repository/headers/header.info ] && need_yum_arch=true
             # Or than createrepo database
-            [ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_c
-reaterepo=true
+            [ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
         done
 
         if [ -n "$new_rpms" ] ; then
