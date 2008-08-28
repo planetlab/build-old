@@ -1,5 +1,6 @@
 #!/bin/bash
 # -*-shell-*-
+# $Id$
 
 COMMAND=$(basename $0)
 DIRNAME=$(dirname $0)
