@@ -290,7 +290,8 @@ $releasever/$basearch/os
 	    # for now I do the mapping here, mmhh
 	    case $releasever in
 		4) actual=4.6 ;;
-		5) actual=5.2 ;;
+		# getrelease.sh returns 5.2, used to be simply 5
+		5*) releasever=5; actual=5.2 ;;
 		*) actual=$releasever ;;
 	    esac
 	    attempts="
