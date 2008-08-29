@@ -202,9 +202,12 @@ function devel_or_vtest_tools () {
     fi
     pkgsfile=$(pl_locateDistroFile $DIRNAME $pldistro $pkgsname)
 
-    # install individual packages, then groups
-    packages=$(pl_getPackages $fcdistro $pldistro $pkgsfile)
-    groups=$(pl_getGroups $fcdistro $pldistro $pkgsfile)
+    ### install individual packages, then groups
+    # get target arch - use uname -i here (we want either x86_64 or i386)
+    vserver_arch=$($personality vserver $vserver exec uname -i)
+    
+    packages=$(pl_getPackages -a $vserver_arch $fcdistro $pldistro $pkgsfile)
+    groups=$(pl_getGroups -a $vserver_arch $fcdistro $pldistro $pkgsfile)
 
     [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
     [ -n "$groups" ] && $personality vserver $vserver exec yum -y groupinstall $groups

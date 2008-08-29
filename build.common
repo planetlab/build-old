@@ -635,9 +635,16 @@ function pl_getPkgsAttribute () {
 # 
 # values can contain @arch@, @fcdistro@ or @pldistro@ that are replaced with the current values
 #
+# Usage: pl_parsePkgs keyword [-a arch] fcdistro pldistro pkgs-file[..s]
+# the reason for the -a option is for when we build the build vserver itself; in this case
+# pl_DISTRO_ARCH is the one we obtain from the root context, and that's wrong
+# specify -sa arch AFTER keyword, so as to keep pl_getPackages and pl_getGroups simple
+#
 function pl_parsePkgs () {
 
+    target_arch=$pl_DISTRO_ARCH
     keyword=$1;shift
+    [ "$1" == "-a" ] && { shift; target_arch="$1"; shift; }
     fcdistro=$1; shift
     pldistro=$1; shift
     # remaining arguments are paths to the pkgs files
@@ -649,17 +656,18 @@ function pl_parsePkgs () {
     # grab exclusions
     sub=$(grep -v '^#' "$@" | grep --regexp="^${keyword}-${fcdistro}:" | sed -e "s,${keyword}-${fcdistro}:,,")
 
-    for i in $all $add; do
+    for rpm in $all $add; do
 	for exclude in $sub; do
-	    [ "$i" = "$exclude" ] && continue 2
+	    [ "$rpm" = "$exclude" ] && continue 2
 	done
-	echo "$i " | sed -e "s,@arch@,$pl_DISTRO_ARCH,g" -e "s,@fcdistro@,$fcdistro,g" -e "s,@pldistro@,$pldistro,g"
+	echo "${rpm} " | sed -e "s,@arch@,${target_arch},g" -e "s,@fcdistro@,$fcdistro,g" -e "s,@pldistro@,$pldistro,g"
     done
     return 0
 }
 
-function pl_getPackages() { fcdistro=$1; shift ; pldistro=$1; shift ; pl_parsePkgs package $fcdistro $pldistro "$@" ; }
-function pl_getGroups() { fcdistro=$1; shift ; pldistro=$1; shift ; pl_parsePkgs group $fcdistro $pldistro "$@" ; }
+# usage: pl_getPackages [-a arch] fcdistro pldistro pkg-file[..s]
+function pl_getPackages() { pl_parsePkgs package "$@" ; }
+function pl_getGroups() { pl_parsePkgs group "$@" ; }
 
 # locates a pldistro-dependant file
 # tries first in build/<pldistro>/, then in build/planetlab/
