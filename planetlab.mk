@@ -64,17 +64,6 @@ ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
 
 #
-# libnl
-#
-# [daniel]    wait for latest Fedora release 
-# (03:29:46 PM) daniel_hozac: interfacing with the kernel directly when dealing with netlink was fugly, so... i had to find something nicer.
-# (03:29:53 PM) daniel_hozac: the one in Fedora is lacking certain APIs i need.
-#
-libnl-MODULES := libnl
-libnl-SPEC := libnl.spec
-ALL += libnl
-
-#
 # util-vserver
 #
 util-vserver-MODULES := util-vserver
@@ -88,7 +77,7 @@ IN_BOOTSTRAPFS += util-vserver
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPEND-DEVEL-RPMS := libnl libnl-devel util-vserver-lib util-vserver-devel util-vserver-core
+util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core
 ALL += util-vserver-pl
 IN_BOOTSTRAPFS += util-vserver-pl
 
