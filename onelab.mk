@@ -209,6 +209,14 @@ ALL += vsys
 endif
 
 #
+# dummynet_image
+# 
+dummynet_image-MODULES := dummynet_image
+dummynet_image-SPEC := dummynet_image.spec
+IN_MYPLC += dummynet_image
+ALL += dummynet_image
+
+#
 # PLCAPI
 #
 PLCAPI-MODULES := PLCAPI
@@ -231,6 +239,13 @@ Monitor-MODULES := Monitor
 Monitor-SPEC := Monitor.spec
 ALL += Monitor
 IN_BOOTSTRAPFS += Monitor
+
+#
+# monitor-server
+#
+monitor-server-MODULES := Monitor
+monitor-server-SPEC := monitor-server.spec
+ALL += monitor-server
 
 #
 # nodeconfig
