@@ -12,12 +12,15 @@ PLCWWW
 PLCWWW:onelab.5.0
 PingOfDeath
 VserverReference
+comgt
+dummynet_image
 fprobe-ulog
 iproute2
 iptables
 linux-2.6
 madwifi
 nodeconfig
+nozomi
 pf2slice
 pl_sshd
 pypcilib
