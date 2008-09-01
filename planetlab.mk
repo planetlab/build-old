@@ -162,6 +162,7 @@ iproute-SPEC := iproute.spec
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
 IN_VSERVER += iproute
+IN_BOOTCD += iproute
 
 #
 # vsys
