@@ -241,13 +241,6 @@ ALL += Monitor
 IN_BOOTSTRAPFS += Monitor
 
 #
-# monitor-server
-#
-monitor-server-MODULES := Monitor
-monitor-server-SPEC := monitor-server.spec
-ALL += monitor-server
-
-#
 # nodeconfig
 #
 nodeconfig-MODULES := nodeconfig
@@ -352,9 +345,6 @@ ALL += myplc-native
 ## myplc-RPMDATE := yes
 ## ALL += myplc
 
-# myplc-docs only contains docs for PLCAPI and NMAPI, but
-# we still need to pull MyPLC, as it is where the specfile lies, 
-# together with the utility script docbook2drupal.sh
 myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs

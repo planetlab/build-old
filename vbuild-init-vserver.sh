@@ -299,9 +299,6 @@ function post_install_myplc  () {
     # create symlink for /dev/fd
     [ ! -e "/dev/fd" ] && ln -s /proc/self/fd /dev/fd
 
-    # turn off regular crond, as plc invokes plc_crond
-    chkconfig crond off
-
     # customize root's prompt
     cat << PROFILE > /root/.profile
 export PS1="[$vserver] \\w # "

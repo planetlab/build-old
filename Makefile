@@ -308,7 +308,8 @@ spec2make: spec2make.c
 define target_mk
 MAKE/$(1).mk: $($(1).specpath) spec2make .rpmmacros
 	mkdir -p MAKE
-	./spec2make $($(1)-RPMFLAGS) $($(1).specpath) $(1) > MAKE/$(1).mk || { rm MAKE/$(1).mk; exit 1; }
+	./spec2make $($(1)-RPMFLAGS) $($(1).specpath) $(1) > MAKE/$(1).mk
+	@if [ -z MAKE/$(1).mk ] ; then rm MAKE/$(1).mk ; exit 1 ; fi
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
@@ -650,6 +651,15 @@ $(foreach package,$(sort $(ALL)), $(eval $(call rpm_version_target,$(package))))
 versions: myplc-release version-build version-svns version-rpms
 .PHONY: versions version-build version-rpms version-svns
 
+#################### include install Makefile
+# the default is to use the distro-dependent install file
+# however the main distro file can redefine PLDISTROINSTALL
+ifndef PLDISTROINSTALL
+PLDISTROINSTALL := $(PLDISTRO)-install.mk
+endif
+# only if present
+-include $(PLDISTROINSTALL)
+
 #################### package info
 PKGKEYS := tarballs source codebase srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
 %-pkginfo: package=$(subst -pkginfo,,$@)
@@ -684,7 +694,7 @@ info: packages modules branches
 .PHONY: info packages modules branches module-tools
 
 ####################
-tests_svnpath:
+testsvnpath:
 	@$(if $(TESTS_SVNPATH), echo $(TESTS_SVNPATH) > $@, \
 	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
 
