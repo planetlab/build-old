@@ -3,4 +3,7 @@
 # redirect this into modules.list to get it refreshed
 #
 # we set DISTRONAME as this cannot be correctly guessed from the build box root context
-for tags in *tags*4.2.mk ; do make stage1=true PLDISTROTAGS=$tags DISTRONAME=f8 module-tools ; done | sort -u | grep -v '^build$'
+for distro in onelab planetlab ; do
+    tags=${distro}-tags-4.2.mk 
+    make stage1=true PLDISTRO=${distro} PLDISTROTAGS=${tags} DISTRONAME=f8 module-tools 
+done | sort -u | grep -v '^build$'
