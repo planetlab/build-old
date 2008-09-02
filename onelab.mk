@@ -336,7 +336,7 @@ myplc-native-MODULES := MyPLC build
 myplc-native-SPEC := myplc-native.spec
 # Package must be built as root
 myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-myplc-native-DEPEND-FILES := myplc-release
+myplc-native-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc-native
 
 ## #
