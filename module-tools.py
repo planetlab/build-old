@@ -532,7 +532,7 @@ that for other purposes than tagging"""%topdir
 
 ##############################
     sync_warning="""*** WARNING
-The module-init function has the following limitations
+The module-sync function has the following limitations
 * it does not handle changelogs
 * it does not scan the -tags*.mk files to adopt the new tags"""
 

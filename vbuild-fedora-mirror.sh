@@ -128,7 +128,8 @@ function mirror_distro_arch () {
 
 function usage () {
     echo "Usage: $COMMAND [-n] [-v] [-c] [-r root] [-u|U rsyncurl] [-e|-j] [-f distroname|-F] [-a arch|-A]"
-    echo "Defaults to -r $root -u $rsyncurl -f $default_distroname -a $default_arch"
+    echo "Defaults to -r $root -f $default_distroname -a $default_arch"
+    echo "Default urls : $fedora_url $centos_url"
     echo "Options:"
     echo " -n : dry run"
     echo " -v : verbose"
