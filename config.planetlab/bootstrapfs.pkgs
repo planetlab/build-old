@@ -46,6 +46,7 @@ package: dhclient
 package: diffutils
 package: ethtool
 package: logrotate
+package: libnl
 package: lsof
 package: mailcap
 package: nano
