@@ -16,5 +16,5 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora
 name=Fedora 8 - $basearch - Updates Newkey
 baseurl=@MIRRORURL@/fedora/updates/8/$basearch.newkey/
 enabled=1
-gpgcheck=1
+gpgcheck=0
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-8-and-9
