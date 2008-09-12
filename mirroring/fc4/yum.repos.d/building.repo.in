@@ -1,0 +1,14 @@
+[base]
+name=Fedora Core 4 - $basearch - Base
+baseurl=@MIRRORURL@/fedora/core/4/$basearch/os/
+gpgcheck=1
+
+[updates]
+name=Fedora Core 4 - $basearch - Released Updates
+baseurl=@MIRRORURL@/fedora/core/updates/4/$basearch/
+gpgcheck=1
+
+#[extras]
+#name=Fedora Extras 4 - $basearch
+#baseurl=@MIRRORURL@/fedora/extras/4/$basearch/
+#gpgcheck=1
