@@ -16,9 +16,8 @@ pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/trunk
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/trunk
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/trunk
-# tmp, as the trunk is broken and maybe for long
-#vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
-vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-20
+vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
+#vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.7-20
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/trunk
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/trunk
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
