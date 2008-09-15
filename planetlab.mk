@@ -182,6 +182,7 @@ endif
 ifeq "$(vsys_support)" "yes"
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+vsys-DEPEND-DEVEL-RPMS := kernel-headers ocaml ocaml-docs inotify-tools inotify-tools-devel
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
 endif
