@@ -56,6 +56,8 @@
 #     a set of *packages* that this package depends on
 # (*) package-DEPEND-DEVEL-RPMS
 #     a set of *rpms* that the build will rpm-install before building <package>
+#     this is intended to denote local rpms, i.e. ones that are results of our own build
+#     stock rpms should be mentioned in config.planetlab/devel.pkgs
 # (*) package-DEPEND-FILES
 #     a set of files that the package depends on - and that make needs to know about
 #     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
