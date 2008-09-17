@@ -17,7 +17,9 @@ us_fedora_url=rsync://mirrors.kernel.org/fedora
 # change this
 us_centos_url=rsync://mirrors.rit.edu/centos
 
-eu_fedora_url=rsync://ftp-stud.hs-esslingen.de/fedora/linux
+# this one is contaminated with the .~tmp~ thing
+#eu_fedora_url=rsync://ftp-stud.hs-esslingen.de/fedora/linux
+eu_fedora_url=rsync://mirrors.ircam.fr/fedora-linux
 eu_centos_url=rsync://mirrors.ircam.fr/CentOS
 
 # change this
@@ -73,15 +75,8 @@ function mirror_distro_arch () {
 	options="$options --exclude $e"
     done
 
-    if [ -n "$verbose" ] ; then 
-	echo "root=$root"
-	echo "distro=$distroname"
-	echo "distroname=$distroname"
-	echo "distroindex=$distroindex"
-	echo "arch=$arch"
-	echo rsyncurl="$rsyncurl"
-	echo "rsync options=$options"
-    fi
+    echo ">>>>>>>>>>>>>>>>>>>> root=$root distroname=$distroname arch=$arch rsyncurl=$rsyncurl"
+    [ -n "$verbose" ] && echo "rsync options=$options"
 
     RES=1
     paths=""
@@ -123,13 +118,15 @@ function mirror_distro_arch () {
 	echo "DISTRIBUTION $distro $distroindex CURRENTLY UNSUPPORTED - skipped"
     else
 	for repopath in $paths; do
-	    echo "============================== $distro -> $distroindex $repopath"
+	    echo "===== $distro -> $distroindex $repopath"
 	    [ -z "$dry_run" ] && mkdir -p ${root}/${localpath}/${repopath}
 	    command="rsync $options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
 	    echo $command
 	    $command
 	done
     fi
+
+    echo "<<<<<<<<<<<<<<<<<<<< $distroname $arch"
 
     return $RES 
 }
