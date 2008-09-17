@@ -3,9 +3,13 @@
 # $Id$
 
 COMMAND=$(basename $0)
+LOGDIR=/root/fedora-mirroring
+DATE=$(date '+%Y-%m-%d-%H-%M')
+LOG=${LOGDIR}/${DATE}.log
 
 dry_run=
 verbose=
+log=
 skip_core=
 root=/mirror/
 
@@ -137,10 +141,12 @@ function usage () {
     echo "Options:"
     echo " -n : dry run"
     echo " -v : verbose"
+    echo " -l : turns on autologging in $LOGDIR"
     echo " -c : skips core repository"
     echo " -r root (default is $root)"
     echo " -u rsyncurl for fedora (default is $fedora_url)"
     echo " -U rsyncurl for centos (default is $centos_url)"
+    echo " -s : uses standard (US) mirrors $us_fedora_url $us_centos_url"
     echo " -e : uses European mirrors $eu_fedora_url $eu_centos_url"
     echo " -j : uses Japanese mirrors $jp_fedora_url $jp_centos_url"
     echo " -f distroname - use vserver convention, e.g. fc6 and f7"
@@ -150,17 +156,29 @@ function usage () {
     exit 1
 }
 
+function run () {
+    RES=0
+    for distroname in $distronames ; do 
+	for arch in $archs; do 
+	    mirror_distro_arch "$distroname" "$arch" || RES=1
+	done
+    done
+    return $RES
+}
+
 function main () {
     distronames=""
     archs=""
-    while getopts "nvcr:u:U:ef:Fa:Ah" opt ; do
+    while getopts "nvlcr:u:U:sejf:Fa:Ah" opt ; do
 	case $opt in
-	    n) dry_run=--dry-run ; verbose=--verbose ;;
+	    n) dry_run=--dry-run ;;
 	    v) verbose=--verbose ;;
+	    l) log=true ;;
 	    c) skip_core=true ;;
 	    r) root=$OPTARG ;;
 	    u) fedora_url=$OPTARG ;;
 	    U) centos_url=$OPTARG ;;
+	    s) fedora_url=$us_fedora_url ; centos_url=$us_centos_url ;;
 	    e) fedora_url=$eu_fedora_url ; centos_url=$eu_centos_url ;;
 	    j) fedora_url=$jp_fedora_url ; centos_url=$jp_centos_url ;;
 	    f) distronames="$distronames $OPTARG" ;;
@@ -173,14 +191,14 @@ function main () {
     [ -z "$distronames" ] && distronames=$default_distroname
     [ -z "$archs" ] && archs=$default_arch
 
-    RES=0
-    for distroname in $distronames ; do 
-	for arch in $archs; do 
-	    mirror_distro_arch "$distroname" "$arch" || RES=1
-	done
-    done
-
-    exit $RES
+    # auto log : if specified
+    if [ -n "$log" ] ; then
+	mkdir -p $LOGDIR
+	run &> $LOG
+    else
+	run
+    fi
+    exit $?
 }
 
 main "$@"
