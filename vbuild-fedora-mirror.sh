@@ -3,7 +3,7 @@
 # $Id$
 
 COMMAND=$(basename $0)
-LOGDIR=/root/fedora-mirroring
+LOGDIR=/var/log/fedora-mirroring
 DATE=$(date '+%Y-%m-%d-%H-%M')
 LOG=${LOGDIR}/${DATE}.log
 
