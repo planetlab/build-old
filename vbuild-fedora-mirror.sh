@@ -28,7 +28,7 @@ jp_fedora_url="need-to-be-defined"
 jp_centos_url="need-to-be-defined"
 
 default_distroname=f8
-all_distronames="f7 f8 f9 centos5.2"
+all_distronames="f8 f9 centos5.2"
 default_arch=i386
 all_archs="i386 x86_64"
 
