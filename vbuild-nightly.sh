@@ -214,10 +214,11 @@ function runtest () {
     for config in ${TESTCONFIG} ; do
 	configs="$configs --config $config"
     done
-    
+    test_env="-p $PERSONALITY -d $PLDISTRO -f $FCDISTRO"
+
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs --all || success=
+    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs $test_env --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
