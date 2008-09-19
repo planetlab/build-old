@@ -296,6 +296,9 @@ function post_install_myplc  () {
 # be careful to backslash $ in this, otherwise it's the root context that's going to do the evaluation
     cat << EOF | $personality vserver $VERBOSE $vserver exec bash -x
 
+    # create /etc/sysconfig/network if missing
+    [ -f /etc/sysconfig/network ] || echo NETWORKING=yes > /etc/sysconfig/network
+
     # create symlink for /dev/fd
     [ ! -e "/dev/fd" ] && ln -s /proc/self/fd /dev/fd
 
