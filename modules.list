@@ -28,3 +28,4 @@ pypcilib
 util-vserver-pl
 util-vserver:scholz
 vsys:0.7
+tests:4.2
