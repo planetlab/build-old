@@ -13,32 +13,34 @@ log=
 skip_core=
 root=/mirror/
 
+
 us_fedora_url=rsync://mirrors.kernel.org/fedora
 # change this
 us_centos_url=rsync://mirrors.rit.edu/centos
+us_epel_url="us_epel_url-needs-to-be-defined"
 
 # this one is contaminated with the .~tmp~ thing
-#eu_fedora_url=rsync://ftp-stud.hs-esslingen.de/fedora/linux
+
 eu_fedora_url=rsync://mirrors.ircam.fr/fedora-linux
 eu_centos_url=rsync://mirrors.ircam.fr/CentOS
+eu_epel_url=rsync://mirrors.ircam.fr/fedora-epel
 
-# change this
-jp_fedora_url="need-to-be-defined"
-# change this
-jp_centos_url="need-to-be-defined"
+jp_fedora_url="jp_fedora_url-needs-to-be-defined"
+jp_centos_url="jp_centos_url-needs-to-be-defined"
+jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname=f8
-all_distronames="f8 f9 centos5.2"
+all_distronames="f8 f9 centos5.2 epel5"
 default_arch=i386
 all_archs="i386 x86_64"
 
 case $(hostname) in 
     *.fr|*.de|*.uk)
-	fedora_url=$eu_fedora_url ; centos_url=$eu_centos_url ;;
+	fedora_url=$eu_fedora_url ; centos_url=$eu_centos_url ; epel_url=$eu_epel_url ;;
     *.jp)
-	fedora_url=$jp_fedora_url ; centos_url=$jp_centos_url ;;
+	fedora_url=$jp_fedora_url ; centos_url=$jp_centos_url ; epel_url=$jp_epel_url ;;
     *)
-	fedora_url=$us_fedora_url ; centos_url=$us_centos_url ;;
+	fedora_url=$us_fedora_url ; centos_url=$us_centos_url ; epel_url=$us_epel_url ;;
 esac
 
 function mirror_distro_arch () {
@@ -61,6 +63,11 @@ function mirror_distro_arch () {
 	    distroindex=$(echo $distroname | sed -e "s,centos,,g")
 	    distro="CentOS"
 	    rsyncurl=$centos_url
+	    ;;
+	epel5)
+	    distroindex=5
+	    distro=epel
+	    rsyncurl=$epel_url
 	    ;;
 	*)
 	    echo "WARNING -- Unknown distribution $distroname -- skipped"
@@ -110,6 +117,16 @@ function mirror_distro_arch () {
 		    ;;
 	    esac
 	    localpath=centos
+	    ;;
+
+	epel*)
+	    case $distroindex in
+		5)
+		    paths="$paths $distroindex/$arch/"
+		    RES=0
+		    ;;
+	    esac
+	    localpath=epel
 	    ;;
 
     esac
