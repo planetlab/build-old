@@ -42,4 +42,4 @@ BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/Bootstrap
 MyPLC-SVNBRANCH			:= 4.2
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.2-18
 # locating the right test directory - see make testsvnpath
-TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.2-7
+TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.2-8
