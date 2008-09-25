@@ -3,7 +3,7 @@ BootManager:3.2
 BootstrapFS
 CoDemux
 Mom:2.2
-Monitor
+Monitor:1.0
 MyPLC:4.2
 NodeManager:1.7
 NodeUpdate
