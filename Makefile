@@ -320,6 +320,9 @@ $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 pldistro.mk:
 	echo "PLDISTRO:=$(PLDISTRO)" > $@
 	echo "PLDISTROTAGS:=$(PLDISTROTAGS)" >> $@
+	echo "build-SVNPATH:=$(build-SVNPATH)" >> $@
+	echo "PERSONALITY:=$(PERSONALITY)" >> $@
+	echo "BASE:=$(BASE)" >> $@
 
 savepldistro: pldistro.mk
 .PHONY: savepldistro

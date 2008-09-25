@@ -9,7 +9,7 @@ DEFAULT_FCDISTRO=f8
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
-DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
+DEFAULT_build_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_TESTCONFIG="default"
 DEFAULT_IFNAME=eth0
 
@@ -161,9 +161,9 @@ function build () {
     # stuff our own variable settings
     MAKEVARS=("PLDISTRO=${PLDISTRO}" "${MAKEVARS[@]}")
     MAKEVARS=("PLDISTROTAGS=${PLDISTROTAGS}" "${MAKEVARS[@]}")
-    MAKEVARS=("NIGHTLY_BASE=${BASE}" "${MAKEVARS[@]}")
-    MAKEVARS=("NIGHTLY_PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
-    MAKEVARS=("build-SVNPATH=${SVNPATH}" "${MAKEVARS[@]}")
+    MAKEVARS=("build-SVNPATH=${build_SVNPATH}" "${MAKEVARS[@]}")
+    MAKEVARS=("PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
+    MAKEVARS=("BASE=${BASE}" "${MAKEVARS[@]}")
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
@@ -196,7 +196,7 @@ function runtest () {
     # xxx - Thierry - need to rework the test framework in tests/system so it can work
     # with the entire tests/ module checked out, rather than only tests/system/ 
     # ugly workaround for now
-    SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
+    TESTS_SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
 
     ### the URL to the RPMS/<arch> location
     url=""
@@ -219,7 +219,7 @@ function runtest () {
     # clean it
     ssh -n ${TESTBOXSSH} rm -rf ${testdir}
     # check it out 
-    ssh -n ${TESTBOXSSH} svn co ${SYSTEM_SVNPATH} ${testdir}
+    ssh -n ${TESTBOXSSH} svn co ${TESTS_SYSTEM_SVNPATH} ${testdir}
     # check out the entire tests/ module (with system/ duplicated) as a subdir - see xxx above
     ssh -n ${TESTBOXSSH} svn co ${TESTS_SVNPATH} ${testdir}/tests
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
@@ -231,7 +231,7 @@ function runtest () {
 
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs $test_env --all || success=
+    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${build_SVNPATH} --url ${url} $configs $test_env --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
@@ -304,7 +304,7 @@ function show_env () {
     echo FCDISTRO=$FCDISTRO
     echo PLDISTRO=$PLDISTRO
     echo BASE=$BASE
-    echo SVNPATH=$SVNPATH
+    echo build_SVNPATH=$build_SVNPATH
     echo MAKEVARS="${MAKEVARS[@]}"
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
@@ -333,7 +333,7 @@ function usage () {
     echo "    @NAME@ replaced as appropriate"
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
-    echo " -s svnpath - where to fetch the build module"
+    echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
@@ -370,7 +370,7 @@ function main () {
 	    b) BASE=$OPTARG ;;
 	    t) PLDISTROTAGS=$OPTARG ;;
 	    r) TAGSRELEASE=$OPTARG ;;
-	    s) SVNPATH=$OPTARG ;;
+	    s) build_SVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
 	    W) TESTBUILDURL=$OPTARG ;;
@@ -416,7 +416,7 @@ function main () {
     [ -z "$GPGPATH" ] && GPGPATH="$DEFAULT_GPGPATH"
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
-    [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
+    [ -z "$build_SVNPATH" ] && build_SVNPATH="$DEFAULT_build_SVNPATH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
@@ -457,11 +457,17 @@ function main () {
 	    exec > $LOG 2>&1
 	    set -x
 	    echo "XXXXXXXXXX $COMMAND: using existing vserver $BASE" $(date)
-	    show_env
 	    # start in case e.g. we just rebooted
 	    vserver ${BASE} start || :
 	    # update build
 	    vserver ${BASE} exec svn update /build
+	    # get environment from the first run 
+	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
+	    PLDISTRO=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTRO)
+	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTROTAGS)
+	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build +PERSONALITY)
+	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build +build-SVNPATH)
+	    show_env
 	else
 	    # create vserver: check it does not exist yet
 	    i=
@@ -486,7 +492,7 @@ function main () {
 
 	    ### extract the whole build - much simpler
 	    tmpdir=/tmp/$COMMAND-$$
-	    svn export $SVNPATH $tmpdir
+	    svn export $build_SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
 	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} -i ${IFNAME} ${BASE} 
@@ -494,7 +500,7 @@ function main () {
 	    cd -
 	    rm -rf $tmpdir
 	    # Extract build again - in the vserver
-	    vserver ${BASE} exec svn checkout ${SVNPATH} /build
+	    vserver ${BASE} exec svn checkout ${build_SVNPATH} /build
 	fi
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
 

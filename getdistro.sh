@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. build.common
+. $(dirname $0)/build.common
 
 echo $pl_DISTRO
 
