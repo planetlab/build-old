@@ -311,8 +311,8 @@ function show_env () {
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
     echo TAGSRELEASE="$TAGSRELEASE"
-    echo -n "(might be unexpanded)"
-    echo WEBPATH="$WEBPATH"
+    # this does not help, it's not yet set when we run show_env
+    #echo WEBPATH="$WEBPATH"
     echo TESTBUILDURL="$TESTBUILDURL"
     if in_root_context ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
@@ -424,10 +424,12 @@ function main () {
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
-    ### set BASE from DISTRO, if unspecified
-    sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
-    BASE=$(echo ${BASE} | sed $sedargs)
-    WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
+    if [ -n "$OVERBASE" ] ; then
+	BASE=${OVERBASE}
+    else
+	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
+	BASE=$(echo ${BASE} | sed $sedargs)
+    fi
 
     # where to store the log for web access
     WEBLOG=${WEBPATH}/${BASE}.log.txt
@@ -450,7 +452,6 @@ function main () {
 	
 	if [ -n "$OVERBASE" ] ; then
             ### Re-use a vserver (finish an unfinished build..)
-	    BASE=${OVERBASE}
 	    if [ ! -d /vservers/${BASE} ] ; then
 		echo $COMMAND : cannot find vserver $BASE
 		exit 1
@@ -521,6 +522,9 @@ function main () {
 	LOG=$LOG2
 	# redirect log again
 	exec >> $LOG 2>&1 
+
+	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
+	WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
 	if [ -n "$DO_BUILD" ] ; then 
 
