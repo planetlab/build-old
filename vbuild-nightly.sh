@@ -22,8 +22,8 @@ DEFAULT_GPGPATH="/etc/planetlab"
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
 # for the test part
-TESTBUILDURL="http://build.one-lab.org/"
-TESTBOXSSH=root@testbox.one-lab.org
+DEFAULT_TESTBUILDURL="http://build.onelab.eu/"
+TESTBOXSSH=root@testbox.onelab.eu
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
@@ -98,31 +98,44 @@ EOF
 # Notify recipient of failure or success, manage various stamps 
 function failure() {
     set -x
-    WEBLOG=${WEBPATH}/${BASE}.log.txt
     mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 30k $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
-	tail -c 30k ${WEBLOG} | mail -s "Failures for build ${BASE}" $MAILTO
+	( \
+	    echo "See full build log at ${LOG_URL}" ; \
+	    echo "and tail version at ${LOG_URL}.ko" ; \
+	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
+	    tail -c 30k ${WEBLOG} ) | mail -s "Failures for build ${BASE}" $MAILTO
     fi
     exit 1
 }
 
 function success () {
     set -x
-    WEBLOG=${WEBPATH}/${BASE}.log.txt
     mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     if [ -n "$DO_TEST" ] ; then
-	echo "Successfully built and tested - see testlogs for details" > ${WEBLOG}.pass
-	rm -f ${WEBLOG}.ok
+	( \
+	    echo "Successfully built and tested" ; \
+	    echo "See full build log at ${LOG_URL}" ; \
+	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
+	    ) > ${WEBLOG}.pass
+	rm -f ${WEBLOG}.ok ${WEBLOG}.ko
     else
-	echo "Successfully built"> ${WEBLOG}.ok
+	( \
+	    echo "Successfully built, no test requested" ; \
+	    echo "See full build log at ${LOG_URL}" ; \
+	    ) > ${WEBLOG}.ok
     fi
     if [ -n "$MAILTO" ] ; then
-	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successful build for ${BASE}" $MAILTO
+	( \
+	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
+	    echo "See full build log at ${LOG_URL}" ; \
+            [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
+	    | mail -s "Successful build for ${BASE}" $MAILTO
     fi
     exit 0
 }
@@ -238,6 +251,52 @@ function in_root_context () {
     rpm -q util-vserver > /dev/null 
 }
 
+function sign_and_index_node_packages () {
+    echo "Signing & indexing node packages"
+    
+    need_createrepo=""
+
+    repository=$WEBPATH/$BASE/RPMS/
+    # the rpms that need signing
+    new_rpms=
+    # and the corresponding stamps
+    new_stamps=
+
+    for package in $(find $repository/ -name '*.rpm') ; do
+        stamp=$repository/signed-stamps/$(basename $package).signed
+        # If package is newer than signature stamp
+        if [ $package -nt $stamp ] ; then
+            new_rpms="$new_rpms $package"
+            new_stamps="$new_stamps $stamp"
+        fi
+        # Or than createrepo database
+        [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
+    done
+
+    if [ -n "$new_rpms" ] ; then
+        # Create a stamp once the package gets signed
+        mkdir $repository/signed-stamps 2> /dev/null
+	
+        # Sign RPMS. setsid detaches rpm from the terminal,
+        # allowing the (hopefully blank) GPG password to be
+        # entered from stdin instead of /dev/tty.
+        echo | setsid rpm \
+            --define "_signature gpg" \
+            --define "_gpg_path $GPGPATH" \
+            --define "_gpg_name $GPGUID" \
+            --resign $new_rpms && touch $new_stamps
+    fi
+
+     # Update repository index / yum metadata. 
+    if [ -n "$need_createrepo" ] ; then
+        if [ -f $repository/yumgroups.xml ] ; then
+            createrepo --quiet -g yumgroups.xml $repository
+        else
+            createrepo --quiet $repository
+        fi
+    fi
+}
+
 function show_env () {
     set +x
     echo FCDISTRO=$FCDISTRO
@@ -250,6 +309,7 @@ function show_env () {
     echo TAGSRELEASE="$TAGSRELEASE"
     echo -n "(might be unexpanded)"
     echo WEBPATH="$WEBPATH"
+    echo TESTBUILDURL="$TESTBUILDURL"
     if in_root_context ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
     else
@@ -274,6 +334,7 @@ function usage () {
     echo " -s svnpath - where to fetch the build module"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
+    echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
     echo " -y create (and sign) yum repo in webpath"
     echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
     echo " -u gpg email used in secring. Defaults to $DEFAULT_GPGUID"
@@ -298,7 +359,7 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
-    while getopts "f:d:p:b:t:r:s:x:c:w:g:u:m:OBTnyv7a:i:" opt ; do
+    while getopts "f:d:p:b:t:r:s:x:c:w:W:g:u:m:OBTnyv7a:i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
@@ -309,9 +370,10 @@ function main () {
 	    s) SVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
-        y) MKYUMREPO=$OPTARG;;
-        g) GPGPATH=$OPTARG;;
-        u) GPGUID=$OPTARG;;
+	    W) TESTBUILDURL=$OPTARG ;;
+            y) MKYUMREPO=$OPTARG ;;
+            g) GPGPATH=$OPTARG ;;
+            u) GPGUID=$OPTARG ;;
 	    m) MAILTO=$OPTARG ;;
 	    O) OVERWRITEMODE=true ;;
 	    B) DO_TEST= ;;
@@ -339,6 +401,7 @@ function main () {
     [ -z "$PLDISTROTAGS" ] && PLDISTROTAGS="${PLDISTRO}-tags.mk"
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
+    [ -z "$TESTBUILDURL" ] && TESTBUILDURL="$DEFAULT_TESTBUILDURL"
     [ -z "$GPGPATH" ] && GPGPATH="$DEFAULT_GPGPATH"
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
@@ -352,6 +415,12 @@ function main () {
     BASE=$(echo ${BASE} | sed $sedargs)
     WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
+    # where to store the log for web access
+    WEBLOG=${WEBPATH}/${BASE}.log.txt
+    # compute the log URL - inserted in the mail messages for convenience
+    LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
+    TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
+    
     if ! in_root_context ; then
         # in the vserver
 	echo "==================== Within vserver BEG $(date)"
@@ -446,75 +515,10 @@ function main () {
 	# publish myplc-release
 	rsync --verbose /vservers/$BASE/build/myplc-release $WEBPATH/$BASE
 
-    # create yum repo and sign packages.
-    if [ -n $MKYUMREPO ] ; then
-        echo "Signing signing node packages"
-
-        ### availability of repo indexing tools
-        # old one - might be needed for old-style nodes
-        type -p yum-arch > /dev/null && have_yum_arch="true"
-        # new one
-        type -p createrepo > /dev/null && have_createrepo="true"
-
-        repository=$WEBPATH/$BASE/RPMS/
-        # the rpms that need signing
-        new_rpms=
-        # and the corresponding stamps
-        new_stamps=
-        # is there a need to refresh yum metadata
-        need_yum_arch=
-        need_createrepo=
-
-        # right after installation, no package is present
-        # but we still need to create index 
-        [ -n "$have_yum_arch" -a ! -f $repository/headers/header.info ] && need_yum_arch=true
-        [ -n "$have_createrepo" -a ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
-
-        for package in $(find $repository/ -name '*.rpm') ; do
-            stamp=$repository/signed-stamps/$(basename $package).signed
-            # If package is newer than signature stamp
-            if [ $package -nt $stamp ] ; then
-                new_rpms="$new_rpms $package"
-                new_stamps="$new_stamps $stamp"
-            fi
-            # Or than yum-arch headers
-            [ -n "$have_yum_arch" ] && [ $package -nt $repository/headers/header.info ] && need_yum_arch=true
-            # Or than createrepo database
-            [ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
-        done
-
-        if [ -n "$new_rpms" ] ; then
-            # Create a stamp once the package gets signed
-            mkdir $repository/signed-stamps 2> /dev/null
-
-            # Sign RPMS. setsid detaches rpm from the terminal,
-            # allowing the (hopefully blank) GPG password to be
-            # entered from stdin instead of /dev/tty.
-            echo | setsid rpm \
-                --define "_signature gpg" \
-                --define "_gpg_path $GPGPATH" \
-                --define "_gpg_name $GPGUID" \
-                --resign $new_rpms && touch $new_stamps
-        fi
-
-         # Update repository index / yum metadata. 
-
-        if [ -n "$need_yum_arch" ] ; then
-            # yum-arch sometimes leaves behind
-            # .oldheaders and .olddata directories accidentally.
-            rm -rf $repository/{.oldheaders,.olddata}
-            yum-arch $repository
-        fi
-
-        if [ -n "$need_createrepo" ] ; then
-            if [ -f $repository/yumgroups.xml ] ; then
-                createrepo --quiet -g yumgroups.xml $repository
-            else
-                createrepo --quiet $repository
-            fi
-        fi
-
-    fi
+        # create yum repo and sign packages.
+	if [ -n $MKYUMREPO ] ; then
+	    sign_and_index_node_packages
+	fi
 
 	if [ -n "$DO_TEST" ] ; then 
 	    runtest
