@@ -167,10 +167,10 @@ function build () {
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
-    # versions
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # store tests_svnpath
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_svnpath
+    # versions
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # actual stuff
     make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
 
@@ -251,8 +251,9 @@ function in_root_context () {
     rpm -q util-vserver > /dev/null 
 }
 
-function sign_and_index_node_packages () {
-    echo "Signing & indexing node packages"
+function sign_node_packages () {
+
+    echo "Signing node packages"
     
     need_createrepo=""
 
@@ -289,6 +290,7 @@ function sign_and_index_node_packages () {
 
      # Update repository index / yum metadata. 
     if [ -n "$need_createrepo" ] ; then
+	echo "Indexing node packages after signing"
         if [ -f $repository/yumgroups.xml ] ; then
             createrepo --quiet -g yumgroups.xml $repository
         else
@@ -335,7 +337,7 @@ function usage () {
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
-    echo " -y create (and sign) yum repo in webpath"
+    echo " -y sign yum repo in webpath"
     echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
     echo " -u gpg email used in secring. Defaults to $DEFAULT_GPGUID"
     echo " -m mailto - no default"
@@ -359,6 +361,7 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
+    SIGNYUMREPO=""
     while getopts "f:d:p:b:t:r:s:x:c:w:W:g:u:m:OBTnyv7a:i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
@@ -371,7 +374,7 @@ function main () {
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
 	    W) TESTBUILDURL=$OPTARG ;;
-            y) MKYUMREPO=$OPTARG ;;
+            y) SIGNYUMREPO=true ;;
             g) GPGPATH=$OPTARG ;;
             u) GPGUID=$OPTARG ;;
 	    m) MAILTO=$OPTARG ;;
@@ -516,8 +519,8 @@ function main () {
 	rsync --verbose /vservers/$BASE/build/myplc-release $WEBPATH/$BASE
 
         # create yum repo and sign packages.
-	if [ -n $MKYUMREPO ] ; then
-	    sign_and_index_node_packages
+	if [ -n "$SIGNYUMREPO" ] ; then
+	    sign_node_packages
 	fi
 
 	if [ -n "$DO_TEST" ] ; then 
