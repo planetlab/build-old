@@ -30,6 +30,7 @@ PLCAPI-SVNBRANCH		:= dummynet
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-dummynet-11
 PLCWWW-SVNBRANCH		:= onelab.4.2
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/tags/PLCWWW-onelab.4.2-19
+Monitor-SVNBRANCH		:= 1.0
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-1.0-7
 nodeconfig-SVNBRANCH		:= 4.2
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.2-13
