@@ -163,6 +163,8 @@ function build () {
     MAKEVARS=("PLDISTROTAGS=${PLDISTROTAGS}" "${MAKEVARS[@]}")
     MAKEVARS=("build-SVNPATH=${build_SVNPATH}" "${MAKEVARS[@]}")
     MAKEVARS=("PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
+    MAKEVARS=("MAILTO=${MAILTO}" "${MAKEVARS[@]}")
+
     MAKEVARS=("BASE=${BASE}" "${MAKEVARS[@]}")
 
     # stage1
@@ -331,6 +333,8 @@ function usage () {
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -b base - defaults to $DEFAULT_BASE"
     echo "    @NAME@ replaced as appropriate"
+    echo " -o base: (overwrite) do not re-create vserver, re-use base instead"
+    echo "    the -f/-d/-t/-s/-p/-m options are uneffective in this case"
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
     echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
@@ -341,7 +345,6 @@ function usage () {
     echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
     echo " -u gpg email used in secring. Defaults to $DEFAULT_GPGUID"
     echo " -m mailto - no default"
-    echo " -O : overwrite - re-run in base directory, do not re-create vserver"
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
@@ -362,12 +365,13 @@ function main () {
     DO_BUILD=true
     DO_TEST=true
     SIGNYUMREPO=""
-    while getopts "f:d:p:b:t:r:s:x:c:w:W:g:u:m:OBTnyv7i:" opt ; do
+    while getopts "f:d:p:b:o:t:r:s:x:c:w:W:g:u:m:BTnyv7i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
 	    p) PERSONALITY=$OPTARG ;;
 	    b) BASE=$OPTARG ;;
+	    o) OVERBASE=$OPTARG ;;
 	    t) PLDISTROTAGS=$OPTARG ;;
 	    r) TAGSRELEASE=$OPTARG ;;
 	    s) build_SVNPATH=$OPTARG ;;
@@ -378,9 +382,8 @@ function main () {
             g) GPGPATH=$OPTARG ;;
             u) GPGUID=$OPTARG ;;
 	    m) MAILTO=$OPTARG ;;
-	    O) OVERWRITEMODE=true ;;
 	    B) DO_TEST= ;;
-	    T) DO_BUILD= ; OVERWRITEMODE=true ;;
+	    T) DO_BUILD= ;;
 	    n) DRY_RUN="-n" ;;
 	    v) set -x ;;
 	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
@@ -445,8 +448,9 @@ function main () {
         # (*) copy this command in the vserver
         # (*) invoke it
 	
-	if [ -n "$OVERWRITEMODE" ] ; then
+	if [ -n "$OVERBASE" ] ; then
             ### Re-use a vserver (finish an unfinished build..)
+	    BASE=${OVERBASE}
 	    if [ ! -d /vservers/${BASE} ] ; then
 		echo $COMMAND : cannot find vserver $BASE
 		exit 1
@@ -463,10 +467,12 @@ function main () {
 	    vserver ${BASE} exec svn update /build
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
+
 	    PLDISTRO=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTRO)
 	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTROTAGS)
-	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build +PERSONALITY)
 	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build +build-SVNPATH)
+	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build +PERSONALITY)
+	    MAILTO=$(vserver ${BASE} execmake --no-print-directory -C /build +MAILTO)
 	    show_env
 	else
 	    # create vserver: check it does not exist yet

@@ -322,6 +322,7 @@ pldistro.mk:
 	echo "PLDISTROTAGS:=$(PLDISTROTAGS)" >> $@
 	echo "build-SVNPATH:=$(build-SVNPATH)" >> $@
 	echo "PERSONALITY:=$(PERSONALITY)" >> $@
+	echo "MAILTO:=$(MAILTO)" >> $@
 	echo "BASE:=$(BASE)" >> $@
 
 savepldistro: pldistro.mk
