@@ -431,12 +431,6 @@ function main () {
 	BASE=$(echo ${BASE} | sed $sedargs)
     fi
 
-    # where to store the log for web access
-    WEBLOG=${WEBPATH}/${BASE}.log.txt
-    # compute the log URL - inserted in the mail messages for convenience
-    LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
-    TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
-    
     if ! in_root_context ; then
         # in the vserver
 	echo "==================== Within vserver BEG $(date)"
@@ -473,7 +467,7 @@ function main () {
 	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTROTAGS)
 	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build +build-SVNPATH)
 	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build +PERSONALITY)
-	    MAILTO=$(vserver ${BASE} execmake --no-print-directory -C /build +MAILTO)
+	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build +MAILTO)
 	    show_env
 	else
 	    # create vserver: check it does not exist yet
@@ -526,6 +520,12 @@ function main () {
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
+        # where to store the log for web access
+	WEBLOG=${WEBPATH}/${BASE}.log.txt
+        # compute the log URL - inserted in the mail messages for convenience
+	LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
+	TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
+    
 	if [ -n "$DO_BUILD" ] ; then 
 
 	    cp $COMMANDPATH /vservers/${BASE}/build/
