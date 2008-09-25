@@ -27,7 +27,9 @@ package: libtermcap
 package: passwd
 package: procps
 package: readline
-package: fedora-release
+# let's try without those, should be pulled from deps
+#package+f8 package+f9: fedora-release
+#package+centos5: centos-release
 package: rootfiles
 package: rpm
 package: setserial
