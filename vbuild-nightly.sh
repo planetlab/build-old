@@ -172,7 +172,7 @@ function build () {
     # versions
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # actual stuff
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" "${MAKETARGETS[@]}"
 
 }
 
@@ -323,7 +323,7 @@ function show_env () {
 }
 
 function usage () {
-    echo "Usage: $COMMAND [option] make-targets"
+    echo "Usage: $COMMAND [option] [var=value...] make-targets"
     echo "This is $REVISION"
     echo "Supported options"
     echo " -f fcdistro - defaults to $DEFAULT_FCDISTRO"
@@ -347,7 +347,6 @@ function usage () {
     echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
     echo " -v : be verbose"
     echo " -7 : uses weekday-@FCDISTRO@ as base"
-    echo " -a makevar=value - space in values are not supported"
     echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
     exit 1
 }
@@ -358,11 +357,12 @@ function main () {
 
     # parse arguments
     MAKEVARS=()
+    MAKETARGETS=()
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
     SIGNYUMREPO=""
-    while getopts "f:d:p:b:t:r:s:x:c:w:W:g:u:m:OBTnyv7a:i:" opt ; do
+    while getopts "f:d:p:b:t:r:s:x:c:w:W:g:u:m:OBTnyv7i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
@@ -384,7 +384,6 @@ function main () {
 	    n) DRY_RUN="-n" ;;
 	    v) set -x ;;
 	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
-	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
 	    i) IFNAME=$OPTARG ;;
 	    h|*) usage ;;
 	esac
@@ -395,7 +394,16 @@ function main () {
     toshift=$(($OPTIND - 1))
     arg=1; while [ $arg -le $toshift ] ; do options=(${options[@]} "$1") ; shift; arg=$(($arg+1)) ; done
 
-    MAKETARGETS="$@"
+    # allow var=value stuff; 
+    for target in "$@" ; do
+	# check if contains '='
+	target1=$(echo $target | sed -e s,=,,)
+	if [ "$target" = "$target1" ] ; then
+	    MAKETARGETS=(${MAKETARGETS[@]} "$target")
+	else
+	    MAKEVARS=(${MAKEVARS[@]} "$target")
+	fi
+    done
     
     # set defaults
     [ -z "$FCDISTRO" ] && FCDISTRO=$DEFAULT_FCDISTRO
@@ -508,7 +516,7 @@ function main () {
 
 	    # invoke this command in the vserver for building (-T)
 	    vserver ${BASE} exec chmod +x /build/$COMMAND
-	    vserver ${BASE} exec /build/$COMMAND "${options[@]}" -b "${BASE}" $MAKETARGETS
+	    vserver ${BASE} exec /build/$COMMAND "${options[@]}" -b "${BASE}" "${MAKEVARS[@]}" "${MAKETARGETS[@]}"
 	fi
 
 	# publish to the web so runtest can find them
