@@ -67,6 +67,7 @@ IN_BOOTSTRAPFS += util-vserver
 #
 libnl-MODULES := libnl
 libnl-SPEC := libnl.spec
+libnl-BUILD-FROM-SRPM := yes
 ALL += libnl
 IN_BOOTSTRAPFS += libnl
 
