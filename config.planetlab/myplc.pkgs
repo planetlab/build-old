@@ -34,8 +34,6 @@ package:nmap
 package:python python-devel SOAPpy PyXML
 # add ons for plcapi
 package: python-pycurl python-psycopg2
-# but not on fc4 as we provide ours
-package-fc4: python-pycurl python-psycopg2
 # postgresql
 package:postgresql postgresql-server postgresql-python
 # apache

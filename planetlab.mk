@@ -1,5 +1,5 @@
 #
-# PlanetLab standard components list
+# declare the packages to be built and their dependencies
 # initial version from Mark Huang
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
@@ -60,15 +60,15 @@ util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
 
-## #
-## # libnl - local import
-## # the version available in centos 5.2 is too old
-## # we need either 1.1 or at least 1.0.pre6
-## #
-## libnl-MODULES := libnl
-## libnl-SPEC := libnl.spec
-## ALL += libnl
-## IN_BOOTSTRAPFS += libnl
+#
+# libnl - local import
+# the version available in centos 5.2 is too old
+# we need either 1.1 or at least 1.0.pre6
+#
+libnl-MODULES := libnl
+libnl-SPEC := libnl.spec
+ALL += libnl
+IN_BOOTSTRAPFS += libnl
 
 #
 # util-vserver-pl
@@ -174,10 +174,10 @@ ALL += inotify-tools
 
 #
 # vsys
-# should now work on f{8,9} , and even centos 5.2
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+vsys-DEPEND-DEVEL-RPMS := inotify-tools-devel
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
 
@@ -215,7 +215,7 @@ ALL += monitor-server
 #
 # nodeconfig
 #
-nodeconfig-MODULES := nodeconfig
+nodeconfig-MODULES := nodeconfig build
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
 IN_MYPLC += nodeconfig
@@ -242,7 +242,6 @@ IN_BOOTCD += pypcilib
 bootcd-MODULES := BootCD build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
-# package has *some* dependencies, at least these ones
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
 bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 bootcd-RPMDATE := yes
@@ -256,8 +255,6 @@ vserver-MODULES := VserverReference build
 vserver-SPEC := vserver-reference.spec
 # Package must be built as root
 vserver-RPMBUILD := sudo bash ./rpmbuild.sh
-# this list is useful for manual builds only, since nightly builds 
-# always redo all sequentially - try to keep updated
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 vserver-RPMDATE := yes
@@ -270,7 +267,6 @@ IN_BOOTSTRAPFS += vserver
 bootstrapfs-MODULES := BootstrapFS build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
-# package requires all regular packages
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
 bootstrapfs-RPMDATE := yes

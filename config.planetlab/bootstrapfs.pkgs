@@ -2,10 +2,7 @@
 # groupname: Bootstrapfs
 groupname: PlanetLab
 groupdesc: PlanetLab Node Root
-# This is the replacement for the former mkfedora -k. The following packages
-# will get excluded from the stock fedora repos, as we need to use ours
-kexclude: kernel* util-vserver* iptables iproute 
-#
+# define packages - kecludes are defined in build.common
 package: kernel
 package: udev
 package: basesystem
@@ -84,29 +81,18 @@ package: nfs-utils
 package: openvpn
 package: vconfig
 package: PyXML
+
 #
 # platform-dependent
 #
-package+fc4: sysklogd
-package+fc6: sysklogd
-package+f7: sysklogd
-package+f8: rsyslog
+package: rsyslog
+package-centos5: rsyslog
 package+centos5: sysklogd
 
-package+fc4: util-linux
-package+fc6: util-linux
-package+f7: util-linux
-package+f8: util-linux-ng
+package: util-linux-ng
+package-centos5: util-linux-ng
 package+centos5: util-linux
 
-# not found on other platforms
-package+fc4: netdump
-package+fc4: schedutils
-package+fc4: SysVinit
-package+fc4: portmap
-# 
-package+fc6: SysVinit
-package+fc6: portmap
 #
 # planetlab
 #
@@ -128,8 +114,6 @@ package: ipod
 package: vserver-@pldistro@-@fcdistro@-@arch@
 package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
-package+f8: fprobe-ulog
+package: fprobe-ulog
 package: vsys
-package-fc4: vsys
-package-fc6: vsys
 package: monitor

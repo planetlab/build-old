@@ -1,9 +1,6 @@
 groupname: PlanetLabSlice
 groupdesc: PlanetLab Slice Reference Image
-# This is the replacement for the former mkfedora -k. The following packages
-# will get excluded from the stock fedora repos, as we need to use ours
-kexclude: kernel* util-vserver* iptables iproute 
-# define packages
+# define packages - kecludes are defined in build.common
 package: bash
 package: coreutils
 package: iputils

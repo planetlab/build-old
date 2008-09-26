@@ -1,5 +1,5 @@
 #
-# OneLab standard components list
+# declare the packages to be built and their dependencies
 # initial version from Mark Huang
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
@@ -38,18 +38,6 @@ IN_VSERVER += $(KERNELS)
 IN_BOOTSTRAPFS += $(KERNELS)
 # turns out myplc installs kernel-vserver
 IN_MYPLC += $(KERNELS)
-
-#
-# kexec-tools
-#
-ifeq "$(DISTRONAME)" "fc4"
-kexec-tools-MODULES := kexec-tools
-kexec-tools-SPEC := kexec-tools.spec
-kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
-kexec-tools-TAG := planetlab-4_1-rc2
-ALL += kexec-tools
-IN_BOOTCD += kexec-tools
-endif
 
 #
 # madwifi
@@ -94,21 +82,31 @@ ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
 
 #
+# libnl - local import
+# the version available in centos 5.2 is too old
+# we need either 1.1 or at least 1.0.pre6
+#
+libnl-MODULES := libnl
+libnl-SPEC := libnl.spec
+ALL += libnl
+IN_BOOTSTRAPFS += libnl
+
+#
 # util-vserver-pl
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core
+util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core libnl-devel
 ALL += util-vserver-pl
 IN_BOOTSTRAPFS += util-vserver-pl
 
 #
 # NodeUpdate
 #
-NodeUpdate-MODULES := NodeUpdate
-NodeUpdate-SPEC := NodeUpdate.spec
-ALL += NodeUpdate
-IN_BOOTSTRAPFS += NodeUpdate
+nodeupdate-MODULES := NodeUpdate
+nodeupdate-SPEC := NodeUpdate.spec
+ALL += nodeupdate
+IN_BOOTSTRAPFS += nodeupdate
 
 #
 # ipod
@@ -121,18 +119,18 @@ IN_BOOTSTRAPFS += ipod
 #
 # NodeManager
 #
-NodeManager-MODULES := NodeManager
-NodeManager-SPEC := NodeManager.spec
-ALL += NodeManager
-IN_BOOTSTRAPFS += NodeManager
+nodemanager-MODULES := NodeManager
+nodemanager-SPEC := NodeManager.spec
+ALL += nodemanager
+IN_BOOTSTRAPFS += nodemanager
 
 #
 # pl_sshd
 #
-pl_sshd-MODULES := pl_sshd
-pl_sshd-SPEC := pl_sshd.spec
-ALL += pl_sshd
-IN_BOOTSTRAPFS += pl_sshd
+sshd-MODULES := pl_sshd
+sshd-SPEC := pl_sshd.spec
+ALL += sshd
+IN_BOOTSTRAPFS += sshd
 
 #
 # codemux: Port 80 demux
@@ -158,14 +156,13 @@ pf2slice-MODULES := pf2slice
 pf2slice-SPEC := pf2slice.spec
 ALL += pf2slice
 
-
 #
 # PlanetLab Mom: Cleans up your mess
 #
-pl_mom-MODULES := Mom
-pl_mom-SPEC := pl_mom.spec
-ALL += pl_mom
-IN_BOOTSTRAPFS += pl_mom
+mom-MODULES := Mom
+mom-SPEC := pl_mom.spec
+ALL += mom
+IN_BOOTSTRAPFS += mom
 
 #
 # iptables
@@ -187,26 +184,23 @@ IN_VSERVER += iproute
 IN_BOOTCD += iproute
 
 #
+# inotify-tools - local import
+# could not find this in cen
+#
+inotify-tools-MODULES := inotify-tools
+inotify-tools-SPEC := inotify-tools.spec
+inotify-tools-BUILD-FROM-SRPM := yes
+IN_BOOTSTRAPFS += inotify-tools
+ALL += inotify-tools
+
+#
 # vsys
 #
-vsys_support=yes
-ifeq "$(DISTRONAME)" "fc4"
-vsys_support=
-endif
-ifeq "$(DISTRONAME)" "fc6"
-vsys_support=
-endif
-# cannot find the required packages (see devel.pkgs) on centos5
-ifeq "$(DISTRONAME)" "centos5"
-vsys_support=
-endif
-
-ifeq "$(vsys_support)" "yes"
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+vsys-DEPEND-DEVEL-RPMS := inotify-tools-devel
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
-endif
 
 #
 # dummynet_image
@@ -235,10 +229,10 @@ IN_MYPLC += PLCWWW
 #
 # monitor
 #
-Monitor-MODULES := Monitor
-Monitor-SPEC := Monitor.spec
-ALL += Monitor
-IN_BOOTSTRAPFS += Monitor
+monitor-MODULES := Monitor
+monitor-SPEC := Monitor.spec
+ALL += monitor
+IN_BOOTSTRAPFS += monitor
 
 #
 # monitor-server
@@ -250,7 +244,7 @@ ALL += monitor-server
 #
 # nodeconfig
 #
-nodeconfig-MODULES := nodeconfig
+nodeconfig-MODULES := nodeconfig build
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
 IN_MYPLC += nodeconfig

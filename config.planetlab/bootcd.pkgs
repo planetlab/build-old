@@ -1,9 +1,6 @@
 groupname: PlanetLabBootcd
 groupdesc: PlanetLab BootCD
-# This is the replacement for the former mkfedora -k. The following packages
-# will get excluded from the stock fedora repos, as we need to use ours
-kexclude: kernel* util-vserver* iptables iproute 
-# from prep.sh, was hardwired as packagelist
+# define packages - kecludes are defined in build.common
 package: filesystem
 package: udev
 package: dhclient

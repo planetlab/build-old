@@ -163,7 +163,7 @@ function usage () {
     echo " -s : uses standard (US) mirrors $us_fedora_url $us_centos_url"
     echo " -e : uses European mirrors $eu_fedora_url $eu_centos_url"
     echo " -j : uses Japanese mirrors $jp_fedora_url $jp_centos_url"
-    echo " -f distroname - use vserver convention, e.g. fc6 and f7"
+    echo " -f distroname - use vserver convention, e.g. f8 or centos5"
     echo " -F : for distroname in $all_distronames"
     echo " -a arch - use yum convention"
     echo " -A : for arch in $all_archs"
