@@ -96,7 +96,7 @@ IN_BOOTSTRAPFS += libnl
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core libnl-devel
+util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core libnl libnl-devel
 ALL += util-vserver-pl
 IN_BOOTSTRAPFS += util-vserver-pl
 
