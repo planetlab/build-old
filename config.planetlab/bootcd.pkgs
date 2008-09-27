@@ -1,6 +1,8 @@
 groupname: PlanetLabBootcd
 groupdesc: PlanetLab BootCD
-# define packages - kecludes are defined in build.common
+# packages to exclude from stock repositories
+kexclude: @KEXCLUDE@
+# define packages
 package: filesystem
 package: udev
 package: dhclient

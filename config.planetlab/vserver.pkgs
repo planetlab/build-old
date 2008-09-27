@@ -1,6 +1,8 @@
 groupname: PlanetLabSlice
 groupdesc: PlanetLab Slice Reference Image
-# define packages - kecludes are defined in build.common
+# packages to exclude from stock repositories
+kexclude: @KEXCLUDE@
+# define packages
 package: bash
 package: coreutils
 package: iputils

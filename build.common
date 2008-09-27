@@ -229,7 +229,7 @@ function pl_root_mkfedora () {
     pkgs_precious=$(pl_parsePkgs precious $fcdistro $pldistro $pkgsfile)
     # formerly related to mkfedora -k : packages to take from our own build 
     # and thus need be excluded frem the stock repos
-    pkgs_kexcludes="$pl_KEXCLUDES"
+    pkgs_excludes=$(pl_parsePkgs kexclude $fcdistro $pldistro $pkgsfile | sed -e s,@KEXCLUDE@,"$pl_KEXCLUDES",)
     # get mirrors if not specified with -l
     if [ -z "$mirrors" ] ; then
 	mirrorsfile=$(pl_locateDistroFile ../build/ $pldistro "$pldistro.mirrors")
