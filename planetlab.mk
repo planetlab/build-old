@@ -178,7 +178,7 @@ ALL += inotify-tools
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
-vsys-DEPEND-DEVEL-RPMS := inotify-tools-devel
+vsys-DEPEND-DEVEL-RPMS := inotify-tools inotify-tools-devel
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
 
