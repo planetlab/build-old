@@ -75,10 +75,16 @@ package: PyXML
 # used to reference SOAPpy as well
 # for pypcilib
 package: pciutils-devel
+##########
 # for vsys
 package: ocaml ocaml-docs 
 ## will be loaded from our build as needed 
 #package:inotify-tools-devel 
+##########
 ## for util-vserver-pl
-## ditto
-#package: libnl libnl-devel
+# we can use the stock version with f9; 
+# centos5 comes with something too old
+# use our version as well on f8 as it comes with some 1.0 - which would do however
+package: libnl libnl-devel
+package-f8: libnl libnl-devel
+package-centos5: libnl libnl-devel

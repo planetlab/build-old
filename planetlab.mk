@@ -62,21 +62,36 @@ IN_BOOTSTRAPFS += util-vserver
 
 #
 # libnl - local import
-# the version available in centos 5.2 is too old
 # we need either 1.1 or at least 1.0.pre6
+# rebuild this on f8 and centos5 - see kexcludes in build.common
 #
+local_libnl=false
+ifeq "$(DISTRONAME)" "f8"
+local_libnl=true
+endif
+ifeq "$(DISTRONAME)" "centos5"
+local_libnl=true
+endif
+
+ifeq "$(local_libnl)" "true"
 libnl-MODULES := libnl
 libnl-SPEC := libnl.spec
 libnl-BUILD-FROM-SRPM := yes
+# this sounds like the thing to do, but in fact linux/if_vlan.h comes with kernel-headers
+libnl-DEPEND-DEVEL-RPMS := kernel-devel
 ALL += libnl
 IN_BOOTSTRAPFS += libnl
+endif
 
 #
 # util-vserver-pl
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core libnl libnl-devel
+util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core 
+ifeq "$(local_libnl)" "true"
+util-vserver-pl-DEPEND-DEVEL-RPMS += libnl libnl-devel
+endif
 ALL += util-vserver-pl
 IN_BOOTSTRAPFS += util-vserver-pl
 
