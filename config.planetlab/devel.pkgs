@@ -86,5 +86,4 @@ package: ocaml ocaml-docs
 # centos5 comes with something too old
 # use our version as well on f8 as it comes with some 1.0 - which would do however
 package: libnl libnl-devel
-package-f8: libnl libnl-devel
 package-centos5: libnl libnl-devel

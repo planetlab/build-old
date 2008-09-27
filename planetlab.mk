@@ -66,9 +66,6 @@ IN_BOOTSTRAPFS += util-vserver
 # rebuild this on f8 and centos5 - see kexcludes in build.common
 #
 local_libnl=false
-ifeq "$(DISTRONAME)" "f8"
-local_libnl=true
-endif
 ifeq "$(DISTRONAME)" "centos5"
 local_libnl=true
 endif
