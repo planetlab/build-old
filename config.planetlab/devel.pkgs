@@ -78,12 +78,11 @@ package: pciutils-devel
 ##########
 # for vsys
 package: ocaml ocaml-docs 
-## will be loaded from our build as needed 
-#package:inotify-tools-devel 
+# use local inotify-tools on centos
+package:inotify-tools-devel 
+package-centos5: inotify-tools-devel
 ##########
 ## for util-vserver-pl
-# we can use the stock version with f9; 
-# centos5 comes with something too old
-# use our version as well on f8 as it comes with some 1.0 - which would do however
-package: libnl libnl-devel
-package-centos5: libnl libnl-devel
+# use local libnl on centos
+package: libnl-devel
+package-centos5: libnl-devel

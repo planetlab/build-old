@@ -64,7 +64,7 @@ function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in 
 	f8|f9)
-	    echo 'kernel* util-vserver* iptables iproute inotify-tools*'
+	    echo 'kernel* util-vserver* iptables iproute'
 	    ;;
 	centos5)
 	    echo 'kernel* util-vserver* iptables iproute inotify-tools* libnl*'

@@ -84,7 +84,7 @@ IN_BOOTSTRAPFS += util-vserver
 #
 # libnl - local import
 # we need either 1.1 or at least 1.0.pre6
-# rebuild this on f8 and centos5 - see kexcludes in build.common
+# rebuild this on centos5 - see kexcludes in build.common
 #
 local_libnl=false
 ifeq "$(DISTRONAME)" "centos5"
@@ -196,20 +196,29 @@ IN_BOOTCD += iproute
 
 #
 # inotify-tools - local import
-# could not find this in cen
+# rebuild this on centos5 (not found) - see kexcludes in build.common
 #
+local_inotify_tools=false
+ifeq "$(DISTRONAME)" "centos5"
+local_inotify_tools=true
+endif
+
+ifeq "$(local_inotify_tools)" "true"
 inotify-tools-MODULES := inotify-tools
 inotify-tools-SPEC := inotify-tools.spec
 inotify-tools-BUILD-FROM-SRPM := yes
 IN_BOOTSTRAPFS += inotify-tools
 ALL += inotify-tools
+ifeq "$(local_inotify_tools)" "true"
 
 #
 # vsys
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+ifeq "$(local_inotify_tools)" "true"
 vsys-DEPEND-DEVEL-RPMS := inotify-tools inotify-tools-devel
+endif
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
 
