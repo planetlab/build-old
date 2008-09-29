@@ -190,7 +190,7 @@ inotify-tools-SPEC := inotify-tools.spec
 inotify-tools-BUILD-FROM-SRPM := yes
 IN_BOOTSTRAPFS += inotify-tools
 ALL += inotify-tools
-ifeq "$(local_inotify_tools)" "true"
+endif
 
 #
 # vsys
