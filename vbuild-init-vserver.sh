@@ -59,8 +59,8 @@ function configure_yum_in_vserver () {
 	    echo "WARNING : cannot create myplc repo"
 	else
             # exclude kernel from fedora repos 
-	    for i in /vservers/$vserver/etc/yum.repos.d/* ; do
-		[ -f $i ] && echo "exclude=$pl_KEXCLUDES" >> $i
+	    for repo in /vservers/$vserver/etc/yum.repos.d/* ; do
+		[ -f $repo ] && yumconf_exclude $repo "exclude=$pl_KEXCLUDES" 
 	    done
 	    # the build repo is not signed at this stage
 	    cat > /vservers/$vserver/etc/yum.repos.d/myplc.repo <<EOF

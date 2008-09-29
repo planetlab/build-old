@@ -598,8 +598,8 @@ develclean:
 ####################
 # gather build information for the 'About' page
 # when run from crontab, INIT_CWD not properly set (says /root ..)
-# so, the nightly build passes NIGHTLY_BASE here
-# also store the nightly_base in .base for any post-processing purposes
+# so, the nightly build passes BASE here
+# also store BASE in .base for any post-processing purposes
 myplc-release:
 	@echo 'Creating myplc-release'
 	rm -f $@
@@ -609,13 +609,13 @@ myplc-release:
 	$(MAKE) --no-print-directory version-svns >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpm info" >> $@
 	$(MAKE) --no-print-directory version-rpms >> $@
-	@echo $(NIGHTLY_BASE) > .base
+	@echo $(BASE) > .base
 
 version-build:
 	@echo -n 'Build build-date: ' ; date '+%Y.%m.%d'
 	@echo -n 'Build build-time: ' ; date '+%H:%M-%Z'
 	@echo -n 'Build build-hostname: ' ; hostname
-	@echo    "Build build-base: $(NIGHTLY_BASE)"
+	@echo    "Build build-base: $(BASE)"
 	@echo    "Build planetlab-distro: $(PLDISTRO)"
 	@echo    "Build planetlab-tags: $(PLDISTROTAGS)"
 	@echo -n 'Build planetlab-tagsid: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
@@ -623,7 +623,7 @@ version-build:
 	@echo    "Build target-distro: $(DISTRO)"
 	@echo    "Build target-distroname: $(DISTRONAME)"
 	@echo    "Build target-release: $(RELEASE)"	
-	@echo    "Build target-personality: $(NIGHTLY_PERSONALITY)"	
+	@echo    "Build target-personality: $(PERSONALITY)"	
 
 #################### 
 # for a given module

@@ -14,4 +14,4 @@ gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 name=Extra Packages for Enterprise Linux 5 - $basearch
 baseurl=@MIRRORURL@/epel/5/$basearch/
 gpgcheck=1
-gpgkey=http://mirrors.ircam.fr/pub/fedora/epel/RPM-GPG-KEY-EPEL
+gpgkey=http://download.fedora.redhat.com/pub/epel/RPM-GPG-KEY-EPEL

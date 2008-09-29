@@ -238,12 +238,12 @@ function pl_root_mkfedora () {
 	mirrors=$(pl_parsePkgs mirror $fcdistro $pldistro $mirrorsfile)
     fi
 
-    exclude_line=""
+    kexclude_line=""
     # add them manually as the output of pl_parsePkgs is line-separated
     if [ -n "$pkgs_kexcludes" ] ; then
-	exclude_line="exclude="
+	kexclude_line="exclude="
 	for kexclude in $pkgs_kexcludes ; do
-	    exclude_line="$exclude_line $kexclude"
+	    kexclude_line="$kexclude_line $kexclude"
 	done
     fi
 
@@ -254,7 +254,7 @@ function pl_root_mkfedora () {
 
     # the repo part of the final yum.conf
     yum_conf_repos=$vroot/xxxmkfedora-repos.confxxx
-    if ! yumconf_mirrors $yum_conf_repos ../build/ $fcdistro "$exclude_line" $mirrors ; then
+    if ! yumconf_mirrors $yum_conf_repos ../build/ $fcdistro "$kexclude_line" $mirrors ; then
 	echo xxx -- error ; return 1
     fi
     
@@ -655,7 +655,7 @@ function yumconf_mirrors () {
     dest_yumconf=$1; shift
     builddir=$1; shift
     fcdistro=$1; shift
-    exclude_line="$1" ; shift
+    kexclude_line="$1" ; shift
     mirrors="$@"
 
     template=$builddir/mirroring/$fcdistro/yum.repos.d/building.repo.in
@@ -667,7 +667,7 @@ function yumconf_mirrors () {
     fi
 
     for mirror in $mirrors; do
-	if yumconf_mirror $dest_yumconf $template "$exclude_line" $mirror; then
+	if yumconf_mirror $dest_yumconf $template "$kexclude_line" $mirror; then
 	    return 0
 	fi
     done
@@ -680,12 +680,12 @@ function yumconf_mirrors () {
 function yumconf_mirror () {
     dest_yumconf=$1; shift
     template=$1; shift
-    exclude_line="$1" ; shift
+    kexclude_line="$1" ; shift
     mirror=$1; shift
 
     sed -e "s,@MIRRORURL@,$mirror,g" \
 	-e "/baseurl=/i\\
-$exclude_line" $template > $dest_yumconf
+$kexclude_line" $template > $dest_yumconf
     
     # capture all lines defining baseurl
     baseurl_defs=$(grep '^baseurl=' $dest_yumconf)
@@ -719,4 +719,14 @@ function yumconf_gpgkey () {
     [ -n "$value" ] || return 1
     echo $value
     return 0
+}
+
+# patches a yum conf to insert an exclude line in each declared repo
+function yumconf_exclude_all_repos () {
+    repo=$1; shift
+    kexclude_line="$1" ; shift
+    
+    sed -i -e "/baseurl=.*$/i\\
+$kexclude_line\\
+" $repo
 }
