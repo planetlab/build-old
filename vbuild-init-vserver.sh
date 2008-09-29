@@ -60,7 +60,7 @@ function configure_yum_in_vserver () {
 	else
             # exclude kernel from fedora repos 
 	    for i in /vservers/$vserver/etc/yum.repos.d/* ; do
-		[ -f $i ] && echo "$pl_KEXCLUDES" >> $i
+		[ -f $i ] && echo "exclude=$pl_KEXCLUDES" >> $i
 	    done
 	    # the build repo is not signed at this stage
 	    cat > /vservers/$vserver/etc/yum.repos.d/myplc.repo <<EOF
