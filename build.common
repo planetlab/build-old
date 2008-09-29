@@ -722,7 +722,7 @@ function yumconf_gpgkey () {
 }
 
 # patches a yum conf to insert an exclude line in each declared repo
-function yumconf_exclude_all_repos () {
+function yumconf_exclude () {
     repo=$1; shift
     kexclude_line="$1" ; shift
     
