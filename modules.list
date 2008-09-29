@@ -15,8 +15,10 @@ VserverReference
 comgt
 dummynet_image
 fprobe-ulog
+inotify-tools
 iproute2
 iptables
+libnl
 linux-2.6
 madwifi
 nodeconfig

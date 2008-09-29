@@ -5,5 +5,5 @@
 # we set DISTRONAME as this cannot be correctly guessed from the build box root context
 for distro in onelab planetlab ; do
     tags=${distro}-tags.mk 
-    make stage1=true PLDISTRO=${distro} PLDISTROTAGS=${tags} DISTRONAME=f8 module-tools 
+    make stage1=true PLDISTRO=${distro} PLDISTROTAGS=${tags} DISTRONAME=centos5 module-tools 
 done | sort -u | grep -v '^build$'
