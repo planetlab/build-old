@@ -14,8 +14,3 @@ function usage () {
 [[ -n "$@" ]] && usage
 
 echo "$pl_KEXCLUDES"
-
-
-
-	
-
