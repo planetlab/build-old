@@ -5,7 +5,7 @@ COMMANDPATH=$0
 COMMAND=$(basename $0)
 
 # default values, tunable with command-line options
-DEFAULT_FCDISTRO=f8
+DEFAULT_FCDISTRO=centos5
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
@@ -305,6 +305,7 @@ function show_env () {
     set +x
     echo FCDISTRO=$FCDISTRO
     echo PLDISTRO=$PLDISTRO
+    echo PERSONALITY=$PERSONALITY
     echo BASE=$BASE
     echo build_SVNPATH=$build_SVNPATH
     echo MAKEVARS="${MAKEVARS[@]}"
