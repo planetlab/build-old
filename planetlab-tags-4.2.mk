@@ -1,7 +1,7 @@
 # $Id$
 
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-29
-madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
+madwifi-SVNPATH                 := http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-2
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-4
 util-vserver-pl-SVNPATH         := http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-14
