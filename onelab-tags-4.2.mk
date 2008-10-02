@@ -6,8 +6,10 @@
 
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-28
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.3.3-1
-nozomi-SVNPATH			:= http://svn.one-lab.org/nozomi/tags/nozomi-2.21-1
-comgt-SVNPATH			:= http://svn.one-lab.org/comgt/imports/0.3
+nozomi-SVNPATH			:= http://svn.onelab.eu/nozomi/tags/nozomi-2.21-1
+comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
+umts-tools-SVNPATH		:= http://svn.onelab.eu/planetlab-umts-tools/trunk
+umts-tools-backend-SVNPATH	:= http://svn.onelab.eu/planetlab-umts-tools-backend/trunk
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-4
 util-vserver-pl-SVNPATH         := http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-14

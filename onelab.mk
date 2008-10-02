@@ -85,6 +85,22 @@ IN_BOOTSTRAPFS += comgt
 ALL += comgt
 
 #
+# umts: slice tools
+#
+umts-tools-MODULES := umts-tools
+umts-tools-SPEC := umtstools.spec
+IN_VSERVER += umts-tools
+ALL += umts-tools
+
+#
+# umts: root context stuff
+#
+umts-tools-backend-MODULES := umts-tools-backend
+umts-tools-backend-SPEC := umtstools-backend.spec
+IN_BOOTSTRAPFS += umts-tools-backend
+ALL += umts-tools-backend
+
+#
 # util-vserver
 #
 util-vserver-MODULES := util-vserver
