@@ -85,20 +85,20 @@ IN_BOOTSTRAPFS += comgt
 ALL += comgt
 
 #
-# umts: slice tools
-#
-umts-tools-MODULES := umts-tools
-umts-tools-SPEC := umtstools.spec
-IN_VSERVER += umts-tools
-ALL += umts-tools
-
-#
 # umts: root context stuff
 #
-umts-tools-backend-MODULES := umts-tools-backend
-umts-tools-backend-SPEC := umtstools-backend.spec
-IN_BOOTSTRAPFS += umts-tools-backend
-ALL += umts-tools-backend
+umts-backend-MODULES := planetlab-umts-tools
+umts-backend-SPEC := backend/backend.spec
+IN_BOOTSTRAPFS += umts-backend
+ALL += umts-backend
+
+#
+# umts: slice tools
+#
+umts-frontend-MODULES := planetlab-umts-tools
+umts-frontend-SPEC := frontend/frontend.spec
+IN_VSERVER += umts-frontend
+ALL += umts-frontend
 
 #
 # util-vserver
