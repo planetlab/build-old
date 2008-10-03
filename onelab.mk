@@ -88,7 +88,7 @@ ALL += comgt
 # umts: root context stuff
 #
 umts-backend-MODULES := planetlab-umts-tools
-umts-backend-SPEC := backend/backend.spec
+umts-backend-SPEC := backend.spec
 IN_BOOTSTRAPFS += umts-backend
 ALL += umts-backend
 
@@ -96,7 +96,7 @@ ALL += umts-backend
 # umts: slice tools
 #
 umts-frontend-MODULES := planetlab-umts-tools
-umts-frontend-SPEC := frontend/frontend.spec
+umts-frontend-SPEC := frontend.spec
 IN_VSERVER += umts-frontend
 ALL += umts-frontend
 
