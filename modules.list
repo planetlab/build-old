@@ -15,7 +15,7 @@ PingOfDeath
 VserverReference
 comgt
 dummynet_image
-fprobe-ulog
+fprobe-ulog:1.1.2
 iproute2
 iptables
 linux-2.6
