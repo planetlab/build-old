@@ -427,7 +427,7 @@ function main () {
 	
     if [ -n "$OVERBASE" ] ; then
 	sedargs="-e s,@DATE@,${DATE},g"
-	BASE=(echo ${OVERBASE} | sed $sedargs)
+	BASE=$(echo ${OVERBASE} | sed $sedargs)
     else
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	BASE=$(echo ${BASE} | sed $sedargs)
