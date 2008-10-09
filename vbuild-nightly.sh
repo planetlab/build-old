@@ -426,7 +426,8 @@ function main () {
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
     if [ -n "$OVERBASE" ] ; then
-	BASE=${OVERBASE}
+	sedargs="-e s,@DATE@,${DATE},g"
+	BASE=(echo ${OVERBASE} | sed $sedargs)
     else
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	BASE=$(echo ${BASE} | sed $sedargs)
