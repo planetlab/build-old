@@ -346,7 +346,8 @@ myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
-myplc-release-MODULES := MyPLC
-myplc-release-SPEC := myplc-release.spec
-myplc-release-RPMDATE := yes
-ALL += myplc-release
+# using some other name than myplc-release, as this is a make target already
+release-MODULES := MyPLC
+release-SPEC := myplc-release.spec
+release-RPMDATE := yes
+ALL += release
