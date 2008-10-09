@@ -372,3 +372,8 @@ ALL += myplc-native
 myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
+
+myplc-release-MODULES := MyPLC
+myplc-release-SPEC := myplc-release.spec
+myplc-release-RPMDATE := yes
+ALL += myplc-release
