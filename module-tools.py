@@ -829,7 +829,7 @@ will be based on latest tag %s and *not* on the current trunk"""%(self.name,bran
         # create commit log file
         tmp="/tmp/branching-%d"%os.getpid()
         f=open(tmp,"w")
-        f.write("Branch %s for module %s created from tag %s\n"%(new_trunk_name,self.name,latest_tag_name))
+        f.write("Branch %s for module %s created (as new trunk) from tag %s\n"%(new_trunk_name,self.name,latest_tag_name))
         f.close()
 
         # we're done, let's commit the stuff
