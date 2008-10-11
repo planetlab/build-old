@@ -8,7 +8,7 @@ DIRNAME=$(dirname $0)
 # pkgs parsing utilities
 PATH=$(dirname $0):$PATH . build.common
 
-DEFAULT_FCDISTRO=f8
+DEFAULT_FCDISTRO=centos5
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_IFNAME=eth0
@@ -75,6 +75,30 @@ EOF
     popd
 }    
 
+# return yum or debootstrap
+function package_method () {
+    fcdistro=$1; shift
+    case $fcdistro in
+	f[0-9]*|centos[0-9]*) echo yum ;;
+	lenny|etch) echo debootstrap ;;
+	*) echo Unknown distro $fcdistro ;;
+    esac 
+}
+
+# return arch from debian distro and personality
+function canonical_arch () {
+    personality=$1; shift
+    fcdistro=$1; shift
+    case $(package_method $fcdistro) in
+	yum)
+	    case $personality in *32) echo i386 ;; *64) echo x86_64 ;; *) echo Unknown-arch-1 ;; esac ;;
+	debootstrap)
+	    case $personality in *32) echo i386 ;; *64) echo amd64 ;; *) echo Unknown-arch-2 ;; esac ;;
+	*)
+	    echo Unknown-arch-3 ;;
+    esac
+}
+
 function setup_vserver () {
 
     set -x
@@ -90,12 +114,25 @@ function setup_vserver () {
 	exit 1
     fi
 
+    pkg_method=$(package_method $fcdistro)
+    case $pkg_method in
+	yum)
+	    build_options="-m yum -- -d $fcdistro" 
+	    ;;
+	debootstrap)
+	    arch=$(canonical_arch $personality $fcdistro)
+	    build_options="-m debootstrap -- -d $fcdistro -- --arch $arch"
+	    ;;
+	*)
+	    build_options="something wrong" ;;
+    esac
+
     # create it
     # try to work around the vserver issue:
     # vc_ctx_migrate: No such process
     # rpm-fake.so: failed to initialize communication with resolver
     for i in $(seq 20) ; do
-	$personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS -m yum -- -d $fcdistro && break || true
+	$personality vserver $VERBOSE $vserver build $VSERVER_OPTIONS $build_options && break || true
 	echo "* ${i}-th attempt to 'vserver build' failed - waiting for 3 seconds"
 	sleep 3
     done
@@ -133,18 +170,20 @@ function setup_vserver () {
 	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
     fi
 
-    $personality vyum $vserver -- -y install yum
-    # ditto
-    for i in $(seq 20) ; do
-	$personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
-	echo "* ${i}-th attempt to 'vserver pkgmgmt internalize' failed - waiting for 3 seconds"
-	sleep 3
-    done
+    if [ "$pkg_method" = "yum" ] ; then
+	$personality vyum $vserver -- -y install yum
+        # ditto
+	for i in $(seq 20) ; do
+	    $personality vserver $VERBOSE $vserver pkgmgmt internalize && break || true
+	    echo "* ${i}-th attempt to 'vserver pkgmgmt internalize' failed - waiting for 3 seconds"
+	    sleep 3
+	done
+    fi
 
     # start the vserver so we can do the following operations
     $personality vserver $VERBOSE $vserver start
-    $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
-    $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
+    [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
+    [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
     # with vserver 2.3, granting the vserver CAP_MKNOD is not enough
     # check whether we run vs2.3 or above
@@ -153,29 +192,13 @@ function setup_vserver () {
     need_vdevmap=$(( $vs_version >= 23 ))
 
     if [ "$need_vdevmap" == 1 ] ; then
-	util_vserver_215=0
-	vdevmap --help | grep -- --set &> /dev/null && util_vserver_215=1
-	
-	if [ "$util_vserver_215" == 1 ] ; then
-	    ctx=$(cat /etc/vservers/$vserver/context)
-	    vdevmap --set --xid $ctx --open --create --target /dev/null
-	    vdevmap --set --xid $ctx --open --create --target /dev/root
-	else
-	    echo "You seem to be running vs2.3 with util-vserver < 0.30.215"
-	    echo "This combination is not supported by $COMMAND"
-	    echo "Please upgrade your environment"
-	    exit 1
-# this supposedly is an equivalent to using vdevmap as invoked above
-# but it's not going to work in this case
-#	    mkdir -p /etc/vservers/$vserver/apps/vdevmap/default-{block,char}
-#	    touch /etc/vservers/$vserver/apps/vdevmap/default-{block,char}/{open,create}
-#	    echo /dev/root > /etc/vservers/$vserver/apps/vdevmap/default-block/target
-#	    echo /dev/null > /etc/vservers/$vserver/apps/vdevmap/default-char/target
-	fi
+	ctx=$(cat /etc/vservers/$vserver/context)
+	vdevmap --set --xid $ctx --open --create --target /dev/null
+	vdevmap --set --xid $ctx --open --create --target /dev/root
     fi
 	    
     # minimal config in the vserver for yum to work
-    configure_yum_in_vserver $vserver $fcdistro 
+    [ "$pkg_method" = "yum" ] && configure_yum_in_vserver $vserver $fcdistro 
 
     # set up resolv.conf
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
@@ -194,6 +217,8 @@ function devel_or_vtest_tools () {
     pldistro=$1; shift
     personality=$1; shift
 
+    pkg_method=$(package_method $fcdistro)
+
     # check for .pkgs file based on pldistro
     if [ -n "$VBUILD_MODE" ] ; then
 	pkgsname=devel.pkgs
@@ -205,12 +230,20 @@ function devel_or_vtest_tools () {
     ### install individual packages, then groups
     # get target arch - use uname -i here (we want either x86_64 or i386)
     vserver_arch=$($personality vserver $vserver exec uname -i)
+    # on debian systems we get arch through the 'arch' command
+    [ "$vserver_arch" = "unknown" ] && vserver_arch=$($personality vserver $vserver exec arch)
     
     packages=$(pl_getPackages -a $vserver_arch $fcdistro $pldistro $pkgsfile)
     groups=$(pl_getGroups -a $vserver_arch $fcdistro $pldistro $pkgsfile)
 
-    [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
-    [ -n "$groups" ] && $personality vserver $vserver exec yum -y groupinstall $groups
+    [ "$pkg_method" = yum ] && [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
+    [ "$pkg_method" = yum ] && [ -n "$groups" ] && $personality vserver $vserver exec yum -y groupinstall $groups
+
+    [ "$pkg_method" = debootstrap ] && $personality vserver $vserver exec apt-get update
+    [ "$pkg_method" = debootstrap ] && for package in $packages ; do 
+	$personality vserver $vserver exec apt-get install -y $package 
+    done
+    
     return 0
 }
 
