@@ -211,6 +211,14 @@ ALL += Monitor
 IN_BOOTSTRAPFS += Monitor
 
 #
+# monitor-server
+#
+monitor-server-MODULES := Monitor
+monitor-server-SPEC := monitor-server.spec
+ALL += monitor-server
+
+
+#
 # nodeconfig
 #
 nodeconfig-MODULES := nodeconfig
