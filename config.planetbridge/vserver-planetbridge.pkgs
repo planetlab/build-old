@@ -8,3 +8,4 @@ package: mysql-server
 package: php
 package: php-mysql
 package: hostapd
+package: wifiadmin
