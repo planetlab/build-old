@@ -14,7 +14,6 @@ package: bzip2
 package: diffutils
 package: logrotate
 package: passwd
-#package: rsh
 package: rsync
 package: sudo
 package: tcpdump
@@ -76,3 +75,4 @@ precious: usr/share/terminfo/v/vt100
 precious: usr/share/terminfo/x/xterm
 precious: usr/share/zoneinfo/UTC
 precious: usr/lib/locale/en_US.utf8
+precious-f9: usr/lib/locale/en_US.utf8
