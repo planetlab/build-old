@@ -32,24 +32,24 @@ function configure_yum_in_vserver () {
     vserver=$1; shift
     fcdistro=$1; shift
 
-    pushd /etc/vservers/.distributions/${fcdistro}
-    if [ -f yum/yum.conf ] ; then
-	echo "Initializing yum.conf in $vserver from $(pwd)/yum"
+    templates=/etc/vservers/.distributions/${fcdistro}
+    if [ -f ${templates}/yum/yum.conf ] ; then
+	echo "Initializing yum.conf in $vserver from ${templates}/yum"
         sed -e "s!@YUMETCDIR@!/etc!g;
                 s!@YUMCACHEDIR@!/var/cache/yum!g;
                 s!@YUMLOGDIR@!/var/log!g;
                 s!@YUMLOCKDIR@!/var/lock!g;
-               " yum/yum.conf > /vservers/$vserver/etc/yum.conf
+               " ${templates}/yum/yum.conf > /vservers/$vserver/etc/yum.conf
 
 	# post process the various @...@ variables from this yum.conf file.
     else
 	echo "Using $fcdistro default for yum.conf"
     fi
 
-    if [ -d yum.repos.d ] ; then
-	echo "Initializing yum.repos.d in $vserver from $(pwd)/yum.repos.d"
+    if [ -d ${templates}/yum.repos.d ] ; then
+	echo "Initializing yum.repos.d in $vserver from ${templates}/yum.repos.d"
 	rm -rf /vservers/$vserver/etc/yum.repos.d
-	tar cf - yum.repos.d | tar -C /vservers/$vserver/etc -xvf -
+	tar -C ${templates} -cf - yum.repos.d | tar -C /vservers/$vserver/etc -xvf -
     else
 	echo "Cannot initialize yum.repos.d in $vserver"
     fi
@@ -72,7 +72,6 @@ gpgcheck=0
 EOF
 	fi
     fi
-    popd
 }    
 
 # return yum or debootstrap
