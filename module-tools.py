@@ -669,7 +669,7 @@ The module-sync function has the following limitations
         diff_output=Command("svn diff %s %s"%(old_tag_url,edge_url),
                             self.options).output_of()
         if len(diff_output) == 0:
-            if not prompt ("No difference in trunk for module %s, want to tag anyway"%self.name,False):
+            if not prompt ("No pending difference in module %s, want to tag anyway"%self.name,False):
                 return
 
         # side effect in trunk's specfile
@@ -751,8 +751,8 @@ n: move to next file"""%locals()
         paths=""
         paths += self.edge_dir() + " "
         paths += build.edge_dir() + " "
-        self.run_prompt("Review trunk and build","svn diff " + paths)
-        self.run_prompt("Commit trunk and build","svn commit --file %s %s"%(changelog,paths))
+        self.run_prompt("Review module and build","svn diff " + paths)
+        self.run_prompt("Commit module and build","svn commit --file %s %s"%(changelog,paths))
         self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog,edge_url,new_tag_url))
 
         if self.options.debug:
@@ -866,13 +866,13 @@ More help:
     modes={ 
         'list' : "displays a list of available tags or branches",
         'version' : "check latest specfile and print out details",
-        'diff' : "show difference between trunk and latest tag",
+        'diff' : "show difference between module (trunk or branch) and latest tag",
         'tag'  : """increment taglevel in specfile, insert changelog in specfile,
                 create new tag and and monitor its adoption in build/*-tags*.mk""",
         'branch' : """create a branch for this module, from the latest tag on the trunk, 
                   and change trunk's version number to reflect the new branch name;
                   you can specify the new branch name by using module:branch""",
-        'sync' : """create a tag from the trunk
+        'sync' : """create a tag from the module
                 this is a last resort option, mostly for repairs""",
         }
 
