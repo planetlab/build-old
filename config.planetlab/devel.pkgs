@@ -86,3 +86,5 @@ package-centos5: inotify-tools-devel
 # use local libnl on centos
 package: libnl-devel
 package-centos5: libnl-devel
+# zabbix/monitor
+package: net-snmp net-snmp-devel
