@@ -118,4 +118,4 @@ package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
 package: fprobe-ulog
 package: vsys
-package: monitor
+package: monitor-client
