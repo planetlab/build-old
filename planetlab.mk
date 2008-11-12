@@ -228,13 +228,6 @@ ALL += monitor
 IN_BOOTSTRAPFS += monitor
 
 #
-# monitor-server
-#
-monitor-server-MODULES := Monitor
-monitor-server-SPEC := monitor-server.spec
-ALL += monitor-server
-
-#
 # zabbix
 #
 zabbix-MODULES := Monitor
