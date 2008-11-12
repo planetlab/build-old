@@ -235,6 +235,14 @@ monitor-server-SPEC := monitor-server.spec
 ALL += monitor-server
 
 #
+# zabbix
+#
+zabbix-MODULES := Monitor
+zabbix-SPEC := zabbix.spec
+zabbix-BUILD-FROM-SRPM := yes
+ALL += zabbix
+
+#
 # nodeconfig
 #
 nodeconfig-MODULES := nodeconfig build
