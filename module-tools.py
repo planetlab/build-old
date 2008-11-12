@@ -62,12 +62,18 @@ class Command:
         self.tmp="/tmp/command-%d"%os.getpid()
 
     def run (self):
+        if self.options.dry_run:
+            print 'dry_run',self.command
+            return 0
         if self.options.verbose and self.options.mode not in Main.silent_modes:
             print '+',self.command
             sys.stdout.flush()
         return os.system(self.command)
 
     def run_silent (self):
+        if self.options.dry_run:
+            print 'dry_run',self.command
+            return 0
         if self.options.verbose:
             print '+',self.command,' .. ',
             sys.stdout.flush()
@@ -87,6 +93,9 @@ class Command:
 
     # returns stdout, like bash's $(mycommand)
     def output_of (self,with_stderr=False):
+        if self.options.dry_run:
+            print 'dry_run',self.command
+            return 'dry_run output'
         tmp="/tmp/status-%d"%os.getpid()
         if self.options.debug:
             print '+',self.command,' .. ',
@@ -120,6 +129,7 @@ class Svnpath:
         command="svn status %s"%self.path
         return len(Command(command,self.options).output_of(True)) != 0
 
+# support for tagged module is minimal, and is for the Build class only
 class Module:
 
     svn_magic_line="--This line, and those below, will be ignored--"
@@ -151,6 +161,9 @@ class Module:
 
     # for parsing module spec name:branch
     matcher_branch_spec=re.compile("\A(?P<name>[\w-]+):(?P<branch>[\w\.-]+)\Z")
+    # special form for tagged module - for Build
+    matcher_tag_spec=re.compile("\A(?P<name>[\w-]+)@(?P<tagname>[\w\.-]+)\Z")
+    # parsing specfiles
     matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
     def __init__ (self,module_spec,options):
@@ -160,26 +173,34 @@ class Module:
             self.name=attempt.group('name')
             self.branch=attempt.group('branch')
         else:
-            self.name=module_spec
-            self.branch=None
+            attempt=Module.matcher_tag_spec.match(module_spec)
+            if attempt:
+                self.name=attempt.group('name')
+                self.tagname=attempt.group('tagname')
+            else:
+                self.name=module_spec
 
         self.options=options
-        self.moddir="%s/%s"%(options.workdir,self.name)
+        self.module_dir="%s/%s"%(options.workdir,self.name)
 
     def friendly_name (self):
-        if not self.branch:
-            return self.name
-        else:
+        if hasattr(self,'branch'):
             return "%s:%s"%(self.name,self.branch)
+        elif hasattr(self,'tagname'):
+            return "%s@%s"%(self.name,self.tagname)
+        else:
+            return self.name
 
     def edge_dir (self):
-        if not self.branch:
-            return "%s/trunk"%(self.moddir)
+        if hasattr(self,'branch'):
+            return "%s/branches/%s"%(self.module_dir,self.branch)
+        elif hasattr(self,'tagname'):
+            return "%s/tags/%s"%(self.module_dir,self.tagname)
         else:
-            return "%s/branches/%s"%(self.moddir,self.branch)
+            return "%s/trunk"%(self.module_dir)
 
     def tags_dir (self):
-        return "%s/tags"%(self.moddir)
+        return "%s/tags"%(self.module_dir)
 
     def run (self,command):
         return Command(command,self.options).run()
@@ -247,19 +268,19 @@ that for other purposes than tagging"""%topdir
             for (key,message,default) in Module.configKeys:
                 print '\t',key,'=',Module.config[key]
 
-    def init_moddir (self):
+    def init_module_dir (self):
         if self.options.verbose:
-            print 'Checking for',self.moddir
-        if not os.path.isdir (self.moddir):
-            self.run_fatal("svn up -N %s"%self.moddir)
-        if not os.path.isdir (self.moddir):
-            raise Exception, 'Cannot find %s - check module name'%self.moddir
+            print 'Checking for',self.module_dir
+        if not os.path.isdir (self.module_dir):
+            self.run_fatal("svn update -N %s"%self.module_dir)
+        if not os.path.isdir (self.module_dir):
+            raise Exception, 'Cannot find %s - check module name'%self.module_dir
 
     def init_subdir (self,fullpath):
         if self.options.verbose:
             print 'Checking for',fullpath
         if not os.path.isdir (fullpath):
-            self.run_fatal("svn up -N %s"%fullpath)
+            self.run_fatal("svn update -N %s"%fullpath)
 
     def revert_subdir (self,fullpath):
         if self.options.fast_checks:
@@ -280,8 +301,10 @@ that for other purposes than tagging"""%topdir
 
     def init_edge_dir (self):
         # if branch, edge_dir is two steps down
-        if self.branch:
-            self.init_subdir("%s/branches"%self.moddir)
+        if hasattr(self,'branch'):
+            self.init_subdir("%s/branches"%self.module_dir)
+        elif hasattr(self,'tagname'):
+            self.init_subdir("%s/tags"%self.module_dir)
         self.init_subdir(self.edge_dir())
 
     def revert_edge_dir (self):
@@ -424,10 +447,12 @@ that for other purposes than tagging"""%topdir
         return "%s/%s"%(Module.config['svnpath'],self.name)
 
     def edge_url (self):
-        if not self.branch:
-            return "%s/trunk"%(self.mod_url())
-        else:
+        if hasattr(self,'branch'):
             return "%s/branches/%s"%(self.mod_url(),self.branch)
+        elif hasattr(self,'tagname'):
+            return "%s/tags/%s"%(self.mod_url(),self.tagname)
+        else:
+            return "%s/trunk"%(self.mod_url())
 
     def tag_name (self, spec_dict):
         try:
@@ -469,7 +494,7 @@ that for other purposes than tagging"""%topdir
 
 ##############################
     def do_version (self):
-        self.init_moddir()
+        self.init_module_dir()
         self.init_edge_dir()
         self.revert_edge_dir()
         self.update_edge_dir()
@@ -499,7 +524,7 @@ that for other purposes than tagging"""%topdir
 
         extra_command=""
         extra_message=""
-        if self.branch:
+        if hasattr(self,'branch'):
             pattern=self.branch
         if pattern or exact:
             if exact:
@@ -542,7 +567,7 @@ The module-sync function has the following limitations
             if not prompt('Want to proceed anyway'):
                 return
 
-        self.init_moddir()
+        self.init_module_dir()
         self.init_edge_dir()
         self.revert_edge_dir()
         self.update_edge_dir()
@@ -563,7 +588,7 @@ The module-sync function has the following limitations
 
 ##############################
     def do_diff (self,compute_only=False):
-        self.init_moddir()
+        self.init_module_dir()
         self.init_edge_dir()
         self.revert_edge_dir()
         self.update_edge_dir()
@@ -637,7 +662,7 @@ The module-sync function has the following limitations
         return matches
 
     def do_tag (self):
-        self.init_moddir()
+        self.init_module_dir()
         self.init_edge_dir()
         self.revert_edge_dir()
         self.update_edge_dir()
@@ -706,7 +731,7 @@ Please write a changelog for this new tag in the section above
         if self.options.build_branch:
             buildname+=":"+self.options.build_branch
         build = Module(buildname,self.options)
-        build.init_moddir()
+        build.init_module_dir()
         build.init_edge_dir()
         build.revert_edge_dir()
         build.update_edge_dir()
@@ -845,23 +870,164 @@ will be based on latest tag %s and *not* on the current trunk"""%(self.name,bran
         os.unlink(tmp)
 
 ##############################
+class PackageSpec:
+
+    def __init__(self, package, module, svnpath, spec):
+        self.package=package
+        self.module=module
+        self.svnpath=svnpath
+        self.spec=spec
+        self.specpath="%s/%s"%(svnpath,spec)
+
+    def show(self):
+        print 'package=',self.package,'module=',self.module,'svnpath=',self.svnpath,'spec=',self.spec
+
+class Build (Module):
+    
+    def __init__ (self, buildtag,options):
+        self.buildtag=buildtag
+        Module.__init__(self,"build@%s"%buildtag,options)
+
+    # we cannot get build's svnpath as for other packages as we'd get something in svn+ssh
+    # xxx quick & dirty
+    def get_svnpath (self):
+        self.svnpath="http://svn.planet-lab.org/svn/build/tags/%s"%self.buildtag
+
+    def get_packages (self,distrotag):
+        # mhh: remove -tag* from distrotags to get distro
+        n=distrotag.find('-tag')
+        if n>0:
+            distro=distrotag[:n]
+        else:
+            distro='planetlab'
+        result={}
+        make_options="-C %s stage1=true DISTRO=%s PLDISTROTAGS=%s 2> /dev/null"%(self.edge_dir(),distro,distrotag)
+        command="make %s packages"%make_options
+        make_packages=Command(command,self.options).output_of()
+        pkg_line=re.compile("\Apackage=(?P<package>[^\s]+)\s+ref_module=(?P<module>[^\s]+)\s.*\Z")
+        for line in make_packages.split("\n"):
+            if not line:
+                continue
+            attempt=pkg_line.match(line)
+            if line and not attempt:
+                print "====="
+                print "WARNING: line not understood from make packages"
+                print "in dir %s"%self.edge_dir
+                print "with options",make_options
+                print 'line=',line
+                print "====="
+            else:
+                (package,module) = (attempt.group('package'),attempt.group('module')) 
+                command="make %s +%s-SVNPATH"%(make_options,module)
+                svnpath=Command(command,self.options).output_of().strip()
+                command="make %s +%s-SPEC"%(make_options,package)
+                spec=Command(command,self.options).output_of().strip()
+                result[package]=PackageSpec(package,module,svnpath,spec)
+        return result
+
+    def get_distrotags (self):
+        return [os.path.basename(p) for p in glob("%s/*tags*mk"%self.edge_dir())]
+
+
+class Release:
+
+    discard_matcher=re.compile("\A(\+\+\+|---).*")
+
+    # t1 is the most recent build tag, t2 should be older
+    @staticmethod
+    def do_changelog (t1,t2,options):
+        print "----"
+        print "= build tag %s to %s = #tag-%s-to-%s"%(t2,t1,t2,t1)
+        (b1,b2) = (Build (t1,options), Build (t2,options))
+        for b in (b1,b2):
+            b.init_module_dir()
+            b.init_edge_dir()
+            b.update_edge_dir()
+            b.get_svnpath()
+        # find out the tags files that are common, unless option was specified
+        if options.distrotags:
+            (d1s,d2s)=([options.distrotags],[options.distrotags])
+        else:
+            d1s=b1.get_distrotags()
+            d2s=b2.get_distrotags()
+        print 'd1s',d1s,'d2s',d2s
+        distrotags = list(set(d1s).intersection(set(d2s)))
+        print 'common distrotags',distrotags
+        distrotags.sort()
+        print 'after sort',distrotags
+        first_distrotag=True
+        for distrotag in distrotags:
+            if first_distrotag:
+                first_distrotag=False
+            else:
+                print '----'
+            print '== distro %s (%s to %s) == #distro-%s-%s-to-%s'%(distrotag,t2,t1,distrotag,t2,t1)
+            print ' * from %s/%s'%(b2.svnpath,distrotag)
+            print ' * to %s/%s'%(b1.svnpath,distrotag)
+            p1s=b1.get_packages(distrotag)
+            p1names=set(p1s.keys())
+            p2s=b2.get_packages(distrotag)
+            p2names=set(p2s.keys())
+            in1not2 = list(p1names-p2names)
+            in2not1 = list(p2names-p1names)
+            inboth = list(p1names.intersection(p2names))
+            in1not2.sort()
+            in2not1.sort()
+            inboth.sort()
+            for name in in1not2:
+                print '=== %s : new package %s -- appeared in %s === #pkg-%s-%s'%(distrotag,name,t1,name,t1)
+                obj=p1s[name]
+                print ' * svn link: %s'%obj.svnpath
+                print ' * spec: %s'%obj.specpath
+            for name in in2not1:
+                print '=== %s : package %s -- deprecated, last occurrence in %s === #pkg-%s-%s'%(distrotag,name,t2,name,t1)
+                obj=p2s[name]
+                print ' * svn link: %s'%obj.svnpath
+                print ' * spec: %s'%obj.specpath
+            for name in inboth:
+                (o1,o2)=(p1s[name],p2s[name])
+                if o1.specpath == o2.specpath:
+                    continue
+                command="svn diff %s %s"%(o2.specpath,o1.specpath)
+                specdiff=Command(command,options).output_of()
+                if not specdiff:
+                    continue
+                print '=== %s - %s to %s : package %s === #pkg-%s-%s'%(distrotag,t2,t1,name,name,t1)
+                print ' * from %s '%o2.specpath
+                print ' * to %s '%o1.specpath
+                print '{{{'
+                for line in specdiff.split('\n'):
+                    if not line:
+                        continue
+                    if Release.discard_matcher.match(line):
+                        continue
+                    if line[0] in ['@']:
+                        print '----------'
+                    elif line[0] in ['+','-']:
+                        print line
+                print '}}}'
+
+##############################
 class Main:
 
-    usage="""Usage: %prog options module_desc [ .. module_desc ]
-Purpose:
-  manage subversion tags and specfile
-  requires the specfile to define *version* and *taglevel*
+    module_usage="""Usage: %prog [options] module_desc [ .. module_desc ]
+module-tools : a set of tools to manage subversion tags and specfile
+  requires the specfile to either
+  * define *version* and *taglevel*
   OR alternatively 
-  redirection variables module_version_varname / module_taglevel_varname
+  * define redirection variables module_version_varname / module_taglevel_varname
 Trunk:
   by default, the trunk of modules is taken into account
   in this case, just mention the module name as <module_desc>
 Branches:
   if you wish to work on a branch rather than on the trunk, 
   you can use something like e.g. Mom:2.1 as <module_desc>
-More help:
-  see http://svn.planet-lab.org/wiki/ModuleTools
 """
+    release_usage="""Usage: %prog [options] tag1 .. tagn
+  Extract release notes from the changes in specfiles between several build tags, latest first
+"""
+    common_usage="""More help:
+  see http://svn.planet-lab.org/wiki/ModuleTools"""
 
     modes={ 
         'list' : "displays a list of available tags or branches",
@@ -874,9 +1040,12 @@ More help:
                   you can specify the new branch name by using module:branch""",
         'sync' : """create a tag from the module
                 this is a last resort option, mostly for repairs""",
+        'changelog' : """extract changelog between build tags
+                expected arguments are a list of tags""",
         }
 
     silent_modes = ['list']
+    release_modes = ['changelog']
 
     def run(self):
 
@@ -887,12 +1056,18 @@ More help:
                 break
         if not mode:
             print "Unsupported command",sys.argv[0]
+            print "Supported commands:" + Modes.modes.keys.join(" ")
             sys.exit(1)
 
-        Main.usage += "\nmodule-%s : %s"%(mode,Main.modes[mode])
-        all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
+        if mode not in Main.release_modes:
+            usage = Main.module_usage
+            usage += Main.common_usage
+            usage += "\nmodule-%s : %s"%(mode,Main.modes[mode])
+        else:
+            usage = Main.release_usage
+            usage += Main.common_usage
 
-        parser=OptionParser(usage=Main.usage,version=subversion_id)
+        parser=OptionParser(usage=usage,version=subversion_id)
         
         if mode == 'list':
             parser.add_option("-b","--branches",action="store_true",dest="list_branches",default=False,
@@ -928,48 +1103,73 @@ More help:
             parser.add_option("-u","--url", action="store_true", dest="show_urls", default=False,
                               help="display URLs")
             
-        # default verbosity depending on function - temp
-        parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
-                          help="run on all modules as found in %s"%all_modules)
-        verbose_default=False
-        if mode in ['tag','sync'] : verbose_default = True
-        parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=verbose_default, 
-                          help="run in verbose mode")
-        if mode not in ['version','list']:
-            parser.add_option("-q","--quiet", action="store_false", dest="verbose", 
-                              help="run in quiet (non-verbose) mode")
+        if mode not in Main.release_modes:
+            all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
+            parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
+                              help="run on all modules as found in %s"%all_modules)
+        else:
+            parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
+                              help="dry run - shell commands are only displayed")
+            parser.add_option("-t","--distrotags",action="store",dest="distrotags",default=None,
+                              help="specify a distro-tags file, e.g. onelab-tags-4.2.mk")
+
         parser.add_option("-w","--workdir", action="store", dest="workdir", 
                           default="%s/%s"%(os.getenv("HOME"),"modules"),
                           help="""name for dedicated working dir - defaults to ~/modules
 ** THIS MUST NOT ** be your usual working directory""")
         parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
                           help="skip safety checks, such as svn updates -- use with care")
-        parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
-                          help="debug mode - mostly more verbose")
+
+        # default verbosity depending on function - temp
+        verbose_modes= ['tag','sync']
+        
+        if mode not in verbose_modes:
+            parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
+                              help="run in verbose mode")
+        else:
+            parser.add_parser("-q","--quiet", action="store_false", dest="verbose", default=True,
+                              help="run in quiet (non-verbose) mode")
+#        parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
+#                          help="debug mode - mostly more verbose")
         (options, args) = parser.parse_args()
         options.mode=mode
+        if not hasattr(options,'dry_run'):
+            options.dry_run=False
+        options.debug=False
 
-        if len(args) == 0:
-            if options.all_modules:
-                args=Command("grep -v '#' %s"%all_modules,options).output_of().split()
-            else:
+        ########## release-*
+        if mode in Main.release_modes :
+            ########## changelog
+            if len(args) <= 1:
                 parser.print_help()
                 sys.exit(1)
-        Module.init_homedir(options)
-        for modname in args:
-            module=Module(modname,options)
-            if len(args)>1 and mode not in Main.silent_modes:
-                print '========================================',module.friendly_name()
-            # call the method called do_<mode>
-            method=Module.__dict__["do_%s"%mode]
-            try:
-                method(module)
-            except Exception,e:
-                print 'Skipping failed %s: '%modname,e
+            Module.init_homedir(options)
+            for n in range(len(args)-1):
+                [t_new,t_old]=args[n:n+2]
+                Release.do_changelog (t_new,t_old,options)
+        else:
+            ########## module-*
+            if len(args) == 0:
+                if options.all_modules:
+                    args=Command("grep -v '#' %s"%all_modules,options).output_of().split()
+                else:
+                    parser.print_help()
+                    sys.exit(1)
+            Module.init_homedir(options)
+            for modname in args:
+                module=Module(modname,options)
+                if len(args)>1 and mode not in Main.silent_modes:
+                    print '========================================',module.friendly_name()
+                # call the method called do_<mode>
+                method=Module.__dict__["do_%s"%mode]
+                try:
+                    method(module)
+                except Exception,e:
+                    print 'Skipping failed %s: '%modname,e
 
+####################
 if __name__ == "__main__" :
     try:
         Main().run()
     except KeyboardInterrupt:
         print '\nBye'
-        
