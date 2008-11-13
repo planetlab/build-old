@@ -55,6 +55,15 @@ def default_editor():
         editor = "emacs"
     return editor
 
+### fold long lines
+fold_length=132
+
+def print_fold (line):
+    while len(line) >= fold_length:
+        print line[:fold_length],'\\'
+        line=line[fold_length:]
+    print line
+
 class Command:
     def __init__ (self,command,options):
         self.command=command
@@ -941,7 +950,6 @@ class Build (Module):
     def get_distrotags (self):
         return [os.path.basename(p) for p in glob("%s/*tags*mk"%self.edge_dir())]
 
-
 class Release:
 
     # header in diff output
@@ -1037,7 +1045,7 @@ class Release:
                     if line[0] in ['@']:
                         print '----------'
                     elif line[0] in ['+','-']:
-                        print line
+                        print_fold(line)
                 print '}}}'
 
 ##############################
