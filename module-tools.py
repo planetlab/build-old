@@ -904,6 +904,9 @@ class Package:
         else:
             return None
 
+    def details (self):
+        return "[%s %s] [%s (spec)]"%(self.svnpath,self.basename,self.specpath)
+
 class Build (Module):
     
     def __init__ (self, buildtag,options):
@@ -915,15 +918,21 @@ class Build (Module):
     def get_svnpath (self):
         self.svnpath="http://svn.planet-lab.org/svn/build/tags/%s"%self.buildtag
 
-    def get_packages (self,distrotag):
+    @staticmethod
+    def get_distro_from_distrotag (distrotag):
         # mhh: remove -tag* from distrotags to get distro
         n=distrotag.find('-tag')
         if n>0:
-            distro=distrotag[:n]
+            return distrotag[:n]
         else:
-            distro='planetlab'
+            return None
+
+    def get_packages (self,distrotag):
         result={}
-        make_options="-C %s stage1=true PLDISTRO=%s PLDISTROTAGS=%s 2> /dev/null"%(self.edge_dir(),distro,distrotag)
+        distro=Build.get_distro_from_distrotag(distrotag)
+        if not distro:
+            return result
+        make_options="--no-print-directory -C %s stage1=true PLDISTRO=%s PLDISTROTAGS=%s 2> /dev/null"%(self.edge_dir(),distro,distrotag)
         command="make %s packages"%make_options
         make_packages=Command(command,self.options).output_of()
         pkg_line=re.compile("\Apackage=(?P<package>[^\s]+)\s+ref_module=(?P<module>[^\s]+)\s.*\Z")
@@ -950,6 +959,24 @@ class Build (Module):
     def get_distrotags (self):
         return [os.path.basename(p) for p in glob("%s/*tags*mk"%self.edge_dir())]
 
+class DiffCache:
+
+    def __init__ (self):
+        self._cache={}
+
+    def key(self, frompath,topath):
+        return frompath+'-to-'+topath
+
+    def fetch (self, frompath, topath):
+        key=self.key(frompath,topath)
+        if not self._cache.has_key(key):
+            return None
+        return self._cache[key]
+
+    def store (self, frompath, topath, diff):
+        key=self.key(frompath,topath)
+        self._cache[key]=diff
+
 class Release:
 
     # header in diff output
@@ -960,7 +987,7 @@ class Release:
         print "----"
         print "----"
         print "----"
-        print "= build tag %s to %s = #tag-%s"%(buildtag_old,buildtag_new,buildtag_new)
+        print "= build tag %s to %s = #build-%s"%(buildtag_old,buildtag_new,buildtag_new)
         (build_new,build_old) = (Build (buildtag_new,options), Build (buildtag_old,options))
         for b in (build_new,build_old):
             b.init_module_dir()
@@ -969,29 +996,34 @@ class Release:
             b.get_svnpath()
         # find out the tags files that are common, unless option was specified
         if options.distrotags:
-            (distrotags_new,distrotags_old)=([options.distrotags],[options.distrotags])
+            distrotags=options.distrotags
         else:
             distrotags_new=build_new.get_distrotags()
             distrotags_old=build_old.get_distrotags()
-        distrotags = list(set(distrotags_new).intersection(set(distrotags_old)))
-        distrotags.sort()
-        if options.verbose:
-            print "Found distrotags",distrotags
+            distrotags = list(set(distrotags_new).intersection(set(distrotags_old)))
+            distrotags.sort()
+        if options.verbose: print "Found distrotags",distrotags
         first_distrotag=True
+        diffcache = DiffCache()
         for distrotag in distrotags:
+            distro=Build.get_distro_from_distrotag(distrotag)
+            if not distro:
+                continue
             if first_distrotag:
                 first_distrotag=False
             else:
                 print '----'
-            print '== distro %s (%s to %s) == #distro-%s-%s'%(distrotag,buildtag_old,buildtag_new,distrotag,buildtag_new)
+            print '== distro %s (%s to %s) == #distro-%s-%s'%(distrotag,buildtag_old,buildtag_new,distro,buildtag_new)
             print ' * from %s/%s'%(build_old.svnpath,distrotag)
             print ' * to %s/%s'%(build_new.svnpath,distrotag)
 
             # parse make packages
             packages_new=build_new.get_packages(distrotag)
             pnames_new=set(packages_new.keys())
+            if options.verbose: print 'got packages for ',buildtag_new
             packages_old=build_old.get_packages(distrotag)
             pnames_old=set(packages_old.keys())
+            if options.verbose: print 'got packages for ',buildtag_old
 
             # get created, deprecated, and preserved package names
             pnames_created = list(pnames_new-pnames_old)
@@ -1001,38 +1033,38 @@ class Release:
             pnames = list(pnames_new.intersection(pnames_old))
             pnames.sort()
 
-            if options.verbose:
-                print "Found new/deprecated/preserved pnames",pnames_new,pnames_deprecated,pnames
+            if options.verbose: print "Found new/deprecated/preserved pnames",pnames_new,pnames_deprecated,pnames
 
             # display created and deprecated 
             for name in pnames_created:
-                print '=== %s : new package %s -- appeared in %s === #pkg-%s-%s'%(distrotag,name,buildtag_new,name,buildtag_new)
-                obj=packages_new[name]
-                print ' * svn link: %s'%obj.svnpath
-                print ' * spec: %s'%obj.specpath
+                print '=== %s : new package %s -- appeared in %s === #package-%s-%s-%s'%(distrotag,name,buildtag_new,name,distro,buildtag_new)
+                pobj=packages_new[name]
+                print ' * %s'%pobj.details()
             for name in pnames_deprecated:
-                print '=== %s : package %s -- deprecated, last occurrence in %s === #pkg-%s-%s'%(distrotag,name,buildtag_old,name,buildtag_new)
-                obj=packages_old[name]
-                if not obj.svnpath:
-                    print ' * codebase stored in CVS, specfile is %s'%obj.spec
+                print '=== %s : package %s -- deprecated, last occurrence in %s === #package-%s-%s-%s'%(distrotag,name,buildtag_old,name,distro,buildtag_new)
+                pobj=packages_old[name]
+                if not pobj.svnpath:
+                    print ' * codebase stored in CVS, specfile is %s'%pobj.spec
                 else:
-                    print ' * svn link: %s'%obj.svnpath
-                    print ' * spec: %s'%obj.specpath
+                    print ' * %s'%pobj.details()
 
             # display other packages
             for name in pnames:
                 (pobj_new,pobj_old)=(packages_new[name],packages_old[name])
-                if options.verbose:
-                    print "Dealing with package",name
-                if pobj_new.specpath == pobj_old.specpath:
+                if options.verbose: print "Dealing with package",name
+                if pobj_old.specpath == pobj_new.specpath:
                     continue
-                command="svn diff %s %s"%(pobj_old.specpath,pobj_new.specpath)
-                specdiff=Command(command,options).output_of()
+                specdiff = diffcache.fetch(pobj_old.specpath,pobj_new.specpath)
+                if specdiff is None:
+                    command="svn diff %s %s"%(pobj_old.specpath,pobj_new.specpath)
+                    specdiff=Command(command,options).output_of()
+                    diffcache.store(pobj_old.specpath,pobj_new.specpath,specdiff)
+                else:
+                    if options.verbose: print 'got diff from cache'
                 if not specdiff:
                     continue
-                print '=== %s - %s to %s : package %s === #pkg-%s-%s'%(distrotag,buildtag_old,buildtag_new,name,name,buildtag_new)
-                print ' * from [%s %s] ([%s spec])'%(pobj_old.svnpath,pobj_old.basename,pobj_old.specpath),
-                print ' to [%s %s] ([%s spec])'%(pobj_new.svnpath,pobj_new.basename,pobj_new.specpath)
+                print '=== %s - %s to %s : package %s === #package-%s-%s-%s'%(distrotag,buildtag_old,buildtag_new,name,name,distro,buildtag_new)
+                print ' * from %s to %s'%(pobj_old.details(),pobj_new.details())
                 trac_diff_url=pobj_old.trac_full_diff(pobj_new)
                 if trac_diff_url:
                     print ' * [%s View full diff]'%trac_diff_url
@@ -1087,6 +1119,13 @@ Branches:
 
     silent_modes = ['list']
     release_modes = ['changelog']
+
+    @staticmethod
+    def optparse_list (option, opt, value, parser):
+        try:
+            setattr(parser.values,option.dest,getattr(parser.values,option.dest)+value.split())
+        except:
+            setattr(parser.values,option.dest,value.split())
 
     def run(self):
 
@@ -1151,8 +1190,10 @@ Branches:
         else:
             parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
                               help="dry run - shell commands are only displayed")
-            parser.add_option("-t","--distrotags",action="store",dest="distrotags",default=None,
-                              help="specify a distro-tags file, e.g. onelab-tags-4.2.mk")
+            parser.add_option("-t","--distrotags",action="callback",callback=Main.optparse_list, dest="distrotags",
+                              default=[], nargs=1,type="string",
+                              help="""specify distro-tags files, e.g. onelab-tags-4.2.mk
+-- can be set multiple times, or use quotes""")
 
         parser.add_option("-w","--workdir", action="store", dest="workdir", 
                           default="%s/%s"%(os.getenv("HOME"),"modules"),
