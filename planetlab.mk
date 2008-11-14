@@ -248,7 +248,6 @@ IN_BOOTCD += pypcilib
 bootcd-MODULES := BootCD build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
-# package has *some* dependencies, at least these ones
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
 bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 bootcd-RPMDATE := yes
@@ -262,8 +261,6 @@ vserver-MODULES := VserverReference build
 vserver-SPEC := vserver-reference.spec
 # Package must be built as root
 vserver-RPMBUILD := sudo bash ./rpmbuild.sh
-# this list is useful for manual builds only, since nightly builds 
-# always redo all sequentially - try to keep updated
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 vserver-RPMDATE := yes
@@ -276,7 +273,6 @@ IN_BOOTSTRAPFS += vserver
 bootstrapfs-MODULES := BootstrapFS build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
-# package requires all regular packages
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
 bootstrapfs-RPMDATE := yes

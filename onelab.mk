@@ -174,7 +174,6 @@ pf2slice-MODULES := pf2slice
 pf2slice-SPEC := pf2slice.spec
 ALL += pf2slice
 
-
 #
 # PlanetLab Mom: Cleans up your mess
 #
@@ -255,6 +254,14 @@ Monitor-MODULES := Monitor
 Monitor-SPEC := Monitor.spec
 ALL += Monitor
 IN_BOOTSTRAPFS += Monitor
+
+#
+# monitor-server
+#
+monitor-server-MODULES := Monitor
+monitor-server-SPEC := monitor-server.spec
+ALL += monitor-server
+
 
 #
 # nodeconfig
