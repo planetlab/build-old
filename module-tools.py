@@ -1183,10 +1183,12 @@ Branches:
             parser.add_option("-u","--url", action="store_true", dest="show_urls", default=False,
                               help="display URLs")
             
+        default_modules_list=os.path.dirname(sys.argv[0])+"/modules.list"
         if mode not in Main.release_modes:
-            all_modules=os.path.dirname(sys.argv[0])+"/modules.list"
             parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
-                              help="run on all modules as found in %s"%all_modules)
+                              help="run on all modules as found in %s"%default_modules_list)
+            parser.add_option("-f","--file",action="store",dest="modules_list",default=None,
+                              help="run on all modules found in specified file")
         else:
             parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
                               help="dry run - shell commands are only displayed")
@@ -1199,7 +1201,7 @@ Branches:
                           default="%s/%s"%(os.getenv("HOME"),"modules"),
                           help="""name for dedicated working dir - defaults to ~/modules
 ** THIS MUST NOT ** be your usual working directory""")
-        parser.add_option("-f","--fast-checks",action="store_true",dest="fast_checks",default=False,
+        parser.add_option("-F","--fast-checks",action="store_true",dest="fast_checks",default=False,
                           help="skip safety checks, such as svn updates -- use with care")
 
         # default verbosity depending on function - temp
@@ -1209,7 +1211,7 @@ Branches:
             parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                               help="run in verbose mode")
         else:
-            parser.add_parser("-q","--quiet", action="store_false", dest="verbose", default=True,
+            parser.add_option("-q","--quiet", action="store_false", dest="verbose", default=True,
                               help="run in quiet (non-verbose) mode")
 #        parser.add_option("-d","--debug", action="store_true", dest="debug", default=False, 
 #                          help="debug mode - mostly more verbose")
@@ -1233,7 +1235,9 @@ Branches:
             ########## module-*
             if len(args) == 0:
                 if options.all_modules:
-                    args=Command("grep -v '#' %s"%all_modules,options).output_of().split()
+                    options.modules_list=default_modules_list
+                if options.modules_list:
+                    args=Command("grep -v '#' %s"%options.modules_list,options).output_of().split()
                 else:
                     parser.print_help()
                     sys.exit(1)
