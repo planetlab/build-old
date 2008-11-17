@@ -15,9 +15,8 @@ root=/mirror/
 
 
 us_fedora_url=rsync://mirrors.kernel.org/fedora
-# change this
 us_centos_url=rsync://mirrors.rit.edu/centos
-us_epel_url="us_epel_url-needs-to-be-defined"
+us_epel_url=rsync://rsync.gtlib.gatech.edu/fedora-epel
 
 # this one is contaminated with the .~tmp~ thing
 
@@ -160,9 +159,10 @@ function usage () {
     echo " -r root (default is $root)"
     echo " -u rsyncurl for fedora (default is $fedora_url)"
     echo " -U rsyncurl for centos (default is $centos_url)"
-    echo " -s : uses standard (US) mirrors $us_fedora_url $us_centos_url"
-    echo " -e : uses European mirrors $eu_fedora_url $eu_centos_url"
-    echo " -j : uses Japanese mirrors $jp_fedora_url $jp_centos_url"
+    echo " -E rsyncurl for epel (default is $epel_url)"
+    echo " -s : uses standard (US) mirrors $us_fedora_url $us_centos_url $us_epel_url"
+    echo " -e : uses European mirrors $eu_fedora_url $eu_centos_url $eu_epel_url"
+    echo " -j : uses Japanese mirrors $jp_fedora_url $jp_centos_url $jp_epel_url"
     echo " -f distroname - use vserver convention, e.g. f8 or centos5"
     echo " -F : for distroname in $all_distronames"
     echo " -a arch - use yum convention"
@@ -183,7 +183,7 @@ function run () {
 function main () {
     distronames=""
     archs=""
-    while getopts "nvlcr:u:U:sejf:Fa:Ah" opt ; do
+    while getopts "nvlcr:u:U:E:sejf:Fa:Ah" opt ; do
 	case $opt in
 	    n) dry_run=--dry-run ;;
 	    v) verbose=--verbose ;;
@@ -192,9 +192,10 @@ function main () {
 	    r) root=$OPTARG ;;
 	    u) fedora_url=$OPTARG ;;
 	    U) centos_url=$OPTARG ;;
-	    s) fedora_url=$us_fedora_url ; centos_url=$us_centos_url ;;
-	    e) fedora_url=$eu_fedora_url ; centos_url=$eu_centos_url ;;
-	    j) fedora_url=$jp_fedora_url ; centos_url=$jp_centos_url ;;
+	    E) epel_url=$OPTARG ;;
+	    s) fedora_url=$us_fedora_url ; centos_url=$us_centos_url ; epel_url=$us_epel_url;;
+	    e) fedora_url=$eu_fedora_url ; centos_url=$eu_centos_url ; epel_url=$eu_epel_url ;;
+	    j) fedora_url=$jp_fedora_url ; centos_url=$jp_centos_url ; epel_url=$jp_epel_url ;;
 	    f) distronames="$distronames $OPTARG" ;;
 	    F) distronames="$distronames $all_distronames" ;;
 	    a) archs="$archs $OPTARG" ;;
