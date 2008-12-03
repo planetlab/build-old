@@ -25,6 +25,7 @@ nozomi
 pf2slice
 pl_sshd
 pypcilib
+pyplnet:4.2
 util-vserver-pl
 util-vserver:scholz
 vsys:0.7
