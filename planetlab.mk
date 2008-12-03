@@ -347,6 +347,16 @@ myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
+#
+# pyplnet
+#
+pyplnet-MODULES := pyplnet
+pyplnet-SPEC := pyplnet.spec
+ALL += pyplnet
+IN_BOOTSTRAPFS += pyplnet
+IN_MYPLC += pyplnet
+IN_BOOTCD += pyplnet
+
 # using some other name than myplc-release, as this is a make target already
 release-MODULES := MyPLC
 release-SPEC := myplc-release.spec

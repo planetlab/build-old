@@ -11,6 +11,7 @@ util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/trunk
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/trunk
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/trunk
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/trunk
+pyplnet-SVNPATH			:= http://svn.planet-lab.org/svn/pyplnet/trunk
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/trunk
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/trunk
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/trunk
