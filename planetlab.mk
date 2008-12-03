@@ -243,6 +243,16 @@ ALL += pypcilib
 IN_BOOTCD += pypcilib
 
 #
+# pyplnet
+#
+pyplnet-MODULES := pyplnet
+pyplnet-SPEC := pyplnet.spec
+ALL += pyplnet
+IN_BOOTSTRAPFS += pyplnet
+IN_MYPLC += pyplnet
+IN_BOOTCD += pyplnet
+
+#
 # bootcd
 #
 bootcd-MODULES := BootCD build
@@ -326,13 +336,3 @@ ALL += myplc-native
 myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
-
-#
-# pyplnet
-#
-pyplnet-MODULES := pyplnet
-pyplnet-SPEC := pyplnet.spec
-ALL += pyplnet
-IN_BOOTSTRAPFS += pyplnet
-IN_MYPLC += pyplnet
-IN_BOOTCD += pyplnet
