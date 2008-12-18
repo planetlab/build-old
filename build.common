@@ -63,7 +63,7 @@ function pl_getReleaseName () {
 function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in 
-	f8|f9)
+	f?|f1?)
 	    echo 'kernel* util-vserver* iptables iproute'
 	    ;;
 	centos5)
@@ -71,6 +71,7 @@ function pl_getKexcludes () {
 	    ;;
 	*)
 	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh"
+	    exit 1
 	    ;;
     esac
 }

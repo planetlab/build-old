@@ -4,6 +4,7 @@ groupname: PlanetLab
 groupdesc: PlanetLab Node Root
 # packages to exclude from stock repositories
 kexclude: @KEXCLUDE@
+# fedora-release or centos-release are pulled from deps
 # define packages
 package: kernel
 package: udev
@@ -26,9 +27,6 @@ package: libtermcap
 package: passwd
 package: procps
 package: readline
-# let's try without those, should be pulled from deps
-#package+f8 package+f9: fedora-release
-#package+centos5: centos-release
 package: rootfiles
 package: rpm
 package: setserial
