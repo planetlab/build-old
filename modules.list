@@ -9,7 +9,7 @@ NodeManager
 NodeUpdate
 PLCAPI
 PLCWWW
-PLCWWW:onelab.5.0
+PLEWWW
 PingOfDeath
 VserverReference
 comgt

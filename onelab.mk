@@ -95,6 +95,8 @@ ifeq "$(local_libnl)" "true"
 libnl-MODULES := libnl
 libnl-SPEC := libnl.spec
 libnl-BUILD-FROM-SRPM := yes
+# this sounds like the thing to do, but in fact linux/if_vlan.h comes with kernel-headers
+libnl-DEPEND-DEVEL-RPMS := kernel-devel
 ALL += libnl
 IN_BOOTSTRAPFS += libnl
 endif
@@ -239,12 +241,12 @@ ALL += PLCAPI
 IN_MYPLC += PLCAPI
 
 #
-# PLCWWW
+# use the PLEWWW module instead
 #
-PLCWWW-MODULES := PLCWWW
-PLCWWW-SPEC := PLCWWW.spec
-ALL += PLCWWW
-IN_MYPLC += PLCWWW
+PLEWWW-MODULES := PLEWWW
+PLEWWW-SPEC := PLEWWW.spec
+ALL += PLEWWW
+IN_MYPLC += PLEWWW
 
 #
 # monitor
@@ -255,11 +257,12 @@ ALL += monitor
 IN_BOOTSTRAPFS += monitor
 
 #
-# monitor-server
+# zabbix
 #
-monitor-server-MODULES := Monitor
-monitor-server-SPEC := monitor-server.spec
-ALL += monitor-server
+zabbix-MODULES := Monitor
+zabbix-SPEC := zabbix.spec
+zabbix-BUILD-FROM-SRPM := yes
+ALL += zabbix
 
 #
 # nodeconfig
