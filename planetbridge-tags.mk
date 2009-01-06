@@ -1,4 +1,4 @@
-# $Id: planetlab-tags.mk 10667 2008-09-26 13:28:51Z thierry $
+# $Id$
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
