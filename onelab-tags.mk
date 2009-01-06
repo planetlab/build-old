@@ -24,6 +24,7 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/trunk
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/trunk
 dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/trunk
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/trunk
+drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/trunk
 PLEWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLEWWW/trunk
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/trunk

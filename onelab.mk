@@ -241,10 +241,19 @@ ALL += PLCAPI
 IN_MYPLC += PLCAPI
 
 #
+# drupal
+# 
+drupal-MODULES := drupal
+drupal-SPEC := drupal.spec
+drupal-BUILD-FROM-SRPM := yes
+ALL += drupal
+IN_MYPLC += drupal
+
+#
 # use the PLEWWW module instead
 #
 PLEWWW-MODULES := PLEWWW
-PLEWWW-SPEC := PLEWWW.spec
+PLEWWW-SPEC := PLCWWW.spec
 ALL += PLEWWW
 IN_MYPLC += PLEWWW
 
