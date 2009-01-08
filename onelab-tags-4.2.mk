@@ -4,7 +4,7 @@
 # but by modules.update to refresh modules.list 
 # that serves as the default for module-tools -a
 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-31
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-32
 madwifi-SVNPATH                 := http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-2
 nozomi-SVNPATH			:= http://svn.onelab.eu/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
