@@ -328,27 +328,25 @@ ALL += noderepo
 IN_MYPLC += noderepo
 
 #
-# MyPLC native : lightweight packaging, dependencies are yum-installed in a vserver
+# MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-myplc-native-MODULES := MyPLC build 
-myplc-native-SPEC := myplc-native.spec
+mylc-MODULES := MyPLC build 
+mylc-SPEC := mylc.spec
 # Package must be built as root
-myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-myplc-native-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
-ALL += myplc-native
+mylc-RPMBUILD := sudo bash ./rpmbuild.sh
+mylc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
+ALL += mylc
 
 ## #
-## # myplc : old-fashioned, chroot-based packaging
+## # myplc-chroot : old-fashioned, chroot-based packaging
 ## #
-## myplc-MODULES := MyPLC build
-## myplc-SPEC := myplc.spec
-## # Package must be built as root
-## myplc-RPMBUILD := sudo bash ./rpmbuild.sh
-## # myplc may require all packages
-## myplc-DEPEND-PACKAGES := $(IN_MYPLC)
-## myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
-## myplc-RPMDATE := yes
-## ALL += myplc
+## myplc-chroot-MODULES := MyPLC build
+## myplc-chroot-SPEC := myplc-chroot.spec
+## # myplc-chroot may require all packages
+## myplc-chroot-DEPEND-PACKAGES := $(IN_MYPLC)
+## myplc-chroot-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
+## myplc-chroot-RPMDATE := yes
+## ALL += myplc-chroot
 
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 

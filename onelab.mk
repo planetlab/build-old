@@ -324,8 +324,6 @@ IN_MYPLC += bootcd
 #
 vserver-MODULES := VserverReference build
 vserver-SPEC := vserver-reference.spec
-# Package must be built as root
-vserver-RPMBUILD := sudo bash ./rpmbuild.sh
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 vserver-RPMDATE := yes
@@ -366,27 +364,12 @@ ALL += noderepo
 IN_MYPLC += noderepo
 
 #
-# MyPLC native : lightweight packaging, dependencies are yum-installed in a vserver
+# MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-myplc-native-MODULES := MyPLC build 
-myplc-native-SPEC := myplc-native.spec
-# Package must be built as root
-myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
-myplc-native-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
-ALL += myplc-native
-
-## #
-## # myplc : old-fashioned, chroot-based packaging
-## #
-## myplc-MODULES := MyPLC build
-## myplc-SPEC := myplc.spec
-## # Package must be built as root
-## myplc-RPMBUILD := sudo bash ./rpmbuild.sh
-## # myplc may require all packages
-## myplc-DEPEND-PACKAGES := $(IN_MYPLC)
-## myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
-## myplc-RPMDATE := yes
-## ALL += myplc
+myplc-MODULES := MyPLC build 
+myplc-SPEC := myplc.spec
+myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
+ALL += myplc
 
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
