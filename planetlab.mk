@@ -330,12 +330,12 @@ IN_MYPLC += noderepo
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-mylc-MODULES := MyPLC build 
-mylc-SPEC := mylc.spec
+myplc-MODULES := MyPLC build 
+myplc-SPEC := myplc.spec
 # Package must be built as root
-mylc-RPMBUILD := sudo bash ./rpmbuild.sh
-mylc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
-ALL += mylc
+myplc-RPMBUILD := sudo bash ./rpmbuild.sh
+myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
+ALL += myplc
 
 ## #
 ## # myplc-chroot : old-fashioned, chroot-based packaging
