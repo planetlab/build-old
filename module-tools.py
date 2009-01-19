@@ -169,7 +169,7 @@ class Module:
 
 
     # for parsing module spec name:branch
-    matcher_branch_spec=re.compile("\A(?P<name>[\w-]+):(?P<branch>[\w\.-]+)\Z")
+    matcher_branch_spec=re.compile("\A(?P<name>[\w\.-]+):(?P<branch>[\w\.-]+)\Z")
     # special form for tagged module - for Build
     matcher_tag_spec=re.compile("\A(?P<name>[\w-]+)@(?P<tagname>[\w\.-]+)\Z")
     # parsing specfiles
@@ -801,9 +801,11 @@ n: move to next file"""%locals()
         # do this before anything else and restore .branch to None, 
         # as this is part of the class's logic
         new_trunk_name=None
-        if self.branch:
+        if hasattr(self,'branch'):
             new_trunk_name=self.branch
-            self.branch=None
+            del self.branch
+        elif self.options.new_version:
+            new_trunk_name = self.options.new_version
 
         # compute diff - a way to initialize the whole stuff
         # do_diff already does edge_dir initialization
