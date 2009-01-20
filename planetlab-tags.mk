@@ -1,7 +1,9 @@
 # $Id$
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/22
+#linux-2.6-SVNPATH              := http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/scholz
