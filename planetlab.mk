@@ -41,15 +41,15 @@ IN_MYPLC += $(KERNELS)
 #
 # madwifi
 #
-madwifi-MODULES := madwifi
-madwifi-SPEC := madwifi.spec
-madwifi-BUILD-FROM-SRPM := yes
-madwifi-DEPEND-DEVEL-RPMS := kernel-devel
-madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
-ALL += madwifi
-IN_BOOTSTRAPFS += madwifi
+# tmp-xxx-tmp madwifi-MODULES := madwifi
+# tmp-xxx-tmp madwifi-SPEC := madwifi.spec
+# tmp-xxx-tmp madwifi-BUILD-FROM-SRPM := yes
+# tmp-xxx-tmp madwifi-DEPEND-DEVEL-RPMS := kernel-devel
+# tmp-xxx-tmp madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
+# tmp-xxx-tmp 	kernel_release=$(kernel.rpm-release) \
+# tmp-xxx-tmp 	kernel_arch=$(kernel.rpm-arch)
+# tmp-xxx-tmp ALL += madwifi
+# tmp-xxx-tmp IN_BOOTSTRAPFS += madwifi
 
 #
 # util-vserver

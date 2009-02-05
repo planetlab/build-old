@@ -96,7 +96,7 @@ package+centos5: util-linux
 #
 # planetlab
 #
-package: madwifi
+# tmp-xxx-tmp package: madwifi
 package: wireless-tools
 package: util-vserver
 package: util-vserver-build
