@@ -286,8 +286,6 @@ IN_MYPLC += bootcd
 #
 vserver-MODULES := VserverReference build
 vserver-SPEC := vserver-reference.spec
-# Package must be built as root
-vserver-RPMBUILD := sudo bash ./rpmbuild.sh
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 vserver-RPMDATE := yes
@@ -332,8 +330,6 @@ IN_MYPLC += noderepo
 #
 myplc-MODULES := MyPLC build 
 myplc-SPEC := myplc.spec
-# Package must be built as root
-myplc-RPMBUILD := sudo bash ./rpmbuild.sh
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc
 
