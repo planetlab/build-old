@@ -105,7 +105,8 @@ DISTRO := $(shell ./getdistro.sh)
 RELEASE := $(shell ./getrelease.sh)
 DISTRONAME := $(shell ./getdistroname.sh)
 RPM-INSTALL-DEVEL := rpm --force -Uvh
-# cannot force rpm -e
+# uninstall -- cannot force rpm -e
+# need to ignore result, kernel-headers cannot be uninstalled as glibc depends on it
 RPM-UNINSTALL-DEVEL := rpm -e
 
 #################### Makefile
@@ -422,7 +423,6 @@ srpms: $(ALLSRPMS)
 .PHONY: srpms
 
 # usage: target_source_rpm package
-# select upon the package name, whether it contains srpm or not
 define target_source_rpm 
 ifeq "$($(1)-BUILD-FROM-SRPM)" ""
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs) 
@@ -430,7 +430,7 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs)
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) -bs $($(1).specpath)
-	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 else
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
@@ -440,7 +440,7 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
 	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
-	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 endif
 endef
@@ -468,7 +468,7 @@ $($(1).rpms): $($(1).srpm)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) --rebuild $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 # for manual use only - in case we need to investigate the results of an rpmbuild
 $(1)-compile: $($(1).srpm)
@@ -477,7 +477,7 @@ $(1)-compile: $($(1).srpm)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) --recompile $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END compile $(1) " ; date)
 .PHONY: $(1)-compile
 endef
@@ -593,7 +593,7 @@ distclean: distclean1 distclean2
 .PHONY: distclean1 distclean2 distclean
 
 develclean:
-	$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
+	-$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
 
 ####################
 # gather build information for the 'About' page

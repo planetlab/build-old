@@ -75,7 +75,7 @@ libnl-MODULES := libnl
 libnl-SPEC := libnl.spec
 libnl-BUILD-FROM-SRPM := yes
 # this sounds like the thing to do, but in fact linux/if_vlan.h comes with kernel-headers
-libnl-DEPEND-DEVEL-RPMS := kernel-devel
+libnl-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
 ALL += libnl
 IN_BOOTSTRAPFS += libnl
 endif
@@ -161,7 +161,7 @@ IN_BOOTSTRAPFS += mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-iptables-DEPEND-DEVEL-RPMS := kernel-devel
+iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
 
