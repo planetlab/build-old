@@ -18,15 +18,15 @@ dummynet_image
 fprobe-ulog:1.1.2
 iproute2
 iptables
-linux-2.6
+linux-2.6:22
 madwifi
 nodeconfig:4.2
 nozomi
 pf2slice
 pl_sshd
+planetlab-umts-tools
 pypcilib
 pyplnet:4.2
 util-vserver-pl
 util-vserver:scholz
 vsys:0.7
-tests:4.2
