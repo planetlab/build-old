@@ -250,12 +250,12 @@ ALL += drupal
 IN_MYPLC += drupal
 
 #
-# use the PLEWWW module instead
+# use the plewww module instead
 #
-PLEWWW-MODULES := PLEWWW
-PLEWWW-SPEC := PLCWWW.spec
-ALL += PLEWWW
-IN_MYPLC += PLEWWW
+plewww-MODULES := PLEWWW
+plewww-SPEC := plewww.spec
+ALL += plewww
+IN_MYPLC += plewww
 
 #
 # monitor
