@@ -298,6 +298,7 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
+    SIGNYUMREPO=""
     while getopts "f:d:p:b:t:r:s:x:c:w:g:u:m:OBTnyv7a:i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
@@ -309,7 +310,7 @@ function main () {
 	    s) SVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
-        y) MKYUMREPO=$OPTARG;;
+        y) SIGNYUMREPO=$OPTARG;;
         g) GPGPATH=$OPTARG;;
         u) GPGUID=$OPTARG;;
 	    m) MAILTO=$OPTARG ;;
@@ -447,7 +448,7 @@ function main () {
 	rsync --verbose /vservers/$BASE/build/myplc-release $WEBPATH/$BASE
 
     # create yum repo and sign packages.
-    if [ -n $MKYUMREPO ] ; then
+    if [ -n "$SIGNYUMREPO" ] ; then
         echo "Signing signing node packages"
 
         ### availability of repo indexing tools
