@@ -22,8 +22,8 @@ DEFAULT_GPGPATH="/etc/planetlab"
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
 # for the test part
-TESTBUILDURL="http://build.one-lab.org/"
-TESTBOXSSH=root@testbox.one-lab.org
+TESTBUILDURL="http://build.onelab.eu/"
+TESTBOXSSH=root@testbox.onelab.eu
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
