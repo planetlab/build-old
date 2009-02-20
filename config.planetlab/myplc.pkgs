@@ -58,3 +58,4 @@ package:bootcd-@pldistro@-@arch@ bootmanager
 # use a qualified name so other variants can be installed as well
 package: bootstrapfs-@pldistro@-@arch@ 
 package:PLCAPI PLCWWW nodeconfig
+package: monitor-runlevelagent

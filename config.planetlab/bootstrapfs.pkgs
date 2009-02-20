@@ -117,3 +117,4 @@ package: pl_mom
 package: fprobe-ulog
 package: vsys
 package: monitor-client
+package: monitor-runlevelagent
