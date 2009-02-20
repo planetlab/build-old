@@ -327,10 +327,11 @@ that for other purposes than tagging"""%topdir
         if os.path.isfile (attempt):
             return attempt
         else:
+            pattern="%s/*.spec"%self.edge_dir()
             try:
-                return glob("%s/*.spec"%self.edge_dir())[0]
+                return glob(pattern)[0]
             except:
-                raise Exception, 'Cannot guess specfile for module %s'%self.name
+                raise Exception, 'Cannot guess specfile for module %s -- pattern was %s'%(self.name,pattern)
 
     def all_specnames (self):
         return glob("%s/*.spec"%self.edge_dir())
