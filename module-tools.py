@@ -911,14 +911,20 @@ class Package:
 
 class Build (Module):
     
-    def __init__ (self, buildtag,options):
-        self.buildtag=buildtag
-        Module.__init__(self,"build@%s"%buildtag,options)
-
     # we cannot get build's svnpath as for other packages as we'd get something in svn+ssh
     # xxx quick & dirty
-    def get_svnpath (self):
-        self.svnpath="http://svn.planet-lab.org/svn/build/tags/%s"%self.buildtag
+    def __init__ (self, buildtag,options):
+        self.buildtag=buildtag
+        # if the buildtag start with a : (to use a branch rather than a tag)
+        if buildtag.find(':') == 0 : 
+            module_name="build%(buildtag)s"%locals()
+            self.display=buildtag[1:]
+            self.svnpath="http://svn.planet-lab.org/svn/build/branches/%s"%self.display
+        else : 
+            module_name="build@%(buildtag)s"%locals()
+            self.display=buildtag
+            self.svnpath="http://svn.planet-lab.org/svn/build/tags/%s"%self.buildtag
+        Module.__init__(self,module_name,options)
 
     @staticmethod
     def get_distro_from_distrotag (distrotag):
@@ -989,13 +995,12 @@ class Release:
         print "----"
         print "----"
         print "----"
-        print "= build tag %s to %s = #build-%s"%(buildtag_old,buildtag_new,buildtag_new)
         (build_new,build_old) = (Build (buildtag_new,options), Build (buildtag_old,options))
+        print "= build tag %s to %s = #build-%s"%(build_old.display,build_new.display,build_new.display)
         for b in (build_new,build_old):
             b.init_module_dir()
             b.init_edge_dir()
             b.update_edge_dir()
-            b.get_svnpath()
         # find out the tags files that are common, unless option was specified
         if options.distrotags:
             distrotags=options.distrotags
@@ -1100,6 +1105,10 @@ Branches:
 """
     release_usage="""Usage: %prog [options] tag1 .. tagn
   Extract release notes from the changes in specfiles between several build tags, latest first
+  Examples:
+      release-changelog 4.2-rc25 4.2-rc24 4.2-rc23 4.2-rc22
+  You can refer to a (build) branch by prepending a colon, like in
+      release-changelog :4.2 4.2-rc25
 """
     common_usage="""More help:
   see http://svn.planet-lab.org/wiki/ModuleTools"""
