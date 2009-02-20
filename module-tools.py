@@ -1020,17 +1020,17 @@ class Release:
                 first_distrotag=False
             else:
                 print '----'
-            print '== distro %s (%s to %s) == #distro-%s-%s'%(distrotag,buildtag_old,buildtag_new,distro,buildtag_new)
+            print '== distro %s (%s to %s) == #distro-%s-%s'%(distrotag,build_old.display,build_new.display,distro,build_new.display)
             print ' * from %s/%s'%(build_old.svnpath,distrotag)
             print ' * to %s/%s'%(build_new.svnpath,distrotag)
 
             # parse make packages
             packages_new=build_new.get_packages(distrotag)
             pnames_new=set(packages_new.keys())
-            if options.verbose: print 'got packages for ',buildtag_new
+            if options.verbose: print 'got packages for ',build_new.display
             packages_old=build_old.get_packages(distrotag)
             pnames_old=set(packages_old.keys())
-            if options.verbose: print 'got packages for ',buildtag_old
+            if options.verbose: print 'got packages for ',build_old.display
 
             # get created, deprecated, and preserved package names
             pnames_created = list(pnames_new-pnames_old)
@@ -1044,11 +1044,13 @@ class Release:
 
             # display created and deprecated 
             for name in pnames_created:
-                print '=== %s : new package %s -- appeared in %s === #package-%s-%s-%s'%(distrotag,name,buildtag_new,name,distro,buildtag_new)
+                print '=== %s : new package %s -- appeared in %s === #package-%s-%s-%s'%(
+                    distrotag,name,build_new.display,name,distro,build_new.display)
                 pobj=packages_new[name]
                 print ' * %s'%pobj.details()
             for name in pnames_deprecated:
-                print '=== %s : package %s -- deprecated, last occurrence in %s === #package-%s-%s-%s'%(distrotag,name,buildtag_old,name,distro,buildtag_new)
+                print '=== %s : package %s -- deprecated, last occurrence in %s === #package-%s-%s-%s'%(
+                    distrotag,name,build_old.display,name,distro,build_new.display)
                 pobj=packages_old[name]
                 if not pobj.svnpath:
                     print ' * codebase stored in CVS, specfile is %s'%pobj.spec
@@ -1070,7 +1072,8 @@ class Release:
                     if options.verbose: print 'got diff from cache'
                 if not specdiff:
                     continue
-                print '=== %s - %s to %s : package %s === #package-%s-%s-%s'%(distrotag,buildtag_old,buildtag_new,name,name,distro,buildtag_new)
+                print '=== %s - %s to %s : package %s === #package-%s-%s-%s'%(
+                    distrotag,build_old.display,build_new.display,name,name,distro,build_new.display)
                 print ' * from %s to %s'%(pobj_old.details(),pobj_new.details())
                 trac_diff_url=pobj_old.trac_full_diff(pobj_new)
                 if trac_diff_url:
