@@ -26,6 +26,7 @@ fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ul
 pf2slice-SVNPATH                := http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
 Mom-SVNBRANCH			:= 2.2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.2-7
+iptables-SVNBRANCH		:= 1.3.8
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-9
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 vsys-SVNBRANCH			:= 0.7
