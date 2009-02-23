@@ -17,3 +17,4 @@ groupdesc: planetlab node wifi extensions
 package: madwifi
 package: wireless-tools
 package: iwl3945-firmware iwl4965-firmware
+package: wpa_supplicant
