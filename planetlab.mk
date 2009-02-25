@@ -211,13 +211,30 @@ PLCAPI-SPEC := PLCAPI.spec
 ALL += PLCAPI
 IN_MYPLC += PLCAPI
 
+# #
+# # PLCWWW
+# #
+# PLCWWW-MODULES := PLCWWW
+# PLCWWW-SPEC := PLCWWW.spec
+# ALL += PLCWWW
+# IN_MYPLC += PLCWWW
+
 #
-# PLCWWW
+# drupal
+# 
+drupal-MODULES := drupal
+drupal-SPEC := drupal.spec
+drupal-BUILD-FROM-SRPM := yes
+ALL += drupal
+IN_MYPLC += drupal
+
 #
-PLCWWW-MODULES := PLCWWW
-PLCWWW-SPEC := PLCWWW.spec
-ALL += PLCWWW
-IN_MYPLC += PLCWWW
+# use the plewww module instead
+#
+plewww-MODULES := PLEWWW
+plewww-SPEC := plewww.spec
+ALL += plewww
+IN_MYPLC += plewww
 
 #
 # monitor
