@@ -63,5 +63,5 @@ package:bootcd-@pldistro@-@arch@ bootmanager
 # embed the bootstrafs rpm for this distribution & arch
 # use a qualified name so other variants can be installed as well
 package: bootstrapfs-@pldistro@-@arch@ 
-package:PLCAPI PLCWWW nodeconfig
+package:PLCAPI PLCWWW nodeconfig www-register-wizard
 package: monitor-runlevelagent
