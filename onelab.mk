@@ -223,6 +223,14 @@ IN_BOOTSTRAPFS += vsys
 ALL += vsys
 endif
 
+ifeq "$(vsys_support)" "yes"
+vsys-factory-MODULES := vsys-factory
+vsys-factory-SPEC := vsys-factory.spec
+IN_BOOTSTRAPFS += vsys-factory
+ALL += vsys-factory
+endif
+
+
 #
 # dummynet_image
 # 

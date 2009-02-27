@@ -187,6 +187,18 @@ ALL += vsys
 endif
 
 #
+# vsys-factory
+#
+
+ifeq "$(vsys_support)" "yes"
+vsys-factory-MODULES := vsys-factory
+vsys-factory-SPEC := vsys-factory.spec
+IN_BOOTSTRAPFS += vsys-factory
+ALL += vsys-factory
+endif
+
+
+#
 # PLCAPI
 #
 PLCAPI-MODULES := PLCAPI
