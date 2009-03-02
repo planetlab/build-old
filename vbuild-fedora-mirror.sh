@@ -14,6 +14,8 @@ skip_core=
 root=/mirror/
 
 
+hozac_url=http://rpm.hozac.com/dhozac/centos/5/vserver
+
 us_fedora_url=rsync://mirrors.kernel.org/fedora
 us_centos_url=rsync://mirrors.rit.edu/centos
 us_epel_url=rsync://rsync.gtlib.gatech.edu/fedora-epel
@@ -46,6 +48,8 @@ function mirror_distro_arch () {
     distroname=$1; shift
     arch=$1; shift
 
+    LFTP=0
+
     distroname=$(echo $distroname | tr '[A-Z]' '[a-z]')
     case $distroname in
 	fc*[1-6])
@@ -68,6 +72,11 @@ function mirror_distro_arch () {
 	    distro=epel
 	    rsyncurl=$epel_url
 	    ;;
+	hozac)
+	    distroindex=5
+	    distro="hozac"
+	    rsyncurl=$hozac_url
+	    ;;
 	*)
 	    echo "WARNING -- Unknown distribution $distroname -- skipped"
 	    return 1
@@ -76,9 +85,11 @@ function mirror_distro_arch () {
 
     excludelist="debug/ iso/ ppc/ source/"
     options="--archive --compress --delete --delete-excluded $dry_run $verbose"
+    lftp_options="--delete $dry_run $verbose"
     [ -n "$(rsync --help | grep no-motd)" ] && options="$options --no-motd"
     for e in $excludelist; do
 	options="$options --exclude $e"
+	lftp_options="$lftp_options --exclude $e"
     done
 
     echo ">>>>>>>>>>>>>>>>>>>> root=$root distroname=$distroname arch=$arch rsyncurl=$rsyncurl"
@@ -128,6 +139,18 @@ function mirror_distro_arch () {
 	    localpath=epel
 	    ;;
 
+	hozac*)
+	    case $distroindex in
+		5)
+		    # leave off trailing '/'
+		    paths="$paths $arch"
+		    RES=0
+		    LFTP=1
+		    ;;
+	    esac
+	    localpath=dhozac
+	    ;;
+
     esac
 
     if [ "$RES" = 1 ] ; then
@@ -136,7 +159,11 @@ function mirror_distro_arch () {
 	for repopath in $paths; do
 	    echo "===== $distro -> $distroindex $repopath"
 	    [ -z "$dry_run" ] && mkdir -p ${root}/${localpath}/${repopath}
-	    command="rsync $options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
+	    if [ "$LFTP" = 1 ]; then
+	        command="lftp -c mirror $lftp_options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
+	    else
+		command="rsync $options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
+	    fi
 	    echo $command
 	    $command
 	done
