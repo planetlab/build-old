@@ -28,6 +28,7 @@ dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/trunk
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/trunk
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/trunk
 PLEWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLEWWW/trunk
+www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/trunk
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/trunk
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
