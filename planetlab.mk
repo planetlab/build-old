@@ -215,6 +215,14 @@ ALL += PLCWWW
 IN_MYPLC += PLCWWW
 
 #
+# www-register-wizard
+#
+www-register-wizard-MODULES := www-register-wizard
+www-register-wizard-SPEC := www-register-wizard.spec
+ALL += www-register-wizard
+IN_MYPLC += www-register-wizard
+
+#
 # monitor
 #
 monitor-MODULES := Monitor
