@@ -465,11 +465,11 @@ function main () {
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
 
-	    PLDISTRO=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTRO)
-	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build +PLDISTROTAGS)
-	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build +build-SVNPATH)
-	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build +PERSONALITY)
-	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build +MAILTO)
+	    PLDISTRO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PLDISTRO)
+	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PLDISTROTAGS)
+	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH)
+	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PERSONALITY)
+	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +MAILTO)
 	    show_env
 	else
 	    # create vserver: check it does not exist yet

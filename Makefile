@@ -109,6 +109,8 @@ RPM-INSTALL-DEVEL := rpm --force -Uvh
 # need to ignore result, kernel-headers cannot be uninstalled as glibc depends on it
 RPM-UNINSTALL-DEVEL := rpm -e
 
+REMOTE-PLDISTROS="gnuradio"
+
 #################### Makefile
 # Default target
 all:
@@ -119,9 +121,15 @@ PLDISTRO := planetlab
 RPMBUILD := rpmbuild
 export CVS_RSH := ssh
 
-########## pldistro.mk holds PLDISTRO - it is generated at stage1 (see below)
+########## savedpldistro.mk holds PLDISTRO - it is generated at stage1 (see below)
 ifeq "$(stage1)" ""
-include pldistro.mk
+include savedpldistro.mk
+endif
+
+# when re-running the nightly build after failure, we need to gather the former values
+# do this by running make stage1=skip +PLDISTRO
+ifeq "$(stage1)" "skip"
+include savedpldistro.mk
 endif
 
 #################### include onelab.mk
@@ -147,6 +155,29 @@ default-build-SVNPATH := http://svn.planet-lab.org/svn/build/trunk
 endif
 # use default if necessary
 build-SVNPATH ?= $(default-build-SVNPATH)
+
+####################
+define remote_pldistro
+$(1).mk: config.$(1)/$(1).mk
+	@echo 'creating $(1) from config subdir'
+	cp config.$(1)/$(1).mk $(1).mk
+
+$(2).mk: config.$(1)/$(2).mk
+	@echo 'creating $(1) tags from config subdir'
+	cp config.$(1)/$(2).mk $(2).mk
+
+config.$(1)/$(1).mk: config.$(1)
+config.$(1)/$(2).mk: config.$(1)
+
+config.$(1): config.$(1).svnpath
+	@echo "Fetching details for pldistro $(1)"
+	svn export $(shell grep -v "^#" config.$(1).svnpath) config.$(1)
+
+DISTCLEANS += $(1).mk $(2).mk config.$(1)
+
+endef
+
+$(eval $(call remote_pldistro,gnuradio,gnuradio-tags))
 
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
@@ -318,7 +349,7 @@ $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 
 # stores PLDISTRO in a file
 # this is done at stage1. later run wont get confused
-pldistro.mk:
+savedpldistro.mk:
 	echo "PLDISTRO:=$(PLDISTRO)" > $@
 	echo "PLDISTROTAGS:=$(PLDISTROTAGS)" >> $@
 	echo "build-SVNPATH:=$(build-SVNPATH)" >> $@
@@ -326,11 +357,11 @@ pldistro.mk:
 	echo "MAILTO:=$(MAILTO)" >> $@
 	echo "BASE:=$(BASE)" >> $@
 
-savepldistro: pldistro.mk
-.PHONY: savepldistro
+savedpldistro: savedpldistro.mk
+.PHONY: savedpldistro
 
 # always refresh this
-all: savepldistro
+all: savedpldistro
 
 #################### regular make
 
@@ -586,7 +617,7 @@ clean-help:
 
 ### brute force clean
 distclean1:
-	rm -rf pldistro.mk .rpmmacros spec2make header.spec SPECS MAKE 
+	rm -rf savedpldistro.mk .rpmmacros spec2make header.spec SPECS MAKE $(DISTCLEANS)
 distclean2:
 	rm -rf CODEBASES SOURCES BUILD RPMS SRPMS tmp
 distclean: distclean1 distclean2
@@ -693,6 +724,7 @@ info: packages modules branches
 tests_svnpath:
 	@$(if $(TESTS_SVNPATH), echo $(TESTS_SVNPATH) > $@, \
 	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
+
 
 ####################
 help:

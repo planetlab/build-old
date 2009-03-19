@@ -337,6 +337,9 @@ function post_install_myplc  () {
     # turn off regular crond, as plc invokes plc_crond
     chkconfig crond off
 
+    # take care of loginuid in /etc/pam.d 
+    sed -i "s,#*\(.*loginuid.*\),#\1," /etc/pam.d/*
+
     # customize root's prompt
     cat << PROFILE > /root/.profile
 export PS1="[$vserver] \\w # "
