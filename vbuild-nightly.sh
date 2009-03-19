@@ -318,9 +318,13 @@ function show_env () {
     if in_root_context ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
     else
-	echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
-	cat /build/$PLDISTROTAGS
-	echo "XXXXXXXXXXXXXXXXXXXX end tags definition"
+	if [ -f /build/$PLDISTROTAGS ] ; then
+	    echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
+	    cat 
+	    echo "XXXXXXXXXXXXXXXXXXXX end tags definition"
+	else
+	    echo "XXXXXXXXXXXXXXXXXXXX Cannot find tags definition file /build/$PLDISTROTAGS, assuming remote pldistro"
+	fi
     fi
     set -x
 }
