@@ -577,6 +577,10 @@ function pl_locateDistroFile () {
     pkgsfile=$1; shift
 
     pkgspath=""
+    # if config dir is missing but a .svnpath exists
+    if [ -f "$builddir/config.${pldistro}.svpath" && ! -d $builddir/config.${pldistro} ] ; then
+	make -C $builddir stage1=true config.${pldistro}
+    fi
     # locate it
     paths="$builddir/config.$pldistro/$pkgsfile $builddir/config.planetlab/$pkgsfile"
     for path in $paths; do
