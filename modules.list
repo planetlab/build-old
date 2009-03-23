@@ -8,11 +8,11 @@ MyPLC
 NodeManager
 NodeUpdate
 PLCAPI
-PLCWWW
 PLEWWW
 PingOfDeath
 VserverReference
 comgt
+drupal
 dummynet_image
 fprobe-ulog
 inotify-tools
@@ -30,3 +30,4 @@ pyplnet
 util-vserver-pl
 util-vserver:scholz
 vsys
+www-register-wizard
