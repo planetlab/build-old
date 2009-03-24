@@ -578,8 +578,9 @@ function pl_locateDistroFile () {
 
     pkgspath=""
     # if config dir is missing but a .svnpath exists
-    if [[ -f "$builddir/config.${pldistro}.svpath" && ! -d "$builddir/config.${pldistro}" ]] ; then
-	make -C $builddir stage1=true config.${pldistro}
+    if [[ -f "$builddir/config.${pldistro}.svnpath" && ! -d "$builddir/config.${pldistro}" ]] ; then
+	echo 1>&2 "Invoking make to extract remote config.${pldistro}"
+	make 1>&2 --silent --no-print-directory -C $builddir stage1=true config.${pldistro}
     fi
     # locate it
     paths="$builddir/config.$pldistro/$pkgsfile $builddir/config.planetlab/$pkgsfile"
