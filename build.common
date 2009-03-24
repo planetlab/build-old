@@ -58,16 +58,16 @@ function pl_getReleaseName () {
     return 0
 }
 
-# on fedora 8 or 9, we use libnl from the stock repos
+# on fedora 8 or above, we use libnl from the stock repos
 # on centos5 we build it locally
 function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in 
 	f?|f1?)
-	    echo 'kernel* util-vserver* iptables iproute'
+	    echo 'kernel* util-vserver* iptables iproute drupal'
 	    ;;
 	centos5)
-	    echo 'kernel* util-vserver* iptables iproute inotify-tools* libnl*'
+	    echo 'kernel* util-vserver* iptables iproute inotify-tools* libnl* drupal'
 	    ;;
 	*)
 	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh"
