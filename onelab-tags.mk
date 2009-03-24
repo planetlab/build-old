@@ -4,7 +4,6 @@
 
 linux-2.6-SVNBRANCH		:= 22
 linux-2.6-SVNPATH               := http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-2
-#linux-2.6-SVNPATH              := http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 nozomi-SVNPATH			:= http://svn.onelab.eu/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
@@ -34,11 +33,12 @@ PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLE
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn//www-register-wizard/tags/www-register-wizard-4.2-2
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-2.0-5
 nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-2
-BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
-pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
+BootManager-SVNPATH		:= http://svn.planet-lab.org/svn//BootManager/tags/BootManager-4.3-2
+pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn//pypcilib/tags/pypcilib-0.2-5
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-10
-VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
-BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/trunk
+VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn//VserverReference/tags/VserverReference-4.2-11
+BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn//BootstrapFS/tags/BootstrapFS-1.0-6
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-3
+
 # locating the right test directory - see make tests_svnpath
 TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk

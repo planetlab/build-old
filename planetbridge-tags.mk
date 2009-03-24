@@ -4,8 +4,7 @@
 
 linux-2.6-SVNBRANCH		:= 22
 linux-2.6-SVNPATH               := http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-2
-#linux-2.6-SVNPATH              := http://svn.planet-lab.org/svn/linux-2.6/trunk
-madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
+madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2/
@@ -27,14 +26,15 @@ PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn//PLCAPI/tags/PL
 PLCWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLCWWW/trunk
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-2.0-5
 nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-2
-BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
-pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
+BootManager-SVNPATH		:= http://svn.planet-lab.org/svn//BootManager/tags/BootManager-4.3-2
+pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn//pypcilib/tags/pypcilib-0.2-5
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-10
-VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
-BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/trunk
+VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn//VserverReference/tags/VserverReference-4.2-11
+BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn//BootstrapFS/tags/BootstrapFS-1.0-6
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-3
+# hostapd
+hostapd-SVNPATH			:= http://svn.planet-lab.org/svn/hostapd/trunk
+
 # locating the right test directory - see make tests_svnpath
 TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
 
-# hostapd
-hostapd-SVNPATH			:= http://svn.planet-lab.org/svn/hostapd/trunk
