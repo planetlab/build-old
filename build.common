@@ -578,7 +578,7 @@ function pl_locateDistroFile () {
 
     pkgspath=""
     # if config dir is missing but a .svnpath exists
-    if [ -f "$builddir/config.${pldistro}.svpath" && ! -d "$builddir/config.${pldistro}" ] ; then
+    if [[ -f "$builddir/config.${pldistro}.svpath" && ! -d "$builddir/config.${pldistro}" ]] ; then
 	make -C $builddir stage1=true config.${pldistro}
     fi
     # locate it
