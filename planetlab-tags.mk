@@ -35,5 +35,6 @@ BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/Boo
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn//VserverReference/tags/VserverReference-4.2-12
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn//BootstrapFS/tags/BootstrapFS-1.0-6
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-3
+
 # locating the right test directory - see make tests_svnpath
 TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
