@@ -98,7 +98,11 @@ EOF
 # Notify recipient of failure or success, manage various stamps 
 function failure() {
     set -x
-    mkdir -p ${WEBPATH}
+    # early stage ? - let's not create /build/@PLDISTRO@
+    if [ ! -d ${WEBPATH} ] ; then
+	WEBPATH=/tmp
+	WEBLOG=/tmp/vbuild-early.log.txt
+    fi
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 30k $WEBLOG) > ${WEBLOG}.ko
@@ -114,7 +118,11 @@ function failure() {
 
 function success () {
     set -x
-    mkdir -p ${WEBPATH}
+    # early stage ? - let's not create /build/@PLDISTRO@
+    if [ ! -d ${WEBPATH} ] ; then
+	WEBPATH=/tmp
+	WEBLOG=/tmp/vbuild-early.log.txt
+    fi
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     if [ -n "$DO_TEST" ] ; then
@@ -239,8 +247,8 @@ function runtest () {
     mkdir -p /vservers/$BASE/build/testlogs
     ssh 2>&1 -n ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
     # push them to the build web
+    chmod -R a+r /vservers/$BASE/build/testlogs/
     rsync --archive --delete /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
-    chmod -R a+r $WEBPATH/$BASE/testlogs/
 
     if [ -z "$success" ] ; then
 	failure
@@ -253,6 +261,7 @@ function in_root_context () {
     rpm -q util-vserver > /dev/null 
 }
 
+# this part won't work with a remote(rsync) WEBPATH
 function sign_node_packages () {
 
     echo "Signing node packages"
@@ -525,6 +534,7 @@ function main () {
 
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
+	mkdir -p ${WEBPATH}
 
         # where to store the log for web access
 	WEBLOG=${WEBPATH}/${BASE}.log.txt
