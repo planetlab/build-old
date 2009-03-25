@@ -320,7 +320,7 @@ function show_env () {
     else
 	if [ -f /build/$PLDISTROTAGS ] ; then
 	    echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
-	    cat 
+	    cat /build/$PLDISTROTAGS
 	    echo "XXXXXXXXXXXXXXXXXXXX end tags definition"
 	else
 	    echo "XXXXXXXXXXXXXXXXXXXX Cannot find tags definition file /build/$PLDISTROTAGS, assuming remote pldistro"
