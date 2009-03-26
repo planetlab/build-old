@@ -5,7 +5,7 @@ CoDemux
 Mom
 Monitor
 MyPLC
-NodeManager
+NodeManager:0.8
 NodeUpdate
 PLCAPI
 PLEWWW
@@ -30,5 +30,5 @@ pypcilib
 pyplnet
 util-vserver-pl
 util-vserver:scholz
-vsys
+vsys:0.7
 www-register-wizard
