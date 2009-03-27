@@ -94,7 +94,7 @@ function usage () {
     echo "Examples"
     echo "  $COMMAND -a display "
     echo "  $COMMAND -a superclean"
-    echo "  $COMMAND -a -u http://mirror.one-lab.org/ init"
+    echo "  $COMMAND -a -u http://mirror.onelab.eu/ init"
     echo "  $COMMAND -a display"
     exit 1
 }
