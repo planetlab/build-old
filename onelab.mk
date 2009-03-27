@@ -25,6 +25,7 @@ kernel-RPMFLAGS:= --target i686
 else
 kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
+# this is useful for 2.6.22 but will not be needed anymore with 2.6.27
 kernel-SPECVARS := iwlwifi=1
 KERNELS += kernel
 

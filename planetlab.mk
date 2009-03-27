@@ -211,14 +211,6 @@ PLCAPI-SPEC := PLCAPI.spec
 ALL += PLCAPI
 IN_MYPLC += PLCAPI
 
-# #
-# # PLCWWW
-# #
-# PLCWWW-MODULES := PLCWWW
-# PLCWWW-SPEC := PLCWWW.spec
-# ALL += PLCWWW
-# IN_MYPLC += PLCWWW
-
 #
 # drupal
 # 
