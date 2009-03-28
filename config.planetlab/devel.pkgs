@@ -81,4 +81,7 @@ package-fc4: ocaml ocaml-docs inotify-tools-devel
 package-fc6: ocaml ocaml-docs inotify-tools-devel 
 package-centos5: ocaml ocaml-docs inotify-tools-devel 
 # util-vserver-pl
-package: libnl libnl-devel
+package: libnl-devel
+# use local libnl on centos
+package-centos5: libnl-devel
+
