@@ -111,7 +111,7 @@ function failure() {
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "and tail version at ${LOG_URL}.ko" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail -c 30k ${WEBLOG} ) | mail -s "Failures for build ${BASE}" $MAILTO
+	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with {MAIL_SUBJECT}" $MAILTO
     fi
     exit 1
 }
@@ -143,7 +143,7 @@ function success () {
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at ${LOG_URL}" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
-	    | mail -s "Successful build for ${BASE}" $MAILTO
+	    | mail -s "Success with ${MAIL_SUBJECT}" $MAILTO
     fi
     exit 0
 }
@@ -445,6 +445,21 @@ function main () {
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	BASE=$(echo ${BASE} | sed $sedargs)
     fi
+
+    ### elaborate mail subject
+    if [ -n "$DO_BUILD" -a -n "$DO_TEST" ] ; then
+	MAIL_SUBJECT="complete"
+    elif [ -n "$DO_BUILD" ] ; then
+	MAIL_SUBJECT="package-only"
+    elif [ -n "$DO_TEST" ] ; then
+	MAIL_SUBJECT="test-only"
+    fi
+    if [ -n "$OVERBASE" ] ; then
+	MAIL_SUBJECT="$MAIL_SUBJECT incremental run on"
+    else
+	MAIL_SUBJECT="$MAIL_SUBJECT fresh build"
+    fi
+    MAIL_SUBJECT="$MAIL_SUBJECT ${BASE}"
 
     if ! in_root_context ; then
         # in the vserver
