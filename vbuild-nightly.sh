@@ -111,7 +111,7 @@ function failure() {
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "and tail version at ${LOG_URL}.ko" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with {MAIL_SUBJECT}" $MAILTO
+	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT}" $MAILTO
     fi
     exit 1
 }
