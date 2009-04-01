@@ -204,6 +204,14 @@ IN_BOOTSTRAPFS += vsys
 ALL += vsys
 
 #
+# vsys-scripts
+#
+vsys-scripts-MODULES := vsys-scripts
+vsys-scripts-SPEC := vsys-scripts.spec
+IN_BOOTSTRAPFS += vsys-scripts
+ALL += vsys-scripts
+
+#
 # PLCAPI
 #
 PLCAPI-MODULES := PLCAPI

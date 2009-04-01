@@ -226,6 +226,14 @@ IN_BOOTSTRAPFS += vsys
 ALL += vsys
 
 #
+# vsys-scripts
+#
+vsys-scripts-MODULES := vsys-scripts
+vsys-scripts-SPEC := vsys-scripts.spec
+IN_BOOTSTRAPFS += vsys-scripts
+ALL += vsys-scripts
+
+#
 # dummynet_image
 # 
 dummynet_image-MODULES := dummynet_image
