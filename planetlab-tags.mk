@@ -22,6 +22,7 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn//Mom/tags/Mom-2.3-0
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn//iptables/tags/iptables-1.4.1.1-0
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn//iproute2/tags/iproute2-2.6.16-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn//inotify-tools/tags/inotify-tools-3.13-2
+vsys-scripts-SVNPATH			:= http://svn.planet-lab.org/svn/vsys-scripts/trunk
 vsys-SVNBRANCH			:= 0.9
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.9-1
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn//PLCAPI/tags/PLCAPI-4.3-4

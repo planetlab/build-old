@@ -27,6 +27,7 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn//iproute2/tags/iproute2-2.6.1
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn//inotify-tools/tags/inotify-tools-3.13-2
 vsys-SVNBRANCH			:= 0.9
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn//vsys/tags/vsys-0.9-1
+vsys-scripts-SVNPATH			:= http://svn.planet-lab.org/svn//vsys-scripts/trunk
 dummynet_image-SVNPATH          := http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-5
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-4
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-11
