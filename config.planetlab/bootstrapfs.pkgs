@@ -116,5 +116,6 @@ package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
 package: fprobe-ulog
 package: vsys
+package: vsys-scripts
 package: monitor-client
 package: monitor-runlevelagent
