@@ -23,7 +23,6 @@ package: initscripts
 package: iproute
 package: iputils
 package: kbd
-package: libtermcap
 package: passwd
 package: procps
 package: readline
@@ -31,7 +30,6 @@ package: rootfiles
 package: rpm
 package: setserial
 package: setup
-package: termcap
 package: vim-minimal
 package: shadow-utils
 package: anacron
@@ -65,7 +63,6 @@ package: time
 package: tmpwatch
 package: tcpdump
 package: openssh-server
-package: vixie-cron
 package: wget
 package: yum
 package: curl
@@ -82,6 +79,9 @@ package: openvpn
 package: vconfig
 package: PyXML
 
+package: termcap libtermcap
+package: vixie-cron
+
 #
 # platform-dependent
 #
@@ -93,6 +93,8 @@ package: util-linux-ng
 package-centos5: util-linux-ng
 package+centos5: util-linux
 
+package-f10: termcap libtermcap
+package-f10: vixie-cron
 #
 # planetlab
 #

@@ -20,7 +20,6 @@ package: tcpdump
 package: telnet
 package: traceroute
 package: time
-package: vixie-cron
 package: wget
 package: which
 package: yum
@@ -32,3 +31,5 @@ package: python-devel
 package: tar
 package: findutils
 package: filesystem
+package: vixie-cron
+package-f10: vixie-cron
