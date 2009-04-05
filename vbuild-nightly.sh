@@ -121,7 +121,7 @@ function success () {
     # early stage ? - let's not create /build/@PLDISTRO@
     if [ ! -d ${WEBPATH} ] ; then
 	WEBPATH=/tmp
-	WEBLOG=/tmp/vbuild-early.log.txt
+	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
     fi
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
@@ -131,12 +131,13 @@ function success () {
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
 	    ) > ${WEBLOG}.pass
-	rm -f ${WEBLOG}.ok ${WEBLOG}.ko
+	rm -f ${WEBLOG}.pkg-ok ${WEBLOG}.ko
     else
 	( \
-	    echo "Successfully built, no test requested" ; \
+	    echo "Successful package-only build, no test requested" ; \
 	    echo "See full build log at ${LOG_URL}" ; \
-	    ) > ${WEBLOG}.ok
+	    ) > ${WEBLOG}.pkg-ok
+	rm -f ${WEBLOG}.ko
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
