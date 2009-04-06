@@ -224,10 +224,10 @@ ALL += vsys
 endif
 
 ifeq "$(vsys_support)" "yes"
-vsys-factory-MODULES := vsys-factory
-vsys-factory-SPEC := vsys-factory.spec
-IN_BOOTSTRAPFS += vsys-factory
-ALL += vsys-factory
+vsys-scripts-MODULES := vsys-scripts
+vsys-scripts-SPEC := vsys-scripts.spec
+IN_BOOTSTRAPFS += vsys-scripts
+ALL += vsys-scripts
 endif
 
 
