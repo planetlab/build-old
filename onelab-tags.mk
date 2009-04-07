@@ -35,6 +35,7 @@ drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-11
 PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-3
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn//www-register-wizard/tags/www-register-wizard-4.2-2
 Monitor-SVNBRANCH		:= 2.0
+Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-2.0-9
 nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-2
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn//BootManager/tags/BootManager-4.3-3
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn//pypcilib/tags/pypcilib-0.2-5
