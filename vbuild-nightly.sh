@@ -442,6 +442,7 @@ function main () {
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$build_SVNPATH" ] && build_SVNPATH="$DEFAULT_build_SVNPATH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
+    [ -z "$TESTMASTER" ] && TESTMASTER="$DEFAULT_TESTMASTER"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
