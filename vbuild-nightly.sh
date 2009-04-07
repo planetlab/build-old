@@ -10,20 +10,30 @@ DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_build_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
-DEFAULT_TESTCONFIG="default"
 DEFAULT_IFNAME=eth0
-
-# web publishing results
-DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
 # default gpg path used in signing yum repo
 DEFAULT_GPGPATH="/etc/planetlab"
 # default email to use in gpg secring
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
+# web publishing results
+DEFAULT_WEBPATH="/build/@PLDISTRO@/"
+
 # for the test part
-DEFAULT_TESTBUILDURL="http://build.onelab.eu/"
-TESTBOXSSH=root@testbox.onelab.eu
+DEFAULT_TESTCONFIG="default"
+x=$(hostname)
+y=$(hostname|sed -e s,inria,,)
+# INRIA defaults
+if [ "$x" != "$y" ] ; then
+    DEFAULT_TESTBUILDURL="http://build.onelab.eu/"
+    DEFAULT_TESTMASTER="testmaster.onelab.eu"
+else
+    DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
+    ### xxx change as appropriate
+    DEFAULT_TESTMASTER="p-testmaster.onelab.eu"
+fi    
+
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
@@ -220,14 +230,16 @@ function runtest () {
 	exit 1
     fi
 
+    testmaster_ssh="root@${TESTMASTER}"
+
     # test directory name on test box
     testdir=${BASE}
     # clean it
-    ssh -n ${TESTBOXSSH} rm -rf ${testdir}
+    ssh -n ${testmaster_ssh} rm -rf ${testdir}
     # check it out 
-    ssh -n ${TESTBOXSSH} svn co ${TESTS_SYSTEM_SVNPATH} ${testdir}
+    ssh -n ${testmaster_ssh} svn co ${TESTS_SYSTEM_SVNPATH} ${testdir}
     # check out the entire tests/ module (with system/ duplicated) as a subdir - see xxx above
-    ssh -n ${TESTBOXSSH} svn co ${TESTS_SVNPATH} ${testdir}/tests
+    ssh -n ${testmaster_ssh} svn co ${TESTS_SVNPATH} ${testdir}/tests
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
     for config in ${TESTCONFIG} ; do
@@ -237,11 +249,11 @@ function runtest () {
 
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${build_SVNPATH} --url ${url} $configs $test_env --all || success=
+    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/runtest --build ${build_SVNPATH} --url ${url} $configs $test_env --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
-    ssh 2>&1 -n ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+    ssh 2>&1 -n ${testmaster_ssh} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
     # push them to the build web
     chmod -R a+r /vservers/$BASE/build/testlogs/
     rsync --archive --delete /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
@@ -340,19 +352,20 @@ function usage () {
     echo " -f fcdistro - defaults to $DEFAULT_FCDISTRO"
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
+    echo " -m mailto - no default"
+    echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
+    echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -b base - defaults to $DEFAULT_BASE"
     echo "    @NAME@ replaced as appropriate"
     echo " -o base: (overwrite) do not re-create vserver, re-use base instead"
-    echo "    the -f/-d/-t/-s/-p/-m options are uneffective in this case"
-    echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
-    echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
+    echo "    the -f/-d/-p/-m/-s/-t options are uneffective in this case"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
+    echo " -M testmaster - defaults to $DEFAULT_TESTMASTER"
     echo " -y sign yum repo in webpath"
     echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
     echo " -u gpg email used in secring. Defaults to $DEFAULT_GPGUID"
-    echo " -m mailto - no default"
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
@@ -373,22 +386,23 @@ function main () {
     DO_BUILD=true
     DO_TEST=true
     SIGNYUMREPO=""
-    while getopts "f:d:p:b:o:t:s:x:c:w:W:g:u:m:BTnyv7i:" opt ; do
+    while getopts "f:d:p:m:s:t:b:o:c:w:W:M:yg:u:BTnv7i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
 	    p) PERSONALITY=$OPTARG ;;
+	    m) MAILTO=$OPTARG ;;
+	    s) build_SVNPATH=$OPTARG ;;
+	    t) PLDISTROTAGS=$OPTARG ;;
 	    b) BASE=$OPTARG ;;
 	    o) OVERBASE=$OPTARG ;;
-	    t) PLDISTROTAGS=$OPTARG ;;
-	    s) build_SVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
 	    W) TESTBUILDURL=$OPTARG ;;
+	    M) TESTMASTER=$OPTARG ;;
             y) SIGNYUMREPO=true ;;
             g) GPGPATH=$OPTARG ;;
             u) GPGUID=$OPTARG ;;
-	    m) MAILTO=$OPTARG ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ;;
 	    n) DRY_RUN="-n" ;;
