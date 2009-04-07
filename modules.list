@@ -3,7 +3,7 @@ BootManager
 BootstrapFS
 CoDemux
 Mom
-Monitor
+Monitor:2.0
 MyPLC
 NodeManager:0.8
 NodeUpdate
@@ -26,9 +26,11 @@ nodeconfig
 nozomi
 pf2slice
 pl_sshd
+planetlab-umts-tools
 pypcilib
 pyplnet
 util-vserver-pl
 util-vserver:scholz
-vsys:0.7
+vsys-scripts
+vsys:0.9
 www-register-wizard
