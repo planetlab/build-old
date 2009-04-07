@@ -158,11 +158,6 @@ function build () {
     date
 
     cd /build
-  # if TAGSRELEASE specified : update PLDISTROTAGS with this tag
-    if [ -n "$TAGSRELEASE" ] ; then
-	svn up -r $TAGSRELEASE $PLDISTROTAGS
-    fi
-
     show_env
     
     echo "Running make IN $(pwd)"
@@ -321,7 +316,6 @@ function show_env () {
     echo MAKEVARS="${MAKEVARS[@]}"
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
-    echo TAGSRELEASE="$TAGSRELEASE"
     # this does not help, it's not yet set when we run show_env
     #echo WEBPATH="$WEBPATH"
     echo TESTBUILDURL="$TESTBUILDURL"
@@ -351,7 +345,6 @@ function usage () {
     echo " -o base: (overwrite) do not re-create vserver, re-use base instead"
     echo "    the -f/-d/-t/-s/-p/-m options are uneffective in this case"
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
-    echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
     echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
@@ -380,7 +373,7 @@ function main () {
     DO_BUILD=true
     DO_TEST=true
     SIGNYUMREPO=""
-    while getopts "f:d:p:b:o:t:r:s:x:c:w:W:g:u:m:BTnyv7i:" opt ; do
+    while getopts "f:d:p:b:o:t:s:x:c:w:W:g:u:m:BTnyv7i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
@@ -388,7 +381,6 @@ function main () {
 	    b) BASE=$OPTARG ;;
 	    o) OVERBASE=$OPTARG ;;
 	    t) PLDISTROTAGS=$OPTARG ;;
-	    r) TAGSRELEASE=$OPTARG ;;
 	    s) build_SVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
