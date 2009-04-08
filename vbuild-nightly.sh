@@ -121,7 +121,7 @@ function failure() {
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "and tail version at ${LOG_URL}.ko" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT}" $MAILTO
+	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE}" $MAILTO
     fi
     exit 1
 }
@@ -154,7 +154,7 @@ function success () {
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at ${LOG_URL}" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
-	    | mail -s "Success with ${MAIL_SUBJECT}" $MAILTO
+	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE}" $MAILTO
     fi
     exit 0
 }
@@ -467,7 +467,6 @@ function main () {
     else
 	MAIL_SUBJECT="$MAIL_SUBJECT fresh build"
     fi
-    MAIL_SUBJECT="$MAIL_SUBJECT ${BASE}"
 
     if ! in_root_context ; then
         # in the vserver
