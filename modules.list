@@ -5,7 +5,7 @@ CoDemux
 Mom
 Monitor:2.0
 MyPLC
-NodeManager:0.8
+NodeManager:1.8
 NodeUpdate
 PLCAPI
 PLEWWW
