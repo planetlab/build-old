@@ -5,7 +5,7 @@
 # that serves as the default for module-tools -a
 
 linux-2.6-SVNBRANCH		:= 22
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-33
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-34
 madwifi-SVNPATH                 := http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
