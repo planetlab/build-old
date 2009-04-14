@@ -28,7 +28,7 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn//iproute2/tags/iproute2-2.6.1
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn//inotify-tools/tags/inotify-tools-3.13-2
 vsys-SVNBRANCH			:= 0.9
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn//vsys/tags/vsys-0.9-1
-vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn//vsys-scripts/trunk
+vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-scripts-0.95-0
 dummynet_image-SVNPATH          := http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-5
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-6
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-11
@@ -45,4 +45,4 @@ BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn//BootstrapFS/tags/Bootstra
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-5
 
 # locating the right test directory - see make tests_svnpath
-TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
+TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.3-0
