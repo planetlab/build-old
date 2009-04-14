@@ -20,9 +20,9 @@ us_fedora_url=rsync://mirrors.kernel.org/fedora
 us_centos_url=rsync://mirrors.rit.edu/centos
 us_epel_url=rsync://rsync.gtlib.gatech.edu/fedora-epel
 
-# this one is contaminated with the .~tmp~ thing
-
-eu_fedora_url=rsync://mirrors.ircam.fr/fedora-linux
+# ircam's fedora8 repo has been turned off
+#eu_fedora_url=rsync://mirrors.ircam.fr/fedora-linux
+eu_fedora_url=rsync://mirror.ovh.net/download.fedora.redhat.com/linux
 eu_centos_url=rsync://mirrors.ircam.fr/CentOS
 eu_epel_url=rsync://mirrors.ircam.fr/fedora-epel
 
@@ -31,7 +31,7 @@ jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname="centos5"
-all_distronames="f8 f10 centos5.2 epel5"
+all_distronames="f8 f10 centos5.2 centos5.3 epel5"
 default_arch="i386"
 all_archs="i386 x86_64"
 
