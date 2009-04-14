@@ -1,8 +1,9 @@
 groupname: PlanetLabBootcd
 groupdesc: PlanetLab BootCD
-# packages to exclude from stock repositories
-kexclude: @KEXCLUDE@
-# define packages
+# This is the replacement for the former mkfedora -k. The following packages
+# will get excluded from the stock fedora repos, as we need to use ours
+kexclude: kernel* util-vserver* iptables iproute 
+# from prep.sh, was hardwired as packagelist
 package: filesystem
 package: udev
 package: dhclient
@@ -14,6 +15,7 @@ package: bzip2
 package: diffutils
 package: logrotate
 package: passwd
+#package: rsh
 package: rsync
 package: sudo
 package: tcpdump
@@ -74,5 +76,4 @@ precious: usr/share/terminfo/l/linux
 precious: usr/share/terminfo/v/vt100
 precious: usr/share/terminfo/x/xterm
 precious: usr/share/zoneinfo/UTC
-precious+f8: usr/lib/locale/en_US.utf8
-precious+centos5: usr/lib/locale/en_US.utf8
+precious: usr/lib/locale/en_US.utf8

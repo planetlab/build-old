@@ -1,5 +1,5 @@
 #
-# declare the packages to be built and their dependencies
+# PlanetLab standard components list
 # initial version from Mark Huang
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
@@ -39,6 +39,18 @@ IN_BOOTSTRAPFS += $(KERNELS)
 IN_MYPLC += $(KERNELS)
 
 #
+# kexec-tools
+#
+ifeq "$(DISTRONAME)" "fc4"
+kexec-tools-MODULES := kexec-tools
+kexec-tools-SPEC := kexec-tools.spec
+kexec-tools-CVSROOT := :pserver:anon@cvs.planet-lab.org:/cvs
+kexec-tools-TAG := planetlab-4_1-rc2
+ALL += kexec-tools
+IN_BOOTCD += kexec-tools
+endif
+
+#
 # madwifi
 #
 madwifi-MODULES := madwifi
@@ -75,7 +87,8 @@ libnl-MODULES := libnl
 libnl-SPEC := libnl.spec
 libnl-BUILD-FROM-SRPM := yes
 # this sounds like the thing to do, but in fact linux/if_vlan.h comes with kernel-headers
-libnl-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
+# HACK: leaving out kernel-headers for now
+libnl-DEPEND-DEVEL-RPMS := kernel-devel # kernel-headers
 ALL += libnl
 IN_BOOTSTRAPFS += libnl
 endif
@@ -85,7 +98,7 @@ endif
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core 
+util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core
 ifeq "$(local_libnl)" "true"
 util-vserver-pl-DEPEND-DEVEL-RPMS += libnl libnl-devel
 endif
@@ -95,10 +108,10 @@ IN_BOOTSTRAPFS += util-vserver-pl
 #
 # NodeUpdate
 #
-nodeupdate-MODULES := NodeUpdate
-nodeupdate-SPEC := NodeUpdate.spec
-ALL += nodeupdate
-IN_BOOTSTRAPFS += nodeupdate
+NodeUpdate-MODULES := NodeUpdate
+NodeUpdate-SPEC := NodeUpdate.spec
+ALL += NodeUpdate
+IN_BOOTSTRAPFS += NodeUpdate
 
 #
 # ipod
@@ -111,18 +124,18 @@ IN_BOOTSTRAPFS += ipod
 #
 # NodeManager
 #
-nodemanager-MODULES := NodeManager
-nodemanager-SPEC := NodeManager.spec
-ALL += nodemanager
-IN_BOOTSTRAPFS += nodemanager
+NodeManager-MODULES := NodeManager
+NodeManager-SPEC := NodeManager.spec
+ALL += NodeManager
+IN_BOOTSTRAPFS += NodeManager
 
 #
 # pl_sshd
 #
-sshd-MODULES := pl_sshd
-sshd-SPEC := pl_sshd.spec
-ALL += sshd
-IN_BOOTSTRAPFS += sshd
+pl_sshd-MODULES := pl_sshd
+pl_sshd-SPEC := pl_sshd.spec
+ALL += pl_sshd
+IN_BOOTSTRAPFS += pl_sshd
 
 #
 # codemux: Port 80 demux
@@ -151,17 +164,17 @@ ALL += pf2slice
 #
 # PlanetLab Mom: Cleans up your mess
 #
-mom-MODULES := Mom
-mom-SPEC := pl_mom.spec
-ALL += mom
-IN_BOOTSTRAPFS += mom
+pl_mom-MODULES := Mom
+pl_mom-SPEC := pl_mom.spec
+ALL += pl_mom
+IN_BOOTSTRAPFS += pl_mom
 
 #
 # iptables
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
+iptables-DEPEND-DEVEL-RPMS := kernel-devel
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
 
@@ -176,40 +189,38 @@ IN_VSERVER += iproute
 IN_BOOTCD += iproute
 
 #
-# inotify-tools - local import
-# rebuild this on centos5 (not found) - see kexcludes in build.common
-#
-local_inotify_tools=false
-ifeq "$(DISTRONAME)" "centos5"
-local_inotify_tools=true
-endif
-
-ifeq "$(local_inotify_tools)" "true"
-inotify-tools-MODULES := inotify-tools
-inotify-tools-SPEC := inotify-tools.spec
-inotify-tools-BUILD-FROM-SRPM := yes
-IN_BOOTSTRAPFS += inotify-tools
-ALL += inotify-tools
-endif
-
-#
 # vsys
 #
+vsys_support=yes
+ifeq "$(DISTRONAME)" "fc4"
+vsys_support=
+endif
+ifeq "$(DISTRONAME)" "fc6"
+vsys_support=
+endif
+# cannot find the required packages (see devel.pkgs) on centos5
+ifeq "$(DISTRONAME)" "centos5"
+vsys_support=
+endif
+
+ifeq "$(vsys_support)" "yes"
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
-ifeq "$(local_inotify_tools)" "true"
-vsys-DEPEND-DEVEL-RPMS := inotify-tools inotify-tools-devel
-endif
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
+endif
 
 #
 # vsys-scripts
 #
+
+ifeq "$(vsys_support)" "yes"
 vsys-scripts-MODULES := vsys-scripts
 vsys-scripts-SPEC := vsys-scripts.spec
 IN_BOOTSTRAPFS += vsys-scripts
 ALL += vsys-scripts
+endif
+
 
 #
 # PLCAPI
@@ -220,21 +231,12 @@ ALL += PLCAPI
 IN_MYPLC += PLCAPI
 
 #
-# drupal
-# 
-drupal-MODULES := drupal
-drupal-SPEC := drupal.spec
-drupal-BUILD-FROM-SRPM := yes
-ALL += drupal
-IN_MYPLC += drupal
-
+# PLCWWW
 #
-# use the plewww module instead
-#
-plewww-MODULES := PLEWWW
-plewww-SPEC := plewww.spec
-ALL += plewww
-IN_MYPLC += plewww
+PLCWWW-MODULES := PLCWWW
+PLCWWW-SPEC := PLCWWW.spec
+ALL += PLCWWW
+IN_MYPLC += PLCWWW
 
 #
 # www-register-wizard
@@ -253,17 +255,9 @@ ALL += monitor
 IN_BOOTSTRAPFS += monitor
 
 #
-# zabbix
-#
-zabbix-MODULES := Monitor
-zabbix-SPEC := zabbix.spec
-zabbix-BUILD-FROM-SRPM := yes
-ALL += zabbix
-
-#
 # nodeconfig
 #
-nodeconfig-MODULES := nodeconfig build
+nodeconfig-MODULES := nodeconfig
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
 IN_MYPLC += nodeconfig
@@ -311,6 +305,8 @@ IN_MYPLC += bootcd
 #
 vserver-MODULES := VserverReference build
 vserver-SPEC := vserver-reference.spec
+# Package must be built as root
+vserver-RPMBUILD := sudo bash ./rpmbuild.sh
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
 vserver-RPMDATE := yes
@@ -351,33 +347,28 @@ ALL += noderepo
 IN_MYPLC += noderepo
 
 #
-# MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
+# myplc : initial, chroot-based packaging
 #
-myplc-MODULES := MyPLC build 
+myplc-MODULES := MyPLC build
 myplc-SPEC := myplc.spec
-myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
+# Package must be built as root
+myplc-RPMBUILD := sudo bash ./rpmbuild.sh
+# myplc may require all packages
+myplc-DEPEND-PACKAGES := $(IN_MYPLC)
+myplc-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
+myplc-RPMDATE := yes
 ALL += myplc
 
-## #
-## # myplc-chroot : old-fashioned, chroot-based packaging
-## #
-## myplc-chroot-MODULES := MyPLC build
-## myplc-chroot-SPEC := myplc-chroot.spec
-## # myplc-chroot may require all packages
-## myplc-chroot-DEPEND-PACKAGES := $(IN_MYPLC)
-## myplc-chroot-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
-## myplc-chroot-RPMDATE := yes
-## ALL += myplc-chroot
+#
+# MyPLC native : lightweight packaging, dependencies are yum-installed in a vserver
+#
+myplc-native-MODULES := MyPLC build 
+myplc-native-SPEC := myplc-native.spec
+# Package must be built as root
+myplc-native-RPMBUILD := sudo bash ./rpmbuild.sh
+myplc-native-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
+ALL += myplc-native
 
-# myplc-docs only contains docs for PLCAPI and NMAPI, but
-# we still need to pull MyPLC, as it is where the specfile lies, 
-# together with the utility script docbook2drupal.sh
 myplc-docs-MODULES := MyPLC PLCAPI NodeManager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
-
-# using some other name than myplc-release, as this is a make target already
-release-MODULES := MyPLC
-release-SPEC := myplc-release.spec
-release-RPMDATE := yes
-ALL += release

@@ -1,7 +1,8 @@
 groupname: PlanetLabSlice
 groupdesc: PlanetLab Slice Reference Image
-# packages to exclude from stock repositories
-kexclude: @KEXCLUDE@
+# This is the replacement for the former mkfedora -k. The following packages
+# will get excluded from the stock fedora repos, as we need to use ours
+kexclude: kernel* util-vserver* iptables iproute 
 # define packages
 package: bash
 package: coreutils
@@ -20,6 +21,7 @@ package: tcpdump
 package: telnet
 package: traceroute
 package: time
+package: vixie-cron
 package: wget
 package: which
 package: yum
@@ -31,5 +33,3 @@ package: python-devel
 package: tar
 package: findutils
 package: filesystem
-package: vixie-cron
-package-f10: vixie-cron

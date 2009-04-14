@@ -9,9 +9,3 @@ name=CentOS 5.2 - $basearch - Released Updates
 baseurl=@MIRRORURL@/centos/5.2/updates/$basearch/
 gpgcheck=1
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
-
-[epel]
-name=Extra Packages for Enterprise Linux 5 - $basearch
-baseurl=@MIRRORURL@/epel/5/$basearch/
-gpgcheck=1
-gpgkey=http://download.fedora.redhat.com/pub/epel/RPM-GPG-KEY-EPEL

@@ -1,12 +1,6 @@
 groupname: Myplc
 groupdesc: PlanetLab ServerSide Contents @FCDISTRO@
 ####
-# WARNING
-####
-# this content is used only when building the chroot image of the legacy myplc packaging
-# it is NOT used to build the standard myplc (formerly known as myplc-native) packaging
-# for the latter, please add Requires: directives in specfile for the component(s) that need it
-####
 # kernel-vserver is intended for the vserver-reference, but
 # serves the same useful purpose for MyPLC, namely, to
 # Provide: kernel without actually installing anything. 
@@ -40,6 +34,8 @@ package:nmap
 package:python python-devel SOAPpy PyXML
 # add ons for plcapi
 package: python-pycurl python-psycopg2
+# but not on fc4 as we provide ours
+package-fc4: python-pycurl python-psycopg2
 # postgresql
 package:postgresql postgresql-server postgresql-python
 # apache
@@ -63,5 +59,4 @@ package:bootcd-@pldistro@-@arch@ bootmanager
 # embed the bootstrafs rpm for this distribution & arch
 # use a qualified name so other variants can be installed as well
 package: bootstrapfs-@pldistro@-@arch@ 
-package:PLCAPI PLCWWW nodeconfig www-register-wizard
-package: monitor-runlevelagent
+package:PLCAPI PLCWWW nodeconfig

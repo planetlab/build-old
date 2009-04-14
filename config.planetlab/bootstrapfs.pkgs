@@ -2,10 +2,10 @@
 # groupname: Bootstrapfs
 groupname: PlanetLab
 groupdesc: PlanetLab Node Root
-# packages to exclude from stock repositories
-kexclude: @KEXCLUDE@
-# fedora-release or centos-release are pulled from deps
-# define packages
+# This is the replacement for the former mkfedora -k. The following packages
+# will get excluded from the stock fedora repos, as we need to use ours
+kexclude: kernel* util-vserver* iptables iproute 
+#
 package: kernel
 package: udev
 package: basesystem
@@ -23,13 +23,16 @@ package: initscripts
 package: iproute
 package: iputils
 package: kbd
+package: libtermcap
 package: passwd
 package: procps
 package: readline
+package: fedora-release
 package: rootfiles
 package: rpm
 package: setserial
 package: setup
+package: termcap
 package: vim-minimal
 package: shadow-utils
 package: anacron
@@ -63,6 +66,7 @@ package: time
 package: tmpwatch
 package: tcpdump
 package: openssh-server
+package: vixie-cron
 package: wget
 package: yum
 package: curl
@@ -78,23 +82,29 @@ package: nfs-utils
 package: openvpn
 package: vconfig
 package: PyXML
-
-package: termcap libtermcap
-package: vixie-cron
-
 #
 # platform-dependent
 #
-package: rsyslog
-package-centos5: rsyslog
+package+fc4: sysklogd
+package+fc6: sysklogd
+package+f7: sysklogd
+package+f8: rsyslog
 package+centos5: sysklogd
 
-package: util-linux-ng
-package-centos5: util-linux-ng
+package+fc4: util-linux
+package+fc6: util-linux
+package+f7: util-linux
+package+f8: util-linux-ng
 package+centos5: util-linux
 
-package-f10: termcap libtermcap
-package-f10: vixie-cron
+# not found on other platforms
+package+fc4: netdump
+package+fc4: schedutils
+package+fc4: SysVinit
+package+fc4: portmap
+# 
+package+fc6: SysVinit
+package+fc6: portmap
 #
 # planetlab
 #
@@ -116,8 +126,9 @@ package: ipod
 package: vserver-@pldistro@-@fcdistro@-@arch@
 package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
 package: pl_mom
-package: fprobe-ulog
+package+f8: fprobe-ulog
 package: vsys
-package: vsys-scripts
-package: monitor-client
-package: monitor-runlevelagent
+package: vsys-factory
+package-fc4: vsys
+package-fc6: vsys
+package: monitor

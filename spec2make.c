@@ -20,15 +20,6 @@
 #include <rpm/rpmbuild.h>
 #include <rpm/rpmspec.h>
 
-/* from f10 and up, Spec is renamed rpmSpec */
-#ifndef _RPMTYPES_H
-#define rpmSpec Spec
-#endif
-
-#ifndef PATH_MAX
-#include <linux/limits.h>
-#endif
-
 extern size_t strnlen(const char *s, size_t maxlen);
 
 /* the structure describing the options we take and the defaults */
@@ -43,7 +34,7 @@ static struct poptOption optionsTable[] = {
 };
 
 /* Stolen from rpm/build/spec.c:rpmspecQuery() */
-rpmSpec
+Spec
 rpmspecGet(rpmts ts, const char * arg)
 {
   char * buildRoot = NULL;
@@ -68,7 +59,7 @@ main(int argc, char *argv[])
   poptContext context;
   rpmts ts = NULL;
   int ec = 0;
-  rpmSpec spec;
+  Spec spec;
   struct Source *source;
   Package pkg;
   const char *name, *version, *release, *arch, *unused;

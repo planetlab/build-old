@@ -75,17 +75,13 @@ package: PyXML
 # used to reference SOAPpy as well
 # for pypcilib
 package: pciutils-devel
-##########
-# for vsys - same as for php-devel above
-package: ocaml.@arch@ ocaml-docs 
-# use local inotify-tools on centos
-package:inotify-tools-devel 
-package-centos5: inotify-tools-devel
-##########
-## for util-vserver-pl
-# use local libnl on centos
+# for vsys
+package: ocaml ocaml-docs inotify-tools-devel 
+package-fc4: ocaml ocaml-docs inotify-tools-devel 
+package-fc6: ocaml ocaml-docs inotify-tools-devel 
+package-centos5: ocaml ocaml-docs inotify-tools-devel 
+# util-vserver-pl
 package: libnl-devel
+# use local libnl on centos
 package-centos5: libnl-devel
-# zabbix/monitor
-package: net-snmp net-snmp-devel
-package+centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
+

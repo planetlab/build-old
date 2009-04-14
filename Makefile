@@ -94,7 +94,7 @@
 ####################
 
 # exported to spec files as plrelease
-PLANETLAB_RELEASE = 4.3
+PLANETLAB_RELEASE = 4.2
 
 #
 # Default values
@@ -105,11 +105,8 @@ DISTRO := $(shell ./getdistro.sh)
 RELEASE := $(shell ./getrelease.sh)
 DISTRONAME := $(shell ./getdistroname.sh)
 RPM-INSTALL-DEVEL := rpm --force -Uvh
-# uninstall -- cannot force rpm -e
-# need to ignore result, kernel-headers cannot be uninstalled as glibc depends on it
+# cannot force rpm -e
 RPM-UNINSTALL-DEVEL := rpm -e
-
-REMOTE-PLDISTROS="gnuradio"
 
 #################### Makefile
 # Default target
@@ -121,15 +118,9 @@ PLDISTRO := planetlab
 RPMBUILD := rpmbuild
 export CVS_RSH := ssh
 
-########## savedpldistro.mk holds PLDISTRO - it is generated at stage1 (see below)
+########## pldistro.mk holds PLDISTRO - it is generated at stage1 (see below)
 ifeq "$(stage1)" ""
-include savedpldistro.mk
-endif
-
-# when re-running the nightly build after failure, we need to gather the former values
-# do this by running make stage1=skip +PLDISTRO
-ifeq "$(stage1)" "skip"
-include savedpldistro.mk
+include pldistro.mk
 endif
 
 #################### include onelab.mk
@@ -155,29 +146,6 @@ default-build-SVNPATH := http://svn.planet-lab.org/svn/build/trunk
 endif
 # use default if necessary
 build-SVNPATH ?= $(default-build-SVNPATH)
-
-####################
-define remote_pldistro
-$(1).mk: config.$(1)/$(1).mk
-	@echo 'creating $(1) from config subdir'
-	cp config.$(1)/$(1).mk $(1).mk
-
-$(2).mk: config.$(1)/$(2).mk
-	@echo 'creating $(1) tags from config subdir'
-	cp config.$(1)/$(2).mk $(2).mk
-
-config.$(1)/$(1).mk: config.$(1)
-config.$(1)/$(2).mk: config.$(1)
-
-config.$(1): config.$(1).svnpath
-	@echo "Fetching details for pldistro $(1)"
-	svn export $(shell grep -v "^#" config.$(1).svnpath) config.$(1)
-
-DISTCLEANS += $(1).mk $(2).mk config.$(1)
-
-endef
-
-$(eval $(call remote_pldistro,gnuradio,gnuradio-tags))
 
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
@@ -349,19 +317,15 @@ $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 
 # stores PLDISTRO in a file
 # this is done at stage1. later run wont get confused
-savedpldistro.mk:
+pldistro.mk:
 	echo "PLDISTRO:=$(PLDISTRO)" > $@
 	echo "PLDISTROTAGS:=$(PLDISTROTAGS)" >> $@
-	echo "build-SVNPATH:=$(build-SVNPATH)" >> $@
-	echo "PERSONALITY:=$(PERSONALITY)" >> $@
-	echo "MAILTO:=$(MAILTO)" >> $@
-	echo "BASE:=$(BASE)" >> $@
 
-savedpldistro: savedpldistro.mk
-.PHONY: savedpldistro
+savepldistro: pldistro.mk
+.PHONY: savepldistro
 
 # always refresh this
-all: savedpldistro
+all: savepldistro
 
 #################### regular make
 
@@ -454,6 +418,7 @@ srpms: $(ALLSRPMS)
 .PHONY: srpms
 
 # usage: target_source_rpm package
+# select upon the package name, whether it contains srpm or not
 define target_source_rpm 
 ifeq "$($(1)-BUILD-FROM-SRPM)" ""
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs) 
@@ -461,7 +426,7 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs)
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) -bs $($(1).specpath)
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 else
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
@@ -471,7 +436,7 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
 	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 endif
 endef
@@ -499,7 +464,7 @@ $($(1).rpms): $($(1).srpm)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) --rebuild $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 # for manual use only - in case we need to investigate the results of an rpmbuild
 $(1)-compile: $($(1).srpm)
@@ -508,7 +473,7 @@ $(1)-compile: $($(1).srpm)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
 	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
 	$($(1).rpmbuild) --recompile $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	@(echo -n "XXXXXXXXXXXXXXX -- END compile $(1) " ; date)
 .PHONY: $(1)-compile
 endef
@@ -617,20 +582,20 @@ clean-help:
 
 ### brute force clean
 distclean1:
-	rm -rf savedpldistro.mk .rpmmacros spec2make header.spec SPECS MAKE $(DISTCLEANS)
+	rm -rf pldistro.mk .rpmmacros spec2make header.spec SPECS MAKE 
 distclean2:
 	rm -rf CODEBASES SOURCES BUILD RPMS SRPMS tmp
 distclean: distclean1 distclean2
 .PHONY: distclean1 distclean2 distclean
 
 develclean:
-	-$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
+	$(RPM-UNINSTALL-DEVEL) $(ALL-DEVEL-RPMS)
 
 ####################
 # gather build information for the 'About' page
 # when run from crontab, INIT_CWD not properly set (says /root ..)
-# so, the nightly build passes BASE here
-# also store BASE in .base for any post-processing purposes
+# so, the nightly build passes NIGHTLY_BASE here
+# also store the nightly_base in .base for any post-processing purposes
 myplc-release:
 	@echo 'Creating myplc-release'
 	rm -f $@
@@ -640,13 +605,13 @@ myplc-release:
 	$(MAKE) --no-print-directory version-svns >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpm info" >> $@
 	$(MAKE) --no-print-directory version-rpms >> $@
-	@echo $(BASE) > .base
+	@echo $(NIGHTLY_BASE) > .base
 
 version-build:
 	@echo -n 'Build build-date: ' ; date '+%Y.%m.%d'
 	@echo -n 'Build build-time: ' ; date '+%H:%M-%Z'
 	@echo -n 'Build build-hostname: ' ; hostname
-	@echo    "Build build-base: $(BASE)"
+	@echo    "Build build-base: $(NIGHTLY_BASE)"
 	@echo    "Build planetlab-distro: $(PLDISTRO)"
 	@echo    "Build planetlab-tags: $(PLDISTROTAGS)"
 	@echo -n 'Build planetlab-tagsid: ' ; fgrep '$$''Id' $(PLDISTROTAGS)
@@ -654,7 +619,7 @@ version-build:
 	@echo    "Build target-distro: $(DISTRO)"
 	@echo    "Build target-distroname: $(DISTRONAME)"
 	@echo    "Build target-release: $(RELEASE)"	
-	@echo    "Build target-personality: $(PERSONALITY)"	
+	@echo    "Build target-personality: $(NIGHTLY_PERSONALITY)"	
 
 #################### 
 # for a given module
@@ -724,7 +689,6 @@ info: packages modules branches
 tests_svnpath:
 	@$(if $(TESTS_SVNPATH), echo $(TESTS_SVNPATH) > $@, \
 	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
-
 
 ####################
 help:

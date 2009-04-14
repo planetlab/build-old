@@ -5,35 +5,25 @@ COMMANDPATH=$0
 COMMAND=$(basename $0)
 
 # default values, tunable with command-line options
-DEFAULT_FCDISTRO=centos5
+DEFAULT_FCDISTRO=f8
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
-DEFAULT_build_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
+DEFAULT_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
+DEFAULT_TESTCONFIG="default"
 DEFAULT_IFNAME=eth0
+
+# web publishing results
+DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
 # default gpg path used in signing yum repo
 DEFAULT_GPGPATH="/etc/planetlab"
 # default email to use in gpg secring
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
-# web publishing results
-DEFAULT_WEBPATH="/build/@PLDISTRO@/"
-
 # for the test part
-DEFAULT_TESTCONFIG="default"
-x=$(hostname)
-y=$(hostname|sed -e s,inria,,)
-# INRIA defaults
-if [ "$x" != "$y" ] ; then
-    DEFAULT_TESTBUILDURL="http://build.onelab.eu/"
-    DEFAULT_TESTMASTER="testmaster.onelab.eu"
-else
-    DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
-    ### xxx change as appropriate
-    DEFAULT_TESTMASTER="p-testmaster.onelab.eu"
-fi    
-
+TESTBUILDURL="http://build.onelab.eu/"
+TESTBOXSSH=root@testbox.onelab.eu
 ####################
 # assuming vserver runs in UTC
 DATE=$(date +'%Y.%m.%d')
@@ -49,7 +39,7 @@ function summary () {
 # read a full log and tries to extract the interesting stuff
 
 import sys,re
-m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not installed.*|.*PROPFIND.*|.*Starting.*:runtest.*")
+m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not installed.*")
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
@@ -108,53 +98,31 @@ EOF
 # Notify recipient of failure or success, manage various stamps 
 function failure() {
     set -x
-    # early stage ? - let's not create /build/@PLDISTRO@
-    if [ ! -d ${WEBPATH} ] ; then
-	WEBPATH=/tmp
-	WEBLOG=/tmp/vbuild-early.log.txt
-    fi
+    WEBLOG=${WEBPATH}/${BASE}.log.txt
+    mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 30k $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
-	( \
-	    echo "See full build log at ${LOG_URL}" ; \
-	    echo "and tail version at ${LOG_URL}.ko" ; \
-	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE}" $MAILTO
+	tail -c 30k ${WEBLOG} | mail -s "Failures for build ${BASE}" $MAILTO
     fi
     exit 1
 }
 
 function success () {
     set -x
-    # early stage ? - let's not create /build/@PLDISTRO@
-    if [ ! -d ${WEBPATH} ] ; then
-	WEBPATH=/tmp
-	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
-    fi
+    WEBLOG=${WEBPATH}/${BASE}.log.txt
+    mkdir -p ${WEBPATH}
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
     if [ -n "$DO_TEST" ] ; then
-	( \
-	    echo "Successfully built and tested" ; \
-	    echo "See full build log at ${LOG_URL}" ; \
-	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    ) > ${WEBLOG}.pass
-	rm -f ${WEBLOG}.pkg-ok ${WEBLOG}.ko
+	echo "Successfully built and tested - see testlogs for details" > ${WEBLOG}.pass
+	rm -f ${WEBLOG}.ok
     else
-	( \
-	    echo "Successful package-only build, no test requested" ; \
-	    echo "See full build log at ${LOG_URL}" ; \
-	    ) > ${WEBLOG}.pkg-ok
-	rm -f ${WEBLOG}.ko
+	echo "Successfully built"> ${WEBLOG}.ok
     fi
     if [ -n "$MAILTO" ] ; then
-	( \
-	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
-	    echo "See full build log at ${LOG_URL}" ; \
-            [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
-	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE}" $MAILTO
+	(echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ) | mail -s "Successful build for ${BASE}" $MAILTO
     fi
     exit 0
 }
@@ -168,6 +136,11 @@ function build () {
     date
 
     cd /build
+  # if TAGSRELEASE specified : update PLDISTROTAGS with this tag
+    if [ -n "$TAGSRELEASE" ] ; then
+	svn up -r $TAGSRELEASE $PLDISTROTAGS
+    fi
+
     show_env
     
     echo "Running make IN $(pwd)"
@@ -175,20 +148,18 @@ function build () {
     # stuff our own variable settings
     MAKEVARS=("PLDISTRO=${PLDISTRO}" "${MAKEVARS[@]}")
     MAKEVARS=("PLDISTROTAGS=${PLDISTROTAGS}" "${MAKEVARS[@]}")
-    MAKEVARS=("build-SVNPATH=${build_SVNPATH}" "${MAKEVARS[@]}")
-    MAKEVARS=("PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
-    MAKEVARS=("MAILTO=${MAILTO}" "${MAKEVARS[@]}")
-
-    MAKEVARS=("BASE=${BASE}" "${MAKEVARS[@]}")
+    MAKEVARS=("NIGHTLY_BASE=${BASE}" "${MAKEVARS[@]}")
+    MAKEVARS=("NIGHTLY_PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
+    MAKEVARS=("build-SVNPATH=${SVNPATH}" "${MAKEVARS[@]}")
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
-    # store tests_svnpath
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_svnpath
     # versions
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
+    # store tests_svnpath
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_svnpath
     # actual stuff
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" "${MAKETARGETS[@]}"
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" $MAKETARGETS
 
 }
 
@@ -212,7 +183,7 @@ function runtest () {
     # xxx - Thierry - need to rework the test framework in tests/system so it can work
     # with the entire tests/ module checked out, rather than only tests/system/ 
     # ugly workaround for now
-    TESTS_SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
+    SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
 
     ### the URL to the RPMS/<arch> location
     url=""
@@ -230,16 +201,14 @@ function runtest () {
 	exit 1
     fi
 
-    testmaster_ssh="root@${TESTMASTER}"
-
     # test directory name on test box
     testdir=${BASE}
     # clean it
-    ssh -n ${testmaster_ssh} rm -rf ${testdir}
+    ssh -n ${TESTBOXSSH} rm -rf ${testdir}
     # check it out 
-    ssh -n ${testmaster_ssh} svn co ${TESTS_SYSTEM_SVNPATH} ${testdir}
+    ssh -n ${TESTBOXSSH} svn co ${SYSTEM_SVNPATH} ${testdir}
     # check out the entire tests/ module (with system/ duplicated) as a subdir - see xxx above
-    ssh -n ${testmaster_ssh} svn co ${TESTS_SVNPATH} ${testdir}/tests
+    ssh -n ${TESTBOXSSH} svn co ${TESTS_SVNPATH} ${testdir}/tests
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
     for config in ${TESTCONFIG} ; do
@@ -249,14 +218,14 @@ function runtest () {
 
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/runtest --build ${build_SVNPATH} --url ${url} $configs $test_env --all || success=
+    ssh 2>&1 -n ${TESTBOXSSH} ${testdir}/runtest --build ${SVNPATH} --url ${url} $configs $test_env --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
-    ssh 2>&1 -n ${testmaster_ssh} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+    ssh 2>&1 -n ${TESTBOXSSH} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
     # push them to the build web
-    chmod -R a+r /vservers/$BASE/build/testlogs/
     rsync --archive --delete /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
+    chmod -R a+r $WEBPATH/$BASE/testlogs/
 
     if [ -z "$success" ] ; then
 	failure
@@ -269,108 +238,53 @@ function in_root_context () {
     rpm -q util-vserver > /dev/null 
 }
 
-# this part won't work with a remote(rsync) WEBPATH
-function sign_node_packages () {
-
-    echo "Signing node packages"
-    
-    need_createrepo=""
-
-    repository=$WEBPATH/$BASE/RPMS/
-    # the rpms that need signing
-    new_rpms=
-    # and the corresponding stamps
-    new_stamps=
-
-    for package in $(find $repository/ -name '*.rpm') ; do
-        stamp=$repository/signed-stamps/$(basename $package).signed
-        # If package is newer than signature stamp
-        if [ $package -nt $stamp ] ; then
-            new_rpms="$new_rpms $package"
-            new_stamps="$new_stamps $stamp"
-        fi
-        # Or than createrepo database
-        [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
-    done
-
-    if [ -n "$new_rpms" ] ; then
-        # Create a stamp once the package gets signed
-        mkdir $repository/signed-stamps 2> /dev/null
-	
-        # Sign RPMS. setsid detaches rpm from the terminal,
-        # allowing the (hopefully blank) GPG password to be
-        # entered from stdin instead of /dev/tty.
-        echo | setsid rpm \
-            --define "_signature gpg" \
-            --define "_gpg_path $GPGPATH" \
-            --define "_gpg_name $GPGUID" \
-            --resign $new_rpms && touch $new_stamps
-    fi
-
-     # Update repository index / yum metadata. 
-    if [ -n "$need_createrepo" ] ; then
-	echo "Indexing node packages after signing"
-        if [ -f $repository/yumgroups.xml ] ; then
-            createrepo --quiet -g yumgroups.xml $repository
-        else
-            createrepo --quiet $repository
-        fi
-    fi
-}
-
 function show_env () {
     set +x
     echo FCDISTRO=$FCDISTRO
     echo PLDISTRO=$PLDISTRO
-    echo PERSONALITY=$PERSONALITY
     echo BASE=$BASE
-    echo build_SVNPATH=$build_SVNPATH
+    echo SVNPATH=$SVNPATH
     echo MAKEVARS="${MAKEVARS[@]}"
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
-    # this does not help, it's not yet set when we run show_env
-    #echo WEBPATH="$WEBPATH"
-    echo TESTBUILDURL="$TESTBUILDURL"
+    echo TAGSRELEASE="$TAGSRELEASE"
+    echo -n "(might be unexpanded)"
+    echo WEBPATH="$WEBPATH"
     if in_root_context ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
     else
-	if [ -f /build/$PLDISTROTAGS ] ; then
-	    echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
-	    cat /build/$PLDISTROTAGS
-	    echo "XXXXXXXXXXXXXXXXXXXX end tags definition"
-	else
-	    echo "XXXXXXXXXXXXXXXXXXXX Cannot find tags definition file /build/$PLDISTROTAGS, assuming remote pldistro"
-	fi
+	echo "XXXXXXXXXXXXXXXXXXXX Contents of tags definition file /build/$PLDISTROTAGS"
+	cat /build/$PLDISTROTAGS
+	echo "XXXXXXXXXXXXXXXXXXXX end tags definition"
     fi
     set -x
 }
 
 function usage () {
-    echo "Usage: $COMMAND [option] [var=value...] make-targets"
+    echo "Usage: $COMMAND [option] make-targets"
     echo "This is $REVISION"
     echo "Supported options"
     echo " -f fcdistro - defaults to $DEFAULT_FCDISTRO"
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
-    echo " -m mailto - no default"
-    echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
-    echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -b base - defaults to $DEFAULT_BASE"
     echo "    @NAME@ replaced as appropriate"
-    echo " -o base: (overwrite) do not re-create vserver, re-use base instead"
-    echo "    the -f/-d/-p/-m/-s/-t options are uneffective in this case"
+    echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
+    echo " -r tagsrelease - a release number that refers to PLDISTROTAGS - defaults to HEAD"
+    echo " -s svnpath - where to fetch the build module"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
-    echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
-    echo " -M testmaster - defaults to $DEFAULT_TESTMASTER"
-    echo " -y sign yum repo in webpath"
+    echo " -y create (and sign) yum repo in webpath"
     echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
     echo " -u gpg email used in secring. Defaults to $DEFAULT_GPGUID"
+    echo " -m mailto - no default"
+    echo " -O : overwrite - re-run in base directory, do not re-create vserver"
     echo " -B : run build only"
     echo " -T : run test only"
     echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
     echo " -v : be verbose"
     echo " -7 : uses weekday-@FCDISTRO@ as base"
+    echo " -a makevar=value - space in values are not supported"
     echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
     exit 1
 }
@@ -381,33 +295,32 @@ function main () {
 
     # parse arguments
     MAKEVARS=()
-    MAKETARGETS=()
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
     SIGNYUMREPO=""
-    while getopts "f:d:p:m:s:t:b:o:c:w:W:M:yg:u:BTnv7i:" opt ; do
+    while getopts "f:d:p:b:t:r:s:x:c:w:g:u:m:OBTnyv7a:i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
 	    p) PERSONALITY=$OPTARG ;;
-	    m) MAILTO=$OPTARG ;;
-	    s) build_SVNPATH=$OPTARG ;;
-	    t) PLDISTROTAGS=$OPTARG ;;
 	    b) BASE=$OPTARG ;;
-	    o) OVERBASE=$OPTARG ;;
+	    t) PLDISTROTAGS=$OPTARG ;;
+	    r) TAGSRELEASE=$OPTARG ;;
+	    s) SVNPATH=$OPTARG ;;
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
-	    W) TESTBUILDURL=$OPTARG ;;
-	    M) TESTMASTER=$OPTARG ;;
-            y) SIGNYUMREPO=true ;;
-            g) GPGPATH=$OPTARG ;;
-            u) GPGUID=$OPTARG ;;
+        y) SIGNYUMREPO=$OPTARG;;
+        g) GPGPATH=$OPTARG;;
+        u) GPGUID=$OPTARG;;
+	    m) MAILTO=$OPTARG ;;
+	    O) OVERWRITEMODE=true ;;
 	    B) DO_TEST= ;;
-	    T) DO_BUILD= ;;
+	    T) DO_BUILD= ; OVERWRITEMODE=true ;;
 	    n) DRY_RUN="-n" ;;
 	    v) set -x ;;
 	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
+	    a) MAKEVARS=(${MAKEVARS[@]} "$OPTARG") ;;
 	    i) IFNAME=$OPTARG ;;
 	    h|*) usage ;;
 	esac
@@ -418,16 +331,7 @@ function main () {
     toshift=$(($OPTIND - 1))
     arg=1; while [ $arg -le $toshift ] ; do options=(${options[@]} "$1") ; shift; arg=$(($arg+1)) ; done
 
-    # allow var=value stuff; 
-    for target in "$@" ; do
-	# check if contains '='
-	target1=$(echo $target | sed -e s,=,,)
-	if [ "$target" = "$target1" ] ; then
-	    MAKETARGETS=(${MAKETARGETS[@]} "$target")
-	else
-	    MAKEVARS=(${MAKEVARS[@]} "$target")
-	fi
-    done
+    MAKETARGETS="$@"
     
     # set defaults
     [ -z "$FCDISTRO" ] && FCDISTRO=$DEFAULT_FCDISTRO
@@ -436,37 +340,18 @@ function main () {
     [ -z "$PLDISTROTAGS" ] && PLDISTROTAGS="${PLDISTRO}-tags.mk"
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
-    [ -z "$TESTBUILDURL" ] && TESTBUILDURL="$DEFAULT_TESTBUILDURL"
     [ -z "$GPGPATH" ] && GPGPATH="$DEFAULT_GPGPATH"
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
-    [ -z "$build_SVNPATH" ] && build_SVNPATH="$DEFAULT_build_SVNPATH"
+    [ -z "$SVNPATH" ] && SVNPATH="$DEFAULT_SVNPATH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
-    [ -z "$TESTMASTER" ] && TESTMASTER="$DEFAULT_TESTMASTER"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
 	
-    if [ -n "$OVERBASE" ] ; then
-	sedargs="-e s,@DATE@,${DATE},g"
-	BASE=$(echo ${OVERBASE} | sed $sedargs)
-    else
-	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
-	BASE=$(echo ${BASE} | sed $sedargs)
-    fi
-
-    ### elaborate mail subject
-    if [ -n "$DO_BUILD" -a -n "$DO_TEST" ] ; then
-	MAIL_SUBJECT="complete"
-    elif [ -n "$DO_BUILD" ] ; then
-	MAIL_SUBJECT="package-only"
-    elif [ -n "$DO_TEST" ] ; then
-	MAIL_SUBJECT="test-only"
-    fi
-    if [ -n "$OVERBASE" ] ; then
-	MAIL_SUBJECT="$MAIL_SUBJECT incremental run on"
-    else
-	MAIL_SUBJECT="$MAIL_SUBJECT fresh build"
-    fi
+    ### set BASE from DISTRO, if unspecified
+    sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
+    BASE=$(echo ${BASE} | sed $sedargs)
+    WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
 
     if ! in_root_context ; then
         # in the vserver
@@ -481,7 +366,7 @@ function main () {
         # (*) copy this command in the vserver
         # (*) invoke it
 	
-	if [ -n "$OVERBASE" ] ; then
+	if [ -n "$OVERWRITEMODE" ] ; then
             ### Re-use a vserver (finish an unfinished build..)
 	    if [ ! -d /vservers/${BASE} ] ; then
 		echo $COMMAND : cannot find vserver $BASE
@@ -493,19 +378,11 @@ function main () {
 	    exec > $LOG 2>&1
 	    set -x
 	    echo "XXXXXXXXXX $COMMAND: using existing vserver $BASE" $(date)
+	    show_env
 	    # start in case e.g. we just rebooted
 	    vserver ${BASE} start || :
 	    # update build
 	    vserver ${BASE} exec svn update /build
-	    # get environment from the first run 
-	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
-
-	    PLDISTRO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PLDISTRO)
-	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PLDISTROTAGS)
-	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH)
-	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PERSONALITY)
-	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +MAILTO)
-	    show_env
 	else
 	    # create vserver: check it does not exist yet
 	    i=
@@ -530,7 +407,7 @@ function main () {
 
 	    ### extract the whole build - much simpler
 	    tmpdir=/tmp/$COMMAND-$$
-	    svn export $build_SVNPATH $tmpdir
+	    svn export $SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
 	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} -i ${IFNAME} ${BASE} 
@@ -538,7 +415,7 @@ function main () {
 	    cd -
 	    rm -rf $tmpdir
 	    # Extract build again - in the vserver
-	    vserver ${BASE} exec svn checkout ${build_SVNPATH} /build
+	    vserver ${BASE} exec svn checkout ${SVNPATH} /build
 	fi
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
 
@@ -554,23 +431,13 @@ function main () {
 	# redirect log again
 	exec >> $LOG 2>&1 
 
-	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
-	WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
-	mkdir -p ${WEBPATH}
-
-        # where to store the log for web access
-	WEBLOG=${WEBPATH}/${BASE}.log.txt
-        # compute the log URL - inserted in the mail messages for convenience
-	LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
-	TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
-    
 	if [ -n "$DO_BUILD" ] ; then 
 
 	    cp $COMMANDPATH /vservers/${BASE}/build/
 
 	    # invoke this command in the vserver for building (-T)
 	    vserver ${BASE} exec chmod +x /build/$COMMAND
-	    vserver ${BASE} exec /build/$COMMAND "${options[@]}" -b "${BASE}" "${MAKEVARS[@]}" "${MAKETARGETS[@]}"
+	    vserver ${BASE} exec /build/$COMMAND "${options[@]}" -b "${BASE}" $MAKETARGETS
 	fi
 
 	# publish to the web so runtest can find them
@@ -580,10 +447,75 @@ function main () {
 	# publish myplc-release
 	rsync --verbose /vservers/$BASE/build/myplc-release $WEBPATH/$BASE
 
-        # create yum repo and sign packages.
-	if [ -n "$SIGNYUMREPO" ] ; then
-	    sign_node_packages
-	fi
+    # create yum repo and sign packages.
+    if [ -n "$SIGNYUMREPO" ] ; then
+        echo "Signing signing node packages"
+
+        ### availability of repo indexing tools
+        # old one - might be needed for old-style nodes
+        type -p yum-arch > /dev/null && have_yum_arch="true"
+        # new one
+        type -p createrepo > /dev/null && have_createrepo="true"
+
+        repository=$WEBPATH/$BASE/RPMS/
+        # the rpms that need signing
+        new_rpms=
+        # and the corresponding stamps
+        new_stamps=
+        # is there a need to refresh yum metadata
+        need_yum_arch=
+        need_createrepo=
+
+        # right after installation, no package is present
+        # but we still need to create index 
+        [ -n "$have_yum_arch" -a ! -f $repository/headers/header.info ] && need_yum_arch=true
+        [ -n "$have_createrepo" -a ! -f $repository/repodata/repomd.xml ] && need_createrepo=true
+
+        for package in $(find $repository/ -name '*.rpm') ; do
+            stamp=$repository/signed-stamps/$(basename $package).signed
+            # If package is newer than signature stamp
+            if [ $package -nt $stamp ] ; then
+                new_rpms="$new_rpms $package"
+                new_stamps="$new_stamps $stamp"
+            fi
+            # Or than yum-arch headers
+            [ -n "$have_yum_arch" ] && [ $package -nt $repository/headers/header.info ] && need_yum_arch=true
+            # Or than createrepo database
+            [ -n "$have_createrepo" ] && [ $package -nt $repository/repodata/repomd.xml ] && need_createrepo=true
+        done
+
+        if [ -n "$new_rpms" ] ; then
+            # Create a stamp once the package gets signed
+            mkdir $repository/signed-stamps 2> /dev/null
+
+            # Sign RPMS. setsid detaches rpm from the terminal,
+            # allowing the (hopefully blank) GPG password to be
+            # entered from stdin instead of /dev/tty.
+            echo | setsid rpm \
+                --define "_signature gpg" \
+                --define "_gpg_path $GPGPATH" \
+                --define "_gpg_name $GPGUID" \
+                --resign $new_rpms && touch $new_stamps
+        fi
+
+         # Update repository index / yum metadata. 
+
+        if [ -n "$need_yum_arch" ] ; then
+            # yum-arch sometimes leaves behind
+            # .oldheaders and .olddata directories accidentally.
+            rm -rf $repository/{.oldheaders,.olddata}
+            yum-arch $repository
+        fi
+
+        if [ -n "$need_createrepo" ] ; then
+            if [ -f $repository/yumgroups.xml ] ; then
+                createrepo --quiet -g yumgroups.xml $repository
+            else
+                createrepo --quiet $repository
+            fi
+        fi
+
+    fi
 
 	if [ -n "$DO_TEST" ] ; then 
 	    runtest

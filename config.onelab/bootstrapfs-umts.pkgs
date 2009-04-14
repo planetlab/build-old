@@ -4,3 +4,4 @@ groupdesc: planetlab node umts extensions
 package: nozomi
 package: comgt
 package: wvdial
+package: planetlab-umts-tools-backend

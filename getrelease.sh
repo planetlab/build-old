@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. $(dirname $0)/build.common
+. build.common
 
 echo $pl_DISTRO_RELEASE
 
