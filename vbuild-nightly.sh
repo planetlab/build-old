@@ -21,17 +21,18 @@ DEFAULT_GPGUID="root@$( /bin/hostname )"
 DEFAULT_WEBPATH="/build/@PLDISTRO@/"
 
 # for the test part
-DEFAULT_TESTCONFIG="default"
 x=$(hostname)
 y=$(hostname|sed -e s,inria,,)
 # INRIA defaults
 if [ "$x" != "$y" ] ; then
     DEFAULT_TESTBUILDURL="http://build.onelab.eu/"
     DEFAULT_TESTMASTER="testmaster.onelab.eu"
+    DEFAULT_TESTCONFIG="1default"
 else
     DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
     ### xxx change as appropriate
     DEFAULT_TESTMASTER="p-testmaster.onelab.eu"
+    DEFAULT_TESTCONFIG="pdefault"
 fi    
 
 ####################
