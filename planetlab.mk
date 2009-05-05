@@ -358,17 +358,6 @@ myplc-SPEC := myplc.spec
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc
 
-## #
-## # myplc-chroot : old-fashioned, chroot-based packaging
-## #
-## myplc-chroot-MODULES := MyPLC build
-## myplc-chroot-SPEC := myplc-chroot.spec
-## # myplc-chroot may require all packages
-## myplc-chroot-DEPEND-PACKAGES := $(IN_MYPLC)
-## myplc-chroot-DEPEND-FILES := RPMS/yumgroups.xml myplc-release
-## myplc-chroot-RPMDATE := yes
-## ALL += myplc-chroot
-
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
