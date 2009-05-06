@@ -356,6 +356,9 @@ savedpldistro.mk:
 	echo "PERSONALITY:=$(PERSONALITY)" >> $@
 	echo "MAILTO:=$(MAILTO)" >> $@
 	echo "BASE:=$(BASE)" >> $@
+	echo "WEBPATH:=$(WEBPATH)" >> $@
+	echo "TESTBUILDURL:=$(TESTBUILDURL)" >> $@
+	echo "WEBROOT:=$(WEBROOT)" >> $@
 
 savedpldistro: savedpldistro.mk
 .PHONY: savedpldistro

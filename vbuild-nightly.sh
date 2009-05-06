@@ -17,19 +17,22 @@ DEFAULT_GPGPATH="/etc/planetlab"
 # default email to use in gpg secring
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
-# web publishing results
-DEFAULT_WEBPATH="/build/@PLDISTRO@/"
-
-# for the test part
+# for publishing results, and the tests settings
 x=$(hostname)
 y=$(hostname|sed -e s,inria,,)
 # INRIA defaults
 if [ "$x" != "$y" ] ; then
+    DEFAULT_WEBPATH="/build/@PLDISTRO@/"
     DEFAULT_TESTBUILDURL="http://build.onelab.eu/"
+    # this is where the buildurl is pointing towards
+    DEFAULT_WEBROOT="/build/"
     DEFAULT_TESTMASTER="testmaster.onelab.eu"
     DEFAULT_TESTCONFIG="1default"
 else
+    DEFAULT_WEBPATH="/build/@FCDISTRO@/@PLDISTRO@/"
     DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
+    # this is where the buildurl is pointing towards
+    DEFAULT_WEBROOT="/build/"
     ### xxx change as appropriate
     DEFAULT_TESTMASTER="p-testmaster.onelab.eu"
     DEFAULT_TESTCONFIG="pdefault"
@@ -363,6 +366,7 @@ function usage () {
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
+    echo " -r webroot - defaults to $DEFAULT_WEBROOT - the fs point where testbuildurl actually sits"
     echo " -M testmaster - defaults to $DEFAULT_TESTMASTER"
     echo " -y sign yum repo in webpath"
     echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
@@ -400,6 +404,7 @@ function main () {
 	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
 	    w) WEBPATH=$OPTARG ;;
 	    W) TESTBUILDURL=$OPTARG ;;
+	    r) WEBROOT=$OPTARG ;;
 	    M) TESTMASTER=$OPTARG ;;
             y) SIGNYUMREPO=true ;;
             g) GPGPATH=$OPTARG ;;
@@ -438,6 +443,7 @@ function main () {
     [ -z "$BASE" ] && BASE="$DEFAULT_BASE"
     [ -z "$WEBPATH" ] && WEBPATH="$DEFAULT_WEBPATH"
     [ -z "$TESTBUILDURL" ] && TESTBUILDURL="$DEFAULT_TESTBUILDURL"
+    [ -z "$WEBROOT" ] && WEBROOT="$DEFAULT_WEBROOT"
     [ -z "$GPGPATH" ] && GPGPATH="$DEFAULT_GPGPATH"
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
@@ -506,6 +512,9 @@ function main () {
 	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH)
 	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PERSONALITY)
 	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +MAILTO)
+	    WEBPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +WEBPATH)
+	    TESTBUILDURL=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +TESTBUILDURL)
+	    WEBROOT=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +WEBROOT)
 	    show_env
 	else
 	    # create vserver: check it does not exist yet
@@ -562,8 +571,8 @@ function main () {
         # where to store the log for web access
 	WEBLOG=${WEBPATH}/${BASE}.log.txt
         # compute the log URL - inserted in the mail messages for convenience
-	LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
-	TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,/build/,${TESTBUILDURL},")
+	LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,${WEBROOT},${TESTBUILDURL},")
+	TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,${WEBROOT},${TESTBUILDURL},")
     
 	if [ -n "$DO_BUILD" ] ; then 
 
