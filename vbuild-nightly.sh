@@ -394,7 +394,7 @@ function main () {
     DO_BUILD=true
     DO_TEST=true
     SIGNYUMREPO=""
-    while getopts "f:d:p:m:s:t:b:o:c:w:W:M:yg:u:BTnv7i:" opt ; do
+    while getopts "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:BTnv7i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
