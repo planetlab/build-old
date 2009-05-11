@@ -226,7 +226,9 @@ function runtest () {
     for a in i386 x86_64; do
 	archdir=/vservers/$BASE/build/RPMS/$a
 	if [ -d $archdir ] ; then
-	    url=$(echo $archdir | sed -e "s,/vservers/$BASE/build,${TESTBUILDURL}${PLDISTRO}/${BASE},")
+	    # where was that installed
+	    url=$(echo $archdir | sed -e "s,/vservers/${BASE}/build,${WEBPATH}/${BASE},")
+	    url=$(echo $url | sed -e "s,${WEBROOT},${TESTBUILDURL},")
 	    break
 	fi
     done
