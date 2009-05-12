@@ -3,7 +3,7 @@
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
 # trying the 2.6.27 kernel
-linux-2.6-SVNPATH               := http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-2
+linux-2.6-SVNPATH               := http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-3
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
