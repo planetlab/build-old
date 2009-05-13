@@ -34,5 +34,6 @@ pyplnet
 util-vserver-pl
 util-vserver:scholz
 vsys-scripts
+vsys-scripts:0.9
 vsys:0.9
 www-register-wizard
