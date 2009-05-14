@@ -34,8 +34,7 @@ else
     DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
     # this is where the buildurl is pointing towards
     DEFAULT_WEBROOT="/build/"
-    ### xxx change as appropriate
-    DEFAULT_TESTMASTER="p-testmaster.onelab.eu"
+    DEFAULT_TESTMASTER="master.test.planet-lab.org"
 fi    
 
 ####################
@@ -216,9 +215,7 @@ function run_log () {
 	exit 1
     fi
     TESTS_SVNPATH=$(cat $stamp)
-    # xxx - Thierry - need to rework the test framework in tests/system so it can work
-    # with the entire tests/ module checked out, rather than only tests/system/ 
-    # ugly workaround for now
+    # don't need the tests fulltree anymore
     TESTS_SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
 
     ### the URL to the RPMS/<arch> location
@@ -247,8 +244,8 @@ function run_log () {
     ssh -n ${testmaster_ssh} rm -rf ${testdir}
     # check it out 
     ssh -n ${testmaster_ssh} svn co ${TESTS_SYSTEM_SVNPATH} ${testdir}
-    # check out the entire tests/ module (with system/ duplicated) as a subdir - see xxx above
-    ssh -n ${testmaster_ssh} svn co ${TESTS_SVNPATH} ${testdir}/tests
+###    # check out the entire tests/ module (with system/ duplicated) as a subdir - see fulltree above
+###    ssh -n ${testmaster_ssh} svn co ${TESTS_SVNPATH} ${testdir}/tests
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
     for config in ${TESTCONFIG} ; do
