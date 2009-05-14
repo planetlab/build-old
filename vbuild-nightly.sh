@@ -27,7 +27,6 @@ if [ "$x" != "$y" ] ; then
     # this is where the buildurl is pointing towards
     DEFAULT_WEBROOT="/build/"
     DEFAULT_TESTMASTER="testmaster.onelab.eu"
-    DEFAULT_TESTCONFIG="1default"
 else
     DEFAULT_WEBPATH="/build/@FCDISTRO@/@PLDISTRO@/"
     DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
@@ -35,7 +34,6 @@ else
     DEFAULT_WEBROOT="/build/"
     ### xxx change as appropriate
     DEFAULT_TESTMASTER="p-testmaster.onelab.eu"
-    DEFAULT_TESTCONFIG="pdefault"
 fi    
 
 ####################
@@ -53,7 +51,7 @@ function summary () {
 # read a full log and tries to extract the interesting stuff
 
 import sys,re
-m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not installed.*|.*PROPFIND.*|.*Starting.*:runtest.*")
+m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not installed.*|.*PROPFIND.*|.*Starting.*:run_log.*")
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
@@ -201,12 +199,12 @@ function build () {
 
 # this was formerly run in the myplc-devel chroot but now is run in the root context,
 # this is so that the .ssh config gets done manually, and once and for all
-function runtest () {
+function run_log () {
     set -x
     set -e
     trap failure ERR INT
 
-    echo -n "============================== Starting $COMMAND:runtest on $(date)"
+    echo -n "============================== Starting $COMMAND:run_log on $(date)"
 
     # where to find TESTS_SVNPATH
     stamp=/vservers/$BASE/build/tests_svnpath
@@ -258,7 +256,7 @@ function runtest () {
 
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/runtest --build ${build_SVNPATH} --url ${url} $configs $test_env --all || success=
+    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${build_SVNPATH} --url ${url} $configs $test_env --verbose --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
@@ -271,7 +269,7 @@ function runtest () {
 	failure
     fi
     
-    echo -n "============================== End $COMMAND:runtest on $(date)"
+    echo -n "============================== End $COMMAND:run_log on $(date)"
 }
 
 function in_root_context () {
@@ -588,7 +586,7 @@ function main () {
 	    vserver ${BASE} exec /build/$COMMAND "${options[@]}" -b "${BASE}" "${MAKEVARS[@]}" "${MAKETARGETS[@]}"
 	fi
 
-	# publish to the web so runtest can find them
+	# publish to the web so run_log can find them
 	rm -rf $WEBPATH/$BASE ; mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
 	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
 	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
@@ -601,7 +599,7 @@ function main () {
 	fi
 
 	if [ -n "$DO_TEST" ] ; then 
-	    runtest
+	    run_log
 	fi
 
 	success 
