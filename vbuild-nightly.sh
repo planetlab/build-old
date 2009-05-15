@@ -34,7 +34,7 @@ else
     DEFAULT_TESTBUILDURL="http://build.planet-lab.org/"
     # this is where the buildurl is pointing towards
     DEFAULT_WEBROOT="/build/"
-    DEFAULT_TESTMASTER="master.test.planet-lab.org"
+    DEFAULT_TESTMASTER="manager.test.planet-lab.org"
 fi    
 
 ####################
