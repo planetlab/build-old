@@ -307,6 +307,22 @@ zabbix-BUILD-FROM-SRPM := yes
 ALL += zabbix
 
 #
+# pyopenssl
+#
+pyopenssl-MODULES := pyopenssl
+pyopenssl-SPEC := pyOpenSSL.spec
+pyopenssl-BUILD-FROM-SRPM := yes
+ALL += pyopenssl
+
+
+#
+# geniwrapper
+#
+geniwrapper-MODULES := geniwrapper
+geniwrapper-SPEC := geniwrapper.spec
+ALL += geniwrapper
+
+#
 # nodeconfig
 #
 nodeconfig-MODULES := nodeconfig build
