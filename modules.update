@@ -2,8 +2,12 @@
 
 # redirect this into modules.list to get it refreshed
 #
-# we set DISTRONAME as this cannot be correctly guessed from the build box root context
-for distro in onelab planetlab ; do
-    tags=${distro}-tags.mk 
-    make stage1=true PLDISTRO=${distro} PLDISTROTAGS=${tags} DISTRONAME=centos5 module-tools 
-done | sort -u | grep -v '^build$'
+
+# keep centos5 as the default target rather than - more accurate - f8 b/c we need more of our modules on centos
+fcdistro=centos5
+
+( \
+  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+  make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+) | sort -u | grep -v '^build$'
