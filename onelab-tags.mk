@@ -35,17 +35,17 @@ PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-14
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-11
 PLEWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-13
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn//www-register-wizard/tags/www-register-wizard-4.2-3
-Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/trunk
+Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-9
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-3
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn//BootManager/tags/BootManager-4.3-7
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn//pypcilib/tags/pypcilib-0.2-6
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-13
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn//VserverReference/tags/VserverReference-4.2-12
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn//BootstrapFS/tags/BootstrapFS-1.0-8
-MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/trunk
-geniwrapper-SVNPATH             := http://svn.planet-lab.org/svn/geniwrapper/trunk
-pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/trunk
+MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-11
+geniwrapper-SVNPATH             := http://svn.planet-lab.org/svn/geniwrapper/tags/geniwrapper-0.2-1
+pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 
 
 # locating the right test directory - see make tests_svnpath
-TESTS_SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
+tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk

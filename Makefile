@@ -725,7 +725,7 @@ info: packages modules branches
 
 ####################
 tests_svnpath:
-	@$(if $(TESTS_SVNPATH), echo $(TESTS_SVNPATH) > $@, \
+	@$(if $(tests-SVNPATH), echo $(tests-SVNPATH) > $@, \
 	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
 
 
