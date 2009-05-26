@@ -48,4 +48,4 @@ pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/
 
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
+tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-2

@@ -41,4 +41,4 @@ geniwrapper-SVNPATH             := http://svn.planet-lab.org/svn/geniwrapper/tag
 pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
+tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-2
