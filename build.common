@@ -8,9 +8,10 @@
 #
 # $Id$
 #
+# supported distros f8, f10, (f11) -- fc[46] probably does not work anymore
+# centos5.3
 
-# support for fedora and centos only for now
-
+# returns 'Fedora' or 'CentOS' for now
 function pl_getDistro() {
     if [ -f "/etc/redhat-release" ] ; then
 	distro=$(awk ' { print $1 } ' /etc/redhat-release)
@@ -22,6 +23,7 @@ function pl_getDistro() {
     return 0
 }
 
+# returns something like 8, 10, or 5.3
 function pl_getRelease() {
     if [ -f "/etc/redhat-release" ] ; then
 	release=$(awk ' { if ($1=="Fedora" && $2=="Core") print $4 ; if (($1=="Fedora" && $2!="Core")||$1=="CentOS") print $3 } ' /etc/redhat-release)
@@ -33,7 +35,7 @@ function pl_getRelease() {
     return 0
 }
 
-# vserver expects something like f8 or centos5
+# returns stuff for vserver, i.e. something like 'f8' or 'centos5'
 function pl_getReleaseName () {
     distro=$1; shift
     release=$1; shift
@@ -62,17 +64,13 @@ function pl_getReleaseName () {
 # on centos5 we build it locally
 function pl_getKexcludes () {
     distroname=$1; shift
-    case $distroname in 
-	f?|f1?)
-	    echo 'kernel* util-vserver* iptables iproute drupal'
-	    ;;
+    case $distroname in
+	f*)
+	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal' ;;
 	centos5)
-	    echo 'kernel* util-vserver* iptables iproute inotify-tools* libnl* drupal'
-	    ;;
+	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	*)
-	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh"
-	    exit 1
-	    ;;
+	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh" ; exit 1 ;;
     esac
 }
 
