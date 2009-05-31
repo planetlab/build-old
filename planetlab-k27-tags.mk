@@ -3,7 +3,7 @@
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
 # trying the 2.6.27 kernel
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-3
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
 util-vserver-SVNBRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
@@ -19,7 +19,7 @@ CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn//CoDemux/tags/CoDemux-0.1-13
 fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn//fprobe-ulog/tags/fprobe-ulog-1.1.3-0
 pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn//pf2slice/tags/pf2slice-1.0-2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn//Mom/tags/Mom-2.3-1
-iptables-SVNPATH		:= http://svn.planet-lab.org/svn//iptables/tags/iptables-1.4.1.1-1
+iptables-SVNPATH		:= http://svn.planet-lab.org/svn//iptables/trunk
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn//iproute2/tags/iproute2-2.6.16-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn//inotify-tools/tags/inotify-tools-3.13-2
 vsys-SVNBRANCH			:= 0.9
