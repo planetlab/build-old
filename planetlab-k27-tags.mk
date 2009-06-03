@@ -37,7 +37,7 @@ BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-13
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn//VserverReference/tags/VserverReference-4.2-12
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn//BootstrapFS/tags/BootstrapFS-1.0-8
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-13
-geniwrapper-SVNPATH             := http://svn.planet-lab.org/svn/geniwrapper/tags/geniwrapper-0.2-2
+geniwrapper-SVNPATH             := http://svn.planet-lab.org/svn/geniwrapper/tags/geniwrapper-0.2-3
 pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 
 # locating the right test directory - see make tests_svnpath
