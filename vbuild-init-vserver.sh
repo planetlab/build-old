@@ -8,7 +8,7 @@ DIRNAME=$(dirname $0)
 # pkgs parsing utilities
 PATH=$(dirname $0):$PATH . build.common
 
-DEFAULT_FCDISTRO=centos5
+DEFAULT_FCDISTRO=f8
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_IFNAME=eth0
