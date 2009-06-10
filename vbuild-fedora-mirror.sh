@@ -31,7 +31,7 @@ jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname="centos5"
-all_distronames="f8 f10 centos5.2 centos5.3 epel5"
+all_distronames="f8 f10 f11 centos5.2 centos5.3 epel5"
 default_arch="i386"
 all_archs="i386 x86_64"
 
@@ -57,7 +57,7 @@ function mirror_distro_arch () {
 	    distro="Fedora Core"
 	    rsyncurl=$fedora_url
 	    ;;
-	f*[7-9]|f10)
+	f*[7-9]|f1?)
 	    distroindex=$(echo $distroname | sed -e "s,f,,g")
 	    distro="Fedora"
 	    rsyncurl=$fedora_url
@@ -105,7 +105,7 @@ function mirror_distro_arch () {
 		    paths="$paths core/updates/$distroindex/$arch/ extras/$distroindex/$arch/"
 		    RES=0
 		    ;;
-		7|8|9|10)
+		7|8|9|1?)
 		    [ -z "$skip_core" ] && paths="releases/$distroindex/Everything/$arch/os/"
 		    paths="$paths updates/$distroindex/$arch/"
 		    # f8 and f9 have the additional newkey repo
