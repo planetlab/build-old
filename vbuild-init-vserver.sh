@@ -184,13 +184,10 @@ function setup_vserver () {
     [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
     [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
-    # with vserver 2.3, granting the vserver CAP_MKNOD is not enough
-    # check whether we run vs2.3 or above
-    vs_version=$(uname -a  | sed -e 's,.*[\.\-]vs\([0-9]\)\.\([0-9]\)\..*,\1\2,')
-    # at this stage we have here 22 or 23
-    need_vdevmap=$(( $vs_version >= 23 ))
+    # check if the vserver kernel is using VSERVER_DEVICE (vdevmap) support
+    need_vdevmap=$(grep "CONFIG_VSERVER_DEVICE=y" /boot/config-$(uname -r) | wc -l)
 
-    if [ "$need_vdevmap" == 1 ] ; then
+    if [ $need_vdevmap -eq 1 ] ; then
 	ctx=$(cat /etc/vservers/$vserver/context)
 	vdevmap --set --xid $ctx --open --create --target /dev/null
 	vdevmap --set --xid $ctx --open --create --target /dev/root
