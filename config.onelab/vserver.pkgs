@@ -1,0 +1,36 @@
+groupname: PlanetLabSlice
+groupdesc: PlanetLab Slice Reference Image
+# packages to exclude from stock repositories
+kexclude: @KEXCLUDE@
+# define packages
+package: bash
+package: coreutils
+package: iputils
+package: kernel-vserver
+package: bzip2
+package: crontabs
+package: diffutils
+package: logrotate
+package: openssh-clients
+package: passwd
+package: rsh
+package: rsync
+package: sudo
+package: tcpdump
+package: telnet
+package: traceroute
+package: time
+package: wget
+package: which
+package: yum
+package: curl
+package: gzip
+package: perl
+package: python
+package: python-devel
+package: tar
+package: findutils
+package: filesystem
+package: vixie-cron
+package-f10: vixie-cron
+package: planetlab-umts-tools-frontend
