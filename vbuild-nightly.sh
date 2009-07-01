@@ -351,6 +351,24 @@ function show_env () {
     set -x
 }
 
+function setupssh () {
+    base=$1; shift
+    sshkey=$1; shift
+    
+    if [ -f ${sshkey} ] ; then
+	SSHDIR=/vservers/${base}/root/.ssh
+	mkdir -p ${SSHDIR}
+	cp $sshkey ${SSHDIR}/thekey
+	(echo "host *"; \
+	    echo "  IdentityFile ~/.ssh/thekey"; \
+	    echo "  StrictHostKeyChecking no" ) > ${SSHDIR}/config
+	chmod 700 ${SSHDIR}
+	chmod 400 ${SSHDIR}/*
+    else 
+	echo "WARNING : could not find provided ssh key $sshkey - ignored"
+    fi
+}
+
 function usage () {
     echo "Usage: $COMMAND [option] [var=value...] make-targets"
     echo "This is $REVISION"
@@ -370,14 +388,16 @@ function usage () {
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
     echo " -r webroot - defaults to $DEFAULT_WEBROOT - the fs point where testbuildurl actually sits"
     echo " -M testmaster - defaults to $DEFAULT_TESTMASTER"
-    echo " -y sign yum repo in webpath"
-    echo " -g path to gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
-    echo " -u gpg email used in secring. Defaults to $DEFAULT_GPGUID"
-    echo " -B : run build only"
-    echo " -T : run test only"
-    echo " -n dry-run : -n passed to make - vserver gets created though - no mail sent"
-    echo " -v : be verbose"
-    echo " -7 : uses weekday-@FCDISTRO@ as base"
+    echo " -y - sign yum repo in webpath"
+    echo " -g gpg_path - to the gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
+    echo " -u gpg_uid - email used in secring. Defaults to $DEFAULT_GPGUID"
+    echo " -K svnsshkey - specify key to use when svn+ssh:// URLs are used for SVNPATH"
+    echo " -S - do not publish source rpms"
+    echo " -B - run build only"
+    echo " -T - run test only"
+    echo " -n - dry-run: -n passed to make - vserver gets created though - no mail sent"
+    echo " -v - be verbose"
+    echo " -7 - uses weekday-@FCDISTRO@ as base"
     echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
     exit 1
 }
@@ -392,8 +412,10 @@ function main () {
     DRY_RUN=
     DO_BUILD=true
     DO_TEST=true
+    PUBLISH_SRPMS=true
+    SSH_KEY=""
     SIGNYUMREPO=""
-    while getopts "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:BTnv7i:" opt ; do
+    while getopts "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:K:SBTnv7i:" opt ; do
 	case $opt in
 	    f) FCDISTRO=$OPTARG ;;
 	    d) PLDISTRO=$OPTARG ;;
@@ -411,6 +433,8 @@ function main () {
             y) SIGNYUMREPO=true ;;
             g) GPGPATH=$OPTARG ;;
             u) GPGUID=$OPTARG ;;
+	    K) SSH_KEY=$OPTARG ;;
+	    S) PUBLISH_SRPMS="" ;;
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ;;
 	    n) DRY_RUN="-n" ;;
@@ -505,6 +529,7 @@ function main () {
 	    # start in case e.g. we just rebooted
 	    vserver ${BASE} start || :
 	    # update build
+	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    vserver ${BASE} exec svn update /build
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
@@ -550,8 +575,10 @@ function main () {
 	    cd -
 	    rm -rf $tmpdir
 	    # Extract build again - in the vserver
+	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    vserver ${BASE} exec svn checkout ${build_SVNPATH} /build
 	fi
+	# install ssh key in vserver
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
 
 	# The log inside the vserver contains everything
@@ -578,6 +605,7 @@ function main () {
     
 	if [ -n "$DO_BUILD" ] ; then 
 
+	    # invoke this command into the build directory of the vserver
 	    cp $COMMANDPATH /vservers/${BASE}/build/
 
 	    # invoke this command in the vserver for building (-T)
@@ -588,9 +616,10 @@ function main () {
 	# publish to the web so run_log can find them
 	rm -rf $WEBPATH/$BASE ; mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
 	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
-	rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
-	# publish myplc-release
-	rsync --verbose /vservers/$BASE/build/myplc-release $WEBPATH/$BASE
+	[[ -n "$PUBLISH_SRPMS" ]] && rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
+	# publish myplc-release if this exists
+	release=/vservers/$BASE/build/myplc-release
+	[ -f $release ] && rsync --verbose $release $WEBPATH/$BASE
 
         # create yum repo and sign packages.
 	if [ -n "$SIGNYUMREPO" ] ; then
