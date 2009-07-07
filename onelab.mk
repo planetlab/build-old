@@ -299,6 +299,13 @@ ALL += monitor
 IN_BOOTSTRAPFS += monitor
 
 #
+# PLC RT
+#
+plcrt-MODULES := PLCRT
+plcrt-SPEC := plcrt.spec
+ALL += plcrt
+
+#
 # zabbix
 #
 zabbix-MODULES := Monitor

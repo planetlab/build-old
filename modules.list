@@ -8,6 +8,7 @@ MyPLC
 NodeManager:1.8
 NodeUpdate
 PLCAPI
+PLCRT
 PLEWWW
 PingOfDeath
 VserverReference
@@ -38,4 +39,3 @@ util-vserver:scholz
 vsys-scripts
 vsys:0.9
 www-register-wizard
-PLCRT

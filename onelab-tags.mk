@@ -33,10 +33,10 @@ vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-sc
 dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-5
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-21
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
-PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-24
+PLEWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-24
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-1
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-18
-nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-3
+nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-4
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-4.3-9
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-7
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-14
@@ -45,7 +45,7 @@ BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/Bootstrap
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-19
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/geniwrapper/tags/geniwrapper-0.8-2
 pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
-
+PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-4
 
 # locating the right test directory - see make tests_svnpath
 tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-2
