@@ -331,7 +331,7 @@ ALL += pyopenssl
 # sfa - Slice Facility Architecture - fka geniwrapper
 #
 sfa-MODULES := sfa
-sfa-SPEC := geniwrapper.spec
+sfa-SPEC := sfa.spec
 ALL += sfa
 
 #
