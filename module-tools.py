@@ -412,7 +412,7 @@ that for other purposes than tagging"""%topdir
 
     def unignored_lines (self, logfile):
         result=[]
-        exclude="Tagging module %s"%self.name
+        exclude="Setting tag %s"%self.name
         white_line_matcher = re.compile("\A\s*\Z")
         for logline in file(logfile).readlines():
             if logline.strip() == Module.svn_magic_line:
@@ -715,11 +715,11 @@ The module-sync function has the following limitations
         # so we can provide useful information, such as version numbers and diff
         # in the same file
         changelog="/tmp/%s-%d.txt"%(self.name,os.getpid())
-        file(changelog,"w").write("""Tagging module %s - %s
+        file(changelog,"w").write("""Setting tag %s
 
 %s
 Please write a changelog for this new tag in the section above
-"""%(self.name,new_tag_name,Module.svn_magic_line))
+"""%(new_tag_name,Module.svn_magic_line))
 
         if not self.options.verbose or prompt('Want to see diffs while writing changelog',True):
             file(changelog,"a").write('DIFF=========\n' + diff_output)
