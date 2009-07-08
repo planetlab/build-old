@@ -34,3 +34,4 @@ package: filesystem
 package: vixie-cron
 package-f10: vixie-cron
 package: planetlab-umts-tools-frontend
+package: ipfw-slice

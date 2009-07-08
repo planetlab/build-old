@@ -41,6 +41,23 @@ IN_BOOTSTRAPFS += $(KERNELS)
 IN_MYPLC += $(KERNELS)
 
 #
+# ipfw: root context module, and slice companion
+#
+ipfw-MODULES := ipfw
+ipfw-SPEC := ipfw.spec
+ipfw-DEPEND-DEVEL-RPMS := kernel-devel
+ipfw-SPECVARS = kernel_version=$(kernel.rpm-version) \
+	kernel_release=$(kernel.rpm-release) \
+	kernel_arch=$(kernel.rpm-arch)
+IN_BOOTSTRAPFS += ipfw
+ALL += ipfw
+
+ipfwslice-MODULES := ipfw
+ipfwslice-SPEC := ipfw-slice.spec
+IN_VSERVER += ipfwslice
+ALL += ipfwslice
+
+#
 # madwifi
 #
 madwifi-MODULES := madwifi
