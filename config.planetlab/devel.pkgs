@@ -93,4 +93,4 @@ package: TurboGears
 package: python-cherrypy
 ##########
 # for sfa : rebuilding wsdl index at build-time
-package: python-uuid
+package: python-uuid pyOpenSSL m2crypto
