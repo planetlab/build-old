@@ -652,14 +652,16 @@ The module-sync function has the following limitations
         # brute-force : change uncommented lines that define <module>-SVNPATH
         else:
             if self.options.verbose:
-                print 'Setting %s-SVNPATH for using %s\n\tin %s .. '%(self.name,newname,tagsfile),
-            pattern="\A\s*%s-SVNPATH\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s/[^\s]+"\
-                                          %(self.name,self.name)
+                print 'Searching for -SVNPATH lines referring to /%s/\n\tin %s .. '%(self.name,tagsfile),
+            pattern="\A\s*(?P<make_name>[^\s]+)-SVNPATH\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s/[^\s]+"\
+                                          %(self.name)
             matcher_module=re.compile(pattern)
             for line in tags.readlines():
                 attempt=matcher_module.match(line)
                 if attempt:
-                    svnpath="%s-SVNPATH"%self.name
+                    svnpath="%s-SVNPATH"%(attempt.group('make_name'))
+                    if self.options.verbose:
+                        print ' '+svnpath, 
                     replacement = "%-32s:= %s/%s/tags/%s\n"%(svnpath,attempt.group('url_main'),self.name,newname)
                     new.write(replacement)
                     matches += 1
