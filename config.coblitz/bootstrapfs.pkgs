@@ -7,7 +7,7 @@ kexclude: @KEXCLUDE@
 # fedora-release or centos-release are pulled from deps
 # define packages
 package: kernel
-package: igp
+package: igb
 package: udev
 package: basesystem
 package: filesystem
