@@ -42,7 +42,7 @@ package+f8: popt-devel
 package: gnupg 
 package: diffutils 
 package: vconfig 
-# package: iptables 
+package: iptables 
 package: wget 
 package: beecrypt-devel 
 package: tetex-latex
