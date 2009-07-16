@@ -7,6 +7,7 @@ kexclude: @KEXCLUDE@
 # fedora-release or centos-release are pulled from deps
 # define packages
 package: kernel
+package: igp
 package: udev
 package: basesystem
 package: filesystem
@@ -74,7 +75,6 @@ package: perl
 package: python
 package: tar
 package: expect
-package: nfs-utils
 package: openvpn
 package: vconfig
 package: PyXML
@@ -98,8 +98,6 @@ package-f10: vixie-cron
 #
 # planetlab
 #
-package: madwifi
-package: wireless-tools
 package: util-vserver
 package: util-vserver-build
 package: util-vserver-lib
@@ -107,9 +105,7 @@ package: util-vserver-core
 package: util-vserver-sysv
 package: util-vserver-legacy
 package: util-vserver-pl
-#package: util-python
 package: NodeManager
-#package: NodeManager-CoBlitz
 package: NodeUpdate
 package: codemux
 package: pl_sshd
@@ -122,3 +118,10 @@ package: vsys
 package: vsys-scripts
 package: monitor-client
 package: monitor-runlevelagent
+
+#
+# wireless support
+#
+#package: madwifi
+#package: wireless-tools
+
