@@ -7,6 +7,9 @@ if [ -z "${vdir}" ] ; then
 	exit
 fi
 
+# Cleanup yum config entirely, waiting for the config files to populate this
+rm -rf ${vdir}/etc/yum.conf ${vdir}/etc/yum.repos.d
+
 # NOTE: we're enabling util-vserver to allow it to help shutdown all slices
 # before rebooting.  This has been problematic in the past.
 # Thierry : I'm enabling network since, for some reason, it ends up turned off on fedora9
@@ -24,29 +27,6 @@ echo > ${vdir}/etc/sysconfig/crontab
 
 # Add site_admin account
 chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
-
-# NOTE:  Removed due to incompatibility between fedora and centos, and b/c we
-# expect that enabling util-vserver above will help with shutdown.
-#
-# : this is added to ensure that processes running within the slices that
-# may have special permissions and other parts of the filesystem engated are
-# killed before shutdown.  We experienced hangs when rebooting without this
-# step.
-#( cat <<EOF ) | patch -d ${vdir}/etc/init.d/
-#--- halt        2007-10-08 19:18:54.000000000 +0000
-#+++ halt2       2008-05-07 17:52:42.000000000 +0000
-#@@ -65,8 +65,10 @@
-# # Kill all processes.
-# [ "\${BASH+bash}" = bash ] && enable kill
-#
-#+action $"Sending all VServers the TERM signal..."  ls -d /proc/virtual/[0-9]* | awk -F '/' '{print \$4}' | xargs -I{} /usr/sbin/vkill -s 15 --xid {} -- 0
-# action $"Sending all processes the TERM signal..." /sbin/killall5 -15
-# sleep 2
-#+action $"Sending all VServers the KILL signal..."  ls -d /proc/virtual/[0-9]* | awk -F '/' '{print \$4}' | xargs -I{} /usr/sbin/vkill -s 9 --xid {} -- 0
-# action $"Sending all processes the KILL signal..."  /sbin/killall5 -9
-#
-# # Write to wtmp file before unmounting /var
-#EOF
 
 # NOTE:  This is added to relieve one site's Cisco router configuration that
 # fails to recognize the host once the arping is sent out.
