@@ -39,6 +39,24 @@ IN_BOOTSTRAPFS += $(KERNELS)
 IN_MYPLC += $(KERNELS)
 
 #
+# igb : Intel gigabit ethernet driver 
+#
+
+# using some other name than myplc-release, as this is a make target already
+igb-MODULES := igb
+igb-SPEC := igb.spec
+ifeq "$(HOSTARCH)" "i386"
+igb-RPMFLAGS:= --target i686
+else
+igb-RPMFLAGS:= --target $(HOSTARCH)
+endif
+igb-DEPEND-DEVEL-RPMS := kernel-devel
+ALL += igb
+IN_BOOTSTRAPFS += igb
+IN_BOOTCD += igb
+
+
+#
 # madwifi
 #
 madwifi-MODULES := madwifi
