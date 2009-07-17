@@ -40,7 +40,6 @@ MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-21
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/geniwrapper/trunk
 pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 PLCRT-SVNPATH                   := http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-5
-igb-SVNPATH			:= http://svn.planet-lab.org/svn/igb/trunk
 
 # locating the right test directory - see make tests_svnpath
 tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-2
