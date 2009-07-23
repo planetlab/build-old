@@ -1,5 +1,24 @@
 #!/usr/bin/python
 
+###
+# Nightly build spec HOWTO
+#
+# *  To add a 'build spec', define a dictionary as in the following examples, filling in the values you would like to override in the defaults. Any values you leave out
+# will get picked up from the defaults at the bottom of this fiel.
+#
+# *  A build spec may define multiple builds encapsulating various combinations of the available parameter options. To do so, 
+# set a parameter to a list, and the parent script will automatically turn it into the combinations it encloses. e.g., the following
+# build spec defines 6 separate builds:
+#
+# my_build = {
+#   'fcdistro':['centos5','f8','f10'],
+#   'personality':['linux32','linux65']
+#
+# * If your parameters have dependencies - e.g. you only want to build the linu64 personality on f10, then define the parameter as a lambda operating
+# on the current build spec. e.g. in this case, it would be to the effect of lambda (build): if (build['fcdistro']=='f10') then ['linux32','linux64'] else ['linux32']
+#
+
+
 marcs_trunk_build = {
 	'tags':'planetlab-tags.mk',
 	'fcdistro':['centos5','f8'],
