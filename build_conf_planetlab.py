@@ -1,22 +1,26 @@
 #!/usr/bin/python
 
 marcs_trunk_build = {
-	'tags':['planetlab-tags.mk'],
+	'tags':'planetlab-tags.mk',
 	'distro':['centos5','f8'],
 	'personality':['linux32','linux64'],
 	'test': 0,
-	'release':['k22'],
+	'release':'k22',
 }
 		
 sapans_k27_build = {
-	'tags':['k27-tags.mk'],
-	'distro':['centos5'],
-	'personality':['linux32'],
+	'tags':'k27-tags.mk',
+	'distro':'centos5',
+	'personality':'linux32',
 	'test':1,
-	'release':['k27']
+	'release':'k27'
 }
 
 ###
+#
+# Defaults: Any values that you leave out from the above specs will get filled in by the defaults specified below
+#
+#
 
 personality_to_arch={'linux32':'i386','linux64':'x86_64'}
 
@@ -31,6 +35,6 @@ __default_build__ = {
 	'svnpath':'http://svn.planet-lab.org/svn/build/trunk',
     'personality':'linux32',
 ### Define lambdas at the end, because they may need the above values to be filled in for their evaluation
-    'arch':lambda concrete_build: personality_to_arch[concrete_build['personality']]
+    'arch':lambda build: personality_to_arch[concrete_build['personality']]
 }
 

@@ -15,10 +15,7 @@ def interpret_build(build, param_names, current_concrete_build={}, concrete_buil
 				new_concrete_build = current_concrete_build.copy()
                                 new_concrete_build[cur_param_name] = value
                                 concrete_build_list = interpret_build(build, remaining_param_names, new_concrete_build, concrete_build_list)
-                elif (type(cur_param)==type(lambda x:x)):
-                        # XXX Assumes that the value is behind it
-                        current_concrete_build[cur_param_name] = cur_param(current_concrete_build)
-                        concrete_build_list = interpret_build(build, remaining_param_names, current_concrete_build,concrete_build_list)
+                
                 # If not, just tack on the value and move on
                 else:
                         current_concrete_build[cur_param_name] = cur_param
@@ -53,12 +50,21 @@ def concrete_build_to_commandline(concrete_build):
     return cmdline
 
                     
+# reduce dependencies in a build 
+def reduce_dependencies(concrete_build):
+    for b in concrete_build.keys():
+        val = concrete_build[b]
+        if (type(val)==type(lambda x:x)):
+            concrete_build[b] = val(concrete_build)
+    return concrete_build
+
 
 # Turn build parameter dicts into commandlines and execute them
 def process_builds (builds, build_names, default_build):
         for build_name in build_names:
                 build = complete_build_spec_with_defaults (builds[build_name], default_build)
-                concrete_builds = interpret_build (build, build.keys())
+                concrete_builds_without_deps = interpret_build (build, build.keys())
+                concrete_builds = map(lambda cb: reduce_dependencies(cb), concrete_builds_without_deps)
                 for concrete_build in concrete_builds:
                         build_commandline = concrete_build_to_commandline(concrete_build)
                         print build_commandline
