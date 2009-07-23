@@ -16,7 +16,6 @@ comgt
 drupal
 dummynet_image
 fprobe-ulog
-geniwrapper
 inotify-tools
 iproute2
 iptables
@@ -34,6 +33,7 @@ planetlab-umts-tools
 pyopenssl
 pypcilib
 pyplnet
+sfa
 util-vserver-pl
 util-vserver:scholz
 vsys-scripts
