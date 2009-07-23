@@ -40,13 +40,13 @@ def concrete_build_to_commandline(concrete_build):
     cmdline = '''%(sh)s 
             %(vbuildnightly)s
             -b %(pldistro)s-%(fcdistro)s-%(arch)s-%(myplcversion)s-%(release)s-%(date)s
-            -f %(distro)s 
+            -f %(fcdistro)s 
             -m %(mailto)s 
             -p %(personality)s
             -r %(webpath)s
             -s %(svnpath)s
             -t %(tags)s 
-            -w %(webpath)s/%(pldistro)s/%(distro)s
+            -w %(webpath)s/%(pldistro)s/%(fcdistro)s
             %(runtests)s'''.replace('\n','') 
     cmdline = cmdline % concrete_build
 
