@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # Script to read build configs in /etc/build_conf.py, turn the configuration into command lines and execute it
 
-import pdb
-
 # Assemble a list of builds from a single build spec
 def interpret_build(build, param_names, current_concrete_build={}, concrete_build_list=[]):
         if (param_names==[]):
@@ -36,7 +34,6 @@ def complete_build_spec_with_defaults (build, default_build):
 
 # Turn build parameter dicts into commandlines and execute them
 def process_builds (builds, build_names, default_build):
-        pdb.set_trace()
         for build_name in build_names:
                 build = complete_build_spec_with_defaults (builds[build_name], default_build)
                 concrete_builds = interpret_build (build, build.keys())
