@@ -35,17 +35,20 @@ def complete_build_spec_with_defaults (build, default_build):
 # Turn a concrete build into a commandline
 
 def concrete_build_to_commandline(concrete_build):
-    cmdline = """%(sh) \
-            %(vbuildinghtly) \
-            -b %(pldistro)-%(fcdistro)-%(arch)-%(myplc_version)-%(release)-%(date) \
-            -f %(distro) \
-            -m %(mailto) \
-            -p %(personality) \
-            -r %(webpath) \
-            -s %(svnpath) \
-            -t %(tags) \
-            -w %(webpath)/%(pldistro)/%(distro) \
-            %(runtests) """ % concrete_build
+    import pdb
+    pdb.set_trace()
+    cmdline = """%(sh) 
+            %(vbuildinghtly) 
+            -b %(pldistro)-%(fcdistro)-%(arch)-%(myplc_version)-%(release)-%(date) 
+            -f %(distro) 
+            -m %(mailto) 
+            -p %(personality) 
+            -r %(webpath) 
+            -s %(svnpath)
+            -t %(tags) 
+            -w %(webpath)/%(pldistro)/%(distro) 
+            %(runtests)""".replace('\n','') 
+    cmdline = cmdline % concrete_build
 
     return cmdline
 

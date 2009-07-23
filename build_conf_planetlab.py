@@ -22,7 +22,8 @@ sapans_k27_build = {
 #
 #
 
-personality_to_arch={'linux32':'i386','linux64':'x86_64'}
+__personality_to_arch__={'linux32':'i386','linux64':'x86_64'}
+__flag_to_test__={0:'-B', 1:'')
 
 __default_build__ = {
 	'path':'/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin',
@@ -34,7 +35,9 @@ __default_build__ = {
 	'date':'2009-07-21',
 	'svnpath':'http://svn.planet-lab.org/svn/build/trunk',
     'personality':'linux32',
-### Define lambdas at the end, because they may need the above values to be filled in for their evaluation
-    'arch':lambda build: personality_to_arch[concrete_build['personality']]
-}
 
+### Dependencies: Define paramater mappings as lambdas here
+
+    'arch':lambda build: __personality_to_arch__[build['personality']],
+    'runtests':lambda build: __flag_to_test__[build['test']],
+}
