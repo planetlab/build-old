@@ -37,17 +37,17 @@ def complete_build_spec_with_defaults (build, default_build):
 def concrete_build_to_commandline(concrete_build):
     import pdb
     pdb.set_trace()
-    cmdline = """%(sh) 
-            %(vbuildinghtly) 
-            -b %(pldistro)-%(fcdistro)-%(arch)-%(myplc_version)-%(release)-%(date) 
-            -f %(distro) 
-            -m %(mailto) 
-            -p %(personality) 
-            -r %(webpath) 
-            -s %(svnpath)
-            -t %(tags) 
-            -w %(webpath)/%(pldistro)/%(distro) 
-            %(runtests)""".replace('\n','') 
+    cmdline = '''%(sh)s 
+            %(vbuildnightly)s
+            -b %(pldistro)s-%(fcdistro)s-%(arch)s-%(myplcversion)s-%(release)s-%(date)s
+            -f %(distro)s 
+            -m %(mailto)s 
+            -p %(personality)s
+            -r %(webpath)s
+            -s %(svnpath)s
+            -t %(tags)s 
+            -w %(webpath)s/%(pldistro)s/%(distro)s
+            %(runtests)s'''.replace('\n','') 
     cmdline = cmdline % concrete_build
 
     return cmdline
