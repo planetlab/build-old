@@ -1,6 +1,9 @@
 #!/usr/bin/python
 # Script to read build configs in /etc/build_conf.py, turn the configuration into command lines and execute it
 
+import os
+import re
+
 # Assemble a list of builds from a single build spec
 def interpret_build(build, param_names, current_concrete_build={}, concrete_build_list=[]):
         if (param_names==[]):
@@ -35,8 +38,7 @@ def complete_build_spec_with_defaults (build, default_build):
 # Turn a concrete build into a commandline
 
 def concrete_build_to_commandline(concrete_build):
-    import pdb
-    pdb.set_trace()
+    
     cmdline = '''%(sh)s 
             %(vbuildnightly)s
             -b %(pldistro)s-%(fcdistro)s-%(arch)s-%(myplcversion)s-%(release)s-%(date)s
@@ -47,10 +49,13 @@ def concrete_build_to_commandline(concrete_build):
             -s %(svnpath)s
             -t %(tags)s 
             -w %(webpath)s/%(pldistro)s/%(fcdistro)s
-            %(runtests)s'''.replace('\n','') 
+            %(runtests)s'''.replace('\n','')
+
     cmdline = cmdline % concrete_build
 
-    return cmdline
+    purge_spaces = re.compile('\s+')
+
+    return purge_spaces.sub(' ', cmdline)
 
                     
 # reduce dependencies in a build 
@@ -70,10 +75,10 @@ def process_builds (builds, build_names, default_build):
                 concrete_builds = map(lambda cb: reduce_dependencies(cb), concrete_builds_without_deps)
                 for concrete_build in concrete_builds:
                         build_commandline = concrete_build_to_commandline(concrete_build)
-                        print build_commandline
+                        os.system(build_commandline)
         
 def main():
-        config_file = './build_conf_planetlab.py'
+        config_file = '/etc/build-conf-planetlab.py'
         builds = {}
         try:
                 execfile(config_file, builds)

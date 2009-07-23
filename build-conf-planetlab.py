@@ -2,7 +2,7 @@
 
 marcs_trunk_build = {
 	'tags':'planetlab-tags.mk',
-	'distro':['centos5','f8'],
+	'fcdistro':['centos5','f8'],
 	'personality':['linux32','linux64'],
 	'test': 0,
 	'release':'k22',
@@ -10,7 +10,7 @@ marcs_trunk_build = {
 		
 sapans_k27_build = {
 	'tags':'k27-tags.mk',
-	'distro':'centos5',
+	'fcdistro':'centos5',
 	'personality':'linux32',
 	'test':1,
 	'release':'k27'
@@ -32,17 +32,25 @@ def __check_out_build_script__(build):
     os.system("svn cat %s/%s > %s 2>/dev/null"%(build['svnpath'],build['build-script'],tmpname))
     return tmpname
 
+def __today__():
+    import datetime
+    return datetime.datetime.now().strftime("%Y-%m-%d")
+
 __default_build__ = {
 
 ### Simple parameters
-
+    'tags':'planetlabs-tags.mk',
+    'fcdistro':'centos5',
+    'personality':'linux32',
+    'test':0,
+    'release':'k22',
 	'path':'/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin',
 	'sh':'/bin/bash',
 	'mailto':'build@lists.planet-lab.org',
 	'build-script':'vbuild-nightly.sh',
 	'webpath':'/vservers/build.planet-lab.org/var/www/html/install-rpms/archive',
 	'pldistro':'planetlab',
-	'date':'2009-07-21',
+	'date': __today__(),
 	'svnpath':'http://svn.planet-lab.org/svn/build/trunk',
     'personality':'linux32',
     'myplcversion':'4.3',
