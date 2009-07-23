@@ -15,7 +15,10 @@ def interpret_build(build, param_names, current_concrete_build={}, concrete_buil
 				new_concrete_build = current_concrete_build.copy()
                                 new_concrete_build[cur_param_name] = value
                                 concrete_build_list = interpret_build(build, remaining_param_names, new_concrete_build, concrete_build_list)
-
+                elif (type(cur_param)==type(lambda x:x)):
+                        # XXX Assumes that the value is behind it
+                        current_concrete_build[cur_param_name] = cur_param(current_concrete_build)
+                        concrete_build_list = interpret_build(build, remaining_param_names, current_concrete_build,concrete_build_list)
                 # If not, just tack on the value and move on
                 else:
                         current_concrete_build[cur_param_name] = cur_param
@@ -35,7 +38,7 @@ def complete_build_spec_with_defaults (build, default_build):
 # Turn a concrete build into a commandline
 
 def concrete_build_to_commandline(concrete_build):
-    cmdline = """%(shell) \
+    cmdline = """%(sh) \
             %(vbuildinghtly) \
             -b %(pldistro)-%(fcdistro)-%(arch)-%(myplc_version)-%(release)-%(date) \
             -f %(distro) \
@@ -61,7 +64,7 @@ def process_builds (builds, build_names, default_build):
                         print build_commandline
         
 def main():
-        config_file = '/etc/build_conf.py'
+        config_file = './build_conf_planetlab.py'
         builds = {}
         try:
                 execfile(config_file, builds)

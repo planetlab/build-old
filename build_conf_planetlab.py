@@ -5,7 +5,7 @@ marcs_trunk_build = {
 	'distro':['centos5','f8'],
 	'personality':['linux32','linux64'],
 	'test': 0,
-	'release':['k22']
+	'release':['k22'],
 }
 		
 sapans_k27_build = {
@@ -17,6 +17,9 @@ sapans_k27_build = {
 }
 
 ###
+
+personality_to_arch={'linux32':'i386','linux64':'x86_64'}
+
 __default_build__ = {
 	'path':'/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin',
 	'sh':'/bin/bash',
@@ -25,6 +28,9 @@ __default_build__ = {
 	'webpath':'/vservers/build.planet-lab.org/var/www/html/install-rpms/archive',
 	'pldistro':'planetlab',
 	'date':'2009-07-21',
-	'svnpath':'http://svn.planet-lab.org/svn/build/trunk'
+	'svnpath':'http://svn.planet-lab.org/svn/build/trunk',
+    'personality':'linux32',
+### Define lambdas at the end, because they may need the above values to be filled in for their evaluation
+    'arch':lambda concrete_build: personality_to_arch[concrete_build['personality']]
 }
 
