@@ -32,6 +32,25 @@ def complete_build_spec_with_defaults (build, default_build):
         return build
         
 
+# Turn a concrete build into a commandline
+
+def concrete_build_to_commandline(concrete_build):
+    cmdline = """%(shell) \
+            %(vbuildinghtly) \
+            -b %(pldistro)-%(fcdistro)-%(arch)-%(myplc_version)-%(release)-%(date) \
+            -f %(distro) \
+            -m %(mailto) \
+            -p %(personality) \
+            -r %(webpath) \
+            -s %(svnpath) \
+            -t %(tags) \
+            -w %(webpath)/%(pldistro)/%(distro) \
+            %(runtests) """ % concrete_build
+
+    return cmdline
+
+                    
+
 # Turn build parameter dicts into commandlines and execute them
 def process_builds (builds, build_names, default_build):
         for build_name in build_names:
