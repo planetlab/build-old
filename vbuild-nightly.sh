@@ -159,6 +159,9 @@ function success () {
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
 	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE}" $MAILTO
     fi
+    # XXX For some reason, we haven't been getting this email for successful builds. If this sleep
+    # doesn't fix the problem, I'll remove it -- Sapan.
+    sleep 5
     exit 0
 }
 
