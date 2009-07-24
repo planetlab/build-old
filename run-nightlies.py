@@ -5,7 +5,7 @@ import os
 import re
 
 # Assemble a list of builds from a single build spec
-def interpret_build(concrete_build_list, build, param_names, current_concrete_build={}, concrete_build_list=[]):
+def interpret_build(build, param_names, current_concrete_build={}, concrete_build_list=[]):
         
         if (param_names==[]):
                 concrete_build_list.extend([current_concrete_build])
@@ -71,15 +71,12 @@ def reduce_dependencies(concrete_build):
 # Turn build parameter dicts into commandlines and execute them
 def process_builds (builds, build_names, default_build):
         for build_name in build_names:
-                import pdb
-                pdb.set_trace()
                 build = complete_build_spec_with_defaults (builds[build_name], default_build)
                 concrete_builds_without_deps = interpret_build (build, build.keys(), {}, [])
                 concrete_builds = map(reduce_dependencies, concrete_builds_without_deps)
                 commandlines = map(concrete_build_to_commandline, concrete_builds)
-                print "Number of builds for %s = %d\n"%(build_name,len(commandlines))
                 for commandline in commandlines:
-                    print commandline
+                    os.system(commandline)
         
 def main():
         config_file = '/etc/build-conf-planetlab.py'
