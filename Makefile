@@ -330,6 +330,7 @@ endif
 	rm -f $@ 
 	echo "%_topdir $(HOME)" >> $@
 	echo "%_tmppath $(HOME)/tmp" >> $@
+	echo "%__spec_install_pre %{___build_pre}" >> $@
 	./getrpmmacros.sh >> $@
 
 ### this utility allows to extract various info from a spec file
