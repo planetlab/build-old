@@ -54,6 +54,9 @@ ALL += ipfw
 
 ipfwslice-MODULES := ipfw
 ipfwslice-SPEC := ipfw-slice.spec
+ipfwslice-SPECVARS = kernel_version=$(kernel.rpm-version) \
+	kernel_release=$(kernel.rpm-release) \
+	kernel_arch=$(kernel.rpm-arch)
 IN_VSERVER += ipfwslice
 ALL += ipfwslice
 
