@@ -3,16 +3,23 @@
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
 # trying the 2.6.27 kernel
+# VINI is running a prototype of a 2.6.27-based PlanetLab node (aka Trellis)
+# Below we include a few Trellis versions of packages 
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
-util-vserver-SVNBRANCH		:= scholz
-util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
+# Trellis is using a modified util-vserver and util-vserver-pl with the 2.6.27 kernel
+util-vserver-SVNBRANCH		:= trellis
+util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/trellis
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
-util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-17
+util-vserver-pl-SVNBRANCH	:= trellis
+util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/branches/trellis
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-4
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 NodeManager-SVNBRANCH		:= 1.8
 NodeManager-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager/tags/NodeManager-1.8-4
+# Trellis-specific NodeManager plugins 
+NodeManager-topo-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
+NodeManager-optin-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-optin/trunk
 pyplnet-SVNPATH			:= http://svn.planet-lab.org/svn/pyplnet/tags/pyplnet-4.3-3
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/CoDemux-0.1-13
