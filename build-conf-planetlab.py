@@ -29,7 +29,7 @@ marcs_trunk_build = {
 		
 sapans_k27_build = {
 	'tags':'k27-tags.mk',
-	'fcdistro':'centos5',
+	'fcdistro':['centos5','f8'],
 	'personality':'linux32',
 	'test':1,
 	'release':'k27'
