@@ -57,8 +57,8 @@ IN_BOOTSTRAPFS += madwifi
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
 # Dependencies for util-vserver-0.30.216
-util-vserver-DEPEND-DEVEL-RPMS := ctags
-util-vserver-RPMFLAGS:= --without dietlibc
+util-vserver-DEPEND-DEVEL-RPMS := ctags dietlibc
+#util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
 
