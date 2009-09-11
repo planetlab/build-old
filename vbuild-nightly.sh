@@ -118,7 +118,7 @@ function failure() {
     fi
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
-    (echo -n "============================== $COMMAND: failure at " ; date ; tail -c 30k $WEBLOG) > ${WEBLOG}.ko
+    (echo -n "============================== $COMMAND: failure at " ; date ; tail --lines=800 $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "See full build log at ${LOG_URL}" ; \
