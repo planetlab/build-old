@@ -5,7 +5,7 @@
 linux-2.6-SVNBRANCH		:= 22
 # not adopting tag 40 about "VXC_PROC_WRITE support" - should be safe but Sapan advised keeping it out was safer still
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-39
-ipfw-SVNPATH                    := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-4
+ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-4
 madwifi-SVNBRANCH		:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 nozomi-SVNPATH			:= http://svn.onelab.eu/nozomi/tags/nozomi-2.21-1
@@ -32,21 +32,21 @@ vsys-SVNBRANCH			:= 0.9
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.9-3
 vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-scripts-0.95-8
 dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-5
-PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-24
+PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-24
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
-PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-29
+PLEWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-29
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-1
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-20
-nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-5
-BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
-pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
+nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-5
+BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-4.3-12
+pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-8
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-15
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-13
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-1.0-8
-MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-24
-sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-2
-pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
+MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-24
+sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-2
+pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-7
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-3
+tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-4.3-3
