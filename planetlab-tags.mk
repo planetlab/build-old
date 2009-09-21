@@ -43,4 +43,4 @@ pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-5
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-2
+tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-3

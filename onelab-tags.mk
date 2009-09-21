@@ -38,8 +38,8 @@ PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLE
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-1
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-20
 nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-5
-BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/trunk
-pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/trunk
+BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-4.3-12
+pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-8
 BootCD-SVNPATH			:= http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-15
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-13
 BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-1.0-8
@@ -49,4 +49,4 @@ pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-5
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/trunk
+tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-3
