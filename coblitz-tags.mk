@@ -40,7 +40,7 @@ BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/Bootstrap
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-24
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-2
 pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
-PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-7
+PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-8
 
 # locating the right test directory - see make tests_svnpath
 tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-3
