@@ -1,4 +1,4 @@
-# $Id: planetlab-tags.mk 14332 2009-07-07 12:21:06Z thierry $
+# $Id$
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
