@@ -14,7 +14,7 @@ skip_core=
 root=/mirror/
 
 
-hozac_url=ftp://rpm.hozac.com/dhozac/centos/5/vserver
+hozac_url=http://rpm.hozac.com/dhozac/centos/5/vserver
 # Daniel mentions rsync://rpm.hozac.com/dhozac/centos/5/vserver/
 
 us_fedora_url=rsync://mirrors.kernel.org/fedora
