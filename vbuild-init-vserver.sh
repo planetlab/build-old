@@ -2,6 +2,8 @@
 # -*-shell-*-
 # $Id$
 
+#shopt -s huponexit
+
 COMMAND=$(basename $0)
 DIRNAME=$(dirname $0)
 
@@ -180,7 +182,13 @@ function setup_vserver () {
     fi
 
     # start the vserver so we can do the following operations
+#    rm -f /tmp/go*
+#    echo -n ' about to start - WAITING for /tmp/go1' ; while true ; do [ -f /tmp/go1 ] && break || : ; done
     $personality vserver $VERBOSE $vserver start
+#    echo -n ' started - WAITING for /tmp/go2' ; while true ; do [ -f /tmp/go2 ] && break || : ; done
+#if true ; then 
+#    echo SKIPPING for debug --- vserver was started
+#else
     [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
     [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 
@@ -200,6 +208,9 @@ function setup_vserver () {
     cp /etc/resolv.conf /vservers/$vserver/etc/resolv.conf
     # and /etc/hosts for at least localhost
     [ -f /vservers/$vserver/etc/hosts ] || echo "127.0.0.1 localhost localhost.localdomain" > /vservers/$vserver/etc/hosts
+
+#fi
+
 }
 
 function devel_or_vtest_tools () {
