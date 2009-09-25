@@ -1,3 +1,4 @@
+
 #!/bin/bash
 # this can help you create/update your fedora mirror
 # $Id$
@@ -14,8 +15,7 @@ skip_core=true
 root=/mirror/
 
 
-hozac_url=http://rpm.hozac.com/dhozac/centos/5/vserver
-# Daniel mentions rsync://rpm.hozac.com/dhozac/centos/5/vserver/
+dhozac_url=rsync://rpm.hozac.com/dhozac/centos/
 
 us_fedora_url=rsync://mirrors.kernel.org/fedora
 us_centos_url=rsync://mirrors.rit.edu/centos
@@ -31,7 +31,7 @@ jp_fedora_url="jp_fedora_url-needs-to-be-defined"
 jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
-default_distroname="centos5"
+default_distroname="centos5.3"
 all_distronames="f10 f11 centos5.3 epel5"
 default_arch="i386"
 all_archs="i386 x86_64"
@@ -48,8 +48,6 @@ esac
 function mirror_distro_arch () {
     distroname=$1; shift
     arch=$1; shift
-
-    LFTP=0
 
     distroname=$(echo $distroname | tr '[A-Z]' '[a-z]')
     case $distroname in
@@ -73,10 +71,10 @@ function mirror_distro_arch () {
 	    distro=epel
 	    rsyncurl=$epel_url
 	    ;;
-	hozac)
+	dhozac)
 	    distroindex=5
-	    distro="hozac"
-	    rsyncurl=$hozac_url
+	    distro="dhozac"
+	    rsyncurl=$dhozac_url
 	    ;;
 	*)
 	    echo "WARNING -- Unknown distribution $distroname -- skipped"
@@ -86,11 +84,9 @@ function mirror_distro_arch () {
 
     excludelist="debug/ iso/ ppc/ source/"
     options="--archive --compress --delete --delete-excluded $dry_run $verbose"
-    lftp_options="--delete $dry_run $verbose"
     [ -n "$(rsync --help | grep no-motd)" ] && options="$options --no-motd"
     for e in $excludelist; do
 	options="$options --exclude $e"
-	lftp_options="$lftp_options --exclude $e"
     done
 
     echo ">>>>>>>>>>>>>>>>>>>> root=$root distroname=$distroname arch=$arch rsyncurl=$rsyncurl"
@@ -140,13 +136,12 @@ function mirror_distro_arch () {
 	    localpath=epel
 	    ;;
 
-	hozac*)
+	dhozac*)
 	    case $distroindex in
 		5)
 		    # leave off trailing '/'
-		    paths="$paths $arch"
+		    paths="$paths $distroindex/vserver/$arch"
 		    RES=0
-		    LFTP=1
 		    ;;
 	    esac
 	    localpath=dhozac
@@ -160,11 +155,7 @@ function mirror_distro_arch () {
 	for repopath in $paths; do
 	    echo "===== $distro -> $distroindex $repopath"
 	    [ -z "$dry_run" ] && mkdir -p ${root}/${localpath}/${repopath}
-	    if [ "$LFTP" = 1 ]; then
-	        command="lftp -c mirror $lftp_options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
-	    else
-		command="rsync $options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
-	    fi
+	    command="rsync $options ${rsyncurl}/${repopath} ${root}/${localpath}/${repopath}"
 	    echo $command
 	    $command
 	done
@@ -233,6 +224,8 @@ function main () {
 	    h|*) usage ;;
 	esac
     done
+    shift $(($OPTIND-1))
+    [[ -n "$@" ]] && usage
     [ -z "$distronames" ] && distronames=$default_distroname
     [ -z "$archs" ] && archs=$default_arch
 
