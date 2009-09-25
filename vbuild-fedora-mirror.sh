@@ -32,7 +32,7 @@ jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname="centos5"
-all_distronames="f8 f10 f11 centos5.2 centos5.3 epel5"
+all_distronames="f8 f10 f11 centos5.3 epel5"
 default_arch="i386"
 all_archs="i386 x86_64"
 
