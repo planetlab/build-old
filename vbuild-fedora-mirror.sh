@@ -10,7 +10,7 @@ LOG=${LOGDIR}/${DATE}.log
 dry_run=
 verbose=
 log=
-skip_core=
+skip_core=true
 root=/mirror/
 
 
@@ -183,7 +183,8 @@ function usage () {
     echo " -n : dry run"
     echo " -v : verbose"
     echo " -l : turns on autologging in $LOGDIR"
-    echo " -c : skips core repository"
+    echo " -c : skips core repository (default)"
+    echo " -C : force syncing core repository"
     echo " -r root (default is $root)"
     echo " -u rsyncurl for fedora (default is $fedora_url)"
     echo " -U rsyncurl for centos (default is $centos_url)"
@@ -211,12 +212,13 @@ function run () {
 function main () {
     distronames=""
     archs=""
-    while getopts "nvlcr:u:U:E:sejf:Fa:Ah" opt ; do
+    while getopts "nvlcCr:u:U:E:sejf:Fa:Ah" opt ; do
 	case $opt in
 	    n) dry_run=--dry-run ;;
 	    v) verbose=--verbose ;;
 	    l) log=true ;;
 	    c) skip_core=true ;;
+	    C) skip_core= ;;
 	    r) root=$OPTARG ;;
 	    u) fedora_url=$OPTARG ;;
 	    U) centos_url=$OPTARG ;;
