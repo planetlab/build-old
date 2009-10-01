@@ -118,13 +118,13 @@ function failure() {
     fi
     cp $LOG ${WEBLOG}
     summary $LOG >> ${WEBLOG}
-    (echo -n "============================== $COMMAND: failure at " ; date ; tail --lines=800 $WEBLOG) > ${WEBLOG}.ko
+    (echo -n "============================== $COMMAND: failure at " ; date ; tail --lines=1000 $WEBLOG) > ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "and tail version at ${LOG_URL}.ko" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail -c 30k ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE}" $MAILTO
+	    tail --lines=1000 ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE}" $MAILTO
     fi
     exit 1
 }
