@@ -52,7 +52,7 @@ function summary () {
 # read a full log and tries to extract the interesting stuff
 
 import sys,re
-m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*|.*is not installed.*|.*PROPFIND.*|.*Starting.*:run_log.*")
+m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*| \* .*|.*is not installed.*|.*PROPFIND.*|.*Starting.*:run_log.*")
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
