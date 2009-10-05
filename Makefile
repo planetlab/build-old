@@ -109,7 +109,7 @@ RPM-INSTALL-DEVEL := rpm --force -Uvh
 # need to ignore result, kernel-headers cannot be uninstalled as glibc depends on it
 RPM-UNINSTALL-DEVEL := rpm -e
 
-REMOTE-PLDISTROS="gnuradio"
+REMOTE-PLDISTROS="wextoolbox"
 
 #################### Makefile
 # Default target
@@ -177,7 +177,7 @@ DISTCLEANS += $(1).mk $(2).mk config.$(1)
 
 endef
 
-$(eval $(call remote_pldistro,gnuradio,gnuradio-tags))
+$(foreach distro, $(REMOTE_PLDISTROS), $(eval $(call remote_pldistro,$(distro),$(distro)-tags)))
 
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
