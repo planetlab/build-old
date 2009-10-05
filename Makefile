@@ -109,6 +109,7 @@ RPM-INSTALL-DEVEL := rpm --force -Uvh
 # need to ignore result, kernel-headers cannot be uninstalled as glibc depends on it
 RPM-UNINSTALL-DEVEL := rpm -e
 
+# see also below
 REMOTE-PLDISTROS="wextoolbox"
 
 #################### Makefile
@@ -177,7 +178,9 @@ DISTCLEANS += $(1).mk $(2).mk config.$(1)
 
 endef
 
-$(foreach distro, $(REMOTE_PLDISTROS), $(eval $(call remote_pldistro,$(distro),$(distro)-tags)))
+# somehow this does not work, handle manually instead
+#$(foreach distro, $(REMOTE-PLDISTROS), $(eval $(call remote_pldistro,$(distro),$(distro)-tags)))
+$(eval $(call remote_pldistro,wextoolbox,wextoolbox-tags))
 
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
