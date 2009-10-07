@@ -279,9 +279,9 @@ ALL += pyopenssl
 #
 # sfa - Slice Facility Architecture
 #
-sfa-MODULES := sfa
-sfa-SPEC := sfa.spec
-ALL += sfa
+# sfa-MODULES := sfa
+# sfa-SPEC := sfa.spec
+# ALL += sfa
 
 #
 # nodeconfig
