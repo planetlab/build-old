@@ -306,7 +306,7 @@ span.error {text-weight:bold; color: red; }
                 print '<hr /><h1>',self.html_anchor(self.friendly_name(),title),'</h1>'
         if hasattr(self,'body'):
             print self.body
-        print '<p class="top">',self.html_href('#','Back to top'),'</p>'
+            print '<p class="top">',self.html_href('#','Back to top'),'</p>'
 
     ####################
     @staticmethod
