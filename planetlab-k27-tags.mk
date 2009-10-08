@@ -8,9 +8,13 @@
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
 # Trellis is using a modified util-vserver and util-vserver-pl with the 2.6.27 kernel
+# this branch is numbered 0.30.216-pre2833 in the specfile
+# initial tag would be util-vserver-0.30.216-pre2833-0
 util-vserver-SVNBRANCH		:= trellis
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/trellis
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
+# this branch is numbered 0.4 in the specfile
+# initial tag would be tags/util-vserver-pl-0.4-3
 util-vserver-pl-SVNBRANCH	:= trellis
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/branches/trellis
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-5
