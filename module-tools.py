@@ -231,6 +231,66 @@ class Module:
             if prompt(question,True):
                 self.run(command)            
 
+    ####################
+    # store and restitute html fragments
+    @staticmethod 
+    def html_href (url,text): return '<a href="%s">%s</a>'%(url,text)
+    @staticmethod 
+    def html_anchor (url,text): return '<a name="%s">%s</a>'%(url,text)
+
+    # only the fake error module has multiple titles
+    def html_store_title (self, title):
+        if not hasattr(self,'titles'): self.titles=[]
+        self.titles.append(title)
+    def html_store_raw (self, html):
+        if not hasattr(self,'body'): self.body=''
+        self.body += html
+    def html_store_pre (self, text):
+        if not hasattr(self,'body'): self.body=''
+        self.body += '<pre>' + text + '</pre>'
+
+    def html_dump_header(self):
+        now=time.strftime("%Y-%m-%d %H:%M")
+        print """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title> Pending changes in %s </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body { font-family:georgia, serif; }
+h1 {font-size: large; }
+p.title {font-size: x-large; }
+span.error {text-weight:bold; color: red; }
+</style>
+</head>
+<body>
+<p class='title'> Pending changes in %s - status at %s</p>
+<ul>
+"""%(self.options.www,self.options.www,now)
+
+    @staticmethod
+    def html_dump_middle():
+        print "</ul>"
+
+    @staticmethod
+    def html_dump_footer():
+        print "</body></html"
+
+    def html_dump_toc(self):
+        if hasattr(self,'titles'):
+            for title in self.titles:
+                print '<li>',self.html_href ('#'+self.friendly_name(),title),'</li>'
+
+    def html_dump_body(self):
+        if hasattr(self,'titles'):
+            for title in self.titles:
+                print ('<hr />')
+                print '<h1>',self.html_anchor(self.friendly_name(),title),'</h1>'
+        if hasattr(self,'body'):
+            print self.body
+
+    ####################
     @staticmethod
     def init_homedir (options):
         topdir=options.workdir
@@ -622,8 +682,17 @@ The module-sync function has the following limitations
             if diff_output:
                 print self.name
         else:
-            if not self.options.only or diff_output:
-                print 'x'*30,'module',self.friendly_name()
+            anchor=self.friendly_name()
+            do_print=False
+            if self.options.www and diff_output:
+                self.html_store_title("Diffs in module %s (%d chars)"%(anchor,len(diff_output)))
+                link=self.html_href(tag_url,tag_url)
+                self.html_store_raw ('<p> &lt; (left) %s </p>'%link)
+                link=self.html_href(edge_url,edge_url)
+                self.html_store_raw ('<p> &gt; (right) %s </p>'%link)
+                self.html_store_pre (diff_output)
+            elif not self.options.www:
+                print 'x'*30,'module',anchor
                 print 'x'*20,'<',tag_url
                 print 'x'*20,'>',edge_url
                 print diff_output
@@ -1190,8 +1259,8 @@ Branches:
             parser.add_option("-m","--message", action="store", dest="message", default=None,
                               help="specify log message")
         if mode == "diff" :
-            parser.add_option("-o","--only", action="store_true", dest="only", default=False,
-                              help="report diff only for modules that exhibit differences")
+            parser.add_option("-W","--www", action="store", dest="www", default=False,
+                              help="export diff in html format, e.g. -W trunk")
         if mode == "diff" :
             parser.add_option("-l","--list", action="store_true", dest="list", default=False,
                               help="just list modules that exhibit differences")
@@ -1259,16 +1328,37 @@ Branches:
                     parser.print_help()
                     sys.exit(1)
             Module.init_homedir(options)
-            for modname in args:
-                module=Module(modname,options)
-                if len(args)>1 and mode not in Main.silent_modes:
+
+            # 2 passes for www output
+            modules=[ Module(modname,options) for modname in args ]
+            # hack: create a dummy Module to store errors/warnings
+            error_module = Module('__errors__',options)
+
+            # pass 1 : do it, except if options.www
+            for module in modules:
+                if len(args)>1 and mode not in Main.silent_modes and not options.www:
                     print '========================================',module.friendly_name()
                 # call the method called do_<mode>
                 method=Module.__dict__["do_%s"%mode]
                 try:
                     method(module)
                 except Exception,e:
-                    print 'Skipping failed %s: '%modname,e
+                    if options.www:
+                        title='<span class="error"> Skipping module %s - failure: %s </span>'%(module.name, str(e))
+                        error_module.html_store_title(title)
+                    else:
+                        print 'Skipping module %s: '%modname,e
+
+            # in which case we do the actual printing in the second pass
+            if options.www:
+                modules.append(error_module)
+                error_module.html_dump_header()
+                for module in modules:
+                    module.html_dump_toc()
+                Module.html_dump_middle()
+                for module in modules:
+                    module.html_dump_body()
+                Module.html_dump_footer()
 
 ####################
 if __name__ == "__main__" :
