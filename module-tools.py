@@ -249,13 +249,20 @@ class Module:
         if not hasattr(self,'body'): self.body=''
         self.body += '<pre>' + text + '</pre>'
 
-    def html_dump_header(self):
+    def html_print (self, txt):
+        if not self.options.www:
+            print txt
+        else:
+            self.html_store_pre(txt)
+
+    @staticmethod
+    def html_dump_header(title):
         now=time.strftime("%Y-%m-%d %H:%M")
         print """
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title> Pending changes in %s </title>
+<title> %s </title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style type="text/css">
 body { font-family:georgia, serif; }
@@ -265,9 +272,9 @@ span.error {text-weight:bold; color: red; }
 </style>
 </head>
 <body>
-<p class='title'> Pending changes in %s - status at %s</p>
+<p class='title'> %s - status at %s</p>
 <ul>
-"""%(self.options.www,self.options.www,now)
+"""%(title,title,now)
 
     @staticmethod
     def html_dump_middle():
@@ -564,6 +571,8 @@ that for other purposes than tagging"""%topdir
 
 ##############################
     def do_version (self):
+        if self.options.www:
+            self.html_store_title('Version for module %s' % self.friendly_name())
         self.init_module_dir()
         self.init_edge_dir()
         self.revert_edge_dir()
@@ -571,16 +580,16 @@ that for other purposes than tagging"""%topdir
         spec_dict = self.spec_dict()
         for varname in self.varnames:
             if not spec_dict.has_key(varname):
-                print 'Could not find %%define for %s'%varname
+                self.html_print ('Could not find %%define for %s'%varname)
                 return
             else:
-                print "%-16s %s"%(varname,spec_dict[varname])
+                self.html_print ("%-16s %s"%(varname,spec_dict[varname]))
         if self.options.show_urls:
-            print "%-16s %s"%('edge url',self.edge_url())
-            print "%-16s %s"%('latest tag url',self.tag_url(spec_dict))
+            self.html_print ("%-16s %s"%('edge url',self.edge_url()))
+            self.html_print ("%-16s %s"%('latest tag url',self.tag_url(spec_dict)))
         if self.options.verbose:
-            print "%-16s %s"%('main specfile:',self.main_specname())
-            print "%-16s %s"%('specfiles:',self.all_specnames())
+            self.html_print ("%-16s %s"%('main specfile:',self.main_specname()))
+            self.html_print ("%-16s %s"%('specfiles:',self.all_specnames()))
 
 ##############################
     def do_list (self):
@@ -1258,7 +1267,7 @@ Branches:
         if mode == "sync" :
             parser.add_option("-m","--message", action="store", dest="message", default=None,
                               help="specify log message")
-        if mode == "diff" :
+        if mode in ["diff","version"] :
             parser.add_option("-W","--www", action="store", dest="www", default=False,
                               help="export diff in html format, e.g. -W trunk")
         if mode == "diff" :
@@ -1353,8 +1362,12 @@ Branches:
 
             # in which case we do the actual printing in the second pass
             if options.www:
+                if mode == "diff":
+                    modetitle="Pending changes in %s"%options.www
+                elif mode == "version":
+                    modetitle="Version of latest tags in %s"%options.www
                 modules.append(error_module)
-                error_module.html_dump_header()
+                error_module.html_dump_header(modetitle)
                 for module in modules:
                     module.html_dump_toc()
                 Module.html_dump_middle()
