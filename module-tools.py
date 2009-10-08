@@ -237,6 +237,10 @@ class Module:
     def html_href (url,text): return '<a href="%s">%s</a>'%(url,text)
     @staticmethod 
     def html_anchor (url,text): return '<a name="%s">%s</a>'%(url,text)
+    # there must be some smarter means to do that - dirty for now
+    @staticmethod
+    def html_quote (text):
+        return text.replace('&','&#38;').replace('<','&lt;').replace('>','&gt;')
 
     # only the fake error module has multiple titles
     def html_store_title (self, title):
@@ -247,7 +251,7 @@ class Module:
         self.body += html
     def html_store_pre (self, text):
         if not hasattr(self,'body'): self.body=''
-        self.body += '<pre>' + text + '</pre>'
+        self.body += '<pre>' + self.html_quote(text) + '</pre>'
 
     def html_print (self, txt):
         if not self.options.www:
@@ -299,10 +303,10 @@ span.error {text-weight:bold; color: red; }
     def html_dump_body(self):
         if hasattr(self,'titles'):
             for title in self.titles:
-                print ('<hr />')
-                print '<h1>',self.html_anchor(self.friendly_name(),title),'</h1>'
+                print '<hr /><h1>',self.html_anchor(self.friendly_name(),title),'</h1>'
         if hasattr(self,'body'):
             print self.body
+        print '<p class="top">',self.html_href('#','Back to top'),'</p>'
 
     ####################
     @staticmethod
@@ -1374,9 +1378,9 @@ Branches:
             # in which case we do the actual printing in the second pass
             if options.www:
                 if mode == "diff":
-                    modetitle="Pending changes in %s"%options.www
+                    modetitle="Changes to tag in %s"%options.www
                 elif mode == "version":
-                    modetitle="Version of latest tags in %s"%options.www
+                    modetitle="Latest tags in %s"%options.www
                 modules.append(error_module)
                 error_module.html_dump_header(modetitle)
                 for module in modules:
