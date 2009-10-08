@@ -253,11 +253,18 @@ class Module:
         if not self.options.www:
             print txt
         else:
-            self.html_store_pre(txt)
+            if not hasattr(self,'in_list') or not self.in_list:
+                self.html_store_raw('<ul>')
+                self.in_list=True
+            self.html_store_raw('<li>'+txt+'</li>')
+    def html_print_end (self):
+        if self.options.www:
+            self.html_store_raw ('</ul>')
 
     @staticmethod
     def html_dump_header(title):
-        now=time.strftime("%Y-%m-%d %H:%M")
+        nowdate=time.strftime("%Y-%m-%d")
+        nowtime=time.strftime("%H:%M")
         print """
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
@@ -272,9 +279,9 @@ span.error {text-weight:bold; color: red; }
 </style>
 </head>
 <body>
-<p class='title'> %s - status at %s</p>
+<p class='title'> %s - status on %s at %s</p>
 <ul>
-"""%(title,title,now)
+"""%(title,title,nowdate,nowtime)
 
     @staticmethod
     def html_dump_middle():
@@ -531,12 +538,13 @@ that for other purposes than tagging"""%topdir
         else:
             return "%s/trunk"%(self.mod_url())
 
+    def last_tag (self, spec_dict):
+        return "%s-%s"%(spec_dict[self.module_version_varname],spec_dict[self.module_taglevel_varname])
+
     def tag_name (self, spec_dict):
         try:
-            return "%s-%s-%s"%(#spec_dict[self.module_name_varname],
-                self.name,
-                spec_dict[self.module_version_varname],
-                spec_dict[self.module_taglevel_varname])
+            return "%s-%s"%(self.name,
+                            self.last_tag(spec_dict))
         except KeyError,err:
             raise Exception, 'Something is wrong with module %s, cannot determine %s - exiting'%(self.name,err)
 
@@ -571,13 +579,13 @@ that for other purposes than tagging"""%topdir
 
 ##############################
     def do_version (self):
-        if self.options.www:
-            self.html_store_title('Version for module %s' % self.friendly_name())
         self.init_module_dir()
         self.init_edge_dir()
         self.revert_edge_dir()
         self.update_edge_dir()
         spec_dict = self.spec_dict()
+        if self.options.www:
+            self.html_store_title('Version for module %s (%s)' % (self.friendly_name(),self.last_tag(spec_dict)))
         for varname in self.varnames:
             if not spec_dict.has_key(varname):
                 self.html_print ('Could not find %%define for %s'%varname)
@@ -590,6 +598,7 @@ that for other purposes than tagging"""%topdir
         if self.options.verbose:
             self.html_print ("%-16s %s"%('main specfile:',self.main_specname()))
             self.html_print ("%-16s %s"%('specfiles:',self.all_specnames()))
+        self.html_print_end()
 
 ##############################
     def do_list (self):
@@ -691,17 +700,18 @@ The module-sync function has the following limitations
             if diff_output:
                 print self.name
         else:
-            anchor=self.friendly_name()
+            thename=self.friendly_name()
             do_print=False
             if self.options.www and diff_output:
-                self.html_store_title("Diffs in module %s (%d chars)"%(anchor,len(diff_output)))
+                self.html_store_title("Diffs in module %s (%s) : %d chars"%(\
+                        thename,self.last_tag(spec_dict),len(diff_output)))
                 link=self.html_href(tag_url,tag_url)
                 self.html_store_raw ('<p> &lt; (left) %s </p>'%link)
                 link=self.html_href(edge_url,edge_url)
                 self.html_store_raw ('<p> &gt; (right) %s </p>'%link)
                 self.html_store_pre (diff_output)
             elif not self.options.www:
-                print 'x'*30,'module',anchor
+                print 'x'*30,'module',thename
                 print 'x'*20,'<',tag_url
                 print 'x'*20,'>',edge_url
                 print diff_output
@@ -1355,7 +1365,8 @@ Branches:
                     method(module)
                 except Exception,e:
                     if options.www:
-                        title='<span class="error"> Skipping module %s - failure: %s </span>'%(module.name, str(e))
+                        title='<span class="error"> Skipping module %s - failure: %s </span>'%\
+                            (module.friendly_name(), str(e))
                         error_module.html_store_title(title)
                     else:
                         print 'Skipping module %s: '%modname,e
