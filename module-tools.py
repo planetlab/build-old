@@ -1305,6 +1305,8 @@ Branches:
         options.mode=mode
         if not hasattr(options,'dry_run'):
             options.dry_run=False
+        if not hasattr(options,'www'):
+            options.www=False
         options.debug=False
 
         ########## release-*
