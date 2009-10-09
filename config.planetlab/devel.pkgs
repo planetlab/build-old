@@ -86,6 +86,8 @@ package-centos5: inotify-tools-devel
 # use local libnl on centos
 package: libnl-devel
 package-centos5: libnl-devel
+# for util-vserver
+package: ctags
 # zabbix/monitor
 package: net-snmp net-snmp-devel
 package+centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
