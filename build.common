@@ -390,10 +390,11 @@ fi
 
     if [ -n "$pkgs_groups" ] ; then
        ## call yum sequentially to get finer-grained info on dependencies
-	for grp in $pkgs_groups ; do
-	    echo "* Installing optional group $grp" 
+	for group_plus in $pkgs_groups ; do
+	    group=$(echo $group_plus | sed -e "s,+++, ,g")
+	    echo "* Installing optional group $group" 
             # ignore yum's return code that is basically undefined
-	    yum $yum_options $exclude_arg groupinstall "$grp" || :
+	    yum $yum_options $exclude_arg groupinstall "$group" || :
 	done
     fi
 
