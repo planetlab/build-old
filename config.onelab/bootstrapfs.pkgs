@@ -95,6 +95,10 @@ package+centos5: util-linux
 
 package-f10: termcap libtermcap
 package-f10: vixie-cron
+
+# for nagios
+package: nrpe
+
 #
 # planetlab
 #
