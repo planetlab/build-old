@@ -56,12 +56,17 @@
 #     a set of *packages* that this package depends on
 # (*) package-DEPEND-DEVEL-RPMS
 #     a set of *rpms* that the build will rpm-install before building <package>
+#     the build will attempt to uninstall those once the package is built, this is not fatal though
 #     this is intended to denote local rpms, i.e. ones that are results of our own build
 #     stock rpms should be mentioned in config.planetlab/devel.pkgs
 # (*) package-DEPEND-FILES
 #     a set of files that the package depends on - and that make needs to know about
 #     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
 #     is refreshed with createrepo prior to running rpmbuild
+# (*) package-EXCLUDE-DEVEL-RPMS
+#     a set of *rpms* that the build will rpm-uninstall before building <package>
+#     this is intended to denote stock rpms, and the build will attempt to yum-install them
+#     back after the package is rebuilt
 # (*) package-RPMFLAGS: Miscellaneous RPM flags
 # (*) package-RPMBUILD: If not rpmbuild - mostly used for sudo'ing rpmbuild
 # (*) package-BUILD-FROM-SRPM: set this to any non-empty value, if your package is able to produce 
@@ -108,6 +113,7 @@ RPM-INSTALL-DEVEL := rpm --force -Uvh
 # uninstall -- cannot force rpm -e
 # need to ignore result, kernel-headers cannot be uninstalled as glibc depends on it
 RPM-UNINSTALL-DEVEL := rpm -e
+YUM-INSTALL-DEVEL := yum -y install
 
 # see also below
 REMOTE-PLDISTROS="wextoolbox"
@@ -460,25 +466,37 @@ srpms: $(ALLSRPMS)
 	@echo $(words $(ALLSRPMS)) source rpms OK
 .PHONY: srpms
 
+### these macro handles the DEPEND-DEVEL-RPMS and EXCLUDE-DEVEL-RPMS tags for a hiven package
+# before building : rpm-install DEPEND-DEVEL-RPMS and rpm-uninstall EXCLUDE
+define handle_devel_rpms_pre 
+	$(if $($(1).all-devel-rpm-paths), echo "Installing for $(1)-DEPEND-DEVEL-RPMS" ; $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths)) 
+	$(if $($(1)-EXCLUDE-DEVEL-RPMS), echo "Uninstalling for $(1)-EXCLUDE-DEVEL-RPMS" ; $(RPM-UNINSTALL-DEVEL) $($(1)-EXCLUDE-DEVEL-RPMS))
+endef
+
+define handle_devel_rpms_post
+	-$(if $($(1)-DEPEND-DEVEL-RPMS), echo "Unstalling for $(1)-DEPEND-DEVEL-RPMS" ; $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(if $($(1)-EXCLUDE-DEVEL-RPMS), "Reinstalling for $(1)-EXCLUDE-DEVEL-RPMS" ; $(YUM-INSTALL-DEVEL) $($(1)-EXCLUDE-DEVEL-RPMS) )
+endef
+
 # usage: target_source_rpm package
 define target_source_rpm 
 ifeq "$($(1)-BUILD-FROM-SRPM)" ""
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
-	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
+	$(call handle_devel_rpms_pre,$(1))
 	$($(1).rpmbuild) -bs $($(1).specpath)
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(call handle_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 else
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
-	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
+	$(call handle_devel_rpms_pre,$(1))
 	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(call handle_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 endif
 endef
@@ -504,18 +522,18 @@ $($(1).rpms): $($(1).srpm)
 	mkdir -p RPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
-	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
+	$(call handle_devel_rpms_pre,$(1))
 	$($(1).rpmbuild) --rebuild $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(call handle_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 # for manual use only - in case we need to investigate the results of an rpmbuild
 $(1)-compile: $($(1).srpm)
 	mkdir -p COMPILE tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG compile $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
-	$(if $($(1).all-devel-rpm-paths), $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths))
+	$(call handle_devel_rpms_pre,$(1))
 	$($(1).rpmbuild) --recompile $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	-$(if $($(1)-DEPEND-DEVEL-RPMS), $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
+	$(call handle_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END compile $(1) " ; date)
 .PHONY: $(1)-compile
 endef
