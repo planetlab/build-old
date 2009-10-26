@@ -142,6 +142,7 @@ class Svnpath:
 class Module:
 
     svn_magic_line="--This line, and those below, will be ignored--"
+    setting_tag_format = "Setting tag %s"
     
     redirectors=[ # ('module_name_varname','name'),
                   ('module_version_varname','version'),
@@ -488,20 +489,26 @@ that for other purposes than tagging"""%topdir
             new.close()
             os.rename(newspecfile,specfile)
 
+    # returns all lines until the magic line
     def unignored_lines (self, logfile):
         result=[]
-        exclude="Setting tag %s"%self.name
         white_line_matcher = re.compile("\A\s*\Z")
         for logline in file(logfile).readlines():
             if logline.strip() == Module.svn_magic_line:
                 break
-            if logline.find(exclude) >= 0:
-                continue
             elif white_line_matcher.match(logline):
                 continue
             else:
                 result.append(logline.strip()+'\n')
         return result
+
+    # creates a copy of the input with only the unignored lines
+    def stripped_magic_line_filename (self, filein, fileout ,new_tag_name):
+       f=file(fileout,'w')
+       f.write(self.setting_tag_format%new_tag_name + '\n')
+       for line in self.unignored_lines(filein):
+           f.write(line)
+       f.close()
 
     def insert_changelog (self, logfile, oldtag, newtag):
         for specfile in self.all_specnames():
@@ -808,12 +815,14 @@ The module-sync function has the following limitations
         # we use the standard subversion magic string (see svn_magic_line)
         # so we can provide useful information, such as version numbers and diff
         # in the same file
-        changelog="/tmp/%s-%d.txt"%(self.name,os.getpid())
-        file(changelog,"w").write("""Setting tag %s
-
+        changelog="/tmp/%s-%d.edit"%(self.name,os.getpid())
+        changelog_svn="/tmp/%s-%d.svn"%(self.name,os.getpid())
+        setting_tag_line=Module.setting_tag_format%new_tag_name
+        file(changelog,"w").write("""
+%s
 %s
 Please write a changelog for this new tag in the section above
-"""%(new_tag_name,Module.svn_magic_line))
+"""%(Module.svn_magic_line,setting_tag_line))
 
         if not self.options.verbose or prompt('Want to see diffs while writing changelog',True):
             file(changelog,"a").write('DIFF=========\n' + diff_output)
@@ -823,6 +832,9 @@ Please write a changelog for this new tag in the section above
 
         # edit it        
         self.run("%s %s"%(self.options.editor,changelog))
+        # strip magic line in second file - looks like svn has changed its magic line with 1.6
+        # so we do the job ourselves
+        self.stripped_magic_line_filename(changelog,changelog_svn,new_tag_name)
         # insert changelog in spec
         if self.options.changelog:
             self.insert_changelog (changelog,old_tag_name,new_tag_name)
@@ -850,7 +862,7 @@ Please write a changelog for this new tag in the section above
                 while tagsdict[tagsfile] == 'todo' :
                     choice = prompt ("insert %s in %s    "%(new_tag_name,basename),default_answer,
                                      [ ('y','es'), ('n', 'ext'), ('f','orce'), 
-                                       ('d','iff'), ('r','evert'), ('h','elp') ] ,
+                                       ('d','iff'), ('r','evert'), ('c', 'at'), ('h','elp') ] ,
                                      allow_outside=True)
                     if choice == 'y':
                         self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=True)
@@ -863,12 +875,15 @@ Please write a changelog for this new tag in the section above
                         self.run("svn diff %s"%tagsfile)
                     elif choice == 'r':
                         self.run("svn revert %s"%tagsfile)
+                    elif choice == 'c':
+                        self.run("cat %s"%tagsfile)
                     else:
                         name=self.name
                         print """y: change %(name)s-SVNPATH only if it currently refers to %(old_tag_name)s
-f: unconditionnally change any line setting %(name)s-SVNPATH to using %(new_tag_name)s
+f: unconditionnally change any line that assigns %(name)s-SVNPATH to using %(new_tag_name)s
 d: show current diff for this tag file
 r: revert that tag file
+c: cat the current tag file
 n: move to next file"""%locals()
 
             if prompt("Want to review changes on tags files",False):
@@ -881,13 +896,14 @@ n: move to next file"""%locals()
         paths += self.edge_dir() + " "
         paths += build.edge_dir() + " "
         self.run_prompt("Review module and build","svn diff " + paths)
-        self.run_prompt("Commit module and build","svn commit --file %s %s"%(changelog,paths))
-        self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog,edge_url,new_tag_url))
+        self.run_prompt("Commit module and build","svn commit --file %s %s"%(changelog_svn,paths))
+        self.run_prompt("Create tag","svn copy --file %s %s %s"%(changelog_svn,edge_url,new_tag_url))
 
         if self.options.debug:
-            print 'Preserving',changelog
+            print 'Preserving',changelog,'and stripped',changelog_svn
         else:
             os.unlink(changelog)
+            os.unlink(changelog_svn)
             
 ##############################
     def do_branch (self):
