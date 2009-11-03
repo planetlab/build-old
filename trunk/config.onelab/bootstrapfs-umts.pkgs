@@ -1,6 +1,0 @@
-# $Id$
-groupname: extensionumts
-groupdesc: planetlab node umts extensions
-package: nozomi
-package: comgt
-package: wvdial

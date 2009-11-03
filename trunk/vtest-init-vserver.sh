@@ -1,1 +1,0 @@
-vbuild-init-vserver.sh
