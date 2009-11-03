@@ -1,4 +1,4 @@
-n# $Id$
+# $Id$
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
