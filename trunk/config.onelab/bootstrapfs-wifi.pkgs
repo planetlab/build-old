@@ -1,0 +1,20 @@
+# $Id$
+#
+# first attempt for an extensible bootstrapfs contents
+#
+# the groupname should start with extension as the bootmanager 
+# computes it as extension<nodegroup>
+# the present file's name can be either
+# (*) bootstrapfs-something.pkgs
+# in which case the tarball will be elaborated at build-time
+# (*) anything else otherwise
+# 
+# at runtime, the choice between tarball-install or yum install
+# depends on whether the tarball can be downloaded or not
+#
+groupname: extensionwifi
+groupdesc: planetlab node wifi extensions
+package: madwifi
+package: wireless-tools
+package: iwl3945-firmware iwl4965-firmware
+package: wpa_supplicant

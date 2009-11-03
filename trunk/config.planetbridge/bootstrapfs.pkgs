@@ -1,0 +1,123 @@
+# Keeping the old name as it might be referenced elsewhere (node update..)
+# groupname: Bootstrapfs
+groupname: PlanetLab
+groupdesc: PlanetLab Node Root
+# packages to exclude from stock repositories
+kexclude: @KEXCLUDE@
+# fedora-release or centos-release are pulled from deps
+# define packages
+package: kernel
+package: udev
+package: basesystem
+package: filesystem
+package: bash
+package: coreutils
+package: python
+package: cpio
+package: e2fsprogs
+package: ed
+package: file     
+package: glibc
+package: hdparm
+package: initscripts
+package: iproute
+package: iputils
+package: kbd
+package: passwd
+package: procps
+package: readline
+package: rootfiles
+package: rpm
+package: setserial
+package: setup
+package: vim-minimal
+package: shadow-utils
+package: anacron
+package: at
+package: authconfig
+package: bc
+package: bind-utils
+package: bzip2
+package: crontabs
+package: dhclient
+package: diffutils
+package: ethtool
+package: logrotate
+package: libnl
+package: lsof
+package: mailcap
+package: nano
+package: nc
+package: openssh-clients
+package: parted
+package: pciutils
+package: psacct
+package: quota
+package: rsh
+package: rsync
+package: sendmail
+package: sudo
+package: telnet
+package: traceroute
+package: time
+package: tmpwatch
+package: tcpdump
+package: openssh-server
+package: wget
+package: yum
+package: curl
+package: gzip
+package: iptables
+package: mkinitrd
+package: ntp
+package: perl
+package: python
+package: tar
+package: expect
+package: nfs-utils
+package: openvpn
+package: vconfig
+package: PyXML
+
+package: termcap libtermcap
+package: vixie-cron
+
+#
+# platform-dependent
+#
+package: rsyslog
+package-centos5: rsyslog
+package+centos5: sysklogd
+
+package: util-linux-ng
+package-centos5: util-linux-ng
+package+centos5: util-linux
+
+package-f10: termcap libtermcap
+package-f10: vixie-cron
+#
+# planetlab
+#
+package: madwifi
+package: wireless-tools
+package: util-vserver
+package: util-vserver-build
+package: util-vserver-lib
+package: util-vserver-core
+package: util-vserver-sysv
+package: util-vserver-legacy
+package: util-vserver-pl
+#package: util-python
+package: NodeManager
+package: NodeUpdate
+package: codemux
+package: pl_sshd
+package: ipod
+package: vserver-@pldistro@-@fcdistro@-@arch@
+package: vserver-systemslices-@pldistro@-@fcdistro@-@arch@
+package: pl_mom
+package: fprobe-ulog
+package: vsys
+package: vsys-scripts
+package: monitor-client
+package: monitor-runlevelagent

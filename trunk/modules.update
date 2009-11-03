@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# redirect this into modules.list to get it refreshed
+#
+
+# keep centos5 as the default target rather than - more accurate - f8 b/c we need more of our modules on centos
+fcdistro=centos5
+
+( \
+  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+  make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+) | sort -u | grep -v '^build$'
