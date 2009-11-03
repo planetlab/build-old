@@ -1,12 +1,12 @@
 [base]
-name=CentOS 5.3 - $basearch - Base
-baseurl=@MIRRORURL@/centos/5.3/os/$basearch/
+name=CentOS 5.4 - $basearch - Base
+baseurl=@MIRRORURL@/centos/5.4/os/$basearch/
 gpgcheck=1
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 
 [updates]
-name=CentOS 5.3 - $basearch - Released Updates
-baseurl=@MIRRORURL@/centos/5.3/updates/$basearch/
+name=CentOS 5.4 - $basearch - Released Updates
+baseurl=@MIRRORURL@/centos/5.4/updates/$basearch/
 gpgcheck=1
 gpgkey=http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5
 
