@@ -1,0 +1,26 @@
+#!/bin/bash
+
+vdir=$1
+if [ -z "${vdir}" ] ; then
+	echo "ERROR: $0"
+	echo "Provide the directory of the root filesystem to operate on"
+	exit
+fi
+
+# NOTE: we're enabling util-vserver to allow it to help shutdown all slices
+# before rebooting.  This has been problematic in the past.
+# Thierry : I'm enabling network since, for some reason, it ends up turned off on fedora9
+for service in network util-vserver; do
+    chroot ${vdir} /sbin/chkconfig $service on
+done
+
+# Remove unneeded services
+for service in vprocunhide vservers-default; do
+    chroot ${vdir} /sbin/chkconfig $service off
+done
+
+# Disable splaying of cron.
+echo > ${vdir}/etc/sysconfig/crontab
+
+# Add site_admin account
+chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
