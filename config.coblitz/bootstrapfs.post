@@ -15,7 +15,7 @@ for service in network util-vserver; do
 done
 
 # Remove unneeded services
-for service in vprocunhide vservers-default; do
+for service in vprocunhide vservers-default fprobe-ulog; do
     chroot ${vdir} /sbin/chkconfig $service off
 done
 
