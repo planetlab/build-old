@@ -7,6 +7,8 @@ linux-2.6-SVNBRANCH		:= 22
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-3
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-5
 # hack: ipfw needs changes for 2.6.27
+ALL:=$(subst ipfwslice,,$(ALL))
+IN_VSERVER:=$(subst ipfwslice,,$(IN_VSERVER))
 ALL:=$(subst ipfw,,$(ALL))
 IN_BOOTSTRAPFS:=$(subst ipfw,,$(IN_BOOTSTRAPFS))
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
