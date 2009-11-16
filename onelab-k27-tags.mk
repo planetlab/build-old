@@ -6,9 +6,13 @@ linux-2.6-SVNBRANCH		:= 22
 # not adopting tag 40 about "VXC_PROC_WRITE support" - should be safe but Sapan advised keeping it out was safer still
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-3
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-5
+# hack: ipfw needs changes for 2.6.27
+ALL:=$(subst ipfw,,$(ALL))
+IN_BOOTSTRAPFS:=$(subst ipfw,,$(IN_BOOTSTRAPFS))
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
 # hack: nozomi needs changes for 2.6.27
 ALL:=$(subst nozomi,,$(ALL))
+IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
 nozomi-SVNPATH			:= http://svn.onelab.eu/nozomi/tags/nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-SVNPATH	:= http://svn.onelab.eu/planetlab-umts-tools/tags/planetlab-umts-tools-0.6-4
