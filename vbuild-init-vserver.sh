@@ -58,7 +58,7 @@ function configure_yum_in_vserver () {
 
     # for using vtest-init-vserver.sh as a general-purpose vserver creation wrapper
     # just mention 'none' as the repo url
-    if [ -n "$MYPLC_MODE" -a "$REPO_URL" !- "none" ] ; then
+    if [ -n "$MYPLC_MODE" -a "$REPO_URL" != "none" ] ; then
 	if [ ! -d /vservers/$vserver/etc/yum.repos.d ] ; then
 	    echo "WARNING : cannot create myplc repo"
 	else
