@@ -56,7 +56,9 @@ function configure_yum_in_vserver () {
 	echo "Cannot initialize yum.repos.d in $vserver"
     fi
 
-    if [ -n "$MYPLC_MODE" ] ; then
+    # for using vtest-init-vserver.sh as a general-purpose vserver creation wrapper
+    # just mention 'none' as the repo url
+    if [ -n "$MYPLC_MODE" -a "$REPO_URL" !- "none" ] ; then
 	if [ ! -d /vservers/$vserver/etc/yum.repos.d ] ; then
 	    echo "WARNING : cannot create myplc repo"
 	else
@@ -398,6 +400,8 @@ function usage () {
     echo "vserver-options"
     echo "  all args after the optional -- are passed to vserver <name> build <options>"
     echo "  typical usage is e.g. --interface eth0:200.150.100.10/24"
+    echo "With $COMMAND_MYPLC you can give 'none' as the URL, in which case"
+    echo "   myplc.repo does not get created"
     exit 1
 }
 
