@@ -4,7 +4,8 @@
 
 linux-2.6-SVNBRANCH		:= 22
 # not adopting tag 40 about "VXC_PROC_WRITE support" - should be safe but Sapan advised keeping it out was safer still
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-3
+# baris - get the latest fixes in trunk for nightly build
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-7
 # hack: ipfw needs changes for 2.6.27
 ALL:=$(subst ipfwslice,,$(ALL))
