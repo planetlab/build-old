@@ -265,14 +265,27 @@ repo: RPMS/yumgroups.xml
 # $(package)-SPEC - otherwise the cvs modules have to define spec as 
 # <module>/<module>.spec while svn modules just define it as <module>.spec
 #
-define stage1_variables
-$(1).spec = $(notdir $($(1)-SPEC))
-$(1).specpath = SPECS/$(1).spec
-$(1).module = $(firstword $($(1)-MODULES))
-$(1)-SVNPATH = $(strip $($(1)-SVNPATH))
+define stage1_package_vars
+$(1).spec := $(notdir $($(1)-SPEC))
+$(1).specpath := SPECS/$(1).spec
+$(1).module := $(firstword $($(1)-MODULES))
 endef
 
-$(foreach package, $(ALL), $(eval $(call stage1_variables,$(package))))
+$(foreach package, $(ALL), $(eval $(call stage1_package_vars,$(package))))
+
+# compute all modules
+ALL-MODULES :=
+$(foreach package,$(ALL), $(eval ALL-MODULES+=$($(package)-MODULES)))
+ALL-MODULES:=$(sort $(ALL-MODULES))
+
+# extract revision from -SVNPATH
+define stage1_module_vars
+$(1)-SVNPATH := $(strip $($(1)-SVNPATH))
+$(1).svnpath := $(firstword $(subst @, ,$($(1)-SVNPATH)))
+$(1).svnrev := $(word 2,$(subst @, @,$($(1)-SVNPATH)))
+endef
+
+$(foreach module,$(ALL-MODULES), $(eval $(call stage1_module_vars,$(module))))
 
 #
 # for each package, compute whether we need to set date 
@@ -311,7 +324,7 @@ $($(1).specpath): header.spec
 	    echo "%define" $(word 1,$(subst =, ,$(line))) "$(word 2,$(subst =, ,$(line)))" >> $($(1).specpath) ;))
 	echo "# included from $($(1)-SPEC)" >> $($(1).specpath)
 	$(if $($($(1).module)-SVNPATH),\
-          svn cat $($($(1).module)-SVNPATH)/$($(1)-SPEC) >> $($(1).specpath) || rm $($(1).specpath),\
+          svn cat $($($(1).module).svnpath)/$($(1)-SPEC)$($($(1).module).svnrev) >> $($(1).specpath) || rm $($(1).specpath),\
           cvs -d $($($(1).module)-CVSROOT) checkout \
 	      -r $($($(1).module)-TAG) \
 	      -p $($(1).module)/$($(1)-SPEC) >> $($(1).specpath))
@@ -690,11 +703,6 @@ $(1)-version-svn:
 	   printf $(VFORMAT) $(1)-SVNPATH "$($(1)-SVNPATH)",\
 	   printf $(VFORMAT) $(1)-CVSROOT "$($(1)-CVSROOT)" ; printf $(VFORMAT) $(1)-TAG "$($(1)-TAG)")
 endef
-
-# compute all modules
-ALL-MODULES :=
-$(foreach package,$(ALL), $(eval ALL-MODULES+=$($(package)-MODULES)))
-ALL-MODULES:=$(sort $(ALL-MODULES))
 
 $(foreach module,$(ALL-MODULES), $(eval $(call svn_version_target,$(module))))
 
