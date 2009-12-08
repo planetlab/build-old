@@ -2,10 +2,7 @@
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-SVNBRANCH		:= 22
-# not adopting tag 40 about "VXC_PROC_WRITE support" - should be safe but Sapan advised keeping it out was safer still
-# baris - get the latest fixes in trunk for nightly build
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk@15995
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-7
 # hack: ipfw needs changes for 2.6.27
 ALL:=$(subst ipfwslice,,$(ALL))
