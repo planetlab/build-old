@@ -6,7 +6,7 @@ DIRNAME=$(dirname $0)
 
 default_url="http://localhost/mirror/"
 default_distro="f8"
-all_distros="f8 f10 f11 centos5"
+all_distros="f8 f10 f12 centos5"
 
 function check_distro () {
     local distro=$1; shift
