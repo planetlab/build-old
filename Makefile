@@ -506,7 +506,7 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
 	$(call handle_devel_rpms_pre,$(1))
-	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) && \
+	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) EXPECTED_SRPM=$(notdir $($(1).srpm)) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
 	$(call handle_devel_rpms_post,$(1))
