@@ -17,7 +17,8 @@ kernel-RPMFLAGS:= --target i686
 else
 kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
-kernel-RPMFLAGS += --with firmware --without doc
+# the defaults below are built into the specfile
+#kernel-RPMFLAGS += --with firmware --without doc --without-debug
 ALL += kernel
 
 #
