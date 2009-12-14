@@ -1,5 +1,5 @@
 #
-# $Id: onelab.mk 14839 2009-08-21 16:59:02Z baris $
+# $Id$
 # $URL$
 #
 # the f12 pldistro is to rebuild a fedora 12 vserver-capable kernel + out-to-date util-vserver

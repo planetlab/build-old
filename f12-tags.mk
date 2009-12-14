@@ -1,5 +1,5 @@
 #
-# $Id: onelab-tags.mk 15918 2009-12-01 08:02:26Z thierry $
+# $Id$
 # $URL$
 #
 
