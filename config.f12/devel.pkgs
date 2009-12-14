@@ -1,0 +1,20 @@
+groupname: PlanetLabDevel
+groupdesc: Building PlanetLab
+# general utilities
+package: make install 
+package: glibc glibc-common 
+package: bzip2 gzip
+package: cpio tar
+package: coreutils 
+package: rpm rpm-build rpm-devel 
+package: redhat-rpm-config 
+package: curl curl-devel 
+package: subversion cvs 
+package: less 
+package: openssh
+package: gnupg 
+package: diffutils 
+package: beecrypt-devel 
+package: tetex-latex
+package: gcc-c++ 
+package: xmlto asciidoc binutils-devel
