@@ -657,7 +657,7 @@ clean-help:
 distclean1:
 	rm -rf savedpldistro.mk .rpmmacros spec2make header.spec SPECS MAKE $(DISTCLEANS)
 distclean2:
-	rm -rf CODEBASES SOURCES BUILD RPMS SRPMS tmp
+	rm -rf CODEBASES SOURCES BUILD BUILDROOT RPMS SRPMS tmp
 distclean: distclean1 distclean2
 .PHONY: distclean1 distclean2 distclean
 
