@@ -29,3 +29,8 @@ util-vserver-SPEC := util-vserver.spec
 util-vserver-BUILD-FROM-SRPM := yes
 #util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
+
+yum-MODULES := yum
+yum-SPEC := yum.spec
+yum-BUILD-FROM-SRPM := yes
+ALL += yum
