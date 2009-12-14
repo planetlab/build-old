@@ -17,6 +17,7 @@ kernel-RPMFLAGS:= --target i686
 else
 kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
+kernel-RPMFLAGS += --with firmware --without doc
 ALL += kernel
 
 #
