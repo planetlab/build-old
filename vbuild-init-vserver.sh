@@ -187,8 +187,32 @@ function setup_vserver () {
     # redirect out/err to protect against the vserver's init sequence getting stalled 
     # mostly used for f10 vservers created remotely through ssh
     $personality vserver $VERBOSE $vserver start >& /dev/null
-    [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
-    [ "$pkg_method" = "yum" ] && $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
+
+    if [ "$pkg_method" == "yum" ] ; then
+	$personality vserver $VERBOSE $vserver exec sh -c "rm -f /var/lib/rpm/__db*"
+
+	# run the host rpmdb_dump and restore with the guest rpmdb_load
+	function translate_rpm_hashes () {
+	    set -x
+	    set -e
+	    local vserver="$1"; shift
+	    # need to have utilities installed
+	    type -p file
+	    type -p awk
+	    type -p cut
+	    guest_dir=/var/lib/rpm
+	    host_dir=/vservers/$vserver/$guest_dir
+	    files=$(cd $host_dir ; file * | grep Hash | cut -d: -f 1)
+	    for file in $files; do
+		(cd $host_dir && mv $file ${file}-foreign)
+		/usr/lib/rpm/rpmdb_dump $host_dir/${file}-foreign | vserver $VERBOSE $vserver exec /usr/lib/rpm/rpmdb_load $guest_dir/$file
+	    done
+	    return 0
+	}
+
+	# try the simple way, if that fails try to cross fix the rpm hashes
+	$personality vserver $VERBOSE $vserver exec rpm --rebuilddb || translate_rpm_hashes $vserver
+    fi
 
     # check if the vserver kernel is using VSERVER_DEVICE (vdevmap) support
     need_vdevmap=$(grep "CONFIG_VSERVER_DEVICE=y" /boot/config-$(uname -r) | wc -l)
