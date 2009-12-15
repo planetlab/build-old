@@ -2,7 +2,6 @@ groupname: PlanetLabDevel
 groupdesc: Building PlanetLab
 # general utilities
 package: make install 
-package: glibc glibc-common 
 package: bzip2 gzip
 package: cpio tar
 package: coreutils 
@@ -17,6 +16,8 @@ package: diffutils
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
+package: createrepo
+# kernel
 package: xmlto asciidoc binutils-devel
 # util-vserver
 package: vconfig wget which e2fsprogs-devel doxygen graphviz rsync dump dietlibc python-devel ctags
