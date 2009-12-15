@@ -258,7 +258,7 @@ function run_log () {
 
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${build_SVNPATH} --url ${url} $configs $test_env --verbose --all || success=
+    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${build_SVNPATH} --url ${url} $configs $test_env $VERBOSE --all || success=
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
@@ -441,7 +441,7 @@ function main () {
 	    B) DO_TEST= ;;
 	    T) DO_BUILD= ;;
 	    n) DRY_RUN="-n" ;;
-	    v) set -x ;;
+	    v) set -x ; VERBOSE="-v" ;;
 	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
 	    i) IFNAME=$OPTARG ;;
 	    h|*) usage ;;
@@ -573,7 +573,7 @@ function main () {
 	    svn export $build_SVNPATH $tmpdir
             # Create vserver
 	    cd $tmpdir
-	    ./vbuild-init-vserver.sh -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} -i ${IFNAME} ${BASE} 
+	    ./vbuild-init-vserver.sh $VERBOSE -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} -i ${IFNAME} ${BASE} 
 	    # cleanup
 	    cd -
 	    rm -rf $tmpdir
@@ -618,11 +618,11 @@ function main () {
 
 	# publish to the web so run_log can find them
 	rm -rf $WEBPATH/$BASE ; mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
-	rsync --archive --delete --verbose /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
-	[[ -n "$PUBLISH_SRPMS" ]] && rsync --archive --delete --verbose /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
+	rsync --archive --delete $VERBOSE /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
+	[[ -n "$PUBLISH_SRPMS" ]] && rsync --archive --delete $VERBOSE /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
 	# publish myplc-release if this exists
 	release=/vservers/$BASE/build/myplc-release
-	[ -f $release ] && rsync --verbose $release $WEBPATH/$BASE
+	[ -f $release ] && rsync $VERBOSE $release $WEBPATH/$BASE
 
         # create yum repo and sign packages.
 	if [ -n "$SIGNYUMREPO" ] ; then

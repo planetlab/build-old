@@ -195,6 +195,7 @@ function setup_vserver () {
 	function translate_rpm_hashes () {
 	    set -x
 	    set -e
+	    local personality="$1"; shift
 	    local vserver="$1"; shift
 	    # need to have utilities installed
 	    type -p file
@@ -205,13 +206,14 @@ function setup_vserver () {
 	    files=$(cd $host_dir ; file * | grep Hash | cut -d: -f 1)
 	    for file in $files; do
 		(cd $host_dir && mv $file ${file}-foreign)
-		/usr/lib/rpm/rpmdb_dump $host_dir/${file}-foreign | vserver $VERBOSE $vserver exec /usr/lib/rpm/rpmdb_load $guest_dir/$file
+		/usr/lib/rpm/rpmdb_dump $host_dir/${file}-foreign | $personality vserver $VERBOSE $vserver exec /usr/lib/rpm/rpmdb_load $guest_dir/$file
 	    done
+	    $personality vserver $VERBOSE $vserver exec rpm --rebuilddb
 	    return 0
 	}
 
 	# try the simple way, if that fails try to cross fix the rpm hashes
-	$personality vserver $VERBOSE $vserver exec rpm --rebuilddb || translate_rpm_hashes $vserver
+	$personality vserver $VERBOSE $vserver exec rpm --rebuilddb || translate_rpm_hashes $personality $vserver
     fi
 
     # check if the vserver kernel is using VSERVER_DEVICE (vdevmap) support
