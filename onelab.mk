@@ -43,21 +43,19 @@ IN_MYPLC += $(KERNELS)
 #
 # ipfw: root context module, and slice companion
 #
-ipfw-MODULES := ipfw
-ipfw-SPEC := ipfw.spec
-ipfw-DEPEND-DEVEL-RPMS := kernel-devel
-ipfw-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
-IN_BOOTSTRAPFS += ipfw
-ALL += ipfw
+ipfwroot-MODULES := ipfwsrc
+ipfwroot-SPEC := planetlab/ipfwroot.spec
+ipfwroot-DEPEND-DEVEL-RPMS := kernel-devel
+ipfwroot-SPECVARS = kernel_version=$(kernel.rpm-version) \
+        kernel_release=$(kernel.rpm-release) \
+        kernel_arch=$(kernel.rpm-arch)
+ALL += ipfwroot
 
-ipfwslice-MODULES := ipfw
-ipfwslice-SPEC := ipfw-slice.spec
+ipfwslice-MODULES := ipfwsrc
+ipfwslice-SPEC := planetlab/ipfwslice.spec
 ipfwslice-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
-IN_VSERVER += ipfwslice
+        kernel_release=$(kernel.rpm-release) \
+        kernel_arch=$(kernel.rpm-arch)
 ALL += ipfwslice
 
 #
