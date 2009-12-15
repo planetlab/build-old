@@ -88,6 +88,7 @@ package: libnl-devel
 package-centos5: libnl-devel
 # for util-vserver
 package: ctags
+package+f12: e2fsprogs-devel
 # zabbix/monitor
 package: python-setuptools
 package: python-setuptools-devel
