@@ -2,7 +2,7 @@
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk@15995
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-7
 # hack: ipfw needs changes for 2.6.27
 ALL:=$(subst ipfwslice,,$(ALL))
