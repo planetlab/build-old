@@ -10,7 +10,8 @@ gpgcheck=0
 name=Fedora 10 - $basearch - Updates
 baseurl=@MIRRORURL@/fedora/updates/10/$basearch/
 enabled=1
-# turn off gpg checks; when uilding a f10 vserver in a f12 host, this file is genrally not present when installing the very first packages
+# turn off gpg checks; when building a f10 vserver in a f12 host, 
+#this file is generally not present when installing the very first packages
 gpgcheck=0
 #gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora
 
