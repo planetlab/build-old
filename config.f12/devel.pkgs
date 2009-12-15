@@ -18,3 +18,7 @@ package: beecrypt-devel
 package: tetex-latex
 package: gcc-c++ 
 package: xmlto asciidoc binutils-devel
+# util-vserver
+package: vconfig wget which e2fsprogs-devel doxygen graphviz rsync dump dietlibc python-devel ctags
+# yum
+package: gettext intltool
