@@ -124,7 +124,7 @@ function failure() {
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "and tail version at ${LOG_URL}.ko" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail --lines=1000 ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE}" $MAILTO
+	    tail --lines=1000 ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
     fi
     exit 1
 }
@@ -157,7 +157,7 @@ function success () {
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at ${LOG_URL}" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
-	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE}" $MAILTO
+	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
     fi
     # XXX For some reason, we haven't been getting this email for successful builds. If this sleep
     # doesn't fix the problem, I'll remove it -- Sapan.

@@ -71,6 +71,8 @@ package: postgresql postgresql-devel postgresql-python postgresql-server
 # if we don't specify @arch@ for php-devel, we end up with the 2 variants (i386 and x86_64)
 # in an undetermined order, and php-config --extension-dir might return the wrong place
 package: php php-devel.@arch@ php-gd php-pgsql 
+# now this seems to have been fixed in f12
+pacakge+f12: php-devel
 package: PyXML 
 # used to reference SOAPpy as well
 # for pypcilib
