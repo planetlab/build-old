@@ -1,3 +1,7 @@
+#
+# $Id$
+# $URL$
+#
 [base]
 name=CentOS 5.4 - $basearch - Base
 baseurl=@MIRRORURL@/centos/5.4/os/$basearch/

@@ -1,10 +1,13 @@
+#
+# $Id$
+# $URL$
+#
 [fedora]
 name=Fedora 10 - $basearch
 baseurl=@MIRRORURL@/fedora/releases/10/Everything/$basearch/os/
 enabled=1
-gpgcheck=0
-# where can we get this key ?
-#gpgkey=http://redhat.download.fedoraproject.org/pub/fedora/linux/releases/8/Everything/$basearch/os/RPM-GPG-KEY-fedora
+gpgcheck=1
+gpgkey=http://mirror.onelab.eu/fedora/keys/RPM-GPG-KEY-fedora-10-primary
 
 [updates]
 name=Fedora 10 - $basearch - Updates
