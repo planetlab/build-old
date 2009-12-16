@@ -72,7 +72,7 @@ package: postgresql postgresql-devel postgresql-python postgresql-server
 # in an undetermined order, and php-config --extension-dir might return the wrong place
 package: php php-devel.@arch@ php-gd php-pgsql 
 # now this seems to have been fixed in f12
-pacakge+f12: php-devel
+package+f12: php-devel
 package: PyXML 
 # used to reference SOAPpy as well
 # for pypcilib
