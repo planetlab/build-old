@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # this can help you create/update your fedora mirror
 # $Id$
