@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 groupname: PlanetLabSlice
 groupdesc: PlanetLab Slice Reference Image
 # packages to exclude from stock repositories

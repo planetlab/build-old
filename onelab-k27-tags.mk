@@ -1,4 +1,5 @@
-# $Id: onelab-tags.mk 15622 2009-11-03 21:19:17Z mef $
+# $Id$
+# $URL$
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 

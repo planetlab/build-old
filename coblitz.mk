@@ -1,3 +1,5 @@
+# $Id$
+# $URL$
 #
 # declare the packages to be built and their dependencies
 # initial version from Mark Huang
@@ -5,7 +7,7 @@
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 # rewritten by Thierry Parmentelat - INRIA Sophia Antipolis
 #
-# $Id: planetlab.mk 14230 2009-07-03 00:58:17Z thierry $
+# $Id$
 #
 # see doc in Makefile  
 #

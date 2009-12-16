@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 # use the local mirror only
 # see http://svn.planet-lab.org/wiki/VserverCentos for howto setup localhost mirroring
 mirror: http://mirror.onelab.eu/

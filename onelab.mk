@@ -1,11 +1,11 @@
+# $Id$
+# $URL$
 #
 # declare the packages to be built and their dependencies
 # initial version from Mark Huang
 # Mark Huang <mlhuang@cs.princeton.edu>
 # Copyright (C) 2003-2006 The Trustees of Princeton University
 # rewritten by Thierry Parmentelat - INRIA Sophia Antipolis
-#
-# $Id$
 #
 # see doc in Makefile  
 #

@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 # Keeping the old name as it might be referenced elsewhere (node update..)
 # groupname: Bootstrapfs
 groupname: PlanetLab

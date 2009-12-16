@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 groupname: PlanetFlowReference
 groupdesc: PlanetFlow Reference Image
 package: rsync

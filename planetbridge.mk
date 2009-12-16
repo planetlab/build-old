@@ -1,3 +1,5 @@
+# $Id$
+# $URL$
 #
 # declare the packages to be built and their dependencies
 # initial version from Mark Huang
