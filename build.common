@@ -1,16 +1,16 @@
 # -*-Shell-script-*-
 #
+# $Id$
+# $URL$
+#
 # Common functions for build scripts used by various packages
 # incorporated (e.g., build, myplc, myplc-devel, vserver-reference)
 #
 # Marc E. Fiuczynski <mef@cs.princeton.edu>
 # Copyright (C) 2007 The Trustees of Princeton University
 #
-# $Id$
+# supported distros f8, f10, f12, centos5
 #
-# supported distros f8, f10, (f11) -- fc[46] probably does not work anymore
-# centos5.3
-
 # returns 'Fedora' or 'CentOS' for now
 function pl_getDistro() {
     if [ -f "/etc/redhat-release" ] ; then
@@ -257,10 +257,10 @@ function pl_root_mkfedora () {
 	echo xxx -- error ; return 1
     fi
     
-    public_gpg_key=$(yumconf_gpgkey $yum_conf_repos)
-
     # Do not tolerate errors
     set -e
+
+    public_gpg_key=$(yumconf_gpgkey $yum_conf_repos)
 
     ## make rpms ignore installing stuff to special fs entries like /proc
     # Because of https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=52725
@@ -680,6 +680,7 @@ function yumconf_mirrors () {
 	    return 0
 	fi
     done
+    echo 'yumconf_mirrors in build.common : ran out of mirrors -- BAILING OUT'
     rm -f $dest_yumconf
     return 1
 }
