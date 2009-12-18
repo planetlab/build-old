@@ -98,7 +98,6 @@ package+f10: python-setuptools-devel
 package+f12: python-setuptools-devel
 package: net-snmp net-snmp-devel
 package+centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
-package: TurboGears
 package: python-cherrypy
 ##########
 # for sfa : rebuilding wsdl index at build-time
