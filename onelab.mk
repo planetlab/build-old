@@ -317,15 +317,15 @@ IN_MYPLC += www-register-wizard
 #
 monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
-ALL += monitor
-IN_BOOTSTRAPFS += monitor
+###xxx-tmp-off ALL += monitor
+###xxx-tmp-off IN_BOOTSTRAPFS += monitor
 
 #
 # PLC RT
 #
 plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
-ALL += plcrt
+###xxx-tmp-off ALL += plcrt
 
 #
 # zabbix
@@ -333,7 +333,7 @@ ALL += plcrt
 zabbix-MODULES := Monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
-ALL += zabbix
+###xxx-tmp-off ALL += zabbix
 
 #
 # pyopenssl
