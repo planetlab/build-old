@@ -361,7 +361,7 @@ fi
     echo "========== EndDump $yum_conf"
 
     yum_options=""
-    yum --help | grep verbose &> /dev/null && yum_options="$yum_options --verbose"
+#    yum --help | grep verbose &> /dev/null && yum_options="$yum_options --verbose"
     yum_options="$yum_options -y"
     yum_options="$yum_options -c $yum_conf"
     yum_options="$yum_options --installroot=$vroot"
