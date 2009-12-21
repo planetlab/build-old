@@ -383,6 +383,7 @@ savedpldistro.mk:
 	echo "WEBPATH:=$(WEBPATH)" >> $@
 	echo "TESTBUILDURL:=$(TESTBUILDURL)" >> $@
 	echo "WEBROOT:=$(WEBROOT)" >> $@
+	echo "alias m=\"make PLDISTRO=$(PLDISTRO) PLDISTROTAGS=$(PLDISTROTAGS))\"" > aliases
 
 savedpldistro: savedpldistro.mk
 .PHONY: savedpldistro
