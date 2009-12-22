@@ -92,10 +92,6 @@ package-centos5: libnl-devel
 package: ctags
 package+f12: e2fsprogs-devel
 # zabbix/monitor
-package: python-setuptools
-package+f8: python-setuptools-devel
-package+f10: python-setuptools-devel
-package+f12: python-setuptools-devel
 package: net-snmp net-snmp-devel
 package+centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
 package: python-cherrypy
