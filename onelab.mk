@@ -313,11 +313,18 @@ ALL += www-register-wizard
 IN_MYPLC += www-register-wizard
 
 #
+# pcucontrol
+#
+pcucontrol-MODULES := pcucontrol
+pcucontrol-SPEC := pcucontrol.spec
+ALL += pcucontrol
+
+#
 # monitor
 #
 monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
-###xxx-tmp-off ALL += monitor
+ALL += monitor
 ###xxx-tmp-off IN_BOOTSTRAPFS += monitor
 
 #
