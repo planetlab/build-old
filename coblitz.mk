@@ -247,6 +247,13 @@ www-register-wizard-SPEC := www-register-wizard.spec
 #IN_MYPLC += www-register-wizard
 
 #
+# pcucontrol
+#
+pcucontrol-MODULES := pcucontrol
+pcucontrol-SPEC := pcucontrol.spec
+ALL += pcucontrol
+
+#
 # monitor
 #
 monitor-MODULES := Monitor
