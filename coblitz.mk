@@ -258,8 +258,8 @@ ALL += pcucontrol
 #
 monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
-#ALL += monitor
-#IN_BOOTSTRAPFS += monitor
+ALL += monitor
+IN_BOOTSTRAPFS += monitor
 
 #
 # PLC RT
