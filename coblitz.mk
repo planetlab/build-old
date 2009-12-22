@@ -123,8 +123,8 @@ IN_BOOTSTRAPFS += nodemanager
 #
 sshd-MODULES := pl_sshd
 sshd-SPEC := pl_sshd.spec
-#ALL += sshd
-#IN_BOOTSTRAPFS += sshd
+ALL += sshd
+IN_BOOTSTRAPFS += sshd
 
 #
 # codemux: Port 80 demux
@@ -132,31 +132,31 @@ sshd-SPEC := pl_sshd.spec
 codemux-MODULES := CoDemux
 codemux-SPEC   := codemux.spec
 codemux-RPMBUILD := sudo bash ./rpmbuild.sh
-ALL += codemux
-IN_BOOTSTRAPFS += codemux
+#ALL += codemux
+#IN_BOOTSTRAPFS += codemux
 
 #
 # fprobe-ulog
 #
 fprobe-ulog-MODULES := fprobe-ulog
 fprobe-ulog-SPEC := fprobe-ulog.spec
-ALL += fprobe-ulog
-IN_BOOTSTRAPFS += fprobe-ulog
+#ALL += fprobe-ulog
+#IN_BOOTSTRAPFS += fprobe-ulog
 
 #
 # pf2slice
 #
 pf2slice-MODULES := pf2slice
 pf2slice-SPEC := pf2slice.spec
-ALL += pf2slice
+#ALL += pf2slice
 
 #
 # PlanetLab Mom: Cleans up your mess
 #
 mom-MODULES := Mom
 mom-SPEC := pl_mom.spec
-ALL += mom
-IN_BOOTSTRAPFS += mom
+#ALL += mom
+#IN_BOOTSTRAPFS += mom
 
 #
 # iptables
@@ -235,31 +235,31 @@ IN_MYPLC += drupal
 #
 plewww-MODULES := PLEWWW
 plewww-SPEC := plewww.spec
-ALL += plewww
-IN_MYPLC += plewww
+#ALL += plewww
+#IN_MYPLC += plewww
 
 #
 # www-register-wizard
 #
 www-register-wizard-MODULES := www-register-wizard
 www-register-wizard-SPEC := www-register-wizard.spec
-ALL += www-register-wizard
-IN_MYPLC += www-register-wizard
+#ALL += www-register-wizard
+#IN_MYPLC += www-register-wizard
 
 #
 # monitor
 #
 monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
-ALL += monitor
-IN_BOOTSTRAPFS += monitor
+#ALL += monitor
+#IN_BOOTSTRAPFS += monitor
 
 #
 # PLC RT
 #
 plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
-ALL += plcrt
+#ALL += plcrt
 
 #
 # zabbix
@@ -267,7 +267,7 @@ ALL += plcrt
 zabbix-MODULES := Monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
-ALL += zabbix
+#ALL += zabbix
 
 #
 # pyopenssl
