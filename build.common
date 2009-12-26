@@ -222,8 +222,6 @@ function pl_root_mkfedora () {
     fcdistro=${pl_DISTRO_NAME}
     pkgs_packages=$(pl_parsePkgs package $fcdistro $pldistro $pkgsfile) 
     pkgs_groups=$(pl_parsePkgs group $fcdistro $pldistro $pkgsfile)
-    # packages to exclude 
-    pkgs_excludes=$(pl_parsePkgs exclude $fcdistro $pldistro $pkgsfile) 
     # what can get trashed to save space
     pkgs_junk=$(pl_parsePkgs junk $fcdistro $pldistro $pkgsfile)
     # but not this
@@ -238,13 +236,7 @@ function pl_root_mkfedora () {
     fi
 
     kexclude_line=""
-    # add them manually as the output of pl_parsePkgs is line-separated
-    if [ -n "$pkgs_kexcludes" ] ; then
-	kexclude_line="exclude="
-	for kexclude in $pkgs_kexcludes ; do
-	    kexclude_line="$kexclude_line $kexclude"
-	done
-    fi
+    [ -n "$pkgs_kexcludes" ] && kexclude_line="exclude=$pkgs_kexcludes"
 
     echo "$0: candidate mirrors"
     for mirror in $mirrors ; do
@@ -366,22 +358,17 @@ fi
     yum_options="$yum_options -c $yum_conf"
     yum_options="$yum_options --installroot=$vroot"
 
-    exclude_arg=""
-    for exclude in $pkgs_excludes; do
-	exclude_arg="$exclude_arg --exclude $exclude"
-    done
-
     # glibc must be specified explicitly for the correct arch to be
     # chosen.
     echo "* Installing glibc"
     # ignore yum's return code that is basically undefined
-    yum $yum_options $exclude_arg install glibc || :
+    yum $yum_options install glibc || :
 
     # Go, baby, go
     if [ -n "$pkgs_packages" ] ; then
 	echo "* Installing optional packages" $pkgs_packages
         # ignore yum's return code that is basically undefined
-	yum $yum_options $exclude_arg install $pkgs_packages || :
+	yum $yum_options install $pkgs_packages || :
 	if ! rpm --root $vroot -q $pkgs_packages >/dev/null ; then
 	    echo "* Warning: Missing packages"
 	    rpm --root $vroot -q $pkgs_packages | grep "not installed"
@@ -394,7 +381,7 @@ fi
 	    group=$(echo $group_plus | sed -e "s,+++, ,g")
 	    echo "* Installing optional group $group" 
             # ignore yum's return code that is basically undefined
-	    yum $yum_options $exclude_arg groupinstall "$group" || :
+	    yum $yum_options groupinstall "$group" || :
 	done
     fi
 
@@ -520,15 +507,23 @@ function pl_fixdirs() {
 }
 
 ########## .pkgs format
-# comments start with a # - this is needed only if you use a keyword in a comment
+# Usage: pl_parsePkgs keyword [-a arch] fcdistro pldistro pkgs-file[..s]
+# pkgs.py sohuld be found in PATH, like this file build.common
+function pl_parsePkgs () {
+    target_arch=$pl_DISTRO_ARCH
+    keyword=$1;shift
+    [ "$1" == "-a" ] && { shift; target_arch="$1"; shift; }
+    fcdistro=$1; shift
+    pldistro=$1; shift
 
-function pl_getPkgsAttribute () {
-    keyword=$1; shift
-    file=$1; shift
-    # remove any initial white spaces from the result
-    grep -v '^#' $file | grep --regexp="^${keyword}:" | sed -e "s,${keyword}:,," -e "s,^[[:space:]][[:space:]]*,,"
+    pkgs.py -a $target_arch -f $fcdistro -d $pldistro $keyword "$@" 
 }
+# usage: pl_getPackages [-a arch] fcdistro pldistro pkg-file[..s]
+function pl_getPackages() { pl_parsePkgs package "$@" ; }
+function pl_getGroups() { pl_parsePkgs group "$@" ; }
 
+##############################
+### temporary - only for checking the new python version
 # for a given keyword like 'package' :
 # we support fcdistro-dependant format, for tokens (pkgname) without whitespace
 # you can e.g. use
@@ -538,12 +533,11 @@ function pl_getPkgsAttribute () {
 # 
 # values can contain @arch@, @fcdistro@ or @pldistro@ that are replaced with the current values
 #
-# Usage: pl_parsePkgs keyword [-a arch] fcdistro pldistro pkgs-file[..s]
 # the reason for the -a option is for when we build the build vserver itself; in this case
 # pl_DISTRO_ARCH is the one we obtain from the root context, and that's wrong
 # specify -sa arch AFTER keyword, so as to keep pl_getPackages and pl_getGroups simple
 #
-function pl_parsePkgs () {
+function pl_parsePkgs_old () {
 
     target_arch=$pl_DISTRO_ARCH
     keyword=$1;shift
@@ -567,10 +561,7 @@ function pl_parsePkgs () {
     done
     return 0
 }
-
-# usage: pl_getPackages [-a arch] fcdistro pldistro pkg-file[..s]
-function pl_getPackages() { pl_parsePkgs package "$@" ; }
-function pl_getGroups() { pl_parsePkgs group "$@" ; }
+##############################
 
 # locates a pldistro-dependant file
 # tries first in build/<pldistro>/, then in build/planetlab/
@@ -623,8 +614,8 @@ __header
 	pkgsfile=$(pl_locateDistroFile $builddir $pldistro $pkgsname)
 	packages=$(pl_getPackages $fcdistro $pldistro $pkgsfile)
 
-	groupname=$(pl_getPkgsAttribute groupname $pkgsfile | sed $sedargs)
-	groupdesc=$(pl_getPkgsAttribute groupdesc $pkgsfile | sed $sedargs)
+	groupname=$(pkgs.py groupname $pkgsfile | sed $sedargs)
+	groupdesc=$(pkgs.py groupdesc $pkgsfile | sed $sedargs)
 
 	if [ -z "$groupname" -o -z "$groupdesc" ] ; then
 	    echo "Cannot find groupname: and groupdesc: in $pkgsfile -- skipped" 1>&2

@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 groupname: PlanetLabDevel
 groupdesc: Building PlanetLab
 # general utilities
@@ -37,7 +40,7 @@ package: ncurses-devel
 package: readline-devel 
 package: dnsmasq 
 # for spec2make / rpmlib
-package+f8: popt-devel
+package<=f8: popt-devel
 # kernel
 package: gnupg 
 package: diffutils 
@@ -79,16 +82,14 @@ package: pciutils-devel
 # for vsys - same as for php-devel above
 package: ocaml.@arch@ ocaml-docs 
 # use local inotify-tools on centos
-package:inotify-tools-devel 
-package-centos5: inotify-tools-devel
+package>=f8:inotify-tools-devel 
 ##########
 ## for util-vserver-pl
 # use local libnl on centos
-package: libnl-devel
-package-centos5: libnl-devel
+package>=f8: libnl-devel
 # zabbix/monitor
 package: net-snmp net-snmp-devel
-package+centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
+package>=centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
 package: python-cherrypy
 ##########
 # for sfa : rebuilding wsdl index at build-time

@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 groupname: PlanetLabDevel
 groupdesc: Building PlanetLab
 # general utilities
@@ -37,7 +40,7 @@ package: ncurses-devel
 package: readline-devel 
 package: dnsmasq 
 # for spec2make / rpmlib
-package+f8: popt-devel
+package=f8: popt-devel
 # kernel
 package: gnupg 
 package: diffutils 
@@ -72,7 +75,7 @@ package: postgresql postgresql-devel postgresql-python postgresql-server
 # in an undetermined order, and php-config --extension-dir might return the wrong place
 package: php php-devel.@arch@ php-gd php-pgsql 
 # now this seems to have been fixed in f12
-package+f12: php-devel
+package>=f12: php-devel
 package: PyXML 
 # used to reference SOAPpy as well
 # for pypcilib
@@ -81,19 +84,17 @@ package: pciutils-devel
 # for vsys - same as for php-devel above
 package: ocaml.@arch@ ocaml-docs 
 # use local inotify-tools on centos
-package:inotify-tools-devel 
-package-centos5: inotify-tools-devel
+package>=f8:inotify-tools-devel 
 ##########
 ## for util-vserver-pl
 # use local libnl on centos
-package: libnl-devel
-package-centos5: libnl-devel
+package>=f8: libnl-devel
 # for util-vserver
 package: ctags
-package+f12: e2fsprogs-devel
+package>=f12: e2fsprogs-devel
 # zabbix/monitor
 package: net-snmp net-snmp-devel
-package+centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
+package=centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
 package: python-cherrypy
 ##########
 # for sfa : rebuilding wsdl index at build-time
@@ -101,4 +102,3 @@ package: python-uuid pyOpenSSL m2crypto
 package: libxml2-python libxslt-python
 package: python-ZSI 
 package: python-psycopg2
-

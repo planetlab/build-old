@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 # Keeping the old name as it might be referenced elsewhere (node update..)
 # groupname: Bootstrapfs
 groupname: PlanetLab
@@ -79,22 +82,17 @@ package: openvpn
 package: vconfig
 package: PyXML
 
-package: termcap libtermcap
-package: vixie-cron
-
 #
 # platform-dependent
 #
-package: rsyslog
-package-centos5: rsyslog
-package+centos5: sysklogd
+package>=f8: rsyslog
+package=centos5: sysklogd
 
-package: util-linux-ng
-package-centos5: util-linux-ng
-package+centos5: util-linux
+package>=f8: util-linux-ng
+package=centos5: util-linux
 
-package-f10: termcap libtermcap
-package-f10: vixie-cron
+package<=f8 package=centos5: termcap libtermcap vixie-cron
+
 #
 # planetlab
 #

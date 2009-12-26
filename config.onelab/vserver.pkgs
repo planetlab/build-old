@@ -34,7 +34,7 @@ package: python-devel
 package: tar
 package: findutils
 package: filesystem
-package: vixie-cron
-package-f10: vixie-cron
 package: planetlab-umts-tools-frontend
 package: ipfw-slice
+
+package<=f8 package=centos5: vixie-cron

@@ -1,3 +1,6 @@
+# $Id$
+# $URL$
+#
 groupname: PlanetLabBootcd
 groupdesc: PlanetLab BootCD
 # packages to exclude from stock repositories
@@ -74,5 +77,4 @@ precious: usr/share/terminfo/l/linux
 precious: usr/share/terminfo/v/vt100
 precious: usr/share/terminfo/x/xterm
 precious: usr/share/zoneinfo/UTC
-precious+f8: usr/lib/locale/en_US.utf8
-precious+centos5: usr/lib/locale/en_US.utf8
+precious<=f8 precious<=centos5: usr/lib/locale/en_US.utf8
