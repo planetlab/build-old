@@ -110,7 +110,7 @@ class PkgsParser:
                 if self.m_comment.match(line) or self.m_blank.match(line):
                     continue
                 try:
-                    [lefts,rights] = line.split(':')
+                    [lefts,rights] = line.split(':',1)
                     for left in lefts.split():
                         ########## single ident
                         if self.m_ident.match(left):
