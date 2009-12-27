@@ -5,7 +5,7 @@ groupname: PlanetLabDevel
 groupdesc: Building PlanetLab
 # general utilities
 package: sendmail sendmail-cf mailx 
-package: make install 
+package: make 
 package: glibc glibc-common 
 package: bzip2 gzip
 package: cpio tar
