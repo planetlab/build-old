@@ -8,7 +8,8 @@ COMMAND=$(basename $0)
 DIRNAME=$(dirname $0)
 
 # pkgs parsing utilities
-PATH=$(dirname $0):$PATH . build.common
+PATH=$(dirname $0):$PATH export PATH
+. build.common
 
 DEFAULT_FCDISTRO=f8
 DEFAULT_PLDISTRO=planetlab
