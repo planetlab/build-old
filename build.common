@@ -11,6 +11,9 @@
 #
 # supported distros f8, f10, f12, centos5
 #
+# for locating pkgs.py
+export PATH=.:$PATH
+
 # returns 'Fedora' or 'CentOS' for now
 function pl_getDistro() {
     if [ -f "/etc/redhat-release" ] ; then
@@ -508,7 +511,7 @@ function pl_fixdirs() {
 
 ########## .pkgs format
 # Usage: pl_parsePkgs keyword [-a arch] fcdistro pldistro pkgs-file[..s]
-# pkgs.py sohuld be found in PATH, like this file build.common
+# pkgs.py should be found in PATH, like this file build.common
 function pl_parsePkgs () {
     target_arch=$pl_DISTRO_ARCH
     keyword=$1;shift
