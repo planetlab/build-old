@@ -99,7 +99,7 @@ package: nrpe
 #
 # planetlab
 #
-package: ipfw
+package: ipfwroot
 package: madwifi
 package: wireless-tools
 package: util-vserver
