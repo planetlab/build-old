@@ -60,7 +60,7 @@ ALL += ipfwslice
 
 # this doesn't build on f12 - weird all right - I suspect gcc to be smarter but that needs investigation
 # is madwifi still current anyway ? should we move to ath5k instead ?
-ifneq "$(DISTRONAME)" "f12"
+#ifneq "$(DISTRONAME)" "f12"
 #
 # madwifi
 #
@@ -73,7 +73,7 @@ madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_arch=$(kernel.rpm-arch)
 ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
-endif
+#endif
 
 # 
 # nozomi
