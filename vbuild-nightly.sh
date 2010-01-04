@@ -222,8 +222,9 @@ function run_log () {
     TESTS_SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
 
     ### the URL to the RPMS/<arch> location
+    # f12 now has everything in i686; try i386 first as older fedoras have both
     url=""
-    for a in i386 x86_64; do
+    for a in i386 i686 x86_64; do
 	archdir=/vservers/$BASE/build/RPMS/$a
 	if [ -d $archdir ] ; then
 	    # where was that installed
