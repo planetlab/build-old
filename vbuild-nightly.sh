@@ -537,22 +537,17 @@ function main () {
 	    vserver ${BASE} exec svn update /build
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
-
-	    PLDISTRO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PLDISTRO)
-	    options=(${options[@]} -d $PLDISTRO)
-	    PLDISTROTAGS=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PLDISTROTAGS)
-	    options=(${options[@]} -t $PLDISTROTAGS)
-	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH)
-	    options=(${options[@]} -s $build_SVNPATH)
-	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PERSONALITY)
+	    # retrieve all in one run
+	    tmp=/tmp/${BASE}-env.sh
+	    vserver ${BASE} exec make --no-print-directory -C /build stage1=skip \
+		++PLDISTRO ++PLDISTROTAGS ++build-SVNPATH ++PERSONALITY ++MAILTO ++WEBPATH ++TESTBUILDURL ++WEBROOT > $tmp
+	    . $tmp
+	    rm -f $tmp
+	    options=(${options[@]} -d $PLDISTRO -t $PLDISTROTAGS -s $build_SVNPATH)
 	    [ -n "$PERSONALITY" ] && options=(${options[@]} -p $PERSONALITY)
-	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +MAILTO)
 	    [ -n "$MAILTO" ] && options=(${options[@]} -m $MAILTO)
-	    WEBPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +WEBPATH)
 	    [ -n "$WEBPATH" ] && options=(${options[@]} -w $WEBPATH)
-	    TESTBUILDURL=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +TESTBUILDURL)
 	    [ -n "$TESTBUILDURL" ] && options=(${options[@]} -W $TESTBUILDURL)
-	    WEBROOT=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +WEBROOT)
 	    [ -n "$WEBROOT" ] && options=(${options[@]} -r $WEBROOT)
 	    show_env
 	else
