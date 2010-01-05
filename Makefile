@@ -384,6 +384,7 @@ savedpldistro.mk:
 	echo "TESTBUILDURL:=$(TESTBUILDURL)" >> $@
 	echo "WEBROOT:=$(WEBROOT)" >> $@
 	echo "alias m=\"make PLDISTRO=$(PLDISTRO) PLDISTROTAGS=$(PLDISTROTAGS)\"" > aliases
+	echo "alias m1=\"make stage1=true PLDISTRO=$(PLDISTRO) PLDISTROTAGS=$(PLDISTROTAGS)\"" >> aliases
 
 savedpldistro: savedpldistro.mk
 .PHONY: savedpldistro
