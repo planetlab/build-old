@@ -147,7 +147,9 @@ include $(PLDISTROCONTENTS)
 
 #################### include <pldistro>-tags.mk
 # describes where to fetch components, and the related tags if using cvs
+ifeq "$PLDISTROTAGS" ""
 PLDISTROTAGS := $(PLDISTRO)-tags.mk
+endif
 include $(PLDISTROTAGS)
 
 # this used to be set in the -tags.mk files, but that turned out to require
