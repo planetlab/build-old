@@ -540,7 +540,9 @@ function main () {
 	    # retrieve all in one run
 	    tmp=/tmp/${BASE}-env.sh
 	    vserver ${BASE} exec make --no-print-directory -C /build stage1=skip \
-		++PLDISTRO ++PLDISTROTAGS ++build-SVNPATH ++PERSONALITY ++MAILTO ++WEBPATH ++TESTBUILDURL ++WEBROOT > $tmp
+		++PLDISTRO ++PLDISTROTAGS ++PERSONALITY ++MAILTO ++WEBPATH ++TESTBUILDURL ++WEBROOT > $tmp
+	    # sh vars cannot have a minus
+	    echo build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH) >> $tmp
 	    . $tmp
 	    rm -f $tmp
 	    options=(${options[@]} -d $PLDISTRO -t $PLDISTROTAGS -s $build_SVNPATH)
