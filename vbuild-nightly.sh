@@ -545,15 +545,15 @@ function main () {
 	    build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH)
 	    options=($options -s $build_SVNPATH)
 	    PERSONALITY=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +PERSONALITY)
-	    options=($options -p $PERSONALITY)
+	    [ -n "$PERSONALITY" ] && options=($options -p $PERSONALITY)
 	    MAILTO=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +MAILTO)
-	    options=($options -m $MAILTO)
+	    [ -n "$MAILTO" ] && options=($options -m $MAILTO)
 	    WEBPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +WEBPATH)
-	    options=($options -w $WEBPATH)
+	    [ -n "$WEBPATH" ] && options=($options -w $WEBPATH)
 	    TESTBUILDURL=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +TESTBUILDURL)
-	    options=($options -W $TESTBUILDURL)
+	    [ -n "$TESTBUILDURL" ] && options=($options -W $TESTBUILDURL)
 	    WEBROOT=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +WEBROOT)
-	    options=($options -r $WEBROOT)
+	    [ -n "$WEBROOT" ] && options=($options -r $WEBROOT)
 	    show_env
 	else
 	    # create vserver: check it does not exist yet
