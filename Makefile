@@ -373,18 +373,15 @@ $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 
 # stores PLDISTRO in a file
 # this is done at stage1. later run wont get confused
+SAVED_VARS=PLDISTRO PLDISTROTAGS build-SVNPATH PERSONALITY MAILTO BASE WEBPATH TESTBUILDURL WEBROOT
 savedpldistro.mk:
-	echo "PLDISTRO:=$(PLDISTRO)" > $@
-	echo "PLDISTROTAGS:=$(PLDISTROTAGS)" >> $@
-	echo "build-SVNPATH:=$(build-SVNPATH)" >> $@
-	echo "PERSONALITY:=$(PERSONALITY)" >> $@
-	echo "MAILTO:=$(MAILTO)" >> $@
-	echo "BASE:=$(BASE)" >> $@
-	echo "WEBPATH:=$(WEBPATH)" >> $@
-	echo "TESTBUILDURL:=$(TESTBUILDURL)" >> $@
-	echo "WEBROOT:=$(WEBROOT)" >> $@
-	echo "alias m=\"make PLDISTRO=$(PLDISTRO) PLDISTROTAGS=$(PLDISTROTAGS)\"" > aliases
-	echo "alias m1=\"make stage1=true PLDISTRO=$(PLDISTRO) PLDISTROTAGS=$(PLDISTROTAGS)\"" >> aliases
+	@echo "# do not edit" > $@
+	@$(foreach var,$(SAVED_VARS),echo "$(var):=$($(var))" >> $@ ;)
+	@echo "# do not edit" > aliases
+	@echo -n "alias m=\"make " >> aliases
+	@$(foreach var,$(SAVED_VARS),echo -n " $(var)=$($(var))" >> aliases ;)
+	@echo "\"" >> aliases
+	@echo "alias m1=\"m stage1=true\"" >> aliases
 
 savedpldistro: savedpldistro.mk
 .PHONY: savedpldistro
