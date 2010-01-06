@@ -325,14 +325,14 @@ ALL += pcucontrol
 monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
 ALL += monitor
-###xxx-tmp-off IN_BOOTSTRAPFS += monitor
+IN_BOOTSTRAPFS += monitor
 
 #
 # PLC RT
 #
 plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
-###xxx-tmp-off ALL += plcrt
+ALL += plcrt
 
 #
 # zabbix
@@ -340,7 +340,7 @@ plcrt-SPEC := plcrt.spec
 zabbix-MODULES := Monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
-###xxx-tmp-off ALL += zabbix
+ALL += zabbix
 
 #
 # pyopenssl
