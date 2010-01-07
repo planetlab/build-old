@@ -38,3 +38,4 @@ package: planetlab-umts-tools-frontend
 package: ipfw-slice
 
 package<=f8 package=centos5: vixie-cron
+package>f10: cronie

@@ -92,6 +92,7 @@ package>=f8: util-linux-ng
 package=centos5: util-linux
 
 package<=f8 package=centos5: termcap libtermcap vixie-cron
+package>f10: cronie
 
 #
 # planetlab
