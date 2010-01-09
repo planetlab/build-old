@@ -330,7 +330,7 @@ that for other purposes than tagging"""%topdir
             Module.prompt_config()
             print "Checking ...",
             Command("svn co -N %s %s"%(Module.config['svnpath'],topdir),options).run_fatal()
-            Command("svn co -N %s/%s %s/%s"%(Module.config['svnpath'],
+            Command("svn co %s/%s %s/%s"%(Module.config['svnpath'],
                                              Module.config['build'],
                                              topdir,
                                              Module.config['build']),options).run_fatal()
@@ -364,11 +364,13 @@ that for other purposes than tagging"""%topdir
         if not os.path.isdir (self.module_dir):
             raise Exception, 'Cannot find %s - check module name'%self.module_dir
 
-    def init_subdir (self,fullpath):
+    def init_subdir (self,fullpath, deep=False):
         if self.options.verbose:
             print 'Checking for',fullpath
+        opt=""
+        if not deep: opt="-N"
         if not os.path.isdir (fullpath):
-            self.run_fatal("svn update -N %s"%fullpath)
+            self.run_fatal("svn update %s %s"%(opt,fullpath))
 
     def revert_subdir (self,fullpath):
         if self.options.fast_checks:
@@ -385,15 +387,15 @@ that for other purposes than tagging"""%topdir
             return
         if self.options.verbose:
             print 'Updating',fullpath
-        self.run_fatal("svn update -N %s"%fullpath)
+        self.run_fatal("svn update %s"%fullpath)
 
     def init_edge_dir (self):
         # if branch, edge_dir is two steps down
         if hasattr(self,'branch'):
-            self.init_subdir("%s/branches"%self.module_dir)
+            self.init_subdir("%s/branches"%self.module_dir,deep=False)
         elif hasattr(self,'tagname'):
-            self.init_subdir("%s/tags"%self.module_dir)
-        self.init_subdir(self.edge_dir())
+            self.init_subdir("%s/tags"%self.module_dir,deep=False)
+        self.init_subdir(self.edge_dir(),deep=True)
 
     def revert_edge_dir (self):
         self.revert_subdir(self.edge_dir())
@@ -405,15 +407,21 @@ that for other purposes than tagging"""%topdir
         attempt="%s/%s.spec"%(self.edge_dir(),self.name)
         if os.path.isfile (attempt):
             return attempt
-        else:
-            pattern="%s/*.spec"%self.edge_dir()
-            try:
-                return glob(pattern)[0]
-            except:
-                raise Exception, 'Cannot guess specfile for module %s -- pattern was %s'%(self.name,pattern)
+        pattern1="%s/*.spec"%self.edge_dir()
+        level1=glob(pattern1)
+        if level1:
+            return level1[0]
+        pattern2="%s/*/*.spec"%self.edge_dir()
+        level2=glob(pattern2)
+        if level2:
+            return level2[0]
+        raise Exception, 'Cannot guess specfile for module %s -- patterns were %s or %s'%(self.name,pattern1,pattern2)
 
     def all_specnames (self):
-        return glob("%s/*.spec"%self.edge_dir())
+        level1=glob("%s/*.spec"%self.edge_dir())
+        if level1: return level1
+        level2=glob("%s/*/*.spec"%self.edge_dir())
+        return level2
 
     def parse_spec (self, specfile, varnames):
         if self.options.verbose:
