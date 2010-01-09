@@ -855,8 +855,10 @@ Please write a changelog for this new tag in the section above
         tagsfiles=glob(build.edge_dir()+"/*-tags*.mk")
         tagsdict=dict( [ (x,'todo') for x in tagsfiles ] )
         default_answer = 'y'
+        tagsfiles.sort()
         while True:
-            for (tagsfile,status) in tagsdict.iteritems():
+            for tagsfile in tagsfiles:
+                status=tagsdict[tagsfile]
                 basename=os.path.basename(tagsfile)
                 print ".................... Dealing with %s"%basename
                 while tagsdict[tagsfile] == 'todo' :
