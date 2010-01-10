@@ -107,24 +107,39 @@ EOF
     echo "******************** END SUMMARY" 
 }
 
+### we might build on a box other than the actual web server
+# utilities for handling the pushed material (rpms, logfiles, ...)
+function webpublish_misses_dir () { ssh root@${WEBHOST} bash -c "test ! -d $1" ; }
+function webpublish_remote () { ssh root@${WEBHOST} "$@" ; }
+function webpublish_mkdir () { webpublish_remote mkdir "$@" ; }
+function webpublish_rm () { webpublish_remote rm "$@" ; }
+function webpublish_rsync_dir () { rsync --archive --delete $VERBOSE $1 root@${WEBHOST}:$2 ; }
+function webpublish_rsync_file () { rsync $VERBOSE $1 root@${WEBHOST}:$2 ; }
+function webpublish_cp_local_to_remote () { scp $1 root@${WEBHOST}:$2 ; }
+function webpublish_cp_stdin_to_file () { ssh root@${WEBHOST} cat \> $1; }
+function webpublish_append_stdin_to_file () { ssh root@${WEBHOST} cat \>\> $1; }
 
 # Notify recipient of failure or success, manage various stamps 
 function failure() {
     set -x
     # early stage ? - let's not create /build/@PLDISTRO@
-    if [ ! -d ${WEBPATH} ] ; then
+    if webpublish_misses_dir ${WEBPATH} ; then
+	WEBHOST=localhost
 	WEBPATH=/tmp
 	WEBLOG=/tmp/vbuild-early.log.txt
     fi
-    cp $LOG ${WEBLOG}
-    summary $LOG >> ${WEBLOG}
-    (echo -n "============================== $COMMAND: failure at " ; date ; tail --lines=1000 $WEBLOG) > ${WEBLOG}.ko
+    webpublish_cp_local_to_remote $LOG ${WEBLOG}
+    summary $LOG | webpublish_append_stdin_to_file ${WEBLOG}
+    (echo -n "============================== $COMMAND: failure at " ; date ; \
+	webpublish_remote tail --lines=1000 $WEBLOG) | \
+	webpublish_cp_stdin_to_file ${WEBLOG}.ko
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "and tail version at ${LOG_URL}.ko" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    tail --lines=1000 ${WEBLOG} ) | mail -s "Failures with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
+	    webpublish_remote tail --lines=1000 ${WEBLOG} ) | \
+	    mail -s "Failures with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
     fi
     exit 1
 }
@@ -132,25 +147,26 @@ function failure() {
 function success () {
     set -x
     # early stage ? - let's not create /build/@PLDISTRO@
-    if [ ! -d ${WEBPATH} ] ; then
+    if webpublish_misses_dir ${WEBPATH} ; then
+	WEBHOST=localhost
 	WEBPATH=/tmp
 	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
     fi
-    cp $LOG ${WEBLOG}
-    summary $LOG >> ${WEBLOG}
+    webpublish_cp_local_to_remote $LOG ${WEBLOG}
+    summary $LOG | webpublish_append_stdin_to_file ${WEBLOG}
     if [ -n "$DO_TEST" ] ; then
 	( \
 	    echo "Successfully built and tested" ; \
 	    echo "See full build log at ${LOG_URL}" ; \
 	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    ) > ${WEBLOG}.pass
-	rm -f ${WEBLOG}.pkg-ok ${WEBLOG}.ko
+	    ) | webpublish_cp_stdin_to_file ${WEBLOG}.pass
+	webpublish_rm -f ${WEBLOG}.pkg-ok ${WEBLOG}.ko
     else
 	( \
 	    echo "Successful package-only build, no test requested" ; \
 	    echo "See full build log at ${LOG_URL}" ; \
-	    ) > ${WEBLOG}.pkg-ok
-	rm -f ${WEBLOG}.ko
+	    ) | webpublish_cp_stdin_to_file ${WEBLOG}.pkg-ok
+	webpublish_rm -f ${WEBLOG}.ko
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
@@ -266,7 +282,7 @@ function run_log () {
     ssh 2>&1 -n ${testmaster_ssh} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
     # push them to the build web
     chmod -R a+r /vservers/$BASE/build/testlogs/
-    rsync --archive --delete /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
+    webpublish_rsync_dir /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
 
     if [ -z "$success" ] ; then
 	failure
@@ -279,7 +295,9 @@ function in_root_context () {
     rpm -q util-vserver > /dev/null 
 }
 
-# this part won't work with a remote(rsync) WEBPATH
+# this part won't work if WEBHOST does not match the local host
+# would need to be made webpublish_* compliant
+# but do we really need this feature anyway ?
 function sign_node_packages () {
 
     echo "Signing node packages"
@@ -341,6 +359,7 @@ function show_env () {
     # this does not help, it's not yet set when we run show_env
     #echo WEBPATH="$WEBPATH"
     echo TESTBUILDURL="$TESTBUILDURL"
+    echo WEBHOST="$WEBHOST"
     if in_root_context ; then
 	echo PLDISTROTAGS="$PLDISTROTAGS"
     else
@@ -389,7 +408,7 @@ function usage () {
     echo "    the -f/-d/-p/-m/-s/-t options are uneffective in this case"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
-    echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL"
+    echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL; this is also used to get the hostname where to publish builds"
     echo " -r webroot - defaults to $DEFAULT_WEBROOT - the fs point where testbuildurl actually sits"
     echo " -M testmaster - defaults to $DEFAULT_TESTMASTER"
     echo " -y - sign yum repo in webpath"
@@ -505,6 +524,11 @@ function main () {
 	MAIL_SUBJECT="$MAIL_SUBJECT fresh build"
     fi
 
+    ### compute WEBHOST from TESTBUILDURL 
+    # this is to avoid having to change the builds configs everywhere
+    # simplistic way to extract hostname from a URL
+    WEBHOST=$(echo "$TESTBUILDURL" | cut -d/ -f 3)
+
     if ! in_root_context ; then
         # in the vserver
 	echo "==================== Within vserver BEG $(date)"
@@ -604,7 +628,7 @@ function main () {
 
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
-	mkdir -p ${WEBPATH}
+	webpublish_mkdir -p ${WEBPATH}
 
         # where to store the log for web access
 	WEBLOG=${WEBPATH}/${BASE}.log.txt
@@ -623,16 +647,24 @@ function main () {
 	fi
 
 	# publish to the web so run_log can find them
-	rm -rf $WEBPATH/$BASE ; mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
-	rsync --archive --delete $VERBOSE /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
-	[[ -n "$PUBLISH_SRPMS" ]] && rsync --archive --delete $VERBOSE /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
+	webpublish_rm -rf $WEBPATH/$BASE ; webpublish_mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
+	webpublish_rsync_dir /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
+	[[ -n "$PUBLISH_SRPMS" ]] && webpublish_rsync_dir /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
 	# publish myplc-release if this exists
 	release=/vservers/$BASE/build/myplc-release
-	[ -f $release ] && rsync $VERBOSE $release $WEBPATH/$BASE
+	[ -f $release ] && webpublish_rsync_file $release $WEBPATH/$BASE
 
         # create yum repo and sign packages.
 	if [ -n "$SIGNYUMREPO" ] ; then
-	    sign_node_packages
+	    # this script does not yet support signing on a remote (webhost) repo
+	    sign_here=$(hostname) ; sign_web=$(webpublish_remote hostname)
+	    if [ "$hostname" = "$sign_here" ] ; then
+		sign_node_packages
+	    else
+		echo "$COMMAND does not support signing on a remote yum repo"
+		echo "you might want to turn off the -y option, or run this on the web server box itself"
+		exit 1
+	    fi
 	fi
 
 	if [ -n "$DO_TEST" ] ; then 
