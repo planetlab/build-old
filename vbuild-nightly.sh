@@ -109,7 +109,7 @@ EOF
 
 ### we might build on a box other than the actual web server
 # utilities for handling the pushed material (rpms, logfiles, ...)
-function webpublish_misses_dir () { ssh root@${WEBHOST} bash -c "test ! -d $1" ; }
+function webpublish_misses_dir () { ssh root@${WEBHOST}  "bash -c \"test \! -d $1\"" ; }
 function webpublish_remote () { ssh root@${WEBHOST} "$@" ; }
 function webpublish_mkdir () { webpublish_remote mkdir "$@" ; }
 function webpublish_rm () { webpublish_remote rm "$@" ; }
