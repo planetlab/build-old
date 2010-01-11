@@ -35,7 +35,7 @@ package: tar
 package: findutils
 package: filesystem
 package: planetlab-umts-tools-frontend
-package: ipfw-slice
+package: ipfwslice
 
 package<=f8 package=centos5: vixie-cron
 package>f10: cronie
