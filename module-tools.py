@@ -897,7 +897,7 @@ c: cat the current tag file
 n: move to next file"""%locals()
 
             if prompt("Want to review changes on tags files",False):
-                tagsdict = dict ( [ (x, 'todo') for tagsfile in tagsfiles ] )
+                tagsdict = dict ( [ (x, 'todo') for x in tagsfiles ] )
                 default_answer='d'
             else:
                 break
