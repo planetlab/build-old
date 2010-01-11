@@ -34,7 +34,8 @@ function pl_getRelease() {
 	echo "build.common.pl_getRelease-unknown"
 	exit 1
     fi
-    echo "$release"
+    # keep only the major number
+    echo "$release" | cut -d. -f1
     return 0
 }
 
