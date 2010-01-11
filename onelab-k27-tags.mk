@@ -5,7 +5,7 @@
 
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # this should build
-ipfwsrc-SVNPATH                 := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-8
+ipfwsrc-SVNPATH                 := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-9
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 # nozomi not needed anymore for 2.6.27
 ALL:=$(subst nozomi,,$(ALL))
