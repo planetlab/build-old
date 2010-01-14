@@ -731,6 +731,6 @@ function yumconf_exclude () {
     repo=$1; shift
     kexclude_line="$1" ; shift
     
-    sed -i -e "/baseurl=.*$/i\\
+    sed -i -e "/#baseurl=.*$/i\\
 $kexclude_line" $repo
 }
