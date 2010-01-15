@@ -272,14 +272,6 @@ IN_BOOTSTRAPFS += vsys-scripts
 ALL += vsys-scripts
 
 #
-# dummynet_image
-# 
-dummynet_image-MODULES := dummynet_image
-dummynet_image-SPEC := dummynet_image.spec
-IN_MYPLC += dummynet_image
-ALL += dummynet_image
-
-#
 # PLCAPI
 #
 PLCAPI-MODULES := PLCAPI
