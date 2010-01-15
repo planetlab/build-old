@@ -559,6 +559,8 @@ function main () {
 	    # update build
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    vserver ${BASE} exec svn update /build
+	    # make sure we refresh the tests place in case it has changed
+	    rm -f /build/tests_svnpath
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
 	    # retrieve all in one run
