@@ -34,5 +34,6 @@ package: python-devel
 package: tar
 package: findutils
 package: filesystem
+
 package<=f8 package=centos5: vixie-cron
-package>f10: cronie
+package>=f10: cronie
