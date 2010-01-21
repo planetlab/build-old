@@ -438,7 +438,7 @@ ALL += noderepo
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-myplc-MODULES := MyPLC
+myplc-MODULES := MyPLC build
 myplc-SPEC := myplc.spec
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc
