@@ -989,17 +989,24 @@ will be based on latest tag %s and *not* on the current trunk"""%(self.name,bran
         f.write("Branch %s for module %s created (as new trunk) from tag %s\n"%(new_trunk_name,self.name,latest_tag_name))
         f.close()
 
-        # we're done, let's commit the stuff
+        # review the renumbering changes in trunk
         command="svn diff %s"%self.edge_dir()
-        self.run_prompt("Review changes in trunk",command)
-        command="svn copy --file %s %s %s"%(tmp,self.edge_url(),branch_url)
+        self.run_prompt("Review (renumbering) changes in trunk",command)
+        # create branch
+        command="svn copy --file %s %s %s"%(tmp,tag_url,branch_url)
         self.run_prompt("Create branch",command)
+        # commit trunk
         command="svn commit --file %s %s"%(tmp,self.edge_dir())
         self.run_prompt("Commit trunk",command)
+        # create initial tag for the new trunk
         new_tag_url=self.tag_url(spec_dict)
         command="svn copy --file %s %s %s"%(tmp,self.edge_url(),new_tag_url)
         self.run_prompt("Create initial tag in trunk",command)
         os.unlink(tmp)
+        # print message about SVNBRANCH
+        print """You might now wish to review your tags files
+Please make sure you mention as appropriate 
+%s-SVNBRANCH := %s""" %(self.name,branch_name)
 
 ##############################
 class Package:
@@ -1340,7 +1347,7 @@ Branches:
                           help="skip safety checks, such as svn updates -- use with care")
 
         # default verbosity depending on function - temp
-        verbose_modes= ['tag','sync']
+        verbose_modes= ['tag', 'sync', 'branch']
         
         if mode not in verbose_modes:
             parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
