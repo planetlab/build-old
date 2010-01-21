@@ -1000,7 +1000,7 @@ will be based on latest tag %s and *not* on the current trunk"""%(self.name,bran
         self.run_prompt("Commit trunk",command)
         # create initial tag for the new trunk
         new_tag_url=self.tag_url(spec_dict)
-        command="svn copy --file %s %s %s"%(tmp,self.edge_url(),new_tag_url)
+        command="svn copy --file %s %s %s"%(tmp,tag_url,new_tag_url)
         self.run_prompt("Create initial tag in trunk",command)
         os.unlink(tmp)
         # print message about SVNBRANCH
