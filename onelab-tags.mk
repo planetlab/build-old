@@ -33,6 +33,7 @@ vsys-SVNBRANCH			:= 0.9
 vsys-SVNPATH                    := http://svn.planet-lab.org/svn/vsys/tags/vsys-0.9-4
 vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-scripts-0.95-13
 dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-5
+PLCAPI-SVNBRANCH		:= 4.3
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-32
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
 PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-41
