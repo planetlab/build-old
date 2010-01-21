@@ -94,13 +94,9 @@ package=centos5: util-linux
 package<=f8 package=centos5: termcap libtermcap vixie-cron
 package>=f10: cronie
 
-# for nagios
-package: nrpe
-
 #
 # planetlab
 #
-package: ipfwroot
 package: madwifi
 package: wireless-tools
 package: util-vserver
@@ -124,3 +120,11 @@ package: vsys
 package: vsys-scripts
 package: monitor-client
 package: monitor-runlevelagent
+
+# onelab specifics
+# kernel-ipfw
+package: ipfwroot
+# for nagios
+package: nrpe
+# convenience
+package: emacs
