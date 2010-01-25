@@ -41,6 +41,7 @@ www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard
 pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/tags/pcucontrol-1.0-1
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-30
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-7
+BootManager-SVNBRANCH		:= 4.3
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-4.3-16
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-17
