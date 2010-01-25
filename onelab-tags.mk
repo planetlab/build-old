@@ -44,6 +44,7 @@ nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-
 BootManager-SVNBRANCH		:= 4.3
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-4.3-16
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
+BootCD-SVNBRANCH		:= 4.2
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-17
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-16
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-1.0-11
