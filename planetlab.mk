@@ -142,6 +142,13 @@ ALL += fprobe-ulog
 IN_BOOTSTRAPFS += fprobe-ulog
 
 #
+# DistributedRateLimiting
+#
+DistributedRateLimiting-MODULES := DistributedRateLimiting
+DistributedRateLimiting-SPEC := DistributedRateLimiting.spec
+ALL += DistributedRateLimiting
+
+#
 # pf2slice
 #
 pf2slice-MODULES := pf2slice
