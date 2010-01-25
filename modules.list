@@ -31,6 +31,7 @@ linux-2.6:22
 madwifi
 madwifi:0.9.4
 nodeconfig
+nodeconfig:4.3
 nozomi
 pcucontrol
 pf2slice

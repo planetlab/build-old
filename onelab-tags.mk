@@ -40,6 +40,7 @@ PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLE
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-1
 pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/tags/pcucontrol-1.0-1
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-30
+nodeconfig-SVNBRANCH		:= 4.3
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-4.3-7
 BootManager-SVNBRANCH		:= 4.3
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-4.3-16
