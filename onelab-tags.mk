@@ -48,6 +48,7 @@ pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/p
 BootCD-SVNBRANCH		:= 4.2
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-4.2-17
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-4.2-16
+BootstrapFS-SVNBRANCH		:= 1.0
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-1.0-11
 MyPLC-SVNBRANCH			:= 4.3
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-4.3-37

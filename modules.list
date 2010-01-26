@@ -3,6 +3,7 @@ BootCD:4.2
 BootManager
 BootManager:4.3
 BootstrapFS
+BootstrapFS:1.0
 CoDemux
 DistributedRateLimiting
 Mom
