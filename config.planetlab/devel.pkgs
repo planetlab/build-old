@@ -102,3 +102,5 @@ package: python-uuid pyOpenSSL m2crypto
 package: libxml2-python libxslt-python
 package: python-ZSI 
 package: python-psycopg2
+# DistributedRateLimiting
+package: libxml2-devel
