@@ -22,7 +22,8 @@ us_epel_url=rsync://rsync.gtlib.gatech.edu/fedora-epel
 
 # ircam's fedora8 repo has been turned off
 #eu_fedora_url=rsync://mirrors.ircam.fr/fedora-linux
-eu_fedora_url=rsync://mirror.ovh.net/download.fedora.redhat.com/linux
+#eu_fedora_url=rsync://mirror.ovh.net/download.fedora.redhat.com/linux
+eu_fedora_url=rsync://ftp-stud.hs-esslingen.de/fedora/linux
 eu_centos_url=rsync://mirrors.ircam.fr/CentOS
 eu_epel_url=rsync://mirrors.ircam.fr/fedora-epel
 
