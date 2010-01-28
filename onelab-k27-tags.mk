@@ -7,10 +7,6 @@ linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 # this should build
 ipfwsrc-SVNPATH                 := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-9
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
-# nozomi not needed anymore for 2.6.27
-ALL:=$(subst nozomi,,$(ALL))
-IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
-#
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-SVNPATH	:= http://svn.onelab.eu/planetlab-umts-tools/tags/planetlab-umts-tools-0.6-4
 util-vserver-SVNBRANCH		:= scholz
@@ -32,13 +28,13 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 vsys-SVNBRANCH			:= 0.9
 vsys-SVNPATH                    := http://svn.planet-lab.org/svn/vsys/tags/vsys-0.9-4
 vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-scripts-0.95-14
-dummynet_image-SVNPATH		:= http://svn.planet-lab.org/svn/dummynet_image/tags/dummynet_image-1.0-5
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/trunk
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
 PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-41
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-1
 pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/trunk
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-30
+# latest nodeconfig do not need build anymore
 nodeconfig-MODULES := nodeconfig
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/trunk
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/trunk
@@ -55,3 +51,11 @@ PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 
 # locating the right test directory - see make tests_svnpath
 tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/trunk
+
+### temporary
+# nozomi not needed anymore for 2.6.27
+ALL:=$(subst nozomi,,$(ALL))
+IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
+#
+# ipfw provides the feature inside nodes, so this is now deprecated
+ALL:=$(subst dummynet_image,,$(ALL))
