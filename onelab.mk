@@ -277,11 +277,11 @@ dummynet_image-SPEC := dummynet_image.spec
 ALL += dummynet_image
 
 #
-# PLCAPI
+# plcapi
 #
-PLCAPI-MODULES := PLCAPI
-PLCAPI-SPEC := PLCAPI.spec
-ALL += PLCAPI
+plcapi-MODULES := PLCAPI
+plcapi-SPEC := PLCAPI.spec
+ALL += plcapi
 
 #
 # drupal
