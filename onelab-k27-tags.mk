@@ -39,7 +39,7 @@ nodeconfig-MODULES := nodeconfig
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/trunk
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-5.0-1
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
-BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/trunk
+BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-5.0-1
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-2.0-1
 # latest trunk do not need build anymore
