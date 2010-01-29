@@ -11,6 +11,7 @@ Monitor
 MyPLC
 MyPLC:4.3
 NodeManager
+NodeManager:1.8
 NodeUpdate
 PLCAPI
 PLCAPI:4.3
