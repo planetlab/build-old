@@ -37,7 +37,7 @@ Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-30
 # latest nodeconfig do not need build anymore
 nodeconfig-MODULES := nodeconfig
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/trunk
-BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/trunk
+BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-5.0-1
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/trunk
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
