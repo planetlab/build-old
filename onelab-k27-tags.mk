@@ -41,7 +41,7 @@ BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tag
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/trunk
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
-BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/trunk
+BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-2.0-1
 # latest trunk do not need build anymore
 myplc-MODULES := MyPLC
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/trunk
