@@ -44,7 +44,7 @@ VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-2.0-1
 # latest trunk do not need build anymore
 myplc-MODULES := MyPLC
-MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/trunk
+MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-1
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
