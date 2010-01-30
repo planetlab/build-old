@@ -270,13 +270,6 @@ IN_BOOTSTRAPFS += vsys-scripts
 ALL += vsys-scripts
 
 #
-# dummynet_image
-# 
-dummynet_image-MODULES := dummynet_image
-dummynet_image-SPEC := dummynet_image.spec
-ALL += dummynet_image
-
-#
 # plcapi
 #
 plcapi-MODULES := PLCAPI
@@ -354,7 +347,7 @@ ALL += sfa
 #
 # nodeconfig
 #
-nodeconfig-MODULES := nodeconfig build
+nodeconfig-MODULES := nodeconfig
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
 
@@ -438,7 +431,7 @@ ALL += noderepo
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-myplc-MODULES := MyPLC build
+myplc-MODULES := MyPLC
 myplc-SPEC := myplc.spec
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc

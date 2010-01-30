@@ -300,6 +300,8 @@ ALL += sfa
 #
 # nodeconfig
 #
+# xxx needed when upgrading to 5.0
+#nodeconfig-MODULES := nodeconfig
 nodeconfig-MODULES := nodeconfig build
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
@@ -390,6 +392,8 @@ IN_MYPLC += noderepo
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
+# xxx needed when upgrading to 5.0
+#myplc-MODULES := MyPLC
 myplc-MODULES := MyPLC build 
 myplc-SPEC := myplc.spec
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml

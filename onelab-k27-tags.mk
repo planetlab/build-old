@@ -32,30 +32,23 @@ PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLC
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
 PLEWWW-SVNPATH                  := http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-41
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-1
-pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/trunk
+pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/tags/pcucontrol-1.0-1
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-30
-# latest nodeconfig do not need build anymore
-nodeconfig-MODULES := nodeconfig
 nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-1
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-5.0-1
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-5.0-1
 VserverReference-SVNPATH        := http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-5.0-1
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-2.0-1
-# latest trunk do not need build anymore
-myplc-MODULES := MyPLC
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-1
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/trunk
+tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-5.0-0
 
 ### temporary
 # nozomi not needed anymore for 2.6.27
 ALL:=$(subst nozomi,,$(ALL))
 IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
-#
-# ipfw provides the feature inside nodes, so this is now deprecated
-ALL:=$(subst dummynet_image,,$(ALL))
