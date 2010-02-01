@@ -8,6 +8,6 @@ fcdistro=centos5
 
 ( \
   make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
-  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ; \
   make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+  echo tests:4.3
 ) | sort -u | grep -v '^build$'
