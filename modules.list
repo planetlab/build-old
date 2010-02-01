@@ -22,7 +22,6 @@ VserverReference
 VserverReference:4.2
 comgt
 drupal
-dummynet_image
 fprobe-ulog
 inotify-tools
 ipfwsrc
@@ -45,6 +44,7 @@ pyopenssl
 pypcilib
 pyplnet
 sfa
+tests
 util-vserver-pl
 util-vserver-pl:trellis
 util-vserver:scholz
