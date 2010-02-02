@@ -1014,9 +1014,14 @@ class Package:
     def __init__(self, package, module, svnpath, spec):
         self.package=package
         self.module=module
-        self.svnpath=svnpath
+        self.svnrev = None
+        self.svnpath=svnpath    
+        if svnpath.rfind('@') > 0:
+            self.svnpath, self.svnrev = svnpath.split('@')
         self.spec=spec
-        self.specpath="%s/%s"%(svnpath,spec)
+        self.specpath="%s/%s"%(self.svnpath,self.spec)
+        if self.svnrev:
+            self.specpath += "@%s" % self.svnrev
         self.basename=os.path.basename(svnpath)
 
     # returns a http URL to the trac path where full diff can be viewed (between self and pkg)
