@@ -111,7 +111,7 @@ EOF
 # utilities for handling the pushed material (rpms, logfiles, ...)
 function webpublish_misses_dir () { ssh root@${WEBHOST}  "bash -c \"test \! -d $1\"" ; }
 function webpublish_remote () { ssh root@${WEBHOST} "$@" ; }
-function webpublish_mkdir () { webpublish_remote mkdir "$@" ; }
+function webpublish_mkdir () { webpublish_remote mkdir -p "$@" ; }
 function webpublish_rm () { webpublish_remote rm "$@" ; }
 function webpublish_rsync_dir () { rsync --archive --delete $VERBOSE $1 root@${WEBHOST}:$2 ; }
 function webpublish_rsync_file () { rsync $VERBOSE $1 root@${WEBHOST}:$2 ; }
@@ -123,23 +123,25 @@ function webpublish_append_stdin_to_file () { ssh root@${WEBHOST} cat \>\> $1; }
 function failure() {
     set -x
     # early stage ? - let's not create /build/@PLDISTRO@
-    if webpublish_misses_dir ${WEBPATH} ; then
+    if webpublish_misses_dir $WEBPATH ; then
 	WEBHOST=localhost
 	WEBPATH=/tmp
-	WEBLOG=/tmp/vbuild-early.log.txt
+	WEBBASE=/tmp/vbuild-early-$(date +%Y-%m-%d)
+	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
     fi
-    webpublish_cp_local_to_remote $LOG ${WEBLOG}
-    summary $LOG | webpublish_append_stdin_to_file ${WEBLOG}
+    webpublish_mkdir $WEBBASE
+    webpublish_cp_local_to_remote $LOG $WEBLOG
+    summary $LOG | webpublish_append_stdin_to_file $WEBLOG
     (echo -n "============================== $COMMAND: failure at " ; date ; \
 	webpublish_remote tail --lines=1000 $WEBLOG) | \
-	webpublish_cp_stdin_to_file ${WEBLOG}.ko
+	webpublish_cp_stdin_to_file $WEBBASE.ko
     if [ -n "$MAILTO" ] ; then
 	( \
-	    echo "See full build log at ${LOG_URL}" ; \
-	    echo "and tail version at ${LOG_URL}.ko" ; \
-	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    webpublish_remote tail --lines=1000 ${WEBLOG} ) | \
-	    mail -s "Failures with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
+	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    echo "and tail version at $WEBBASE_URL.ko" ; \
+	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
+	    webpublish_remote tail --lines=1000 $WEBLOG ) | \
+	    mail -s "Failures with $MAIL_SUBJECT $BASE on $(hostname)" $MAILTO
     fi
     exit 1
 }
@@ -152,27 +154,28 @@ function success () {
 	WEBPATH=/tmp
 	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
     fi
-    webpublish_cp_local_to_remote $LOG ${WEBLOG}
-    summary $LOG | webpublish_append_stdin_to_file ${WEBLOG}
+    webpublish_mkdir $WEBBASE
+    webpublish_cp_local_to_remote $LOG $WEBLOG
+    summary $LOG | webpublish_append_stdin_to_file $WEBLOG
     if [ -n "$DO_TEST" ] ; then
 	( \
 	    echo "Successfully built and tested" ; \
-	    echo "See full build log at ${LOG_URL}" ; \
-	    echo "See complete set of testlogs at ${TESTLOGS_URL}" ; \
-	    ) | webpublish_cp_stdin_to_file ${WEBLOG}.pass
-	webpublish_rm -f ${WEBLOG}.pkg-ok ${WEBLOG}.ko
+	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
+	    ) | webpublish_cp_stdin_to_file $WEBBASE.pass
+	webpublish_rm -f $WEBLOG.pkg-ok $WEBBASE.ko
     else
 	( \
 	    echo "Successful package-only build, no test requested" ; \
-	    echo "See full build log at ${LOG_URL}" ; \
-	    ) | webpublish_cp_stdin_to_file ${WEBLOG}.pkg-ok
-	webpublish_rm -f ${WEBLOG}.ko
+	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    ) | webpublish_cp_stdin_to_file $WEBBASE.pkg-ok
+	webpublish_rm -f $WEBBASE.ko
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
-	    echo "See full build log at ${LOG_URL}" ; \
-            [ -n "$DO_TEST" ] && echo "See complete set of testlogs at ${TESTLOGS_URL}" ) \
+	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+            [ -n "$DO_TEST" ] && echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ) \
 	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
     fi
     # XXX For some reason, we haven't been getting this email for successful builds. If this sleep
@@ -633,10 +636,10 @@ function main () {
 	webpublish_mkdir -p ${WEBPATH}
 
         # where to store the log for web access
-	WEBLOG=${WEBPATH}/${BASE}.log.txt
+	WEBBASE=${WEBPATH}/${BASE}
+	WEBLOG=${WEBPATH}/${BASE}/full-log.txt
         # compute the log URL - inserted in the mail messages for convenience
-	LOG_URL=$(echo ${WEBLOG} | sed -e "s,//,/,g" -e "s,${WEBROOT},${TESTBUILDURL},")
-	TESTLOGS_URL=$(echo ${WEBPATH}/${BASE}/testlogs | sed -e "s,//,/,g" -e "s,${WEBROOT},${TESTBUILDURL},")
+	WEBBASE_URL=$(echo $WEBBASE | sed -e "s,//,/,g" -e "s,${WEBROOT},${TESTBUILDURL},")
     
 	if [ -n "$DO_BUILD" ] ; then 
 
