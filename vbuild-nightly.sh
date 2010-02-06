@@ -137,7 +137,7 @@ function failure() {
 	webpublish_cp_stdin_to_file $WEBBASE.ko
     if [ -n "$MAILTO" ] ; then
 	( \
-	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "and tail version at $WEBBASE_URL.ko" ; \
 	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
 	    webpublish_remote tail --lines=1000 $WEBLOG ) | \
@@ -160,21 +160,21 @@ function success () {
     if [ -n "$DO_TEST" ] ; then
 	( \
 	    echo "Successfully built and tested" ; \
-	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
 	    ) | webpublish_cp_stdin_to_file $WEBBASE.pass
 	webpublish_rm -f $WEBLOG.pkg-ok $WEBBASE.ko
     else
 	( \
 	    echo "Successful package-only build, no test requested" ; \
-	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    ) | webpublish_cp_stdin_to_file $WEBBASE.pkg-ok
 	webpublish_rm -f $WEBBASE.ko
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
-	    echo "See full build log at $WEBBASE_URL/full-log.txt" ; \
+	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ) \
 	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
     fi
@@ -637,7 +637,7 @@ function main () {
 
         # where to store the log for web access
 	WEBBASE=${WEBPATH}/${BASE}
-	WEBLOG=${WEBPATH}/${BASE}/full-log.txt
+	WEBLOG=${WEBPATH}/${BASE}/log.txt
         # compute the log URL - inserted in the mail messages for convenience
 	WEBBASE_URL=$(echo $WEBBASE | sed -e "s,//,/,g" -e "s,${WEBROOT},${TESTBUILDURL},")
     
