@@ -1046,10 +1046,14 @@ class Build (Module):
     
     # we cannot get build's svnpath as for other packages as we'd get something in svn+ssh
     # xxx quick & dirty
-    def __init__ (self, buildtag,options):
+    def __init__ (self, buildtag, options):
         self.buildtag=buildtag
+        if buildtag == "trunk":
+            module_name="build"
+            self.display="trunk"
+            self.svnpath="http://svn.planet-lab.org/svn/build/trunk"
         # if the buildtag start with a : (to use a branch rather than a tag)
-        if buildtag.find(':') == 0 : 
+        elif buildtag.find(':') == 0 : 
             module_name="build%(buildtag)s"%locals()
             self.display=buildtag[1:]
             self.svnpath="http://svn.planet-lab.org/svn/build/branches/%s"%self.display
@@ -1057,6 +1061,9 @@ class Build (Module):
             module_name="build@%(buildtag)s"%locals()
             self.display=buildtag
             self.svnpath="http://svn.planet-lab.org/svn/build/tags/%s"%self.buildtag
+        print 'module_name',module_name
+        print 'display',self.display
+        print 'svnpath',self.svnpath
         Module.__init__(self,module_name,options)
 
     @staticmethod
@@ -1173,7 +1180,10 @@ class Release:
             pnames = list(pnames_new.intersection(pnames_old))
             pnames.sort()
 
-            if options.verbose: print "Found new/deprecated/preserved pnames",pnames_new,pnames_deprecated,pnames
+            if options.verbose: 
+                print "Found new pnames",pnames_new
+                print "Found deprecated pnames",pnames_deprecated
+                print "Found preserved pnames",pnames
 
             # display created and deprecated 
             for name in pnames_created:
@@ -1247,6 +1257,8 @@ Branches:
       release-changelog 4.2-rc25 4.2-rc24 4.2-rc23 4.2-rc22
   You can refer to a (build) branch by prepending a colon, like in
       release-changelog :4.2 4.2-rc25
+  You can refer to the build trunk by just mentioning 'trunk', e.g.
+      release-changelog -t coblitz-tags.mk coblitz-2.01-rc6 trunk
 """
     common_usage="""More help:
   see http://svn.planet-lab.org/wiki/ModuleTools"""
@@ -1381,6 +1393,8 @@ Branches:
             Module.init_homedir(options)
             for n in range(len(args)-1):
                 [t_new,t_old]=args[n:n+2]
+                print '----------------------------------------'
+                print 'PAIR',t_new,t_old
                 Release.do_changelog (t_new,t_old,options)
         else:
             ########## module-*
