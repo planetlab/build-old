@@ -1061,9 +1061,6 @@ class Build (Module):
             module_name="build@%(buildtag)s"%locals()
             self.display=buildtag
             self.svnpath="http://svn.planet-lab.org/svn/build/tags/%s"%self.buildtag
-        print 'module_name',module_name
-        print 'display',self.display
-        print 'svnpath',self.svnpath
         Module.__init__(self,module_name,options)
 
     @staticmethod
@@ -1393,8 +1390,6 @@ Branches:
             Module.init_homedir(options)
             for n in range(len(args)-1):
                 [t_new,t_old]=args[n:n+2]
-                print '----------------------------------------'
-                print 'PAIR',t_new,t_old
                 Release.do_changelog (t_new,t_old,options)
         else:
             ########## module-*
