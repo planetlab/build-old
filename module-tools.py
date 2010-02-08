@@ -1011,7 +1011,7 @@ Please make sure you mention as appropriate
 ##############################
 class Package:
 
-    def __init__(self, package, module, svnpath, spec):
+    def __init__(self, package, module, svnpath, spec,options):
         self.package=package
         self.module=module
         self.svnrev = None
@@ -1023,6 +1023,7 @@ class Package:
         if self.svnrev:
             self.specpath += "@%s" % self.svnrev
         self.basename=os.path.basename(svnpath)
+        self.options=options
 
     # returns a http URL to the trac path where full diff can be viewed (between self and pkg)
     # typically http://svn.planet-lab.org/changeset?old_path=Monitor%2Ftags%2FMonitor-1.0-7&new_path=Monitor%2Ftags%2FMonitor-1.0-13
@@ -1038,6 +1039,12 @@ class Package:
             return "%s://%s/changeset?old_path=%s&new_path=%s"%(method,hostname,self_path,pkg_path)
         else:
             return None
+    
+    def inline_full_diff (self, pkg):
+        print '{{{'
+        command='svn diff %s %s'%(self.svnpath,pkg.svnpath)
+        Command(command,self.options).run()
+        print '}}}'
 
     def details (self):
         return "[%s %s] [%s (spec)]"%(self.svnpath,self.basename,self.specpath)
@@ -1080,6 +1087,9 @@ class Build (Module):
         make_options="--no-print-directory -C %s stage1=true PLDISTRO=%s PLDISTROTAGS=%s 2> /dev/null"%(self.edge_dir(),distro,distrotag)
         command="make %s packages"%make_options
         make_packages=Command(command,self.options).output_of()
+        if self.options.verbose:
+            print 'obtaining packages information with command:'
+            print command
         pkg_line=re.compile("\Apackage=(?P<package>[^\s]+)\s+ref_module=(?P<module>[^\s]+)\s.*\Z")
         for line in make_packages.split("\n"):
             if not line:
@@ -1098,7 +1108,7 @@ class Build (Module):
                 svnpath=Command(command,self.options).output_of().strip()
                 command="make %s +%s-SPEC"%(make_options,package)
                 spec=Command(command,self.options).output_of().strip()
-                result[package]=Package(package,module,svnpath,spec)
+                result[module]=Package(package,module,svnpath,spec,self.options)
         return result
 
     def get_distrotags (self):
@@ -1164,23 +1174,32 @@ class Release:
             # parse make packages
             packages_new=build_new.get_packages(distrotag)
             pnames_new=set(packages_new.keys())
-            if options.verbose: print 'got packages for ',build_new.display
             packages_old=build_old.get_packages(distrotag)
             pnames_old=set(packages_old.keys())
-            if options.verbose: print 'got packages for ',build_old.display
 
-            # get created, deprecated, and preserved package names
+            # get names of created, deprecated, and preserved modules
             pnames_created = list(pnames_new-pnames_old)
-            pnames_created.sort()
             pnames_deprecated = list(pnames_old-pnames_new)
-            pnames_deprecated.sort()
             pnames = list(pnames_new.intersection(pnames_old))
+
+            pnames_created.sort()
+            pnames_deprecated.sort()
             pnames.sort()
 
             if options.verbose: 
-                print "Found new pnames",pnames_new
-                print "Found deprecated pnames",pnames_deprecated
-                print "Found preserved pnames",pnames
+                print '--------------------'
+                print 'got packages for ',build_new.display
+                print pnames_new
+                print '--------------------'
+                print 'got packages for ',build_old.display
+                print pnames_old
+                print '--------------------'
+                print "Found new modules",pnames_created
+                print '--------------------'
+                print "Found deprecated modules",pnames_deprecated
+                print '--------------------'
+                print "Found preserved modules",pnames
+                print '--------------------'
 
             # display created and deprecated 
             for name in pnames_created:
@@ -1215,20 +1234,25 @@ class Release:
                 print '=== %s - %s to %s : package %s === #package-%s-%s-%s'%(
                     distrotag,build_old.display,build_new.display,name,name,distro,build_new.display)
                 print ' * from %s to %s'%(pobj_old.details(),pobj_new.details())
-                trac_diff_url=pobj_old.trac_full_diff(pobj_new)
-                if trac_diff_url:
-                    print ' * [%s View full diff]'%trac_diff_url
-                print '{{{'
-                for line in specdiff.split('\n'):
-                    if not line:
-                        continue
-                    if Release.discard_matcher.match(line):
-                        continue
-                    if line[0] in ['@']:
-                        print '----------'
-                    elif line[0] in ['+','-']:
-                        print_fold(line)
-                print '}}}'
+                if options.inline_diff:
+                    pobj_old.inline_full_diff(pobj_new)
+                else:
+                    trac_diff_url=pobj_old.trac_full_diff(pobj_new)
+                    if trac_diff_url:
+                        print ' * [%s View full diff]'%trac_diff_url
+                    else:
+                        print ' * No full diff available'
+                    print '{{{'
+                    for line in specdiff.split('\n'):
+                        if not line:
+                            continue
+                        if Release.discard_matcher.match(line):
+                            continue
+                        if line[0] in ['@']:
+                            print '----------'
+                        elif line[0] in ['+','-']:
+                            print_fold(line)
+                    print '}}}'
 
 ##############################
 class Main:
@@ -1350,6 +1374,8 @@ Branches:
         else:
             parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
                               help="dry run - shell commands are only displayed")
+            parser.add_option("-i","--inline-diff",action="store_true",dest="inline_diff",default=False,
+                              help="calls svn diff on whole module, not just only the spec file")
             parser.add_option("-t","--distrotags",action="callback",callback=Main.optparse_list, dest="distrotags",
                               default=[], nargs=1,type="string",
                               help="""specify distro-tags files, e.g. onelab-tags-4.2.mk
