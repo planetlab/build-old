@@ -110,9 +110,7 @@ EOF
 ### we might build on a box other than the actual web server
 # utilities for handling the pushed material (rpms, logfiles, ...)
 function webpublish_misses_dir () { ssh root@${WEBHOST}  "bash -c \"test \! -d $1\"" ; }
-function webpublish_remote () { ssh root@${WEBHOST} "$@" ; }
-function webpublish_mkdir () { webpublish_remote mkdir -p "$@" ; }
-function webpublish_rm () { webpublish_remote rm "$@" ; }
+function webpublish () { ssh root@${WEBHOST} "$@" ; }
 function webpublish_rsync_dir () { rsync --archive --delete $VERBOSE $1 root@${WEBHOST}:$2 ; }
 function webpublish_rsync_file () { rsync $VERBOSE $1 root@${WEBHOST}:$2 ; }
 function webpublish_cp_local_to_remote () { scp $1 root@${WEBHOST}:$2 ; }
@@ -129,19 +127,20 @@ function failure() {
 	WEBBASE=/tmp/vbuild-early-$(date +%Y-%m-%d)
 	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
     fi
-    webpublish_mkdir $WEBBASE
-    webpublish_cp_local_to_remote $LOG $WEBLOG
-    summary $LOG | webpublish_append_stdin_to_file $WEBLOG
+    webpublish mkdir -p $WEBBASE ||:
+    webpublish_cp_local_to_remote $LOG $WEBLOG ||:
+    summary $LOG | webpublish_append_stdin_to_file $WEBLOG ||:
     (echo -n "============================== $COMMAND: failure at " ; date ; \
-	webpublish_remote tail --lines=1000 $WEBLOG) | \
-	webpublish_cp_stdin_to_file $WEBBASE.ko
+	webpublish tail --lines=1000 $WEBLOG) | \
+	webpublish_cp_stdin_to_file $WEBBASE.ko ||:
     if [ -n "$MAILTO" ] ; then
 	( \
+	    echo "Subject: Failures with $MAIL_SUBJECT $BASE on $(hostname)" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "and tail version at $WEBBASE_URL.ko" ; \
 	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
-	    webpublish_remote tail --lines=1000 $WEBLOG ) | \
-	    mail -s "Failures with $MAIL_SUBJECT $BASE on $(hostname)" $MAILTO
+	    webpublish tail --lines=1000 $WEBLOG ) | \
+	    sendmail $MAILTO
     fi
     exit 1
 }
@@ -154,7 +153,7 @@ function success () {
 	WEBPATH=/tmp
 	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
     fi
-    webpublish_mkdir $WEBBASE
+    webpublish mkdir -p $WEBBASE
     webpublish_cp_local_to_remote $LOG $WEBLOG
     summary $LOG | webpublish_append_stdin_to_file $WEBLOG
     if [ -n "$DO_TEST" ] ; then
@@ -163,20 +162,21 @@ function success () {
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
 	    ) | webpublish_cp_stdin_to_file $WEBBASE.pass
-	webpublish_rm -f $WEBLOG.pkg-ok $WEBBASE.ko
+	webpublish rm -f $WEBBASE.pkg-ok $WEBBASE.ko
     else
 	( \
 	    echo "Successful package-only build, no test requested" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    ) | webpublish_cp_stdin_to_file $WEBBASE.pkg-ok
-	webpublish_rm -f $WEBBASE.ko
+	webpublish rm -f $WEBBASE.ko
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
+	    echo "Subject: Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" ; \
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ) \
-	    | mail -s "Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" $MAILTO
+	    | mail $MAILTO
     fi
     # XXX For some reason, we haven't been getting this email for successful builds. If this sleep
     # doesn't fix the problem, I'll remove it -- Sapan.
@@ -282,7 +282,7 @@ function run_log () {
 
     # gather logs in the vserver
     mkdir -p /vservers/$BASE/build/testlogs
-    ssh 2>&1 -n ${testmaster_ssh} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || true
+    ssh 2>&1 -n ${testmaster_ssh} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || :
     # push them to the build web
     chmod -R a+r /vservers/$BASE/build/testlogs/
     webpublish_rsync_dir /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
@@ -633,7 +633,7 @@ function main () {
 
 	sedargs="-e s,@DATE@,${DATE},g -e s,@FCDISTRO@,${FCDISTRO},g -e s,@PLDISTRO@,${PLDISTRO},g -e s,@PERSONALITY@,${PERSONALITY},g"
 	WEBPATH=$(echo ${WEBPATH} | sed $sedargs)
-	webpublish_mkdir -p ${WEBPATH}
+	webpublish mkdir -p ${WEBPATH}
 
         # where to store the log for web access
 	WEBBASE=${WEBPATH}/${BASE}
@@ -652,17 +652,20 @@ function main () {
 	fi
 
 	# publish to the web so run_log can find them
-	webpublish_rm -rf $WEBPATH/$BASE ; webpublish_mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
+	set +e
+	webpublish rm -rf $WEBPATH/$BASE 
+	webpublish mkdir -p $WEBPATH/$BASE/{RPMS,SRPMS}
 	webpublish_rsync_dir /vservers/$BASE/build/RPMS/ $WEBPATH/$BASE/RPMS/
 	[[ -n "$PUBLISH_SRPMS" ]] && webpublish_rsync_dir /vservers/$BASE/build/SRPMS/ $WEBPATH/$BASE/SRPMS/
 	# publish myplc-release if this exists
 	release=/vservers/$BASE/build/myplc-release
 	[ -f $release ] && webpublish_rsync_file $release $WEBPATH/$BASE
+	set -e
 
         # create yum repo and sign packages.
 	if [ -n "$SIGNYUMREPO" ] ; then
 	    # this script does not yet support signing on a remote (webhost) repo
-	    sign_here=$(hostname) ; sign_web=$(webpublish_remote hostname)
+	    sign_here=$(hostname) ; sign_web=$(webpublish hostname)
 	    if [ "$hostname" = "$sign_here" ] ; then
 		sign_node_packages
 	    else
