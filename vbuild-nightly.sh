@@ -139,6 +139,7 @@ function failure() {
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "and tail version at $WEBBASE_URL.ko" ; \
 	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
+	    echo "........................................" ; \
 	    webpublish tail --lines=1000 $WEBLOG ) | \
 	    sendmail $MAILTO
     fi
