@@ -176,7 +176,7 @@ function success () {
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ) \
-	    | mail $MAILTO
+	    | sendmail $MAILTO
     fi
     # XXX For some reason, we haven't been getting this email for successful builds. If this sleep
     # doesn't fix the problem, I'll remove it -- Sapan.
