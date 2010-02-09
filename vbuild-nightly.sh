@@ -289,6 +289,7 @@ function run_log () {
     webpublish_rsync_dir /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
 
     if [ -z "$success" ] ; then
+	echo "Tests have failed - bailing out"
 	failure
     fi
     
