@@ -5,7 +5,7 @@
 
 linux-2.6-SVNBRANCH		:= 22
 # not adopting tag 40 about "VXC_PROC_WRITE support" - should be safe but Sapan advised keeping it out was safer still
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-43
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-44
 madwifi-SVNBRANCH		:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 util-vserver-SVNBRANCH		:= scholz
