@@ -147,6 +147,7 @@ IN_BOOTSTRAPFS += fprobe-ulog
 DistributedRateLimiting-MODULES := DistributedRateLimiting
 DistributedRateLimiting-SPEC := DistributedRateLimiting.spec
 ALL += DistributedRateLimiting
+IN_NODEREPO += DistributedRateLimiting
 
 #
 # pf2slice
@@ -372,7 +373,7 @@ IN_MYPLC += bootstrapfs
 # noderepo
 #
 # all rpms resulting from packages marked as being in bootstrapfs and vserver
-NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_VSERVER),$($(package).rpms))
+NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_NODEREPO) $(IN_VSERVER),$($(package).rpms))
 # replace space with +++ (specvars cannot deal with spaces)
 SPACE=$(subst x, ,x)
 NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
