@@ -382,7 +382,7 @@ noderepo-MODULES := BootstrapFS
 noderepo-SPEC := noderepo.spec
 noderepo-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
-noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
+noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_NODEREPO) $(IN_VSERVER)
 noderepo-DEPEND-FILES := RPMS/yumgroups.xml
 #export rpm list to the specfile
 noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
