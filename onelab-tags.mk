@@ -4,7 +4,7 @@
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-SVNBRANCH		:= 22
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-44
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/22
 ipfwsrc-SVNPATH                 := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-10
 madwifi-SVNBRANCH		:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
