@@ -4,7 +4,6 @@
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-SVNBRANCH		:= 22
-# tag 39-2 is exactly identical to http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-39-1@15610, but for the f12 patch
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-44
 ipfwsrc-SVNPATH                 := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-10
 madwifi-SVNBRANCH		:= 0.9.4
