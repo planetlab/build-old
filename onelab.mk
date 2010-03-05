@@ -377,6 +377,14 @@ IN_BOOTSTRAPFS += pyplnet
 IN_BOOTCD += pyplnet
 
 #
+# OMF resource controller
+#
+omf-resctl-MODULES := omf
+omf-resctl-SPEC := omf-resctl.spec
+ALL += omf-resctl
+IN_VSERVER += omf-resctl
+
+#
 # bootcd
 #
 bootcd-MODULES := BootCD build
