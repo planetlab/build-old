@@ -1,0 +1,6 @@
+# $Id$
+# $URL$
+#
+groupname: omf-resctl
+groupdesc: OMF Resource Controller image
+package: omf-resctl
