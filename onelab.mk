@@ -111,6 +111,25 @@ IN_VSERVER += umts-frontend
 ALL += umts-frontend
 
 #
+# iptables
+#
+iptables-MODULES := iptables
+iptables-SPEC := iptables.spec
+iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
+ALL += iptables
+IN_BOOTSTRAPFS += iptables
+
+#
+# iproute
+#
+iproute-MODULES := iproute2
+iproute-SPEC := iproute.spec
+ALL += iproute
+IN_BOOTSTRAPFS += iproute
+IN_VSERVER += iproute
+IN_BOOTCD += iproute
+
+#
 # util-vserver
 #
 util-vserver-MODULES := util-vserver
@@ -216,25 +235,6 @@ ALL += mom
 IN_BOOTSTRAPFS += mom
 
 #
-# iptables
-#
-iptables-MODULES := iptables
-iptables-SPEC := iptables.spec
-iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
-ALL += iptables
-IN_BOOTSTRAPFS += iptables
-
-#
-# iproute
-#
-iproute-MODULES := iproute2
-iproute-SPEC := iproute.spec
-ALL += iproute
-IN_BOOTSTRAPFS += iproute
-IN_VSERVER += iproute
-IN_BOOTCD += iproute
-
-#
 # inotify-tools - local import
 # rebuild this on centos5 (not found) - see kexcludes in build.common
 #
@@ -315,19 +315,19 @@ ALL += monitor
 IN_BOOTSTRAPFS += monitor
 
 #
-# PLC RT
-#
-plcrt-MODULES := PLCRT
-plcrt-SPEC := plcrt.spec
-ALL += plcrt
-
-#
 # zabbix
 #
 zabbix-MODULES := Monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
 ALL += zabbix
+
+#
+# PLC RT
+#
+plcrt-MODULES := PLCRT
+plcrt-SPEC := plcrt.spec
+ALL += plcrt
 
 #
 # pyopenssl
@@ -344,7 +344,6 @@ pyaspects-MODULES := pyaspects
 pyaspects-SPEC := pyaspects.spec
 pyaspects-BUILD-FROM-SRPM := yes
 ALL += pyaspects
-
 
 #
 # sfa - Slice Facility Architecture
