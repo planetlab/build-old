@@ -43,7 +43,7 @@ pyplnet-SVNPATH                 := http://svn.planet-lab.org/svn/pyplnet/tags/py
 omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/trunk
 #
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-5.0-1
-VserverReference-SVNPATH        := http://svn.planet-lab.org/svn/VserverReference/tags/VserverReference-5.0-1
+VserverReference-SVNPATH        := http://svn.planet-lab.org/svn/VserverReference/trunk
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-2.0-1
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-1
 
