@@ -436,13 +436,33 @@ NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
 noderepo-MODULES := BootstrapFS 
 noderepo-SPEC := noderepo.spec
 noderepo-RPMBUILD := bash ./rpmbuild.sh
-# package requires all regular packages
+# package requires all embedded packages
 noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
 noderepo-DEPEND-FILES := RPMS/yumgroups.xml
 #export rpm list to the specfile
 noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
 noderepo-RPMDATE := yes
 ALL += noderepo
+
+#
+# slicerepo
+#
+# all rpms resulting from packages marked as being in vserver
+SLICEREPO_RPMS = $(foreach package,$(IN_VSERVER),$($(package).rpms))
+# replace space with +++ (specvars cannot deal with spaces)
+SPACE=$(subst x, ,x)
+SLICEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(SLICEREPO_RPMS))
+
+slicerepo-MODULES := BootstrapFS 
+slicerepo-SPEC := slicerepo.spec
+slicerepo-RPMBUILD := bash ./rpmbuild.sh
+# package requires all embedded packages
+slicerepo-DEPEND-PACKAGES := $(IN_VSERVER)
+slicerepo-DEPEND-FILES := RPMS/yumgroups.xml
+#export rpm list to the specfile
+slicerepo-SPECVARS = slice_rpms_plus=$(SLICEREPO_RPMS_3PLUS)
+slicerepo-RPMDATE := yes
+ALL += slicerepo
 
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
