@@ -52,4 +52,4 @@ BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tru
 MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/trunk
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-5.0-2
+tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/trunk
