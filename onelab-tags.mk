@@ -49,7 +49,7 @@ omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/trunk
 BootCD-SVNPATH                  := http://svn.planet-lab.org/svn/BootCD/tags/BootCD-5.0-1
 VserverReference-SVNPATH	:= http://svn.planet-lab.org/svn/VserverReference/trunk
 BootstrapFS-SVNPATH             := http://svn.planet-lab.org/svn/BootstrapFS/tags/BootstrapFS-2.0-2
-MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/trunk
+MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-2
 
 # locating the right test directory - see make tests_svnpath
 tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/trunk
