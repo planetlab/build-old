@@ -107,3 +107,4 @@ package: libxml2-devel
 # for ejabberd
 package: erlang
 pacakge: pam-devel
+package: hevea
