@@ -346,6 +346,13 @@ pyaspects-BUILD-FROM-SRPM := yes
 ALL += pyaspects
 
 #
+# ejabberd
+#
+ejabberd-MODULES := ejabberd
+ejabberd-SPEC := ejabberd.spec
+ALL += ejabberd
+
+#
 # sfa - Slice Facility Architecture
 #
 sfa-MODULES := sfa

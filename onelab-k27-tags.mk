@@ -35,6 +35,7 @@ Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-30
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 pyaspects-SVNPATH               := http://svn.planet-lab.org/svn/pyaspects/trunk
+ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/trunk
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
 nodeconfig-SVNPATH              := http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-1
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-5.0-2
