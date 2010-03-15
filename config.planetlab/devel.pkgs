@@ -104,3 +104,5 @@ package: python-ZSI
 package: python-psycopg2
 # DistributedRateLimiting
 package: libxml2-devel
+# for ejabberd
+package: erlang
