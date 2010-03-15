@@ -350,6 +350,7 @@ ALL += pyaspects
 #
 ejabberd-MODULES := ejabberd
 ejabberd-SPEC := ejabberd.spec
+ejabberd-BUILD-FROM-SRPM := yes
 ALL += ejabberd
 
 #
