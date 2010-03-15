@@ -22,6 +22,7 @@ VserverReference
 VserverReference:4.2
 comgt
 drupal
+ejabberd
 fprobe-ulog
 inotify-tools
 ipfwsrc
@@ -36,10 +37,12 @@ madwifi:0.9.4
 nodeconfig
 nodeconfig:4.3
 nozomi
+omf
 pcucontrol
 pf2slice
 pl_sshd
 planetlab-umts-tools
+pyaspects
 pyopenssl
 pypcilib
 pyplnet
