@@ -400,6 +400,13 @@ ALL += omf-resctl
 IN_VSERVER += omf-resctl
 
 #
+# OMF exp controller
+#
+omf-expctl-MODULES := omf
+omf-expctl-SPEC := omf-expctl.spec
+ALL += omf-expctl
+
+#
 # bootcd
 #
 bootcd-MODULES := BootCD build
