@@ -102,6 +102,7 @@ package: python-uuid pyOpenSSL m2crypto
 package: libxml2-python libxslt-python
 package: python-ZSI 
 package: python-psycopg2
+package: python-setuptools
 # DistributedRateLimiting
 package: libxml2-devel
 # for ejabberd
