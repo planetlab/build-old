@@ -1318,7 +1318,7 @@ Branches:
                 break
         if not mode:
             print "Unsupported command",sys.argv[0]
-            print "Supported commands:" + Modes.modes.keys.join(" ")
+            print "Supported commands:" + " ".join(Main.modes.keys())
             sys.exit(1)
 
         if mode not in Main.release_modes:
