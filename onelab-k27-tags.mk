@@ -38,7 +38,7 @@ PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
 pyaspects-SVNPATH               := http://svn.planet-lab.org/svn/pyaspects/tags/pyaspects-0.3-1
-ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/trunk
+ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/tags/ejabberd-2.1.3-1
 omf-SVNPATH                     := http://svn.planet-lab.org/svn/omf/tags/omf-5.3-2
 ###
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
