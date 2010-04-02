@@ -8,7 +8,7 @@ madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.4.1.1-1
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 ###
-ipfwsrc-SVNPATH                 := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-10
+ipfw-SVNPATH                    := http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-10
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-SVNPATH	:= http://svn.onelab.eu/planetlab-umts-tools/tags/planetlab-umts-tools-0.6-4
 ###

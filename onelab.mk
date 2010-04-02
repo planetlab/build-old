@@ -42,7 +42,7 @@ IN_BOOTSTRAPFS += $(KERNELS)
 #
 # ipfw: root context module, and slice companion
 #
-ipfwroot-MODULES := ipfwsrc
+ipfwroot-MODULES := ipfw
 ipfwroot-SPEC := planetlab/ipfwroot.spec
 ipfwroot-DEPEND-DEVEL-RPMS := kernel-devel
 ipfwroot-SPECVARS = kernel_version=$(kernel.rpm-version) \
@@ -50,7 +50,7 @@ ipfwroot-SPECVARS = kernel_version=$(kernel.rpm-version) \
         kernel_arch=$(kernel.rpm-arch)
 ALL += ipfwroot
 
-ipfwslice-MODULES := ipfwsrc
+ipfwslice-MODULES := ipfw
 ipfwslice-SPEC := planetlab/ipfwslice.spec
 ipfwslice-SPECVARS = kernel_version=$(kernel.rpm-version) \
         kernel_release=$(kernel.rpm-release) \
