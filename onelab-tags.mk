@@ -46,7 +46,7 @@ ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/trunk
 omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/trunk
 ###
 sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
-nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-1
+nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
 BootManager-SVNPATH             := http://svn.planet-lab.org/svn/BootManager/tags/BootManager-5.0-3
 pypcilib-SVNPATH                := http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
 pyplnet-SVNPATH                 := http://svn.planet-lab.org/svn/pyplnet/tags/pyplnet-4.3-5
