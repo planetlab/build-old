@@ -169,6 +169,7 @@ IN_BOOTSTRAPFS += mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
+iptables-BUILD-FROM-SRPM := yes
 iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
