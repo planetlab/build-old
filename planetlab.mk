@@ -56,6 +56,9 @@ IN_BOOTSTRAPFS += madwifi
 #
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
+ifeq "$(PLDISTROTAGS)" "planetlab-k27-tags.mk"
+util-vserver-BUILD-FROM-SRPM := yes
+endif
 util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
