@@ -6,7 +6,7 @@
 # trying the 2.6.27 kernel
 # VINI is running a prototype of a 2.6.27-based PlanetLab node (aka Trellis)
 # Below we include a few Trellis versions of packages 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-7
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-8
 madwifi-SVNPATH                 := http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 # Trellis is using a modified util-vserver and util-vserver-pl with the 2.6.27 kernel
 # this branch is numbered 0.30.216-pre2833 in the specfile
