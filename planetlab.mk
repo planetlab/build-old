@@ -298,6 +298,23 @@ ALL += pyopenssl
 
 
 #
+# pyaspects
+#
+pyaspects-MODULES := pyaspects
+pyaspects-SPEC := pyaspects.spec
+pyaspects-BUILD-FROM-SRPM := yes
+ALL += pyaspects
+
+#
+# ejabberd
+#
+ejabberd-MODULES := ejabberd
+ejabberd-SPEC := ejabberd.spec
+ejabberd-BUILD-FROM-SRPM := yes
+ALL += ejabberd
+
+
+#
 # sfa - Slice Facility Architecture
 #
 sfa-MODULES := sfa
@@ -339,6 +356,23 @@ ALL += pyplnet
 IN_BOOTSTRAPFS += pyplnet
 IN_MYPLC += pyplnet
 IN_BOOTCD += pyplnet
+
+
+#
+# OMF resource controller
+#
+omf-resctl-MODULES := omf
+omf-resctl-SPEC := omf-resctl.spec
+ALL += omf-resctl
+IN_VSERVER += omf-resctl
+
+#
+# OMF exp controller
+#
+omf-expctl-MODULES := omf
+omf-expctl-SPEC := omf-expctl.spec
+ALL += omf-expctl
+
 
 #
 # bootcd
