@@ -220,6 +220,15 @@ ALL += fprobe-ulog
 IN_BOOTSTRAPFS += fprobe-ulog
 
 #
+# DistributedRateLimiting
+#
+DistributedRateLimiting-MODULES := DistributedRateLimiting
+DistributedRateLimiting-SPEC := DistributedRateLimiting.spec
+ALL += DistributedRateLimiting
+IN_NODEREPO += DistributedRateLimiting
+
+
+#
 # pf2slice
 #
 pf2slice-MODULES := pf2slice
@@ -443,7 +452,7 @@ ALL += bootstrapfs
 # noderepo
 #
 # all rpms resulting from packages marked as being in bootstrapfs and vserver
-NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_VSERVER),$($(package).rpms))
+NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_NODEREPO) $(IN_VSERVER),$($(package).rpms))
 # replace space with +++ (specvars cannot deal with spaces)
 SPACE=$(subst x, ,x)
 NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
@@ -452,7 +461,7 @@ noderepo-MODULES := BootstrapFS
 noderepo-SPEC := noderepo.spec
 noderepo-RPMBUILD := bash ./rpmbuild.sh
 # package requires all embedded packages
-noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
+noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_NODEREPO) $(IN_VSERVER)
 noderepo-DEPEND-FILES := RPMS/yumgroups.xml
 #export rpm list to the specfile
 noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
