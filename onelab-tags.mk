@@ -8,7 +8,7 @@ linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/22
 madwifi-SVNBRANCH		:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 iptables-SVNBRANCH		:= 1.3.8
-iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-11
+iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-12
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 ###
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-12
