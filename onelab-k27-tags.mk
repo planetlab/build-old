@@ -3,7 +3,7 @@
 
 # build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
+linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-8
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-SVNBRANCH		:= 1.4.1.1
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.4.1.1-1
@@ -32,7 +32,7 @@ vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-sc
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-5.0-5
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
 PLEWWW-SVNPATH			:= http://svn.planet-lab.org/svn/PLEWWW/tags/PLEWWW-4.3-43
-www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-2
+www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/trunk
 pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/tags/pcucontrol-1.0-2
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-31
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
@@ -40,7 +40,7 @@ pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9
 ###
 pyaspects-SVNPATH		:= http://svn.planet-lab.org/svn/pyaspects/tags/pyaspects-0.3-1
 ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/tags/ejabberd-2.1.3-1
-omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/tags/omf-5.3-2
+omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/trunk
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
@@ -54,7 +54,7 @@ MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-3
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-5.0-4
+tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
 
 ### temporary
 # nozomi not needed anymore for 2.6.27
