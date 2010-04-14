@@ -433,9 +433,7 @@ IN_MYPLC += noderepo
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-# xxx needed when upgrading to 5.0
-#myplc-MODULES := MyPLC
-myplc-MODULES := MyPLC build 
+myplc-MODULES := MyPLC
 myplc-SPEC := myplc.spec
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc
