@@ -326,7 +326,7 @@ ALL += sfa
 #
 # xxx needed when upgrading to 5.0
 #nodeconfig-MODULES := nodeconfig
-nodeconfig-MODULES := nodeconfig build
+nodeconfig-MODULES := nodeconfig
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
 IN_MYPLC += nodeconfig
