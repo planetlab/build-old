@@ -315,6 +315,11 @@ header.spec:
 	echo "%define distroname $(DISTRONAME)" >> $@
 	echo "%define pldistro $(PLDISTRO)" >> $@
 	echo "%define plrelease $(PLANETLAB_RELEASE)" >> $@
+	echo "# use MD5 and gzip for binary and source files" << $@
+	echo "%global _binary_filedigest_algorithm 1" >> $@
+	echo "%global _source_filedigest_algorithm 1" >> $@
+	echo "%global _source_payload       w9.gzdio" >> $@
+	echo "%global _binary_payload       w9.gzdio" >> $@
 
 ### extract spec file from scm
 define target_spec
