@@ -53,4 +53,4 @@ MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-3
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_svnpath
-tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-5.0-4
+tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/tags/tests-5.0-5
