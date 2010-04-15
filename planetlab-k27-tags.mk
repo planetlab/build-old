@@ -6,7 +6,7 @@
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-8
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
-iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
+iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/trunk
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/trunk
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # Trellis is using a modified util-vserver-pl with the 2.6.27 kernel

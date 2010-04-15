@@ -184,6 +184,9 @@ IN_BOOTSTRAPFS += iptables
 #
 iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
+ifeq "$(PLDISTROTAGS)" "planetlab-k27-tags.mk"
+iproute-BUILD-FROM-SRPM := yes
+endif
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
 IN_VSERVER += iproute
