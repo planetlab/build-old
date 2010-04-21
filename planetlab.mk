@@ -56,9 +56,6 @@ IN_BOOTSTRAPFS += madwifi
 #
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
-ifeq "$(PLDISTROTAGS)" "planetlab-k27-tags.mk"
-util-vserver-BUILD-FROM-SRPM := yes
-endif
 util-vserver-RPMFLAGS:= --without dietlibc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
@@ -172,9 +169,6 @@ IN_BOOTSTRAPFS += mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-ifeq "$(PLDISTROTAGS)" "planetlab-k27-tags.mk"
-iptables-BUILD-FROM-SRPM := yes
-endif
 iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
@@ -184,9 +178,6 @@ IN_BOOTSTRAPFS += iptables
 #
 iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
-ifeq "$(PLDISTROTAGS)" "planetlab-k27-tags.mk"
-iproute-BUILD-FROM-SRPM := yes
-endif
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
 IN_VSERVER += iproute
