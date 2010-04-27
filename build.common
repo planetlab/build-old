@@ -32,7 +32,7 @@ function pl_getDistro() {
 # returns something like 8, 10, or 5.3
 function pl_getRelease() {
     if [ -f "/etc/redhat-release" ] ; then
-	release=$(awk ' { if ($1=="Fedora" && $2=="Core") print $4 ; if (($1=="Fedora" && $2!="Core")||$1=="CentOS") print $3 ; if ($1=="Redhat") print $6 } ' /etc/redhat-release)
+	release=$(awk ' { if ($1=="Fedora" && $2=="Core") print $4 ; if (($1=="Fedora" && $2!="Core")||$1=="CentOS") print $3 ; if ($1=="Red") print $6 } ' /etc/redhat-release)
     else
 	echo "build.common.pl_getRelease-unknown"
 	exit 1
