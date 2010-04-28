@@ -18,9 +18,7 @@ export PATH=.:$PATH
 function pl_getDistro() {
     if [ -f "/etc/redhat-release" ] ; then
 	distro=$(awk ' { print $1 } ' /etc/redhat-release)
-	if [ $distro="Red" ] ; then
-		distro="Redhat"
-	fi
+	case $distro in Red*) distro="Redhat" ; esac
     else
 	echo "build.common.pl_getDistro-unknown"
 	exit 1
