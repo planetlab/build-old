@@ -44,6 +44,7 @@ package=f8: popt-devel
 # kernel
 package: gnupg 
 package: diffutils 
+package: patchutils 
 package: vconfig 
 package: iptables 
 package: wget 
