@@ -16,7 +16,7 @@ package: curl curl-devel
 package: subversion cvs 
 package: less 
 package: openssh
-package: emacs
+package: emacs-nox
 # undetermined 
 package: expect 
 package: gd 

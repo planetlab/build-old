@@ -128,4 +128,4 @@ package: ipfwroot
 # for nagios
 package: nrpe
 # convenience
-package: emacs
+package: emacs-nox
