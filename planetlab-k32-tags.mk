@@ -5,7 +5,7 @@
 
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/rhel6
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
-iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.4.7-4
+iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.4.7-5
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.33-2
 iproute-BUILD-FROM-SRPM := yes	# tmp
