@@ -42,7 +42,7 @@ sfa
 tests
 util-vserver
 util-vserver-pl
-util-vserver-pl:trellis
+util-vserver-pl:0.3
 util-vserver:scholz
 vsys-scripts
 vsys:0.9
