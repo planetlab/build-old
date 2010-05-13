@@ -174,6 +174,9 @@ function setup_vserver () {
 	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
     fi
 
+    # Set persistent for the network context
+    echo persistent,lback_allow > /etc/vservers/$vserver/nflags
+ 
     if [ "$pkg_method" = "yum" ] ; then
 	$personality vyum $vserver -- -y install yum
         # ditto
