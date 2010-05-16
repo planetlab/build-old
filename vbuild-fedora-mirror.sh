@@ -35,8 +35,8 @@ jp_fedora_url="jp_fedora_url-needs-to-be-defined"
 jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
-default_distroname="centos5.4"
-all_distronames="f10 f12 centos5.3 centos5.4 epel5"
+default_distroname="centos5.5"
+all_distronames="f10 f12 centos5.3 centos5.4 centos5.5 epel5"
 default_arch="i386"
 all_archs="i386 x86_64"
 
