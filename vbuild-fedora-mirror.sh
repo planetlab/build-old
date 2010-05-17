@@ -41,7 +41,7 @@ default_arch="i386"
 all_archs="i386 x86_64"
 
 case $(hostname) in 
-    *.fr|*.de|*.uk)
+    blitz*|*.fr|*.de|*.uk)
 	fedora_url=$eu_fedora_url ; centos_url=$eu_centos_url ; epel_url=$eu_epel_url ;;
     *.pl)
 	fedora_url=$pl_fedora_url ; centos_url=$pl_centos_url ; epel_url=$pl_epel_url ;;
