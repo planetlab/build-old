@@ -52,7 +52,7 @@ function summary () {
 # read a full log and tries to extract the interesting stuff
 
 import sys,re
-m_show_line=re.compile(".* BEG (RPM|VSERVER).*|.*'boot'.*|\* .*| \* .*|.*is not installed.*|.*PROPFIND.*|.*Starting.*:run_log.*")
+m_show_line=re.compile(".* (BEG|END) (RPM|VSERVER).*|.*'boot'.*|\* .*| \* .*|.*is not installed.*|.*PROPFIND.*|.* (BEG|END).*:run_log.*"|.* Within vserver (BEG|END) .*|.* MAIN (BEG|END).*)
 m_installing_any=re.compile('\r  (Installing:[^\]]*]) ')
 m_installing_err=re.compile('\r  (Installing:[^\]]*])(..+)')
 m_installing_end=re.compile('Installed:.*')
@@ -228,7 +228,7 @@ function run_log () {
     set -e
     trap failure ERR INT
 
-    echo -n "============================== Starting $COMMAND:run_log on $(date)"
+    echo "============================== BEG $COMMAND:run_log on $(date)"
 
     # where to find TESTS_SVNPATH
     stamp=/vservers/$BASE/build/tests_svnpath
@@ -288,12 +288,13 @@ function run_log () {
     chmod -R a+r /vservers/$BASE/build/testlogs/
     webpublish_rsync_dir /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
 
+    echo  "============================== END $COMMAND:run_log on $(date)"
+
     if [ -z "$success" ] ; then
 	echo "Tests have failed - bailing out"
 	failure
     fi
     
-    echo -n "============================== End $COMMAND:run_log on $(date)"
 }
 
 function in_root_context () {
@@ -433,6 +434,8 @@ function usage () {
 function main () {
 
     set -e
+
+    echo "==================== MAIN BEG $(date)"
 
     # parse arguments
     MAKEVARS=()
@@ -682,7 +685,8 @@ function main () {
 	fi
 
 	success 
-	
+
+        echo "==================== MAIN END $(date)"	
     fi
 
 }  
