@@ -148,7 +148,6 @@ main(int argc, char *argv[])
 	  strncpy(sourcename,fullSource,len);
 	  sourcename[len]='\0';
 	  printf ("%s.source := SOURCES/%s\n",package_name,basename(sourcename));
-	  printf ("%s.codebase := CODEBASES/%s\n",package_name,package_name);
 	  break;
 	}
       }

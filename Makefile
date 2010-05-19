@@ -33,6 +33,7 @@
 #     Add a package to ALL if you want it built as part of the default set.
 # (*) modules are named after the subversion tree; as of this writing their names 
 #     are mostly mixed case like MyPLC or VserverReference
+#     (this is something we'll fix while moving to git)
 # (*) rpms are named in the spec files. A package typically defines several rpms;
 #     rpms are used for defining DEPEND-DEVEL-RPMS. See also package.rpmnames
 # 
@@ -44,7 +45,6 @@
 #     to this end, define 
 # (*) package-SPEC
 #     the package's specfile; this is relative to the FIRST module in package-MODULES
-#     see 'codebase' below
 #
 # Optional:
 #
@@ -80,13 +80,13 @@
 # Required information about the various modules (set this in e.g. planetlab-tags.mk)
 #
 # (*) module-SVNPATH
+#     for svn modules
 #     the complete path where this module lies; 
 #     you can specify the trunk or a given tag with this variable
 # 
-# OR if the module is managed under cvs (will be obsoleted)
-# 
-# (*) module-CVSROOT
-# (*) module-TAG
+# (*) module-GITPATH
+#     for git modules
+#     which by analogy with svn revision scheme, is expected to be <url>@<tag>
 #
 #################### automatic variables
 #
@@ -127,7 +127,6 @@ all:
 ### default values
 PLDISTRO := planetlab
 RPMBUILD := rpmbuild
-export CVS_RSH := ssh
 
 ########## savedpldistro.mk holds PLDISTRO - it is generated at stage1 (see below)
 ifeq "$(stage1)" ""
@@ -146,7 +145,7 @@ PLDISTROCONTENTS := $(PLDISTRO).mk
 include $(PLDISTROCONTENTS)
 
 #################### include <pldistro>-tags.mk
-# describes where to fetch components, and the related tags if using cvs
+# describes where to fetch components
 ifeq "$(PLDISTROTAGS)" ""
 PLDISTROTAGS := $(PLDISTRO)-tags.mk
 endif
@@ -237,7 +236,7 @@ else
 include $(ALLMKS)
 #all : tarballs
 #all : sources
-#all : codebases
+#all : modules
 #all : rpms
 #all : srpms
 # mention $(ALL) here rather than rpms 
@@ -262,33 +261,35 @@ repo: RPMS/yumgroups.xml
 
 ####################
 # notes: 
-# * to make configuration easier, we always use the first module's
-# definitions (CVSROOT,TAG, or SVNPATH) to extract the spec file
-# * for the same reason, in case cvs is used, the first module name is added to 
-# $(package)-SPEC - otherwise the cvs modules have to define spec as 
-# <module>/<module>.spec while svn modules just define it as <module>.spec
+# * we always use the first module's location (SVNPATH/GITPATH) to extract the spec file
+# * no matter what SCM is used, SPEC should hold a relative path from the module's root
 #
 define stage1_package_vars
-$(1).spec := $(notdir $($(1)-SPEC))
-$(1).specpath := SPECS/$(1).spec
 $(1).module := $(firstword $($(1)-MODULES))
+$(1).specpath := SPECS/$(notdir $($(1)-SPEC))
+$(1).moduledir := MODULES/$(firstword $($(1)-MODULES))
+$(1).codespec := MODULES/$(firstword $($(1)-MODULES))/$($(1)-SPEC)
 endef
 
 $(foreach package, $(ALL), $(eval $(call stage1_package_vars,$(package))))
 
 # compute all modules
-ALL-MODULES :=
-$(foreach package,$(ALL), $(eval ALL-MODULES+=$($(package)-MODULES)))
-ALL-MODULES:=$(sort $(ALL-MODULES))
+ALL.modules :=
+$(foreach package,$(ALL), $(eval ALL.modules+=$($(package)-MODULES)))
+ALL.modules:=$(sort $(ALL.modules))
 
-# extract revision from -SVNPATH
+# extract revision from -SVNPATH or tag from -GITPATH
 define stage1_module_vars
+ifeq "$($(1)-SVNPATH)" ""
+$(1)-GITPATH := $(strip $($(1)-GITPATH))
+$(1).gitrepo := $(firstword $(subst @, ,$($(1)-GITPATH)))
+$(1).gittag := $(word 2,$(subst @, ,$($(1)-GITPATH)))
+else
 $(1)-SVNPATH := $(strip $($(1)-SVNPATH))
-$(1).svnpath := $(firstword $(subst @, ,$($(1)-SVNPATH)))
-$(1).svnrev := $(word 2,$(subst @, @,$($(1)-SVNPATH)))
+endif
 endef
 
-$(foreach module,$(ALL-MODULES), $(eval $(call stage1_module_vars,$(module))))
+$(foreach module,$(ALL.modules), $(eval $(call stage1_module_vars,$(module))))
 
 #
 # for each package, compute whether we need to set date 
@@ -315,15 +316,15 @@ header.spec:
 	echo "%define distroname $(DISTRONAME)" >> $@
 	echo "%define pldistro $(PLDISTRO)" >> $@
 	echo "%define plrelease $(PLANETLAB_RELEASE)" >> $@
-	echo "# use MD5 and gzip for binary and source files" << $@
+	echo "# use MD5 and gzip for binary and source files" >> $@
 	echo "%global _binary_filedigest_algorithm 1" >> $@
 	echo "%global _source_filedigest_algorithm 1" >> $@
 	echo "%global _source_payload       w9.gzdio" >> $@
 	echo "%global _binary_payload       w9.gzdio" >> $@
 
-### extract spec file from scm
+### make up spec file - extract module first
 define target_spec
-$($(1).specpath): header.spec
+$($(1).specpath): header.spec $($(1).codespec)
 	mkdir -p SPECS
 	cat header.spec > $($(1).specpath)
 	$(if $($(1).has-date),echo "%define date $(shell date +%Y.%m.%d)" >> $($(1).specpath),)
@@ -331,14 +332,27 @@ $($(1).specpath): header.spec
 	  $(foreach line,$($(1)-SPECVARS), \
 	    echo "%define" $(word 1,$(subst =, ,$(line))) "$(word 2,$(subst =, ,$(line)))" >> $($(1).specpath) ;))
 	echo "# included from $($(1)-SPEC)" >> $($(1).specpath)
-	$(if $($($(1).module)-SVNPATH),\
-          svn cat $($($(1).module).svnpath)/$($(1)-SPEC)$($($(1).module).svnrev) >> $($(1).specpath) || rm $($(1).specpath),\
-          cvs -d $($($(1).module)-CVSROOT) checkout \
-	      -r $($($(1).module)-TAG) \
-	      -p $($(1).module)/$($(1)-SPEC) >> $($(1).specpath))
+	cat $($(1).codespec) >> $($(1).specpath)
+
+$($(1).codespec): $($(1).moduledir)
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_spec,$(package))))
+
+### module extraction
+define target_extract_module
+MODULES/$(1):
+	@(echo -n "XXXXXXXXXXXXXXX -- BEG MODULE $(module) : $@ " ; date)
+	echo target_extract_module has arg $(1)
+	mkdir -p MODULES
+	cd MODULES && $(if $($(1)-SVNPATH),\
+	  svn export $($(1)-SVNPATH) $(1),\
+	  git clone $($(1).gitrepo) $(1) && [ -n "$($(1).gittag)" ] && { cd $(1) ; git checkout "$($(1).gittag)"; } )
+	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(module) : $@ " ; date)
+endef
+
+$(foreach module,$(ALL.modules),$(eval $(call target_extract_module,$(module))))
+
 
 ###
 # Base rpmbuild in the current directory
@@ -433,8 +447,8 @@ URLS/%:
 	touch $@
 
 ### the directory SOURCES/<package>-<version> is made 
-# with a copy -rl from CODEBASES/<package>
-# the former is $(package.source) and the latter is $(package.codebase)
+# with a (set of) copy -rl from MODULES/<module>
+# the former is $(package.source) 
 ALLSOURCES:=$(foreach package, $(ALL), $($(package).source))
 # so that make does not use the rule below directly for creating the tarball files
 .SECONDARY: $(ALLSOURCES)
@@ -443,42 +457,23 @@ sources: $(ALLSOURCES)
 	@echo $(words $(ALLSOURCES)) versioned source trees OK
 .PHONY: sources
 
-define target_link_codebase_sources
-$($(1).source): $($(1).codebase) ; mkdir -p SOURCES ; cp -rl $($(1).codebase) $($(1).source)
+# argument is a package
+# do things differently if multiple modules are mentioned (sigh..)
+define target_copy_link_modules_sources
+$($(1).source): $(foreach module,$($(1)-MODULES),MODULES/$(module))
+	$(if $(word 2,$($(1)-MODULES)),\
+	 mkdir -p $($(1).source) && $(foreach module,$($(1)-MODULES), cp -rl MODULES/$(module) $($(1).source)/$(module);) ,\
+	 mkdir -p SOURCES && cp -rl MODULES/$($(1)-MODULES) $($(1).source))
 endef
 
-$(foreach package,$(ALL),$(eval $(call target_link_codebase_sources,$(package))))
+$(foreach package,$(ALL),$(eval $(call target_copy_link_modules_sources,$(package))))
 
 ### codebase extraction
-ALLCODEBASES:=$(foreach package, $(ALL), $($(package).codebase))
-# so that make does not use the rule below directly for creating the tarball files
-.SECONDARY: $(ALLCODEBASES)
-
-codebases : $(ALLCODEBASES)
-	@echo $(words $(ALLCODEBASES)) codebase OK
-.PHONY: codebases
-
-### extract codebase 
-# usage: extract_single_module package 
-define extract_single_module
-	mkdir -p CODEBASES
-	$(if $($($(1).module)-SVNPATH), cd CODEBASES && svn export $($($(1).module)-SVNPATH) $(1), cd CODEBASES && cvs -d $($($(1).module)-CVSROOT) export -r $($($(1).module)-TAG) -d $(1) $($(1).module))
-endef
-
-# usage: extract_multi_module package 
-define extract_multi_module
-	mkdir -p CODEBASES/$(1) && cd CODEBASES/$(1) && (\
-	$(foreach m,$($(1)-MODULES), $(if $($(m)-SVNPATH), svn export $($(m)-SVNPATH) $(m);, cvs -d $($(m)-CVSROOT) export -r $($(m)-TAG) $(m);)))
-endef
-
-CODEBASES/%: package=$(notdir $@)
-CODEBASES/%: multi_module=$(word 2,$($(package)-MODULES))
-CODEBASES/%: 
-	@(echo -n "XXXXXXXXXXXXXXX -- BEG CODEBASE $(package) : $@ " ; date)
-	$(if $(multi_module),\
-	  $(call extract_multi_module,$(package)),\
-	  $(call extract_single_module,$(package)))
-	@(echo -n "XXXXXXXXXXXXXXX -- END CODEBASE $(package) : $@ " ; date)
+ALLMODULES:=$(foreach module, $(ALL.modules), MODULES/$(module))
+.SECONDARY: $(ALLMODULES)
+modules: $(ALLMODULES)
+	@echo $(words $(ALLMODULES)) modules OK "(fetched from scm)"
+.PHONY: modules
 
 ### source rpms
 ALLSRPMS:=$(foreach package,$(ALL),$($(package).srpm))
@@ -509,13 +504,13 @@ $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs)
 	$(call handle_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 else
-$($(1).srpm): $($(1).specpath) .rpmmacros $($(1).codebase)
+$($(1).srpm): $($(1).specpath) .rpmmacros $($(1).source)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
 	$(call handle_devel_rpms_pre,$(1))
-	make -C $($(1).codebase) srpm SPECFILE=$(HOME)/$($(1).specpath) EXPECTED_SRPM=$(notdir $($(1).srpm)) && \
+	make -C $($(1).source) srpm SPECFILE=$(HOME)/$($(1).specpath) EXPECTED_SRPM=$(notdir $($(1).srpm)) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
-           ln $($(1).codebase)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
+           ln $($(1).source)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
 	$(call handle_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 endif
@@ -571,10 +566,8 @@ $(1)-mk: $($(1)-MK)
 .PHONY: $(1)-mk
 $(1)-tarball: $($(1).tarballs)
 .PHONY: $(1)-tarball
-$(1)-codebase: $($(1).codebase)
 .PHONY: $(1)-source
 $(1)-source: $($(1).source)
-.PHONY: $(1)-codebase
 $(1)-rpms: $($(1).rpms)
 .PHONY: $(1)-rpms
 $(1)-srpm: $($(1).srpm)
@@ -612,7 +605,7 @@ $(foreach package,$(ALL),$(eval $(call target_depends,$(package))))
 # usage: target_clean package
 define target_clean
 $(1)-clean-codebase:
-	rm -rf $($(1).codebase)
+	$(foreach module,$($(1)-MODULES),rm -rf MODULES/$(module);)
 .PHONY: $(1)-clean-codebase
 CLEANS += $(1)-clean-codebase
 $(1)-clean-source:
@@ -664,7 +657,7 @@ clean-help:
 distclean1:
 	rm -rf savedpldistro.mk .rpmmacros spec2make header.spec SPECS MAKE $(DISTCLEANS)
 distclean2:
-	rm -rf CODEBASES SOURCES BUILD BUILDROOT RPMS SRPMS tmp
+	rm -rf MODULES SOURCES BUILD BUILDROOT RPMS SRPMS tmp
 distclean: distclean1 distclean2
 .PHONY: distclean1 distclean2 distclean
 
@@ -711,9 +704,9 @@ $(1)-version-svn:
 	   printf $(VFORMAT) $(1)-CVSROOT "$($(1)-CVSROOT)" ; printf $(VFORMAT) $(1)-TAG "$($(1)-TAG)")
 endef
 
-$(foreach module,$(ALL-MODULES), $(eval $(call svn_version_target,$(module))))
+$(foreach module,$(ALL.modules), $(eval $(call svn_version_target,$(module))))
 
-version-svns: $(foreach module, $(ALL-MODULES), $(module)-version-svn)
+version-svns: $(foreach module, $(ALL.modules), $(module)-version-svn)
 
 RFORMAT="%20s :: version=%s release=%s\n"
 define rpm_version_target
@@ -728,7 +721,7 @@ versions: myplc-release version-build version-svns version-rpms
 .PHONY: versions version-build version-rpms version-svns
 
 #################### package info
-PKGKEYS := tarballs source codebase srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
+PKGKEYS := tarballs source srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
 %-pkginfo: package=$(subst -pkginfo,,$@)
 %-pkginfo: 
 	@$(foreach key,$(PKGKEYS),echo "$(package).$(key)=$($(package).$(key))";)
@@ -739,26 +732,26 @@ RPMKEYS := rpm-path package
 	@$(foreach key,$(RPMKEYS),echo "$(rpm).$(key)=$($(rpm).$(key))";)
 
 #################### various lists - designed to run with stage1=true
-packages:
+info-packages:
 	@$(foreach package,$(ALL), echo package=$(package) ref_module=$($(package).module) modules=$($(package)-MODULES) rpmnames=$($(package).rpmnames); )
 
-modules:
-	@$(foreach module,$(ALL-MODULES), echo module=$(module) svnpath=$($(module)-SVNPATH); )
+info-modules:
+	@$(foreach module,$(ALL.modules), echo module=$(module) svnpath=$($(module)-SVNPATH); )
 
-branches:
-	@$(foreach module,$(ALL-MODULES), \
+info-branches:
+	@$(foreach module,$(ALL.modules), \
 	  $(if $($(module)-SVNBRANCH),echo module=$(module) branch=$($(module)-SVNBRANCH);))
 
 module-tools:
-	@$(foreach module,$(ALL-MODULES), \
+	@$(foreach module,$(ALL.modules), \
  	 $(if $($(module)-SVNPATH), \
 	  $(if $($(module)-SVNBRANCH), \
 	     echo $(module):$($(module)-SVNBRANCH); , \
 	     echo $(module); )))
 
-info: packages modules branches 
+info: info-packages info-modules info-branches 
 
-.PHONY: info packages modules branches module-tools
+.PHONY: info info-packages info-modules info-branches module-tools
 
 ####################
 tests_svnpath:
@@ -782,8 +775,6 @@ help:
 	@echo "  equivalent to 'make util-vserver-rpms'"
 	@echo ""
 	@echo "********** Or, vertically - step-by-step for a given package"
-	@echo 'make util-vserver-codebase'
-	@echo "  performs codebase extraction in CODEBASES/util-vserver"
 	@echo 'make util-vserver-source'
 	@echo "  creates source link in SOURCES/util-vserver-<version>"
 	@echo 'make util-vserver-tarball'
@@ -794,7 +785,6 @@ help:
 	@echo "  build rpm(s) in RPMS/"
 	@echo ""
 	@echo "********** Or, horizontally, reach a step for all known packages"
-	@echo 'make codebases'
 	@echo 'make sources'
 	@echo 'make tarballs'
 	@echo 'make srpms'
@@ -816,7 +806,7 @@ help:
 	@echo "make iptables-distclean"
 	@echo "  deep clean for a given package"
 	@echo "make iptables-codeclean"
-	@echo "  run this if you've made a change in the CODEBASES area for iptables"
+	@echo "  run this if you've made a local/manual change in the MODULES area for iptables"
 	@echo ""
 	@echo "make util-vserver-clean"
 	@echo "  removes codebase, source, tarball, build, rpm and srpm for util-vserver"
