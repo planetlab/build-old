@@ -343,11 +343,12 @@ $(foreach package,$(ALL),$(eval $(call target_spec,$(package))))
 define target_extract_module
 MODULES/$(1):
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG MODULE $(module) : $@ " ; date)
-	echo target_extract_module has arg $(1)
 	mkdir -p MODULES
 	cd MODULES && $(if $($(1)-SVNPATH),\
 	  svn export $($(1)-SVNPATH) $(1),\
-	  git clone $($(1).gitrepo) $(1) && [ -n "$($(1).gittag)" ] && { cd $(1) ; git checkout "$($(1).gittag)"; } )
+	  git clone $($(1).gitrepo) $(1); \
+	  $(if $($(1).gittag), cd $(1); git checkout "$($(1).gittag)"; cd -; ,,) \
+	  rm -rf $(1)/.git )
 	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(module) : $@ " ; date)
 endef
 
@@ -468,7 +469,7 @@ endef
 
 $(foreach package,$(ALL),$(eval $(call target_copy_link_modules_sources,$(package))))
 
-### codebase extraction
+### code extraction
 ALLMODULES:=$(foreach module, $(ALL.modules), MODULES/$(module))
 .SECONDARY: $(ALLMODULES)
 modules: $(ALLMODULES)
@@ -604,10 +605,10 @@ $(foreach package,$(ALL),$(eval $(call target_depends,$(package))))
 ### clean target
 # usage: target_clean package
 define target_clean
-$(1)-clean-codebase:
+$(1)-clean-modules:
 	$(foreach module,$($(1)-MODULES),rm -rf MODULES/$(module);)
-.PHONY: $(1)-clean-codebase
-CLEANS += $(1)-clean-codebase
+.PHONY: $(1)-clean-modules
+CLEANS += $(1)-clean-modules
 $(1)-clean-source:
 	rm -rf $($(1).source)
 .PHONY: $(1)-clean-source
@@ -628,7 +629,7 @@ $(1)-clean-srpm:
 .PHONY: $(1)-clean-srpm
 CLEANS += $(1)-clean-srpm
 $(1)-codeclean: $(1)-clean-source $(1)-clean-tarball $(1)-clean-build $(1)-clean-rpms $(1)-clean-srpm
-$(1)-clean: $(1)-clean-codebase $(1)-codeclean
+$(1)-clean: $(1)-clean-modules $(1)-codeclean
 .PHONY: $(1)-codeclean $(1)-clean 
 $(1)-clean-spec:
 	rm -rf $($(1).specpath)
@@ -810,7 +811,7 @@ help:
 	@echo ""
 	@echo "make util-vserver-clean"
 	@echo "  removes codebase, source, tarball, build, rpm and srpm for util-vserver"
-	@echo "make util-vserver-clean-codebase"
+	@echo "make util-vserver-clean-modules"
 	@echo "  and so on for source, tarball, build, rpm and srpm"
 	@echo ""
 	@echo "********** Info examples"
