@@ -26,7 +26,7 @@ fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tag
 pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
-vsys-SVNBRANCH			:= 0.9
+vsys-BRANCH			:= 0.9
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.9-4
 vsys-scripts-SVNPATH		:= http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-scripts-0.95-17
 PLCAPI-SVNPATH			:= http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-5.0-9
@@ -53,5 +53,5 @@ BootstrapFS-SVNPATH		:= http://svn.planet-lab.org/svn/BootstrapFS/tags/Bootstrap
 MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-4
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
-# locating the right test directory - see make tests_svnpath
-tests-SVNPATH			:= http://svn.planet-lab.org/svn/tests/trunk
+# locating the right test directory - see make tests_gitpath
+tests-GITPATH			:= http://git.onelab.eu/tests.git

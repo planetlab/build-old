@@ -9,10 +9,10 @@
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/trunk
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-3878-0
 # Trellis is using a modified util-vserver and util-vserver-pl with the 2.6.27 kernel
-util-vserver-SVNBRANCH		:= trellis
+util-vserver-BRANCH		:= trellis
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/branches/trellis
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
-util-vserver-pl-SVNBRANCH	:= trellis
+util-vserver-pl-BRANCH	:= trellis
 util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/branches/trellis
 NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
@@ -29,7 +29,7 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/trunk
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
-vsys-SVNBRANCH			:= 0.9
+vsys-BRANCH			:= 0.9
 vsys-SVNPATH			:= http://svn.planet-lab.org/svn/vsys/tags/vsys-0.9-4
 vsys-scripts-SVNPATH            := http://svn.planet-lab.org/svn/vsys-scripts/tags/vsys-scripts-0.95-17
 PLCAPI-SVNPATH                  := http://svn.planet-lab.org/svn/PLCAPI/tags/PLCAPI-4.3-33
@@ -49,5 +49,5 @@ sfa-SVNPATH                     := http://svn.planet-lab.org/svn/sfa/tags/sfa-0.
 pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 PLCRT-SVNPATH                   := http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-10
 
-# locating the right test directory - see make tests_svnpath
-tests-SVNPATH                   := http://svn.planet-lab.org/svn/tests/tags/tests-4.3-6
+# locating the right test directory - see make tests_gitpath
+tests-GITPATH                   := http://git.onelab.eu/tests.git@tests-4.3-6

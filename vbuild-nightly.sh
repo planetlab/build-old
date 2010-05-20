@@ -212,8 +212,8 @@ function build () {
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
-    # store tests_svnpath
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_svnpath
+    # store tests_gitpath
+    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_gitpath
     # versions
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # actual stuff
@@ -230,16 +230,14 @@ function run_log () {
 
     echo "============================== BEG $COMMAND:run_log on $(date)"
 
-    # where to find TESTS_SVNPATH
-    stamp=/vservers/$BASE/build/tests_svnpath
+    # where to find TESTS_GITPATH
+    stamp=/vservers/$BASE/build/tests_gitpath
     if [ ! -f $stamp ] ; then
-	echo "$COMMAND: Cannot figure TESTS_SVNPATH from missing $stamp"
+	echo "$COMMAND: Cannot figure TESTS_GITPATH from missing $stamp"
 	failure
 	exit 1
     fi
-    TESTS_SVNPATH=$(cat $stamp)
-    # don't need the tests fulltree anymore
-    TESTS_SYSTEM_SVNPATH=${TESTS_SVNPATH}/system
+    TESTS_GITPATH=$(cat $stamp)
 
     ### the URL to the RPMS/<arch> location
     # f12 now has everything in i686; try i386 first as older fedoras have both
@@ -265,11 +263,15 @@ function run_log () {
     # test directory name on test box
     testdir=${BASE}
     # clean it
-    ssh -n ${testmaster_ssh} rm -rf ${testdir}
-    # check it out 
-    ssh -n ${testmaster_ssh} svn co ${TESTS_SYSTEM_SVNPATH} ${testdir}
-###    # check out the entire tests/ module (with system/ duplicated) as a subdir - see fulltree above
-###    ssh -n ${testmaster_ssh} svn co ${TESTS_SVNPATH} ${testdir}/tests
+    ssh -n ${testmaster_ssh} rm -rf ${testdir} ${testdir}.git
+
+    # check it out - just the 'system' subdir is enough
+    gitrepo=$(echo $TESTS_GITPATH | cut -d@ -f1)
+    gittag=$(echo $TESTS_GITPATH | cut -s -d@ -f2)
+    ssh -n ${testmaster_ssh} git clone ${gitrepo} ${testdir}.git 
+    [ -n "$gittag" ] && ssh -n ${testmaster_ssh} "cd ${testdir}.git ; git checkout ${gittag}"
+    ssh -n ${testmaster_ssh} "mv ${testdir}.git/system ${testdir} ; rm -rf ${testdir}.git"
+
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
     for config in ${TESTCONFIG} ; do
@@ -435,8 +437,6 @@ function main () {
 
     set -e
 
-    echo "==================== MAIN BEG $(date)"
-
     # parse arguments
     MAKEVARS=()
     MAKETARGETS=()
@@ -568,7 +568,7 @@ function main () {
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    vserver ${BASE} exec svn update /build
 	    # make sure we refresh the tests place in case it has changed
-	    rm -f /build/tests_svnpath
+	    rm -f /build/tests_gitpath
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
 	    # retrieve all in one run

@@ -12,4 +12,4 @@ fcdistro=centos5
   make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
   make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ; \
   echo tests
-) | sort -u | grep -v '^build$'
+) | sort -u | grep -v '^build$' | grep -v 'git:'

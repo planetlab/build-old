@@ -280,12 +280,12 @@ ALL.modules:=$(sort $(ALL.modules))
 
 # extract revision from -SVNPATH or tag from -GITPATH
 define stage1_module_vars
-ifeq "$($(1)-SVNPATH)" ""
+ifneq "$($(1)-SVNPATH)" ""
+$(1)-SVNPATH := $(strip $($(1)-SVNPATH))
+else
 $(1)-GITPATH := $(strip $($(1)-GITPATH))
 $(1).gitrepo := $(firstword $(subst @, ,$($(1)-GITPATH)))
 $(1).gittag := $(word 2,$(subst @, ,$($(1)-GITPATH)))
-else
-$(1)-SVNPATH := $(strip $($(1)-SVNPATH))
 endif
 endef
 
@@ -296,13 +296,16 @@ $(foreach module,$(ALL.modules), $(eval $(call stage1_module_vars,$(module))))
 # the heuristic is that we mention the date as part of the rpm release flag if
 # (*) the package has requested it by setting package-RPMDATE (container packages should do that)
 # (*) or SVNPATH contains 'trunk' or 'branches' 
+# (*) or GITPATH has no '@' (trunk) 
+# (*) or GITPATH contains a '@', and the gittag part has no '-' (this is to tell a tag from a branch..)
 # 
 define package_hasdate
 $(1).has-date = $(if $($(1)-RPMDATE),yes, \
                   $(if $($($(1).module)-SVNPATH), \
 		     $(if $(findstring /trunk,$($($(1).module)-SVNPATH)),yes, \
 			$(if $(findstring /branches,$($($(1).module)-SVNPATH)),yes,)), \
-		     $(if $(findstring HEAD,$($($(1).module)-TAG)),yes,)))
+		     $(if $(not $($($(1).module).gittag)), yes,\
+			$(if $(findstring -,$($($(1).module).gittag)),,yes))))
 endef
 
 $(foreach package, $(ALL), $(eval $(call package_hasdate,$(package))))
@@ -335,6 +338,7 @@ $($(1).specpath): header.spec $($(1).codespec)
 	cat $($(1).codespec) >> $($(1).specpath)
 
 $($(1).codespec): $($(1).moduledir)
+
 endef
 
 $(foreach package,$(ALL),$(eval $(call target_spec,$(package))))
@@ -344,12 +348,16 @@ define target_extract_module
 MODULES/$(1):
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG MODULE $(module) : $@ " ; date)
 	mkdir -p MODULES
-	cd MODULES && $(if $($(1)-SVNPATH),\
+	cd MODULES && \
+	$(if $($(1)-SVNPATH),\
 	  svn export $($(1)-SVNPATH) $(1),\
 	  git clone $($(1).gitrepo) $(1); \
 	  $(if $($(1).gittag), cd $(1); git checkout "$($(1).gittag)"; cd -; ,) \
 	  rm -rf $(1)/.git )
 	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(module) : $@ " ; date)
+
+$(1)-module: MODULES/$(1)
+.PHONY: $(1)-module
 endef
 
 $(foreach module,$(ALL.modules),$(eval $(call target_extract_module,$(module))))
@@ -698,16 +706,16 @@ version-build:
 #################### 
 # for a given module
 VFORMAT="%30s := %s\n"
-define svn_version_target
-$(1)-version-svn:
+define print_tag_target
+$(1)-version-tag:
 	@$(if $($(1)-SVNPATH),\
 	   printf $(VFORMAT) $(1)-SVNPATH "$($(1)-SVNPATH)",\
-	   printf $(VFORMAT) $(1)-CVSROOT "$($(1)-CVSROOT)" ; printf $(VFORMAT) $(1)-TAG "$($(1)-TAG)")
+	   printf $(VFORMAT) $(1)-GITPATH "$($(1)-GITPATH)" )
 endef
 
-$(foreach module,$(ALL.modules), $(eval $(call svn_version_target,$(module))))
+$(foreach module,$(ALL.modules), $(eval $(call print_tag_target,$(module))))
 
-version-svns: $(foreach module, $(ALL.modules), $(module)-version-svn)
+version-tags: $(foreach module, $(ALL.modules), $(module)-version-tag)
 
 RFORMAT="%20s :: version=%s release=%s\n"
 define rpm_version_target
@@ -718,8 +726,8 @@ endef
 
 $(foreach package,$(sort $(ALL)), $(eval $(call rpm_version_target,$(package))))
 
-versions: myplc-release version-build version-svns version-rpms
-.PHONY: versions version-build version-rpms version-svns
+versions: myplc-release version-build version-tags version-rpms
+.PHONY: versions version-build version-rpms version-tags
 
 #################### package info
 PKGKEYS := tarballs source srpm rpms rpmnames rpm-release rpm-name rpm-version rpm-subversion
@@ -737,17 +745,21 @@ info-packages:
 	@$(foreach package,$(ALL), echo package=$(package) ref_module=$($(package).module) modules=$($(package)-MODULES) rpmnames=$($(package).rpmnames); )
 
 info-modules:
-	@$(foreach module,$(ALL.modules), echo module=$(module) svnpath=$($(module)-SVNPATH); )
+	@$(foreach module,$(ALL.modules), echo module=$(module) \
+	   $(if $($(module)-SVNPATH),svnpath=$($(module)-SVNPATH),gitpath=$($(module)-GITPATH)) ; )
 
 info-branches:
 	@$(foreach module,$(ALL.modules), \
-	  $(if $($(module)-SVNBRANCH),echo module=$(module) branch=$($(module)-SVNBRANCH);))
+	  $(if $($(module)-BRANCH),echo module=$(module) branch=$($(module)-BRANCH);))
 
 module-tools:
 	@$(foreach module,$(ALL.modules), \
- 	 $(if $($(module)-SVNPATH), \
-	  $(if $($(module)-SVNBRANCH), \
-	     echo $(module):$($(module)-SVNBRANCH); , \
+ 	 $(if $($(module)-GITPATH), \
+	  $(if $($(module)-BRANCH), \
+	     echo git:$(module):$($(module)-BRANCH); , \
+	     echo git:$(module); ), \
+	  $(if $($(module)-BRANCH), \
+	     echo $(module):$($(module)-BRANCH); , \
 	     echo $(module); )))
 
 info: info-packages info-modules info-branches 
@@ -755,9 +767,9 @@ info: info-packages info-modules info-branches
 .PHONY: info info-packages info-modules info-branches module-tools
 
 ####################
-tests_svnpath:
-	@$(if $(tests-SVNPATH), echo $(tests-SVNPATH) > $@, \
-	echo "http://svn.planet-lab.org/svn/tests/trunk" > $@)
+tests_gitpath:
+	@$(if $(tests-GITPATH), echo $(tests-GITPATH) > $@, \
+	echo "http://git.onelab.eu/tests.git" > $@)
 
 
 ####################

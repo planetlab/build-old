@@ -1003,10 +1003,10 @@ will be based on latest tag %s and *not* on the current trunk"""%(self.name,bran
         command="svn copy --file %s %s %s"%(tmp,tag_url,new_tag_url)
         self.run_prompt("Create initial tag in trunk",command)
         os.unlink(tmp)
-        # print message about SVNBRANCH
+        # print message about BRANCH
         print """You might now wish to review your tags files
 Please make sure you mention as appropriate 
-%s-SVNBRANCH := %s""" %(self.name,branch_name)
+%s-BRANCH := %s""" %(self.name,branch_name)
 
 ##############################
 class Package:
