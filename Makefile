@@ -347,7 +347,7 @@ MODULES/$(1):
 	cd MODULES && $(if $($(1)-SVNPATH),\
 	  svn export $($(1)-SVNPATH) $(1),\
 	  git clone $($(1).gitrepo) $(1); \
-	  $(if $($(1).gittag), cd $(1); git checkout "$($(1).gittag)"; cd -; ,,) \
+	  $(if $($(1).gittag), cd $(1); git checkout "$($(1).gittag)"; cd -; ,) \
 	  rm -rf $(1)/.git )
 	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(module) : $@ " ; date)
 endef
