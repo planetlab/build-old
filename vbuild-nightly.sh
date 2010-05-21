@@ -212,8 +212,6 @@ function build () {
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 
-    # store tests_gitpath
-    make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true tests_gitpath
     # versions
     make -C /build $DRY_RUN "${MAKEVARS[@]}" versions
     # actual stuff
@@ -229,15 +227,6 @@ function run_log () {
     trap failure ERR INT
 
     echo "============================== BEG $COMMAND:run_log on $(date)"
-
-    # where to find TESTS_GITPATH
-    stamp=/vservers/$BASE/build/tests_gitpath
-    if [ ! -f $stamp ] ; then
-	echo "$COMMAND: Cannot figure TESTS_GITPATH from missing $stamp"
-	failure
-	exit 1
-    fi
-    TESTS_GITPATH=$(cat $stamp)
 
     ### the URL to the RPMS/<arch> location
     # f12 now has everything in i686; try i386 first as older fedoras have both
@@ -262,15 +251,15 @@ function run_log () {
 
     # test directory name on test box
     testdir=${BASE}
+
     # clean it
     ssh -n ${testmaster_ssh} rm -rf ${testdir} ${testdir}.git
 
-    # check it out - just the 'system' subdir is enough
-    gitrepo=$(echo $TESTS_GITPATH | cut -d@ -f1)
-    gittag=$(echo $TESTS_GITPATH | cut -s -d@ -f2)
-    ssh -n ${testmaster_ssh} git clone ${gitrepo} ${testdir}.git 
-    [ -n "$gittag" ] && ssh -n ${testmaster_ssh} "cd ${testdir}.git ; git checkout ${gittag}"
-    ssh -n ${testmaster_ssh} "mv ${testdir}.git/system ${testdir} ; rm -rf ${testdir}.git"
+    # check it out in the build
+    vserver $BASE exec make -C /build tests-module
+    
+    # push it onto the testmaster - just the 'system' subdir is enough
+    rsync --verbose --archive /vservers/$BASE/build/MODULES/tests/system/ ${testmaster_ssh}:${BASE}
 
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
@@ -283,9 +272,9 @@ function run_log () {
     success=true
     ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${build_SVNPATH} --url ${url} $configs $test_env $VERBOSE --all || success=
 
-    # gather logs in the vserver
+    # gather logs in the build vserver
     mkdir -p /vservers/$BASE/build/testlogs
-    ssh 2>&1 -n ${testmaster_ssh} tar -C ${testdir}/logs -cf - . | tar -C /vservers/$BASE/build/testlogs -xf - || :
+    rsync --verbose --archive ${testmaster_ssh}:$BASE/logs/ /vservers/$BASE/build/testlogs
     # push them to the build web
     chmod -R a+r /vservers/$BASE/build/testlogs/
     webpublish_rsync_dir /vservers/$BASE/build/testlogs/ $WEBPATH/$BASE/testlogs/
@@ -568,7 +557,7 @@ function main () {
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    vserver ${BASE} exec svn update /build
 	    # make sure we refresh the tests place in case it has changed
-	    rm -f /build/tests_gitpath
+	    rm -f /build/MODULES/tests
 	    # get environment from the first run 
 	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
 	    # retrieve all in one run

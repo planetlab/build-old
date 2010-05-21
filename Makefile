@@ -286,6 +286,7 @@ else
 $(1)-GITPATH := $(strip $($(1)-GITPATH))
 $(1).gitrepo := $(firstword $(subst @, ,$($(1)-GITPATH)))
 $(1).gittag := $(word 2,$(subst @, ,$($(1)-GITPATH)))
+$(1).gittag := $(if $($(1).gittag),$($(1).gittag),master)
 endif
 endef
 
@@ -351,9 +352,8 @@ MODULES/$(1):
 	cd MODULES && \
 	$(if $($(1)-SVNPATH),\
 	  svn export $($(1)-SVNPATH) $(1),\
-	  git clone $($(1).gitrepo) $(1); \
-	  $(if $($(1).gittag), cd $(1); git checkout "$($(1).gittag)"; cd -; ,) \
-	  rm -rf $(1)/.git )
+	  mkdir $(1) ; (git archive --remote=$($(1).gitrepo) $($(1).gittag) | tar -C $(1) -xf - ) \
+	   || { rm -rf $(1); false; } )
 	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(module) : $@ " ; date)
 
 $(1)-module: MODULES/$(1)
@@ -362,6 +362,13 @@ endef
 
 $(foreach module,$(ALL.modules),$(eval $(call target_extract_module,$(module))))
 
+### the tests area
+# use this makefile to extract tests rather than extracting manually in vbuild-nightly
+$(eval $(call stage1_module_vars,tests))
+$(eval $(call target_extract_module,tests))
+tests-clean:
+	rm -rf MODULES/tests
+.PHONY: tests-clean
 
 ###
 # Base rpmbuild in the current directory
@@ -684,7 +691,7 @@ myplc-release:
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx build info" >> $@
 	$(MAKE) --no-print-directory version-build >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx svn info" >> $@
-	$(MAKE) --no-print-directory version-svns >> $@
+	$(MAKE) --no-print-directory version-tags >> $@
 	echo "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx rpm info" >> $@
 	$(MAKE) --no-print-directory version-rpms >> $@
 	@echo $(BASE) > .base
@@ -765,12 +772,6 @@ module-tools:
 info: info-packages info-modules info-branches 
 
 .PHONY: info info-packages info-modules info-branches module-tools
-
-####################
-tests_gitpath:
-	@$(if $(tests-GITPATH), echo $(tests-GITPATH) > $@, \
-	echo "http://git.onelab.eu/tests.git" > $@)
-
 
 ####################
 help:

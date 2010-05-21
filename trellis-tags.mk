@@ -50,4 +50,4 @@ pyopenssl-SVNPATH               := http://svn.planet-lab.org/svn/pyopenssl/tags/
 PLCRT-SVNPATH                   := http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-10
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := http://git.onelab.eu/tests.git@tests-4.3-6
+tests-GITPATH                   := git://git.onelab.eu/tests.git@tests-4.3-6

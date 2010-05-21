@@ -52,4 +52,4 @@ MyPLC-SVNPATH			:= http://svn.planet-lab.org/svn/MyPLC/tags/MyPLC-5.0-4
 DistributedRateLimiting-SVNPATH			:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH			:= http://git.onelab.eu/tests.git
+tests-GITPATH			:= git://git.onelab.eu/tests.git@master
