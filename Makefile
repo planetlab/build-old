@@ -1,8 +1,8 @@
 #
 # Thierry Parmentelat - INRIA Sophia Antipolis 
 #
-### $Id$
-### $URL$
+### $Id: Makefile 18118 2010-05-21 17:51:26Z thierry $
+### $URL: svn+ssh://thierry@svn.planet-lab.org/svn/build/trunk/Makefile $
 # 
 ####################
 # invocation:
@@ -347,14 +347,14 @@ $(foreach package,$(ALL),$(eval $(call target_spec,$(package))))
 ### module extraction
 define target_extract_module
 MODULES/$(1):
-	@(echo -n "XXXXXXXXXXXXXXX -- BEG MODULE $(module) : $@ " ; date)
+	@(echo -n "XXXXXXXXXXXXXXX -- BEG MODULE $(1) : $@ " ; date)
 	mkdir -p MODULES
 	cd MODULES && \
 	$(if $($(1)-SVNPATH),\
 	  svn export $($(1)-SVNPATH) $(1),\
 	  mkdir $(1) ; (git archive --remote=$($(1).gitrepo) $($(1).gittag) | tar -C $(1) -xf - ) \
 	   || { rm -rf $(1); false; } )
-	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(module) : $@ " ; date)
+	@(echo -n "XXXXXXXXXXXXXXX -- END MODULE $(1) : $@ " ; date)
 
 $(1)-module: MODULES/$(1)
 .PHONY: $(1)-module

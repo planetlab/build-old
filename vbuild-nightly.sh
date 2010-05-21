@@ -1,5 +1,5 @@
 #!/bin/bash
-REVISION=$(echo '$Revision$' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
+REVISION=$(echo '$Revision: 18119 $' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
 
 COMMANDPATH=$0
 COMMAND=$(basename $0)
@@ -9,7 +9,7 @@ DEFAULT_FCDISTRO=centos5
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
-DEFAULT_build_SVNPATH="http://svn.planet-lab.org/svn/build/trunk"
+DEFAULT_BUILD_SCM_URL="http://svn.planet-lab.org/svn/build/trunk"
 DEFAULT_IFNAME=eth0
 
 # default gpg path used in signing yum repo
@@ -199,9 +199,13 @@ function build () {
     echo "Running make IN $(pwd)"
     
     # stuff our own variable settings
+    if echo $BUILD_SCM_URL | grep -q git ; then
+	MAKEVARS=("build-GITPATH=${BUILD_SCM_URL}" "${MAKEVARS[@]}")
+    else
+	MAKEVARS=("build-SVNPATH=${BUILD_SCM_URL}" "${MAKEVARS[@]}")
+    fi
     MAKEVARS=("PLDISTRO=${PLDISTRO}" "${MAKEVARS[@]}")
     MAKEVARS=("PLDISTROTAGS=${PLDISTROTAGS}" "${MAKEVARS[@]}")
-    MAKEVARS=("build-SVNPATH=${build_SVNPATH}" "${MAKEVARS[@]}")
     MAKEVARS=("PERSONALITY=${PERSONALITY}" "${MAKEVARS[@]}")
     MAKEVARS=("MAILTO=${MAILTO}" "${MAKEVARS[@]}")
     MAKEVARS=("WEBPATH=${WEBPATH}" "${MAKEVARS[@]}")
@@ -260,6 +264,8 @@ function run_log () {
     
     # push it onto the testmaster - just the 'system' subdir is enough
     rsync --verbose --archive /vservers/$BASE/build/MODULES/tests/system/ ${testmaster_ssh}:${BASE}
+    # toss the build in the bargain, so the tests don't need to mess with extracting it
+    rsync --verbose --archive /vservers/$BASE/build/MODULES/build ${testmaster_ssh}:${BASE}/
 
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
     configs=""
@@ -270,7 +276,8 @@ function run_log () {
 
     # need to proceed despite of set -e
     success=true
-    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${build_SVNPATH} --url ${url} $configs $test_env $VERBOSE --all || success=
+    # passing the build_scm_url should not be needed anymore
+    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${BUILD_SCM_URL} --url ${url} $configs $test_env $VERBOSE --all || success=
 
     # gather logs in the build vserver
     mkdir -p /vservers/$BASE/build/testlogs
@@ -349,7 +356,7 @@ function show_env () {
     echo PLDISTRO=$PLDISTRO
     echo PERSONALITY=$PERSONALITY
     echo BASE=$BASE
-    echo build_SVNPATH=$build_SVNPATH
+    echo BUILD_SCM_URL=$BUILD_SCM_URL
     echo MAKEVARS="${MAKEVARS[@]}"
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
@@ -397,7 +404,7 @@ function usage () {
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -m mailto - no default"
-    echo " -s svnpath - where to fetch the build module - defaults to $DEFAULT_build_SVNPATH"
+    echo " -s build_scm_url - git or svn URL where to fetch the build module - defaults to $DEFAULT_BUILD_SCM_URL"
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -b base - defaults to $DEFAULT_BASE"
     echo "    @NAME@ replaced as appropriate"
@@ -441,7 +448,7 @@ function main () {
 	    d) PLDISTRO=$OPTARG ;;
 	    p) PERSONALITY=$OPTARG ;;
 	    m) MAILTO=$OPTARG ;;
-	    s) build_SVNPATH=$OPTARG ;;
+	    s) BUILD_SCM_URL=$OPTARG ;;
 	    t) PLDISTROTAGS=$OPTARG ;;
 	    b) BASE=$OPTARG ;;
 	    o) OVERBASE=$OPTARG ;;
@@ -493,7 +500,7 @@ function main () {
     [ -z "$GPGPATH" ] && GPGPATH="$DEFAULT_GPGPATH"
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
-    [ -z "$build_SVNPATH" ] && build_SVNPATH="$DEFAULT_build_SVNPATH"
+    [ -z "$BUILD_SCM_URL" ] && BUILD_SCM_URL="$DEFAULT_BUILD_SCM_URL"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
     [ -z "$TESTMASTER" ] && TESTMASTER="$DEFAULT_TESTMASTER"
 
@@ -555,7 +562,11 @@ function main () {
 	    vserver ${BASE} start || :
 	    # update build
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
-	    vserver ${BASE} exec svn update /build
+	    if echo $BUILD_SCM_URL | grep -q git ; then
+		vserver $BASE exec bash -c "cd /build; git pull"
+	    else
+		vserver $BASE exec svn update /build
+	    fi
 	    # make sure we refresh the tests place in case it has changed
 	    rm -f /build/MODULES/tests
 	    # get environment from the first run 
@@ -565,10 +576,10 @@ function main () {
 	    vserver ${BASE} exec make --no-print-directory -C /build stage1=skip \
 		++PLDISTRO ++PLDISTROTAGS ++PERSONALITY ++MAILTO ++WEBPATH ++TESTBUILDURL ++WEBROOT > $tmp
 	    # sh vars cannot have a minus
-	    echo build_SVNPATH=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH) >> $tmp
+	    echo BUILD_SCM_URL=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH +build-GITPATH) >> $tmp
 	    . $tmp
 	    rm -f $tmp
-	    options=(${options[@]} -d $PLDISTRO -t $PLDISTROTAGS -s $build_SVNPATH)
+	    options=(${options[@]} -d $PLDISTRO -t $PLDISTROTAGS -s $BUILD_SCM_URL)
 	    [ -n "$PERSONALITY" ] && options=(${options[@]} -p $PERSONALITY)
 	    [ -n "$MAILTO" ] && options=(${options[@]} -m $MAILTO)
 	    [ -n "$WEBPATH" ] && options=(${options[@]} -w $WEBPATH)
@@ -599,7 +610,14 @@ function main () {
 
 	    ### extract the whole build - much simpler
 	    tmpdir=/tmp/$COMMAND-$$
-	    svn export $build_SVNPATH $tmpdir
+	    if echo $BUILD_SCM_URL | grep -q git ; then
+		GIT_REPO=$(echo $BUILD_SCM_URL | cut -d@ -f1)
+		GIT_TAG=$(echo $BUILD_SCM_URL | cut -s -d@ -f2)
+		GIT_TAG=${GIT_TAG:-master}
+		mkdir -p $tmpdir; git archive --remote=$GIT_REPO $GIT_TAG | tar -C $tmpdir -xf -
+	    else
+		svn export $BUILD_SCM_URL $tmpdir
+	    fi
             # Create vserver
 	    cd $tmpdir
 	    ./vbuild-init-vserver.sh $VERBOSE -f ${FCDISTRO} -d ${PLDISTRO} -p ${PERSONALITY} -i ${IFNAME} ${BASE} 
@@ -608,7 +626,11 @@ function main () {
 	    rm -rf $tmpdir
 	    # Extract build again - in the vserver
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
-	    vserver ${BASE} exec svn checkout ${build_SVNPATH} /build
+	    if echo $BUILD_SCM_URL | grep -q git ; then
+		vserver $BASE exce bash -c "mkdir /build ; git archive --remote=$GIT_REPO $GIT_TAG | tar -C /build -xf -"
+	    else
+		vserver $BASE exec svn checkout ${BUILD_SCM_URL} /build
+	    fi
 	fi
 	# install ssh key in vserver
 	echo "XXXXXXXXXX $COMMAND: preparation of vserver $BASE done" $(date)
