@@ -1,5 +1,5 @@
 #!/bin/bash
-REVISION=$(echo '$Revision: 18119 $' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
+REVISION=$(echo '$Revision: 18120 $' | sed -e 's,\$,,g' -e 's,^\w*:\s,,' )
 
 COMMANDPATH=$0
 COMMAND=$(basename $0)
@@ -627,7 +627,7 @@ function main () {
 	    # Extract build again - in the vserver
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    if echo $BUILD_SCM_URL | grep -q git ; then
-		vserver $BASE exce bash -c "mkdir /build ; git archive --remote=$GIT_REPO $GIT_TAG | tar -C /build -xf -"
+		vserver $BASE exec bash -c "mkdir /build ; git archive --remote=$GIT_REPO $GIT_TAG | tar -C /build -xf -"
 	    else
 		vserver $BASE exec svn checkout ${BUILD_SCM_URL} /build
 	    fi
