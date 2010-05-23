@@ -276,7 +276,7 @@ $(foreach package, $(ALL), $(eval $(call stage1_package_vars,$(package))))
 # compute all modules
 ALL.modules :=
 $(foreach package,$(ALL), $(eval ALL.modules+=$($(package)-MODULES)))
-ALL.modules:=$(sort $(ALL.modules))
+ALL.modules:=build tests $(sort $(ALL.modules))
 
 # extract revision from -SVNPATH or tag from -GITPATH
 define stage1_module_vars
@@ -364,8 +364,6 @@ $(foreach module,$(ALL.modules),$(eval $(call target_extract_module,$(module))))
 
 ### the tests area
 # use this makefile to extract tests rather than extracting manually in vbuild-nightly
-$(eval $(call stage1_module_vars,tests))
-$(eval $(call target_extract_module,tests))
 tests-clean:
 	rm -rf MODULES/tests
 .PHONY: tests-clean
