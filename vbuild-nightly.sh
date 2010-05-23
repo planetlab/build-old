@@ -563,7 +563,7 @@ function main () {
 	    # update build
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    if echo $BUILD_SCM_URL | grep -q git ; then
-		vserver $BASE exec bash -c "cd /build; git pull"
+		vserver $BASE exec bash -c "cd /build; git pull; make tests-clean"
 	    else
 		vserver $BASE exec svn update /build
 	    fi
