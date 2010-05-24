@@ -155,15 +155,13 @@ include $(PLDISTROTAGS)
 # error-prone duplicate changes 
 # so now the nightly build script sets this to what it is currently using
 # in case we run this manually, i.e. if neither build-SVNPATH nor build-GITPATH is set
-# set build-GITPATH from the current repo
-ifeq "$(build-SVNPATH)" ""
-ifeq "$(build-GITPATH)" ""
-build-GITPATH := $(shell git config remote.origin.url)
+ifeq "$(build-SVNPATH)$(build-GITPATH)" ""
+build-GITPATH-local := $(shell git config remote.origin.url)
+ifneq "$(build-GITPATH-local)" ""
+build-GITPATH := $(build-GITPATH-local)
+else
+build-SVNPATH := $(lastword $(shell svn info 2> /dev/null | grep URL:))
 endif
-endif
-# the sentence for svn used to be
-#svn-info-url-line := $(shell svn info 2> /dev/null | grep URL:)
-#default-build-SVNPATH := $(lastword $(svn-info-url-line))
 
 ####################
 define remote_pldistro
