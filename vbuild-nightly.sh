@@ -560,6 +560,15 @@ function main () {
 	    echo "XXXXXXXXXX $COMMAND: using existing vserver $BASE" $(date)
 	    # start in case e.g. we just rebooted
 	    vserver ${BASE} start || :
+	    # retrieve environment from the previous run
+	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
+	    BUILD_SCM_URL=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH +build-GITPATH)
+	    # for efficiency, crop everything in one make run
+	    tmp=/tmp/${BASE}-env.sh
+	    vserver ${BASE} exec make --no-print-directory -C /build stage1=skip \
+		++PLDISTRO ++PLDISTROTAGS ++PERSONALITY ++MAILTO ++WEBPATH ++TESTBUILDURL ++WEBROOT > $tmp
+	    . $tmp
+	    rm -f $tmp
 	    # update build
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    if echo $BUILD_SCM_URL | grep -q git ; then
@@ -569,16 +578,6 @@ function main () {
 	    fi
 	    # make sure we refresh the tests place in case it has changed
 	    rm -f /build/MODULES/tests
-	    # get environment from the first run 
-	    FCDISTRO=$(vserver ${BASE} exec /build/getdistroname.sh)
-	    # retrieve all in one run
-	    tmp=/tmp/${BASE}-env.sh
-	    vserver ${BASE} exec make --no-print-directory -C /build stage1=skip \
-		++PLDISTRO ++PLDISTROTAGS ++PERSONALITY ++MAILTO ++WEBPATH ++TESTBUILDURL ++WEBROOT > $tmp
-	    # sh vars cannot have a minus
-	    echo BUILD_SCM_URL=$(vserver ${BASE} exec make --no-print-directory -C /build stage1=skip +build-SVNPATH +build-GITPATH) >> $tmp
-	    . $tmp
-	    rm -f $tmp
 	    options=(${options[@]} -d $PLDISTRO -t $PLDISTROTAGS -s $BUILD_SCM_URL)
 	    [ -n "$PERSONALITY" ] && options=(${options[@]} -p $PERSONALITY)
 	    [ -n "$MAILTO" ] && options=(${options[@]} -m $MAILTO)
