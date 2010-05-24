@@ -154,16 +154,16 @@ include $(PLDISTROTAGS)
 # this used to be set in the -tags.mk files, but that turned out to require
 # error-prone duplicate changes 
 # so now the nightly build script sets this to what it is currently using
-# we set a default in case we run the build manually:
-# if the local directory was svn checked out, then use the corresponding URL
-svn-info-url-line := $(shell svn info 2> /dev/null | grep URL:)
-default-build-SVNPATH := $(lastword $(svn-info-url-line))
-# otherwise, use this hard-coded default
-ifeq "$(default-build-SVNPATH)" ""
-default-build-SVNPATH := http://svn.planet-lab.org/svn/build/trunk
+# in case we run this manually, i.e. if neither build-SVNPATH nor build-GITPATH is set
+# set build-GITPATH from the current repo
+ifeq "$(build-SVNPATH)" ""
+ifeq "$(build-GITPATH)" ""
+build-GITPATH := $(shell git config remote.origin.url)
 endif
-# use default if necessary
-build-SVNPATH ?= $(default-build-SVNPATH)
+endif
+# the sentence for svn used to be
+#svn-info-url-line := $(shell svn info 2> /dev/null | grep URL:)
+#default-build-SVNPATH := $(lastword $(svn-info-url-line))
 
 ####################
 define remote_pldistro
