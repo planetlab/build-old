@@ -272,9 +272,9 @@ endef
 $(foreach package, $(ALL), $(eval $(call stage1_package_vars,$(package))))
 
 # compute all modules
-ALL.modules :=
+ALL.modules := build tests
 $(foreach package,$(ALL), $(eval ALL.modules+=$($(package)-MODULES)))
-ALL.modules:=build tests $(sort $(ALL.modules))
+ALL.modules:=$(sort $(ALL.modules))
 
 # extract revision from -SVNPATH or tag from -GITPATH
 define stage1_module_vars
