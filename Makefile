@@ -162,6 +162,7 @@ build-GITPATH := $(build-GITPATH-local)
 else
 build-SVNPATH := $(lastword $(shell svn info 2> /dev/null | grep URL:))
 endif
+endif
 
 ####################
 define remote_pldistro
