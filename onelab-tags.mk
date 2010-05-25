@@ -44,7 +44,7 @@ pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9
 ###
 pyaspects-SVNPATH		:= http://svn.planet-lab.org/svn/pyaspects/tags/pyaspects-0.3-1
 ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/tags/ejabberd-2.1.3-1
-omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/tags/omf-5.3-2
+omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/tags/omf-5.3-3
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
