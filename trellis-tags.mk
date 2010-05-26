@@ -1,7 +1,4 @@
-# $Id$
-# $URL$
-
-# build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
+# build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 # trying the 2.6.27 kernel
 # VINI is running a prototype of a 2.6.27-based PlanetLab node (aka Trellis)

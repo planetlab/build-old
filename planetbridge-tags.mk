@@ -1,7 +1,4 @@
-# $Id$
-# $URL$
-
-# build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
+# build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-BRANCH		:= 22
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-22-39

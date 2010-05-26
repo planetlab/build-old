@@ -1,7 +1,4 @@
-# $Id$
-# $URL$
-
-# build-SVNPATH is now set by vbuild-nightly.sh to avoid duplication
+# build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-12
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
@@ -41,7 +38,7 @@ pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9
 ###
 pyaspects-SVNPATH		:= http://svn.planet-lab.org/svn/pyaspects/tags/pyaspects-0.3-1
 ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/tags/ejabberd-2.1.3-1
-omf-SVNPATH			:= http://svn.planet-lab.org/svn/omf/tags/omf-5.3-4
+omf-GITPATH			:= git://git.onelab.eu/omf@omf-5.3-4
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-10
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2

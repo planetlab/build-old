@@ -1,8 +1,3 @@
-#
-# $Id$
-# $URL$
-#
-
 linux-2.6-BRANCH		:= f12
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/f12@16162
 util-vserver-BRANCH		:= f12
