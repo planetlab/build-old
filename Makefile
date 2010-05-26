@@ -113,9 +113,6 @@ RPM-INSTALL-DEVEL := rpm --force -Uvh
 RPM-UNINSTALL-DEVEL := rpm -e
 YUM-INSTALL-DEVEL := yum -y install
 
-# see also below
-REMOTE-PLDISTROS="wextoolbox"
-
 #################### Makefile
 # Default target
 all:
@@ -161,30 +158,50 @@ build-SVNPATH := $(lastword $(shell svn info 2> /dev/null | grep URL:))
 endif
 endif
 
-####################
+#################### pldistros that are defined remotely
+# fetching with svn
+define remote_pldistro_fetch_svn
+$(1).config.SVNPATH := $(shell grep -v "^#" config.$(1).svnpath)
+config.$(1): config.$(1).svnpath
+	@echo "Fetching (svn) details for remote pldistro $(1)"
+	svn export $$($(1).config.SVNPATH) config.$(1)
+endef
+
+# fetching with git
+define remote_pldistro_fetch_git
+$(1).config.GITPATH := $(shell grep -v "^#" config.$(1).gitpath)
+$(1).config.gitrepo := $(firstword $(subst @, ,$$($(1).config.GITPATH)))
+$(1).config.gittag := $(word 2,$(subst @, ,$$($(1).config.GITPATH)))
+$(1).config.gittag := $(if $$($(1).config.gittag),$$($(1).config.gittag),master)
+config.$(1): GITPATH=$(shell grep -v "^#" config.$(1).gitpath)
+config.$(1): config.$(1).gitpath
+	@echo "Fetching (git) details for remote pldistro $(1)"
+	mkdir config.$(1)
+	git $(GITTAG) archive --remote=$$($(1).config.gitrepo) $$($(1).config.gittag) | tar -C config.$(1) -xf -
+endef
+
+
+# put it together
 define remote_pldistro
 $(1).mk: config.$(1)/$(1).mk
-	@echo 'creating $(1) from config subdir'
+	@echo 'creating $(1) from config.$(1)'
 	cp config.$(1)/$(1).mk $(1).mk
 
 $(2).mk: config.$(1)/$(2).mk
-	@echo 'creating $(1) tags from config subdir'
+	@echo 'creating $(2) tags from config.$(1)'
 	cp config.$(1)/$(2).mk $(2).mk
 
 config.$(1)/$(1).mk: config.$(1)
 config.$(1)/$(2).mk: config.$(1)
 
-config.$(1): config.$(1).svnpath
-	@echo "Fetching details for pldistro $(1)"
-	svn export $(shell grep -v "^#" config.$(1).svnpath) config.$(1)
-
 DISTCLEANS += $(1).mk $(2).mk config.$(1)
-
+$(eval $(call remote_pldistro_fetch_$(3),$(1)))
 endef
 
 # somehow this does not work, handle manually instead
+#REMOTE-PLDISTROS="wextoolbox"
 #$(foreach distro, $(REMOTE-PLDISTROS), $(eval $(call remote_pldistro,$(distro),$(distro)-tags)))
-$(eval $(call remote_pldistro,wextoolbox,wextoolbox-tags))
+$(eval $(call remote_pldistro,wextoolbox,wextoolbox-tags,svn))
 
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
