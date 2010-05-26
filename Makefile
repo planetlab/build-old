@@ -1,9 +1,6 @@
 #
 # Thierry Parmentelat - INRIA Sophia Antipolis 
 #
-### $Id: Makefile 18118 2010-05-21 17:51:26Z thierry $
-### $URL: svn+ssh://thierry@svn.planet-lab.org/svn/build/trunk/Makefile $
-# 
 ####################
 # invocation:
 #
