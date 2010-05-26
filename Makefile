@@ -280,8 +280,8 @@ repo: RPMS/yumgroups.xml
 define stage1_package_vars
 $(1).module := $(firstword $($(1)-MODULES))
 $(1).specpath := SPECS/$(notdir $($(1)-SPEC))
-$(1).moduledir := MODULES/$(firstword $($(1)-MODULES))
-$(1).codespec := MODULES/$(firstword $($(1)-MODULES))/$($(1)-SPEC)
+$(1).moduledir := MODULES/$$($(1).module)
+$(1).codespec := MODULES/$$($(1).module)/$($(1)-SPEC)
 endef
 
 $(foreach package, $(ALL), $(eval $(call stage1_package_vars,$(package))))
