@@ -1,2 +1,2 @@
 # make sure to invoke remote_pldistro appropriately in the Makefile
-http://svn.onelab.eu/wextoolbox/trunk
+git://git.onelab.eu/wextoolbox

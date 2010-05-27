@@ -201,7 +201,7 @@ endef
 # somehow this does not work, handle manually instead
 #REMOTE-PLDISTROS="wextoolbox"
 #$(foreach distro, $(REMOTE-PLDISTROS), $(eval $(call remote_pldistro,$(distro),$(distro)-tags)))
-$(eval $(call remote_pldistro,wextoolbox,wextoolbox-tags,svn))
+$(eval $(call remote_pldistro,wextoolbox,wextoolbox-tags,git))
 
 ########## stage1 and stage1iter
 # extract specs and compute .mk files by running 
