@@ -167,16 +167,17 @@ config.$(1): config.$(1).svnpath
 	svn export $$($(1).config.SVNPATH) config.$(1)
 endef
 
+FOO=@
 # fetching with git
 define remote_pldistro_fetch_git
 $(1).config.GITPATH := $(shell grep -v "^#" config.$(1).gitpath)
-$(1).config.gitrepo := $(firstword $(subst @, ,$$($(1).config.GITPATH)))
-$(1).config.gittag := $(word 2,$(subst @, ,$$($(1).config.GITPATH)))
-$(1).config.gittag := $(if $$($(1).config.gittag),$$($(1).config.gittag),master)
+$(1).config.gitrepo := $$(firstword $$(subst @, ,$$($(1).config.GITPATH)))
+$(1).config.gittag := $$(word 2,$$(subst @, ,$$($(1).config.GITPATH)))
+$(1).config.gittag := $$(if $$($(1).config.gittag),$$($(1).config.gittag),master)
 config.$(1): GITPATH=$(shell grep -v "^#" config.$(1).gitpath)
 config.$(1): config.$(1).gitpath
 	@echo "Fetching (git) details for remote pldistro $(1)"
-	mkdir config.$(1)
+	mkdir -p config.$(1)
 	git $(GITTAG) archive --remote=$$($(1).config.gitrepo) $$($(1).config.gittag) | tar -C config.$(1) -xf -
 endef
 
@@ -198,9 +199,6 @@ DISTCLEANS += $(1).mk $(2).mk config.$(1)
 $(eval $(call remote_pldistro_fetch_$(3),$(1)))
 endef
 
-# somehow this does not work, handle manually instead
-#REMOTE-PLDISTROS="wextoolbox"
-#$(foreach distro, $(REMOTE-PLDISTROS), $(eval $(call remote_pldistro,$(distro),$(distro)-tags)))
 $(eval $(call remote_pldistro,wextoolbox,wextoolbox-tags,git))
 
 ########## stage1 and stage1iter
