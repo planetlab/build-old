@@ -9,7 +9,7 @@ DEFAULT_FCDISTRO=centos5
 DEFAULT_PLDISTRO=planetlab
 DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
-DEFAULT_BUILD_SCM_URL="http://svn.planet-lab.org/svn/build/trunk"
+DEFAULT_BUILD_SCM_URL="git://git.onelab.eu/build"
 DEFAULT_IFNAME=eth0
 
 # default gpg path used in signing yum repo
