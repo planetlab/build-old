@@ -1,6 +1,5 @@
 #!/bin/bash
 # this can help you create/update your fedora mirror
-# $Id$
 
 COMMAND=$(basename $0)
 LOGDIR=/var/log/fedora-mirroring
@@ -10,7 +9,7 @@ LOG=${LOGDIR}/${DATE}.log
 dry_run=
 verbose=
 log=
-skip_core=true
+skip_core=
 root=/mirror/
 
 
@@ -36,7 +35,7 @@ jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname="centos5.5"
-all_distronames="f12 centos5.4 centos5.5 epel5"
+all_distronames="f13 f12 centos5.4 centos5.5 epel5"
 default_arch="i386"
 all_archs="i386 x86_64"
 
@@ -180,8 +179,8 @@ function usage () {
     echo " -n : dry run"
     echo " -v : verbose"
     echo " -l : turns on autologging in $LOGDIR"
-    echo " -c : skips core repository (default)"
-    echo " -C : force syncing core repository"
+    echo " -c : skips core repository"
+    echo " -C : force syncing core repository (default)"
     echo " -r root (default is $root)"
     echo " -u rsyncurl for fedora (default is $fedora_url)"
     echo " -U rsyncurl for centos (default is $centos_url)"
