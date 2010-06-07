@@ -39,7 +39,7 @@ pyaspects-SVNPATH		:= http://svn.planet-lab.org/svn/pyaspects/tags/pyaspects-0.3
 ejabberd-SVNPATH		:= http://svn.planet-lab.org/svn/ejabberd/tags/ejabberd-2.1.3-1
 omf-GITPATH			:= git://git.onelab.eu/omf@omf-5.3-4
 ###
-sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-11
+sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-12
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
 BootManager-SVNPATH		:= http://svn.planet-lab.org/svn/BootManager/tags/BootManager-5.0-3
 pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
