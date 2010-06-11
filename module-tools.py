@@ -133,6 +133,7 @@ class SvnRepository:
 
     @classmethod
     def checkout(cls, remote, path, options):
+        Command("rm -rf %s" % path, options).run_silent()
         Command("svn co %s %s" % (remote, path), options).run_fatal()
         return SvnRepository(path, options)
 
@@ -144,7 +145,10 @@ class SvnRepository:
         Command("svn up %s" % self.path, self.options).run_fatal()
 
     def commit(self, logfile):
-        Command("svn commmit -F %s %s" % (logfile, self.path), self.options).run_fatal()
+        # add all new files to the repository
+        Command("svn status %s | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\\ /g' | xargs svn add" %
+                self.path, self.options).run_silent()
+        Command("svn commit -F %s %s" % (logfile, self.path), self.options).run_fatal()
 
     def revert(self):
         Command("svn revert %s -R" % self.path, self.options).run_fatal()
@@ -167,6 +171,7 @@ class GitRepository:
 
     @classmethod
     def checkout(cls, remote, path, options, depth=1):
+        Command("rm -rf %s" % path, options).run_silent()
         Command("git clone --depth %d %s %s" % (depth, remote, path), options).run_fatal()
         return GitRepository(path, options)
 
@@ -189,11 +194,13 @@ class GitRepository:
         return self.__run_command_in_repo("git pull")
 
     def commit(self, logfile):
-        self.__run_command_in_repo("git commit -F %s" % logfile)
+        self.__run_command_in_repo("git add -A")
+        self.__run_command_in_repo("git commit -F  %s" % logfile)
         self.__run_command_in_repo("git push")
 
     def revert(self):
-        return self.__run_command_in_repo("git --no-pager reset --hard")
+        self.__run_command_in_repo("git --no-pager reset --hard")
+        self.__run_command_in_repo("git --no-pager clean -f")
 
     def is_clean(self):
         def check_commit():
