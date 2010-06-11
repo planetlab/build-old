@@ -125,16 +125,19 @@ class Command:
 
 
 class SvnRepository:
+    type = "svn"
+
     def __init__(self, path, options):
         self.path = path
         self.options = options
 
     @classmethod
-    def checkout(remote, path):
-        Command("svn co %s %s" % (remote, path), self.options).run_fatal()
+    def checkout(cls, remote, path, options):
+        Command("svn co %s %s" % (remote, path), options).run_fatal()
+        return SvnRepository(path, options)
 
     @classmethod
-    def remote_exists(remote):
+    def remote_exists(cls, remote):
         return os.system("svn list %s &> /dev/null" % remote) == 0
 
     def update(self):
@@ -148,7 +151,7 @@ class SvnRepository:
 
     def is_clean(self):
         command="svn status %s" % self.path
-        return len(Command(command,self.options).output_of(True)) > 0
+        return len(Command(command,self.options).output_of(True)) == 0
 
     def is_valid(self):
         return os.path.exists(os.path.join(self.path, ".svn"))
@@ -156,16 +159,19 @@ class SvnRepository:
 
 
 class GitRepository:
+    type = "git"
+
     def __init__(self, path, options):
         self.path = path
         self.options = options
 
     @classmethod
-    def checkout(remote, path, depth=1):
-        Command("git clone --depth %d %s %s" % (depth, remote, path), self.options).run_fatal()
+    def checkout(cls, remote, path, options, depth=1):
+        Command("git clone --depth %d %s %s" % (depth, remote, path), options).run_fatal()
+        return GitRepository(path, options)
 
     @classmethod
-    def remote_exists(remote):
+    def remote_exists(cls, remote):
         return os.system("git --no-pager ls-remote %s &> /dev/null" % remote) == 0
 
     def __run_in_repo(self, fun, *args):
