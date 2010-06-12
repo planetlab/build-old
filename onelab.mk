@@ -366,12 +366,20 @@ ejabberd-SPEC := ejabberd.spec
 ejabberd-BUILD-FROM-SRPM := yes
 ALL += ejabberd
 
+# sfa now uses the with statement that's not supported on python-2.4 - not even through __future__
+build_sfa=true
+ifeq "$(DISTRONAME)" "centos5"
+build_sfa=false
+endif
+
+ifeq "$(build_sfa)" "true"
 #
 # sfa - Slice Facility Architecture
 #
 sfa-MODULES := sfa
 sfa-SPEC := sfa.spec
 ALL += sfa
+endif
 
 #
 # nodeconfig
