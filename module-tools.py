@@ -1365,7 +1365,6 @@ class Release:
 class Main:
 
     module_usage="""Usage: %prog [options] module_desc [ .. module_desc ]
-Revision: $Revision$
 
 module-tools : a set of tools to manage subversion tags and specfile
   requires the specfile to either
