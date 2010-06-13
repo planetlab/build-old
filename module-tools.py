@@ -122,6 +122,113 @@ class Command:
             print 'Done',
         return result
 
+
+
+class SvnRepository:
+    type = "svn"
+
+    def __init__(self, path, options):
+        self.path = path
+        self.options = options
+
+    @classmethod
+    def checkout(cls, remote, path, options):
+        Command("rm -rf %s" % path, options).run_silent()
+        Command("svn co %s %s" % (remote, path), options).run_fatal()
+        return SvnRepository(path, options)
+
+    @classmethod
+    def remote_exists(cls, remote):
+        return os.system("svn list %s &> /dev/null" % remote) == 0
+
+    def update(self):
+        Command("svn up %s" % self.path, self.options).run_fatal()
+
+    def commit(self, logfile):
+        # add all new files to the repository
+        Command("svn status %s | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\\ /g' | xargs svn add" %
+                self.path, self.options).run_silent()
+        Command("svn commit -F %s %s" % (logfile, self.path), self.options).run_fatal()
+
+    def revert(self):
+        Command("svn revert %s -R" % self.path, self.options).run_fatal()
+
+    def is_clean(self):
+        command="svn status %s" % self.path
+        return len(Command(command,self.options).output_of(True)) == 0
+
+    def is_valid(self):
+        return os.path.exists(os.path.join(self.path, ".svn"))
+    
+
+
+class GitRepository:
+    type = "git"
+
+    def __init__(self, path, options):
+        self.path = path
+        self.options = options
+
+    @classmethod
+    def checkout(cls, remote, path, options, depth=1):
+        Command("rm -rf %s" % path, options).run_silent()
+        Command("git clone --depth %d %s %s" % (depth, remote, path), options).run_fatal()
+        return GitRepository(path, options)
+
+    @classmethod
+    def remote_exists(cls, remote):
+        return os.system("git --no-pager ls-remote %s &> /dev/null" % remote) == 0
+
+    def __run_in_repo(self, fun, *args):
+        cwd = os.getcwd()
+        os.chdir(self.path)
+        ret = fun(*args)
+        os.chdir(cwd)
+        return ret
+
+    def __run_command_in_repo(self, command):
+        c = Command(command, self.options)
+        return self.__run_in_repo(c.run_fatal)
+
+    def update(self):
+        return self.__run_command_in_repo("git pull")
+
+    def commit(self, logfile):
+        self.__run_command_in_repo("git add -A")
+        self.__run_command_in_repo("git commit -F  %s" % logfile)
+        self.__run_command_in_repo("git push")
+
+    def revert(self):
+        self.__run_command_in_repo("git --no-pager reset --hard")
+        self.__run_command_in_repo("git --no-pager clean -f")
+
+    def is_clean(self):
+        def check_commit():
+            command="git status"
+            s="nothing to commit (working directory clean)"
+            return Command(command, self.options).output_of(True).find(s) >= 0
+        return self.__run_in_repo(check_commit)
+
+    def is_valid(self):
+        return os.path.exists(os.path.join(self.path, ".git"))
+    
+
+class Repository:
+    """ Generic repository """
+    supported_repo_types = [SvnRepository, GitRepository]
+
+    def __init__(self, path, options):
+        self.path = path
+        self.options = options
+        for repo in self.supported_repo_types:
+            self.repo = repo(self.path, self.options)
+            if self.repo.is_valid():
+                break
+
+    def __getattr__(self, attr):
+        return getattr(self.repo, attr)
+
+
 class Svnpath:
     def __init__(self,path,options):
         self.path=path
