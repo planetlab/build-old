@@ -1,5 +1,3 @@
-# $Id$
-# $URL$
 #
 # declare the packages to be built and their dependencies
 # initial version from Mark Huang
@@ -289,6 +287,7 @@ ALL += vsys-scripts
 plcapi-MODULES := PLCAPI
 plcapi-SPEC := PLCAPI.spec
 ALL += plcapi
+IN_MYPLC += plcapi
 
 #
 # drupal
@@ -297,6 +296,7 @@ drupal-MODULES := drupal
 drupal-SPEC := drupal.spec
 drupal-BUILD-FROM-SRPM := yes
 ALL += drupal
+IN_MYPLC += drupal
 
 #
 # use the plewww module instead
@@ -304,6 +304,7 @@ ALL += drupal
 plewww-MODULES := PLEWWW
 plewww-SPEC := plewww.spec
 ALL += plewww
+IN_MYPLC += plewww
 
 #
 # www-register-wizard
@@ -311,6 +312,7 @@ ALL += plewww
 www-register-wizard-MODULES := www-register-wizard
 www-register-wizard-SPEC := www-register-wizard.spec
 ALL += www-register-wizard
+IN_MYPLC += www-register-wizard
 
 #
 # pcucontrol
@@ -387,6 +389,7 @@ endif
 nodeconfig-MODULES := nodeconfig
 nodeconfig-SPEC := nodeconfig.spec
 ALL += nodeconfig
+IN_MYPLC += nodeconfig
 
 #
 # bootmanager
@@ -394,6 +397,7 @@ ALL += nodeconfig
 bootmanager-MODULES := BootManager
 bootmanager-SPEC := bootmanager.spec
 ALL += bootmanager
+IN_MYPLC += bootmanager
 
 #
 # pypcilib : used in bootcd
@@ -410,6 +414,7 @@ pyplnet-MODULES := pyplnet
 pyplnet-SPEC := pyplnet.spec
 ALL += pyplnet
 IN_BOOTSTRAPFS += pyplnet
+IN_MYPLC += pyplnet
 IN_BOOTCD += pyplnet
 
 #
@@ -437,6 +442,7 @@ bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
 bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 bootcd-RPMDATE := yes
 ALL += bootcd
+IN_MYPLC += bootcd
 
 #
 # vserver : reference image for slices
@@ -459,6 +465,7 @@ bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
 bootstrapfs-RPMDATE := yes
 ALL += bootstrapfs
+IN_MYPLC += bootstrapfs
 
 #
 # noderepo
@@ -479,6 +486,7 @@ noderepo-DEPEND-FILES := RPMS/yumgroups.xml
 noderepo-SPECVARS = node_rpms_plus=$(NODEREPO_RPMS_3PLUS)
 noderepo-RPMDATE := yes
 ALL += noderepo
+IN_MYPLC += noderepo
 
 #
 # slicerepo

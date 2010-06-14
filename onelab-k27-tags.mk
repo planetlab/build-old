@@ -1,5 +1,6 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
+###
 linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/tags/linux-2.6-27-13
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-SVNPATH                := http://svn.planet-lab.org/svn/iptables/tags/iptables-1.4.8-0
@@ -7,6 +8,7 @@ iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 ###
 ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-15
+###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-4
 ###
