@@ -233,6 +233,10 @@ class Repository:
                 break
 
     @classmethod
+    def has_moved_to_git(cls, remote):
+        return SvnRepository.remote_exists("%s/aaaa-has-moved-to-git")
+
+    @classmethod
     def remote_exists(cls, remote):
         for repo in Repository.supported_repo_types:
             if repo.remote_exists(remote):
