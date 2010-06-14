@@ -123,7 +123,6 @@ class Command:
         return result
 
 
-
 class SvnRepository:
     type = "svn"
 
@@ -132,17 +131,25 @@ class SvnRepository:
         self.options = options
 
     @classmethod
-    def checkout(cls, remote, path, options):
+    def checkout(cls, remote, path, options, recursive=False):
+        if recursive:
+            svncommand = "svn co %s %s" % (remote, path)
+        else:
+            svncommand = "svn co -N %s %s" % (remote, path)
         Command("rm -rf %s" % path, options).run_silent()
-        Command("svn co %s %s" % (remote, path), options).run_fatal()
+        Command(svncommand, options).run_fatal()
         return SvnRepository(path, options)
 
     @classmethod
     def remote_exists(cls, remote):
         return os.system("svn list %s &> /dev/null" % remote) == 0
 
-    def update(self):
-        Command("svn up %s" % self.path, self.options).run_fatal()
+    def update(self, recursive=True):
+        if recursive:
+            svncommand = "svn up %s" % self.path
+        else:
+            svncommand = "svn up -N %s" % self.path
+        Command(svncommand, self.options).run_fatal()
 
     def commit(self, logfile):
         # add all new files to the repository
@@ -170,7 +177,7 @@ class GitRepository:
         self.options = options
 
     @classmethod
-    def checkout(cls, remote, path, options, depth=1):
+    def checkout(cls, remote, path, options, depth=1, recursive=None):
         Command("rm -rf %s" % path, options).run_silent()
         Command("git clone --depth %d %s %s" % (depth, remote, path), options).run_fatal()
         return GitRepository(path, options)
@@ -190,7 +197,7 @@ class GitRepository:
         c = Command(command, self.options)
         return self.__run_in_repo(c.run_fatal)
 
-    def update(self):
+    def update(self, recursive=None):
         return self.__run_command_in_repo("git pull")
 
     def commit(self, logfile):
@@ -225,25 +232,17 @@ class Repository:
             if self.repo.is_valid():
                 break
 
+    @classmethod
+    def remote_exists(cls, remote):
+        for repo in Repository.supported_repo_types:
+            if repo.remote_exists(remote):
+                return True
+        return False
+
     def __getattr__(self, attr):
         return getattr(self.repo, attr)
 
 
-class Svnpath:
-    def __init__(self,path,options):
-        self.path=path
-        self.options=options
-
-    def url_exists (self):
-        return os.system("svn list %s &> /dev/null"%self.path) == 0
-
-    def dir_needs_revert (self):
-        command="svn status %s"%self.path
-        return len(Command(command,self.options).output_of(True)) != 0
-    # turns out it's the same implem.
-    def file_needs_commit (self):
-        command="svn status %s"%self.path
-        return len(Command(command,self.options).output_of(True)) != 0
 
 # support for tagged module is minimal, and is for the Build class only
 class Module:
