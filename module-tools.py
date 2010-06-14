@@ -243,6 +243,17 @@ class Repository:
                 return True
         return False
 
+    @classmethod
+    def checkout(cls, module, config, options, git=False):
+        target = "%s/%s" % (options.workdir)
+        
+        if git:
+            return GitRepository.checkout("%s:/git/%s.git" % (config['gitserver'], module),
+                                          target, options, depth=0)
+        else:
+            return SvnRepository.checkout("%s/%s" % (config['svnpath'], module),
+                                          target, options)
+
     def __getattr__(self, attr):
         return getattr(self.repo, attr)
 
