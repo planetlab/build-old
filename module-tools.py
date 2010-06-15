@@ -276,9 +276,12 @@ class GitRepository:
         os.chdir(cwd)
         return ret
 
-    def __run_command_in_repo(self, command):
+    def __run_command_in_repo(self, command, ignore_errors=False):
         c = Command(command, self.options)
-        return self.__run_in_repo(c.run_fatal)
+        if ignore_errors:
+            return self.__run_in_repo(c.output_of)
+        else:
+            return self.__run_in_repo(c.run_fatal)
 
     def update(self, subdir=None, recursive=None):
         return self.__run_command_in_repo("git pull")
@@ -304,8 +307,8 @@ class GitRepository:
         return self.__run_in_repo(c.output_of, with_stderr=True)
 
     def commit(self, logfile):
-        self.__run_command_in_repo("git add -A")
-        self.__run_command_in_repo("git commit -F  %s" % logfile)
+        self.__run_command_in_repo("git add -A", ignore_errors=True)
+        self.__run_command_in_repo("git commit -F  %s" % logfile, ignore_errors=True)
         self.__run_command_in_repo("git push --tags")
 
     def revert(self):
