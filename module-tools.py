@@ -161,8 +161,8 @@ class SvnRepository:
         out = Command("svn info %s" % self.path, self.options).output_of()
         for line in out.split('\n'):
             if line.startswith("Repository Root:"):
-                repo_root = line.split()[2].strip()
-                return "%s/svn/%s" (repo_root, self.name)
+                root = line.split()[2].strip()
+                return "%s/%s" % (root, self.name())
 
     @classmethod
     def checkout(cls, remote, local, options, recursive=False):
