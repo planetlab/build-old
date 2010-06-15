@@ -309,6 +309,7 @@ class GitRepository:
     def commit(self, logfile):
         self.__run_command_in_repo("git add -A", ignore_errors=True)
         self.__run_command_in_repo("git commit -F  %s" % logfile, ignore_errors=True)
+        self.__run_command_in_repo("git push")
         self.__run_command_in_repo("git push --tags")
 
     def revert(self):
