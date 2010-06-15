@@ -130,11 +130,24 @@ class SvnRepository:
         self.path = path
         self.options = options
 
-    @classmethod
-    def checkout(cls, module, config, options, recursive=False):
-        remote = "%s/%s" % (config['svnpath'], module)
-        local = os.path.join(options.workdir, module)
+    def name(self):
+        return os.path.basename(self.path)
 
+    def url(self):
+        out = Command("svn info %s" % self.path, self.options).output_of()
+        for line in out.split('\n'):
+            if line.startswith("URL:"):
+                return line.split()[1].strip()
+
+    def repo_root(self):
+        out = Command("svn info %s" % self.path, self.options).output_of()
+        for line in out.split('\n'):
+            if line.startswith("Repository Root:"):
+                repo_root = line.split()[2].strip()
+                return "%s/svn/%s" (repo_root, self.name)
+
+    @classmethod
+    def checkout(cls, remote, local, options, recursive=False):
         if recursive:
             svncommand = "svn co %s %s" % (remote, local)
         else:
@@ -162,6 +175,14 @@ class SvnRepository:
                 self.path, self.options).run_silent()
         Command("svn commit -F %s %s" % (logfile, self.path), self.options).run_fatal()
 
+    def to_branch(self, branch):
+        remote = "%s/branches/%s" % (self.repo_root(), branch)
+        SvnRepository.checkout(remote, self.path, self.options, recursive=True)
+
+    def to_tag(self, tag):
+        remote = "%s/tags/%s" % (self.repo_root(), branch)
+        SvnRepository.checkout(remote, self.path, self.options, recursive=True)
+
     def tag(self, from_url, to_url, logfile):
         # TODO: get svn url from svn info output
         # and only require tagname and logfile parameters
@@ -172,6 +193,8 @@ class SvnRepository:
 
     def revert(self):
         Command("svn revert %s -R" % self.path, self.options).run_fatal()
+        Command("svn status %s | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\\ /g' | xargs rm -rf " %
+                self.path, self.options).run_silent()
 
     def is_clean(self):
         command="svn status %s" % self.path
@@ -181,7 +204,6 @@ class SvnRepository:
         return os.path.exists(os.path.join(self.path, ".svn"))
     
 
-
 class GitRepository:
     type = "git"
 
@@ -189,14 +211,23 @@ class GitRepository:
         self.path = path
         self.options = options
 
-    @classmethod
-    def checkout(cls, module, config, options, depth=1):
-        remote = "%s:/git/%s.git" % (config['gitserver'], module)
-        local = os.path.join(options.workdir, module)
+    def name(self):
+        return os.path.basename(self.path)
 
+    def url(self):
+        self.repo_root()
+
+    def repo_root(self):
+        c = Command("git remote show origin", self.options)
+        out = self.__run_in_repo(c.output_of)
+        for line in out.split('\n'):
+            if line.strip().startswith("Fetch URL:"):
+                repo = line.split()[2]
+
+    @classmethod
+    def checkout(cls, remote, local, options, depth=1):
         Command("rm -rf %s" % local, options).run_silent()
         Command("git clone --depth %d %s %s" % (depth, remote, local), options).run_fatal()
-
         return GitRepository(local, options)
 
     @classmethod
@@ -220,7 +251,13 @@ class GitRepository:
     def to_branch(self, branch, remote=True):
         if remote:
             branch = "origin/%s" % branch
-        self.__run_command_in_repo("git checkout %s" % branch)
+        return self.__run_command_in_repo("git checkout %s" % branch)
+
+    def to_tag(self, tag):
+        return self.__run_command_in_repo("git checkout %s" % tag)
+
+    def tag(self, tagname, logfile):
+        return self.__run_command_in_repo("git tag %s -F %s" % (tagname, logfile))
 
     def diff(self):
         c = Command("git diff", self.options)
@@ -229,7 +266,7 @@ class GitRepository:
     def commit(self, logfile):
         self.__run_command_in_repo("git add -A")
         self.__run_command_in_repo("git commit -F  %s" % logfile)
-        self.__run_command_in_repo("git push")
+        self.__run_command_in_repo("git push --tags")
 
     def revert(self):
         self.__run_command_in_repo("git --no-pager reset --hard")
@@ -259,8 +296,8 @@ class Repository:
                 break
 
     @classmethod
-    def has_moved_to_git(cls, module, config):
-        return SvnRepository.remote_exists("%s/%s/aaaa-has-moved-to-git" % (config['svnpath'], module))
+    def has_moved_to_git(cls, module, svnpath):
+        return SvnRepository.remote_exists("%s/%s/aaaa-has-moved-to-git" % (svnpath, module))
 
     @classmethod
     def remote_exists(cls, remote):
@@ -298,12 +335,12 @@ class Module:
                  ("email","Enter your email address for changelogs",""),
                  ]
 
-    @staticmethod
-    def prompt_config ():
-        for (key,message,default) in Module.configKeys:
-            Module.config[key]=""
-            while not Module.config[key]:
-                Module.config[key]=raw_input("%s [%s] : "%(message,default)).strip() or default
+    @classmethod
+    def prompt_config (cls):
+        for (key,message,default) in cls.configKeys:
+            cls.config[key]=""
+            while not cls.config[key]:
+                cls.config[key]=raw_input("%s [%s] : "%(message,default)).strip() or default
 
 
     # for parsing module spec name:branch
@@ -332,25 +369,6 @@ class Module:
         self.repository = None
         self.build = None
 
-    def friendly_name (self):
-        if hasattr(self,'branch'):
-            return "%s:%s"%(self.name,self.branch)
-        elif hasattr(self,'tagname'):
-            return "%s@%s"%(self.name,self.tagname)
-        else:
-            return self.name
-
-    def edge_dir (self):
-        if hasattr(self,'branch'):
-            return "%s/branches/%s"%(self.module_dir,self.branch)
-        elif hasattr(self,'tagname'):
-            return "%s/tags/%s"%(self.module_dir,self.tagname)
-        else:
-            return "%s/trunk"%(self.module_dir)
-
-    def tags_dir (self):
-        return "%s/tags"%(self.module_dir)
-
     def run (self,command):
         return Command(command,self.options).run()
     def run_fatal (self,command):
@@ -370,29 +388,47 @@ class Module:
             if prompt(question,True):
                 fun(*args)
 
+    def friendly_name (self):
+        if hasattr(self,'branch'):
+            return "%s:%s"%(self.name,self.branch)
+        elif hasattr(self,'tagname'):
+            return "%s@%s"%(self.name,self.tagname)
+        else:
+            return self.name
+
+    @classmethod
+    def git_remote_dir (cls, name):
+        return "%s:/git/%s.git" % (cls.config['gitserver'], name)
+
+    @classmethod
+    def svn_remote_dir (cls, name):
+        svn = cls.config['svnpath']
+        if svn.endswith('/'):
+            return "%s%s" % (svn, name)
+        return "%s/%s" % (svn, name)
 
     ####################
-    @staticmethod
-    def init_homedir (options):
-        topdir=options.workdir
+    @classmethod
+    def init_homedir (cls, options):
         if options.verbose and options.mode not in Main.silent_modes:
-            print 'Checking for',topdir
-        storage="%s/%s"%(topdir,Module.config_storage)
+            print 'Checking for', options.workdir
+        storage="%s/%s"%(options.workdir, cls.config_storage)
         # sanity check. Either the topdir exists AND we have a config/storage
         # or topdir does not exist and we create it
         # to avoid people use their own daily svn repo
-        if os.path.isdir(topdir) and not os.path.isfile(storage):
+        if os.path.isdir(options.workdir) and not os.path.isfile(storage):
             print """The directory %s exists and has no CONFIG file
 If this is your regular working directory, please provide another one as the
 module-* commands need a fresh working dir. Make sure that you do not use 
-that for other purposes than tagging"""%topdir
+that for other purposes than tagging""" % options.workdir
             sys.exit(1)
-        if not os.path.isdir (topdir):
-            print "Cannot find",topdir,"let's create it"
-            Module.prompt_config()
+        if not os.path.isdir (options.workdir):
+            print "Cannot find",options.workdir,"let's create it"
+            cls.prompt_config()
             print "Checking ...",
-            GitRepository.checkout(Module.config['build'], Module.config,
-                                   options, depth=1)
+            remote = cls.git_remote_dir(cls.config['build'])
+            local = os.path.join(options.workdir, cls.config['build'])
+            GitRepository.checkout(remote, local, options, depth=1)
             print "OK"
             
             # store config
@@ -415,81 +451,89 @@ that for other purposes than tagging"""%topdir
             for (key,message,default) in Module.configKeys:
                 print '\t',key,'=',Module.config[key]
 
+    def svn_selected_remote(self):
+        remote = self.svn_remote_dir(self.name)
+        if hasattr(self,'branch'):
+            remote = "%s/branches/%s" % (remote, self.branch)
+        elif hasattr(self,'tagname'):
+            remote = "%s/tags/%s" % (remote, self.tagname)
+        else:
+            remote = "%s/trunk" % remote
+        return remote
+
     def init_module_dir (self):
         if self.options.verbose:
             print 'Checking for',self.module_dir
 
         if not os.path.isdir (self.module_dir):
-            if Repository.has_moved_to_git(self.name, Module.config):
-                self.repository = GitRepository.checkout(self.name, Module.config, 
-                                                         self.options, depth=1)
+            if Repository.has_moved_to_git(self.name, Module.config['svnpath']):
+                self.repository = GitRepository.checkout(self.git_remote_dir(self.name),
+                                                         self.module_dir,
+                                                         self.options)
             else:
-                self.repository = SvnRepository.checkout(self.name, Module.config,
+                remote = self.svn_selected_remote()
+                self.repository = SvnRepository.checkout(remote,
+                                                         self.module_dir,
                                                          self.options, recursive=False)
+
+        self.repository = Repository(self.module_dir, self.options)
+        if self.repository.type == "svn":
+            # check if module has moved to git    
+            if Repository.has_moved_to_git(self.name, Module.config['svnpath']):
+                Command("rm -rf %s" % self.module_dir, self.options).run_silent()
+                self.init_module_dir()
+            # check if we have the required branch/tag
+            if self.repository.url() != self.svn_selected_remote():
+                Command("rm -rf %s" % self.module_dir, self.options).run_silent()
+                self.init_module_dir()
+
+        elif self.repository.type == "git":
+            if hasattr(self,'branch'):
+                self.repository.to_branch(self.branch)
+            elif hasattr(self,'tagname'):
+                self.repository.to_tag(self.tagname)
+
         else:
-            try:
-                self.repository = Repository(self.module_dir, self.options)
-            except:
-                raise Exception, 'Cannot find %s - check module name'%self.module_dir
+            raise Exception, 'Cannot find %s - check module name'%self.module_dir
 
-    def init_subdir (self,subdir, recursive=True):
-        path = os.path.join(self.repository.path, subdir)
-        if self.options.verbose:
-            print 'Checking for', path
-        if not os.path.isdir(path):
-            self.repository.update(recursive=recursive, subdir=subdir)
 
-    def revert_subdir (self,fullpath):
+    def revert_module_dir (self):
         if self.options.fast_checks:
-            if self.options.verbose: print 'Skipping revert of %s'%fullpath
+            if self.options.verbose: print 'Skipping revert of %s' % self.module_dir
             return
         if self.options.verbose:
-            print 'Checking whether',fullpath,'needs being reverted'
+            print 'Checking whether', self.module_dir, 'needs being reverted'
         
-        repo=Repository(fullpath, self.options)
-        if not repo.is_clean():
-            repo.revert()
+        if not self.repository.is_clean():
+            self.repository.revert()
 
-    def update_subdir (self,fullpath):
+    def update_module_dir (self):
         if self.options.fast_checks:
-            if self.options.verbose: print 'Skipping update of %s'%fullpath
+            if self.options.verbose: print 'Skipping update of %s' % self.module_dir
             return
         if self.options.verbose:
-            print 'Updating',fullpath
-        Repository(fullpath, self.options).update()
-
-    def init_edge_dir (self):
-        # if branch, edge_dir is two steps down
-        if hasattr(self,'branch'):
-            self.init_subdir("%s/branches"%self.module_dir,recursive=False)
-        elif hasattr(self,'tagname'):
-            self.init_subdir("%s/tags"%self.module_dir,recursive=False)
-        self.init_subdir(self.edge_dir(),recursive=True)
-
-    def revert_edge_dir (self):
-        self.revert_subdir(self.edge_dir())
-
-    def update_edge_dir (self):
-        self.update_subdir(self.edge_dir())
+            print 'Updating', self.module_dir
+        self.repository.update()
 
     def main_specname (self):
-        attempt="%s/%s.spec"%(self.edge_dir(),self.name)
+        attempt="%s/%s.spec"%(self.module_dir,self.name)
         if os.path.isfile (attempt):
             return attempt
-        pattern1="%s/*.spec"%self.edge_dir()
+        pattern1="%s/*.spec"%self.module_dir
         level1=glob(pattern1)
         if level1:
             return level1[0]
-        pattern2="%s/*/*.spec"%self.edge_dir()
+        pattern2="%s/*/*.spec"%self.module_dir
         level2=glob(pattern2)
+
         if level2:
             return level2[0]
         raise Exception, 'Cannot guess specfile for module %s -- patterns were %s or %s'%(self.name,pattern1,pattern2)
 
     def all_specnames (self):
-        level1=glob("%s/*.spec"%self.edge_dir())
+        level1=glob("%s/*.spec" % self.module_dir)
         if level1: return level1
-        level2=glob("%s/*/*.spec"%self.edge_dir())
+        level2=glob("%s/*/*.spec" % self.module_dir)
         return level2
 
     def parse_spec (self, specfile, varnames):
@@ -713,9 +757,8 @@ that for other purposes than tagging"""%topdir
 
     def do_tag (self):
         self.init_module_dir()
-        self.init_edge_dir()
-        self.revert_edge_dir()
-        self.update_edge_dir()
+        self.revert_module_dir()
+        self.update_module_dir()
         # parse specfile
         spec_dict = self.spec_dict()
         self.show_dict(spec_dict)
@@ -837,8 +880,12 @@ n: move to next file"""%locals()
 
         self.run_prompt("Review module and build", diff_all_changes)
         self.run_prompt("Commit module and build", commit_all_changes, changelog_svn)
-        # TODO: implement repository.tag() for git
-        self.run_prompt("Create tag", self.repository.tag, edge_url, new_tag_url, changelog_svn)
+
+        if self.repository.type == 'svn':
+            self.run_prompt("Create tag", self.repository.tag, edge_url, new_tag_url, changelog_svn)
+        elif self.repository.type == 'git':
+            tagname = os.path.basename(new_tag_url)
+            self.run_prompt("Create tag", self.repository.tag, tagname, changelog_svn)
 
         if self.options.debug:
             print 'Preserving',changelog,'and stripped',changelog_svn
