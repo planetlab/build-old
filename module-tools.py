@@ -1,7 +1,5 @@
 #!/usr/bin/python -u
 
-subversion_id = "$Id$"
-
 import sys, os
 import re
 import time
@@ -381,11 +379,15 @@ class Module:
                  ]
 
     @classmethod
+    def prompt_config_option(cls, key, message, default):
+        cls.config[key]=raw_input("%s [%s] : "%(message,default)).strip() or default
+
+    @classmethod
     def prompt_config (cls):
         for (key,message,default) in cls.configKeys:
             cls.config[key]=""
             while not cls.config[key]:
-                cls.config[key]=raw_input("%s [%s] : "%(message,default)).strip() or default
+                cls.prompt_config_option(key, message, default)
 
 
     # for parsing module spec name:branch
@@ -482,16 +484,15 @@ If this is your regular working directory, please provide another one as the
 module-* commands need a fresh working dir. Make sure that you do not use 
 that for other purposes than tagging""" % options.workdir
             sys.exit(1)
-        if not os.path.isdir (options.workdir):
-            print "Cannot find",options.workdir,"let's create it"
-            cls.prompt_config()
-            print "Checking ...",
+
+        def checkout_build():
+            print "Checking out build module..."
             remote = cls.git_remote_dir(cls.config['build'])
             local = os.path.join(options.workdir, cls.config['build'])
             GitRepository.checkout(remote, local, options, depth=1)
             print "OK"
-            
-            # store config
+
+        def store_config():
             f=file(storage,"w")
             for (key,message,default) in Module.configKeys:
                 f.write("%s=%s\n"%(key,Module.config[key]))
@@ -499,13 +500,36 @@ that for other purposes than tagging""" % options.workdir
             if options.debug:
                 print 'Stored',storage
                 Command("cat %s"%storage,options).run()
-        else:
+
+        def read_config():
             # read config
             f=open(storage)
             for line in f.readlines():
                 (key,value)=re.compile("^(.+)=(.+)$").match(line).groups()
                 Module.config[key]=value                
             f.close()
+
+        if not os.path.isdir (options.workdir):
+            print "Cannot find",options.workdir,"let's create it"
+            Command("mkdir -p %s" % options.workdir, options).run_silent()
+            cls.prompt_config()
+            checkout_build()
+            store_config()
+        else:
+            read_config()
+            # check missing config options
+            old_layout = False
+            for (key,message,default) in cls.configKeys:
+                if not Module.config.has_key(key):
+                    print "Configuration changed for module-tools"
+                    cls.prompt_config_option(key, message, default)
+                    old_layout = True
+                    
+            if old_layout:
+                Command("rm -rf %s" % options.workdir, options).run_silent()
+                Command("mkdir -p %s" % options.workdir, options).run_silent()
+                checkout_build()
+                store_config()
 
             build_dir = os.path.join(options.workdir, cls.config['build'])
             build = Repository(build_dir, options)
@@ -1011,7 +1035,7 @@ Branches:
             usage = Main.release_usage
             usage += Main.common_usage
 
-        parser=OptionParser(usage=usage,version=subversion_id)
+        parser=OptionParser(usage=usage)
         
         if mode == "tag" or mode == 'branch':
             parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
