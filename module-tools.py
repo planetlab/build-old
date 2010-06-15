@@ -292,7 +292,8 @@ class GitRepository:
         return self.__run_command_in_repo("git checkout %s" % tag)
 
     def tag(self, tagname, logfile):
-        return self.__run_command_in_repo("git tag %s -F %s" % (tagname, logfile))
+        self.__run_command_in_repo("git tag %s -F %s" % (tagname, logfile))
+        self.commit(logfile)
 
     def diff(self):
         c = Command("git diff", self.options)
