@@ -373,6 +373,7 @@ class Module:
     configKeys=[ ('svnpath',"Enter your toplevel svnpath",
                   "svn+ssh://%s@svn.planet-lab.org/svn/"%commands.getoutput("id -un")),
                  ('gitserver', "Enter your git server's hostname", "git.onelab.eu"),
+                 ('gituser', "Enter your user name (login name) on git server", os.getlogin()),
                  ("build", "Enter the name of your build module","build"),
                  ('username',"Enter your firstname and lastname for changelogs",""),
                  ("email","Enter your email address for changelogs",""),
@@ -448,7 +449,7 @@ class Module:
 
     @classmethod
     def git_remote_dir (cls, name):
-        return "%s:/git/%s.git" % (cls.config['gitserver'], name)
+        return "%s@%s:/git/%s.git" % (cls.config['gituser'], cls.config['gitserver'], name)
 
     @classmethod
     def svn_remote_dir (cls, name):
