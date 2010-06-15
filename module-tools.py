@@ -484,9 +484,7 @@ that for other purposes than tagging""" % options.workdir
             print "Checking ...",
             remote = cls.git_remote_dir(cls.config['build'])
             local = os.path.join(options.workdir, cls.config['build'])
-            build = GitRepository.checkout(remote, local, options, depth=1)
-            if not build.is_clean():
-                build.revert()
+            GitRepository.checkout(remote, local, options, depth=1)
             print "OK"
             
             # store config
@@ -511,6 +509,7 @@ that for other purposes than tagging""" % options.workdir
                 print "build module needs a revert"
                 build.revert()
                 print "OK"
+            build.update()
 
         if options.verbose and options.mode not in Main.silent_modes:
             print '******** Using config'
