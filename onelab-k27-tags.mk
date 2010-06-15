@@ -7,7 +7,7 @@ iptables-SVNPATH                := http://svn.planet-lab.org/svn/iptables/tags/i
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 ###
-ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-15
+ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-16
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-4
