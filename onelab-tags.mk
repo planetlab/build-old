@@ -8,7 +8,7 @@ iptables-BRANCH			:= 1.3.8
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-12
 iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
 ###
-ipfw-SVNPATH			:= http://svn.planet-lab.org/svn/ipfw/tags/ipfw-0.9-15
+ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-15
 nozomi-GITPATH			:= git://git.onelab.eu/nozomi@nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-4
