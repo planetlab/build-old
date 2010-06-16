@@ -843,6 +843,7 @@ that for other purposes than tagging""" % options.workdir
         return found_tagname
 
 
+##############################
     def do_tag (self):
         self.init_module_dir()
         self.revert_module_dir()
@@ -977,7 +978,29 @@ n: move to next file"""%locals()
             os.unlink(changelog_svn)
 
 
-    ####################
+##############################
+    def do_version (self):
+        self.init_module_dir()
+        self.revert_module_dir()
+        self.update_module_dir()
+        spec_dict = self.spec_dict()
+        if self.options.www:
+            self.html_store_title('Version for module %s (%s)' % (self.friendly_name(),
+                                                                  self.last_tag(spec_dict)))
+        for varname in self.varnames:
+            if not spec_dict.has_key(varname):
+                self.html_print ('Could not find %%define for %s'%varname)
+                return
+            else:
+                self.html_print ("%-16s %s"%(varname,spec_dict[varname]))
+        if self.options.verbose:
+            self.html_print ("%-16s %s"%('main specfile:',self.main_specname()))
+            self.html_print ("%-16s %s"%('specfiles:',self.all_specnames()))
+        self.html_print_end()
+
+
+
+##############################
     # store and restitute html fragments
     @staticmethod 
     def html_href (url,text): return '<a href="%s">%s</a>'%(url,text)
@@ -1146,6 +1169,10 @@ Branches:
         if mode == "tag" or mode == "sync" :
             parser.add_option("-e","--editor", action="store", dest="editor", default=default_editor(),
                               help="specify editor")
+
+        if mode in ["diff","version"] :
+            parser.add_option("-W","--www", action="store", dest="www", default=False,
+                              help="export diff in html format, e.g. -W trunk")
             
         default_modules_list=os.path.dirname(sys.argv[0])+"/modules.list"
         parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
