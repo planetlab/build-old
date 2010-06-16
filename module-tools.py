@@ -975,7 +975,89 @@ n: move to next file"""%locals()
         else:
             os.unlink(changelog)
             os.unlink(changelog_svn)
-            
+
+
+    ####################
+    # store and restitute html fragments
+    @staticmethod 
+    def html_href (url,text): return '<a href="%s">%s</a>'%(url,text)
+
+    @staticmethod 
+    def html_anchor (url,text): return '<a name="%s">%s</a>'%(url,text)
+
+    @staticmethod
+    def html_quote (text):
+        return text.replace('&','&#38;').replace('<','&lt;').replace('>','&gt;')
+
+    # only the fake error module has multiple titles
+    def html_store_title (self, title):
+        if not hasattr(self,'titles'): self.titles=[]
+        self.titles.append(title)
+
+    def html_store_raw (self, html):
+        if not hasattr(self,'body'): self.body=''
+        self.body += html
+
+    def html_store_pre (self, text):
+        if not hasattr(self,'body'): self.body=''
+        self.body += '<pre>' + self.html_quote(text) + '</pre>'
+
+    def html_print (self, txt):
+        if not self.options.www:
+            print txt
+        else:
+            if not hasattr(self,'in_list') or not self.in_list:
+                self.html_store_raw('<ul>')
+                self.in_list=True
+            self.html_store_raw('<li>'+txt+'</li>')
+
+    def html_print_end (self):
+        if self.options.www:
+            self.html_store_raw ('</ul>')
+
+    @staticmethod
+    def html_dump_header(title):
+        nowdate=time.strftime("%Y-%m-%d")
+        nowtime=time.strftime("%H:%M (%Z)")
+        print """
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title> %s </title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body { font-family:georgia, serif; }
+h1 {font-size: large; }
+p.title {font-size: x-large; }
+span.error {text-weight:bold; color: red; }
+</style>
+</head>
+<body>
+<p class='title'> %s - status on %s at %s</p>
+<ul>
+"""%(title,title,nowdate,nowtime)
+
+    @staticmethod
+    def html_dump_middle():
+        print "</ul>"
+
+    @staticmethod
+    def html_dump_footer():
+        print "</body></html"
+
+    def html_dump_toc(self):
+        if hasattr(self,'titles'):
+            for title in self.titles:
+                print '<li>',self.html_href ('#'+self.friendly_name(),title),'</li>'
+
+    def html_dump_body(self):
+        if hasattr(self,'titles'):
+            for title in self.titles:
+                print '<hr /><h1>',self.html_anchor(self.friendly_name(),title),'</h1>'
+        if hasattr(self,'body'):
+            print self.body
+            print '<p class="top">',self.html_href('#','Back to top'),'</p>'            
+
 
 ##############################
 class Main:
