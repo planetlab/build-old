@@ -210,18 +210,26 @@ class SvnRepository:
         self_url = self.url()
         Command("svn copy -F %s %s %s" % (logfile, self_url, tag_url), self.options).run_fatal()
 
-    def diff(self):
-        return Command("svn diff %s" % self.path, self.options).output_of(True)
+    def diff(self, f=""):
+        if f:
+            f = os.path.join(self.path, f)
+        else:
+            f = self.path
+        return Command("svn diff %s" % f, self.options).output_of(True)
 
     def diff_with_tag(self, tagname):
         tag_url = "%s/tags/%s" % (self.repo_root(), tagname)
         return Command("svn diff %s %s" % (tag_url, self.url()),
                        self.options).output_of(True)
 
-    def revert(self):
-        Command("svn revert %s -R" % self.path, self.options).run_fatal()
-        Command("svn status %s | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\\ /g' | xargs rm -rf " %
-                self.path, self.options).run_silent()
+    def revert(self, f=""):
+        if f:
+            Command("svn revert %s" % os.path.join(self.path, f), self.options).run_fatal()
+        else:
+            # revert all
+            Command("svn revert %s -R" % self.path, self.options).run_fatal()
+            Command("svn status %s | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\\ /g' | xargs rm -rf " %
+                    self.path, self.options).run_silent()
 
     def is_clean(self):
         command="svn status %s" % self.path
@@ -296,8 +304,8 @@ class GitRepository:
         self.__run_command_in_repo("git tag %s -F %s" % (tagname, logfile))
         self.commit(logfile)
 
-    def diff(self):
-        c = Command("git diff", self.options)
+    def diff(self, f=""):
+        c = Command("git diff %s" % f, self.options)
         return self.__run_in_repo(c.output_of, with_stderr=True)
 
     def diff_with_tag(self, tagname):
@@ -310,9 +318,13 @@ class GitRepository:
         self.__run_command_in_repo("git push")
         self.__run_command_in_repo("git push --tags")
 
-    def revert(self):
-        self.__run_command_in_repo("git --no-pager reset --hard")
-        self.__run_command_in_repo("git --no-pager clean -f")
+    def revert(self, f=""):
+        if f:
+            self.__run_command_in_repo("git checkout %s" % f)
+        else:
+            # revert all
+            self.__run_command_in_repo("git --no-pager reset --hard")
+            self.__run_command_in_repo("git --no-pager clean -f")
 
     def is_clean(self):
         def check_commit():
@@ -533,12 +545,15 @@ that for other purposes than tagging""" % options.workdir
                 store_config()
 
             build_dir = os.path.join(options.workdir, cls.config['build'])
-            build = Repository(build_dir, options)
-            if not build.is_clean():
-                print "build module needs a revert"
-                build.revert()
-                print "OK"
-            build.update()
+            if not os.path.isdir(build_dir):
+                checkout_build()
+            else:
+                build = Repository(build_dir, options)
+                if not build.is_clean():
+                    print "build module needs a revert"
+                    build.revert()
+                    print "OK"
+                build.update()
 
         if options.verbose and options.mode not in Main.silent_modes:
             print '******** Using config'
@@ -923,9 +938,9 @@ Please write a changelog for this new tag in the section above
                     elif choice == 'f':
                         self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=False)
                     elif choice == 'd':
-                        self.run("svn diff %s"%tagsfile)
+                        print build.diff(f=tagsfile)
                     elif choice == 'r':
-                        self.run("svn revert %s"%tagsfile)
+                        build.revert(f=tagsfile)
                     elif choice == 'c':
                         self.run("cat %s"%tagsfile)
                     else:
