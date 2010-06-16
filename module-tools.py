@@ -832,9 +832,13 @@ that for other purposes than tagging""" % options.workdir
                 found_tagname = old_svn_tag_name
 
         if (found and need_it) or (not found and not need_it):
-            print "OK "
+            if self.options.verbose:
+                print "OK",
+                if found: print "- found"
+                else: print "- not found"
         else:
-            print "KO"
+            if self.options.verbose:
+                print "KO"
             if found:
                 raise Exception, "tag (%s) is already there" % tagname
             else:
@@ -999,6 +1003,43 @@ n: move to next file"""%locals()
         self.html_print_end()
 
 
+##############################
+    def do_diff (self):
+        self.init_module_dir()
+        self.revert_module_dir()
+        self.update_module_dir()
+        spec_dict = self.spec_dict()
+        self.show_dict(spec_dict)
+
+        # side effects
+        tag_name = self.tag_name(spec_dict)
+        old_svn_tag_name = self.tag_name(spec_dict, old_svn_name=True)
+
+        # sanity check
+        tag_name = self.check_tag(tag_name, need_it=True, old_svn_tag_name=old_svn_tag_name)
+
+        if self.options.verbose:
+            print 'Getting diff'
+        diff_output = self.repository.diff_with_tag(tag_name)
+
+        if self.options.list:
+            if diff_output:
+                print self.name
+        else:
+            thename=self.friendly_name()
+            do_print=False
+            if self.options.www and diff_output:
+                self.html_store_title("Diffs in module %s (%s) : %d chars"%(\
+                        thename,self.last_tag(spec_dict),len(diff_output)))
+
+                self.html_store_raw ('<p> &lt; (left) %s </p>' % tag_name)
+                self.html_store_raw ('<p> &gt; (right) %s </p>' % thename)
+                self.html_store_pre (diff_output)
+            elif not self.options.www:
+                print 'x'*30,'module',thename
+                print 'x'*20,'<',tag_name
+                print 'x'*20,'>',thename
+                print diff_output
 
 ##############################
     # store and restitute html fragments
@@ -1042,8 +1083,7 @@ n: move to next file"""%locals()
     def html_dump_header(title):
         nowdate=time.strftime("%Y-%m-%d")
         nowtime=time.strftime("%H:%M (%Z)")
-        print """
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        print """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title> %s </title>
@@ -1173,6 +1213,10 @@ Branches:
         if mode in ["diff","version"] :
             parser.add_option("-W","--www", action="store", dest="www", default=False,
                               help="export diff in html format, e.g. -W trunk")
+
+        if mode == "diff" :
+            parser.add_option("-l","--list", action="store_true", dest="list", default=False,
+                              help="just list modules that exhibit differences")
             
         default_modules_list=os.path.dirname(sys.argv[0])+"/modules.list"
         parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
@@ -1212,7 +1256,13 @@ Branches:
             sys.exit(1)
         Module.init_homedir(options)
 
+        
+        
+
         modules=[ Module(modname,options) for modname in args ]
+        # hack: create a dummy Module to store errors/warnings
+        error_module = Module('__errors__',options)
+
         for module in modules:
             if len(args)>1 and mode not in Main.silent_modes:
                 print '========================================',module.friendly_name()
@@ -1221,9 +1271,28 @@ Branches:
             try:
                 method(module)
             except Exception,e:
-                import traceback
-                traceback.print_exc()
-                print 'Skipping module %s: '%modname,e
+                if options.www:
+                    title='<span class="error"> Skipping module %s - failure: %s </span>'%\
+                        (module.friendly_name(), str(e))
+                    error_module.html_store_title(title)
+                else:
+                    import traceback
+                    traceback.print_exc()
+                    print 'Skipping module %s: '%modname,e
+
+        if options.www:
+            if mode == "diff":
+                modetitle="Changes to tag in %s"%options.www
+            elif mode == "version":
+                modetitle="Latest tags in %s"%options.www
+            modules.append(error_module)
+            error_module.html_dump_header(modetitle)
+            for module in modules:
+                module.html_dump_toc()
+            Module.html_dump_middle()
+            for module in modules:
+                module.html_dump_body()
+            Module.html_dump_footer()
 
 ####################
 if __name__ == "__main__" :
