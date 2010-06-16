@@ -1219,6 +1219,10 @@ Branches:
                               help="just list modules that exhibit differences")
             
         default_modules_list=os.path.dirname(sys.argv[0])+"/modules.list"
+        parser.add_option("-a","--all",action="store_true",dest="all_modules",default=False,
+                          help="run on all modules as found in %s"%default_modules_list)
+        parser.add_option("-f","--file",action="store",dest="modules_list",default=None,
+                          help="run on all modules found in specified file")
         parser.add_option("-n","--dry-run",action="store_true",dest="dry_run",default=False,
                           help="dry run - shell commands are only displayed")
         parser.add_option("-t","--distrotags",action="callback",callback=Main.optparse_list, dest="distrotags",
@@ -1252,11 +1256,13 @@ Branches:
 
         ########## module-*
         if len(args) == 0:
+            if options.all_modules:
+                options.modules_list=default_modules_list
+            if options.modules_list:
+                args=Command("grep -v '#' %s"%options.modules_list,options).output_of().split()
             parser.print_help()
             sys.exit(1)
         Module.init_homedir(options)
-
-        
         
 
         modules=[ Module(modname,options) for modname in args ]
