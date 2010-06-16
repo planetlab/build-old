@@ -1260,8 +1260,9 @@ Branches:
                 options.modules_list=default_modules_list
             if options.modules_list:
                 args=Command("grep -v '#' %s"%options.modules_list,options).output_of().split()
-            parser.print_help()
-            sys.exit(1)
+            else:
+                parser.print_help()
+                sys.exit(1)
         Module.init_homedir(options)
         
 
