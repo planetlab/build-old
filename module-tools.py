@@ -290,7 +290,8 @@ class GitRepository:
             return self.__run_in_repo(c.run_fatal)
 
     def update(self, subdir=None, recursive=None):
-        return self.__run_command_in_repo("git pull")
+        self.__run_command_in_repo("git pull")
+        self.__run_command_in_repo("git pull --tags")
 
     def to_branch(self, branch, remote=True):
         if remote:
