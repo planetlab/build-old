@@ -1273,7 +1273,8 @@ Branches:
 
         for module in modules:
             if len(args)>1 and mode not in Main.silent_modes:
-                print '========================================',module.friendly_name()
+                if not options.www:
+                    print '========================================',module.friendly_name()
             # call the method called do_<mode>
             method=Module.__dict__["do_%s"%mode]
             try:
