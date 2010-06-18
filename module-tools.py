@@ -386,7 +386,7 @@ class Module:
     configKeys=[ ('svnpath',"Enter your toplevel svnpath",
                   "svn+ssh://%s@svn.planet-lab.org/svn/"%commands.getoutput("id -un")),
                  ('gitserver', "Enter your git server's hostname", "git.onelab.eu"),
-                 ('gituser', "Enter your user name (login name) on git server", os.getlogin()),
+                 ('gituser', "Enter your user name (login name) on git server", commands.getoutput("id -un")),
                  ("build", "Enter the name of your build module","build"),
                  ('username',"Enter your firstname and lastname for changelogs",""),
                  ("email","Enter your email address for changelogs",""),
