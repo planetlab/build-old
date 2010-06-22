@@ -54,7 +54,7 @@ __flag_to_test__={0:'-B', 1:''}
 def __check_out_build_script__(build):
     import os
     tmpname = os.popen('mktemp -d /tmp/'+build['build-script']+'.XXXXXX').read().rstrip('\n')
-    os.system("git clone --depth 1 %s %s" % (scmpath, tmpname))
+    os.system("git clone --depth 1 %s %s" % (build['scmpath'], tmpname))
     return "%s/%s" % (tmpname, build['build-script'])
 
 def __today__():
