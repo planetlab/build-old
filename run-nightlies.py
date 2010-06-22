@@ -3,6 +3,11 @@
 
 import os
 import re
+import shlex
+import subprocess
+import time
+
+PARALLEL_BUILD = False
 
 # Assemble a list of builds from a single build spec
 def interpret_build(build, param_names, current_concrete_build={}, concrete_build_list=[]):
@@ -42,13 +47,13 @@ def concrete_build_to_commandline(concrete_build):
     
     cmdline = '''%(sh)s 
             %(vbuildnightly)s
-            -b %(pldistro)s-%(fcdistro)s-%(arch)s-%(myplcversion)s-%(release)s-%(date)s
+    	    -b pl-%(fcdistro)s-%(arch)s-%(myplcversion)s-%(release)s-%(date)s
             -f %(fcdistro)s 
             -m %(mailto)s 
             -p %(personality)s
             -r %(webpath)s
-            -s %(svnpath)s
-            -t %(tags)s 
+            -s %(scmpath)s
+            -t %(tags)s
             -w %(webpath)s/%(pldistro)s/%(fcdistro)s
             %(runtests)s'''.replace('\n','')
 
@@ -76,8 +81,14 @@ def process_builds (builds, build_names, default_build):
                 concrete_builds = map(reduce_dependencies, concrete_builds_without_deps)
                 commandlines = map(concrete_build_to_commandline, concrete_builds)
                 for commandline in commandlines:
-                    os.system(commandline)
-        
+                    if PARALLEL_BUILD == True:
+                        args = shlex.split(commandline)
+                        subprocess.Popen(args)
+                        # workaround the vserver race
+                        time.sleep(60)
+                    else:           
+                        os.system(commandline)
+
 def main():
         config_file = '/etc/build-conf-planetlab.py'
         builds = {}

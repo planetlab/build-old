@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 ###
 # Nightly build spec HOWTO
 #
@@ -18,21 +17,28 @@
 # on the current build spec. e.g. in this case, it would be to the effect of lambda (build): if (build['fcdistro']=='f10') then ['linux32','linux64'] else ['linux32']
 #
 
+#caglar_k32_build = {
+#	'tags':'planetlab-k32-tags.mk',
+#	'fcdistro':['f12', 'centos5','f8'],
+#	'personality':['linux32','linux64'],
+#	'test':0,
+#	'release':'k32'
+#}
 
-marcs_trunk_build = {
+sapans_k27_build = {
+	'tags':'planetlab-k27-tags.mk',
+	'fcdistro':['f12', 'centos5','f8'],
+	'personality':['linux32','linux64'],
+	'test':0,
+	'release':'k27'
+}
+
+marcs_k22_build = {
 	'tags':'planetlab-tags.mk',
-	'fcdistro':['centos5','f8'],
+	'fcdistro':['f12', 'centos5','f8'],
 	'personality':['linux32','linux64'],
 	'test': 0,
 	'release':'k22',
-}
-		
-sapans_k27_build = {
-	'tags':'k27-tags.mk',
-	'fcdistro':['centos5','f8'],
-	'personality':'linux32',
-	'test':1,
-	'release':'k27'
 }
 
 ###
@@ -47,9 +53,9 @@ __flag_to_test__={0:'-B', 1:''}
 
 def __check_out_build_script__(build):
     import os
-    tmpname = os.popen('mktemp /tmp/'+build['build-script']+'.XXXXXX').read().rstrip('\n')
-    os.system("svn cat %s/%s > %s 2>/dev/null"%(build['svnpath'],build['build-script'],tmpname))
-    return tmpname
+    tmpname = os.popen('mktemp -d /tmp/'+build['build-script']+'.XXXXXX').read().rstrip('\n')
+    os.system("git clone --depth 1 %s %s" % (scmpath, tmpname))
+    return "%s/%s" % (tmpname, build['build-script'])
 
 def __today__():
     import datetime
@@ -70,15 +76,13 @@ __default_build__ = {
 	'webpath':'/vservers/build.planet-lab.org/var/www/html/install-rpms/archive',
 	'pldistro':'planetlab',
 	'date': __today__(),
-	'svnpath':'http://svn.planet-lab.org/svn/build/trunk',
+	'scmpath':'git://git.planet-lab.org/build.git',
     'personality':'linux32',
     'myplcversion':'4.3',
-
 
 ### Parameters with dependencies: define paramater mappings as lambdas here
 
     'arch':lambda build: __personality_to_arch__[build['personality']],
     'runtests':lambda build: __flag_to_test__[build['test']],
     'vbuildnightly':lambda build: __check_out_build_script__(build)
-
 }
