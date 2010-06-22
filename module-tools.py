@@ -194,7 +194,7 @@ class SvnRepository:
     def commit(self, logfile):
         # add all new files to the repository
         Command("svn status %s | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\\ /g' | xargs svn add" %
-                self.path, self.options).run_silent()
+                self.path, self.options).output_of()
         Command("svn commit -F %s %s" % (logfile, self.path), self.options).run_fatal()
 
     def to_branch(self, branch):
@@ -314,7 +314,8 @@ class GitRepository:
         return self.__run_in_repo(c.output_of, with_stderr=True)
 
     def commit(self, logfile):
-        self.__run_command_in_repo("git add -A", ignore_errors=True)
+        self.__run_command_in_repo("git add .", ignore_errors=True)
+        self.__run_command_in_repo("git add -u", ignore_errors=True)
         self.__run_command_in_repo("git commit -F  %s" % logfile, ignore_errors=True)
         self.__run_command_in_repo("git push")
         self.__run_command_in_repo("git push --tags")
