@@ -776,7 +776,7 @@ that for other purposes than tagging""" % options.workdir
 
 ##############################
     # using fine_grain means replacing only those instances that currently refer to this tag
-    # otherwise, <module>-SVNPATH is replaced unconditionnally
+    # otherwise, <module>-{SVNPATH,GITPATH} is replaced unconditionnally
     def patch_tags_file (self, tagsfile, oldname, newname,fine_grain=True):
         newtagsfile=tagsfile+".new"
         tags=open (tagsfile)
@@ -798,17 +798,21 @@ that for other purposes than tagging""" % options.workdir
         # brute-force : change uncommented lines that define <module>-SVNPATH
         else:
             if self.options.verbose:
-                print 'Searching for -SVNPATH lines referring to /%s/\n\tin %s .. '%(self.name,tagsfile),
-            pattern="\A\s*(?P<make_name>[^\s]+)-SVNPATH\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s/[^\s]+"\
+                print 'Searching for -SVNPATH or -GITPATH lines referring to /%s/\n\tin %s .. '%(self.name,tagsfile),
+            pattern="\A\s*(?P<make_name>[^\s]+)-(SVNPATH|GITPATH)\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s[^\s]+"\
                                           %(self.name)
             matcher_module=re.compile(pattern)
             for line in tags.readlines():
                 attempt=matcher_module.match(line)
                 if attempt:
-                    svnpath="%s-SVNPATH"%(attempt.group('make_name'))
+                    if line.find("-GITPATH") >= 0:
+                        modulepath = "%s-GITPATH"%(attempt.group('make_name'))
+                        replacement = "%-32s:= %s/%s.git@%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
+                    else:
+                        moduleath="%s-SVNPATH"%(attempt.group('make_name'))
+                        replacement = "%-32s:= %s/%s/tags/%s\n"%(svnpath,attempt.group('url_main'),self.name,newname)
                     if self.options.verbose:
-                        print ' '+svnpath, 
-                    replacement = "%-32s:= %s/%s/tags/%s\n"%(svnpath,attempt.group('url_main'),self.name,newname)
+                        print ' ' + modulepath, 
                     new.write(replacement)
                     matches += 1
                 else:
@@ -952,7 +956,7 @@ Please write a changelog for this new tag in the section above
                         self.run("cat %s"%tagsfile)
                     else:
                         name=self.name
-                        print """y: change %(name)s-SVNPATH only if it currently refers to %(old_tag_name)s
+                        print """y: change %(name)s-{SVNPATH,GITPATH} only if it currently refers to %(old_tag_name)s
 f: unconditionnally change any line that assigns %(name)s-SVNPATH to using %(new_tag_name)s
 d: show current diff for this tag file
 r: revert that tag file
