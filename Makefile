@@ -294,10 +294,10 @@ define stage1_module_vars
 ifneq "$($(1)-SVNPATH)" ""
 $(1)-SVNPATH := $(strip $($(1)-SVNPATH))
 else
-$(1)-GITPATH := $(strip $($(1)-GITPATH))
-$(1).gitrepo := $(firstword $(subst @, ,$($(1)-GITPATH)))
-$(1).gittag := $(word 2,$(subst @, ,$($(1)-GITPATH)))
-$(1).gittag := $(if $($(1).gittag),$($(1).gittag),master)
+$(1)-GITPATH := $$(strip $$($(1)-GITPATH))
+$(1).gitrepo := $$(firstword $$(subst @, ,$$($(1)-GITPATH)))
+$(1).gittag := $$(word 2,$$(subst @, ,$$($(1)-GITPATH)))
+$(1).gittag := $$(if $$($(1).gittag),$$($(1).gittag),master)
 endif
 endef
 
@@ -769,7 +769,7 @@ info-branches:
 
 module-tools:
 	@$(foreach module,$(ALL.modules), \
- 	 $(if $($(module)-GITPATH), \
+	 $(if $($(module)-GITPATH), \
 	  $(if $($(module)-BRANCH), \
 	     echo git:$(module):$($(module)-BRANCH); , \
 	     echo git:$(module); ), \
