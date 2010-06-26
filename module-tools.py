@@ -809,8 +809,8 @@ that for other purposes than tagging""" % options.workdir
                         modulepath = "%s-GITPATH"%(attempt.group('make_name'))
                         replacement = "%-32s:= %s/%s.git@%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
                     else:
-                        moduleath="%s-SVNPATH"%(attempt.group('make_name'))
-                        replacement = "%-32s:= %s/%s/tags/%s\n"%(svnpath,attempt.group('url_main'),self.name,newname)
+                        modulepath = "%s-SVNPATH"%(attempt.group('make_name'))
+                        replacement = "%-32s:= %s/%s/tags/%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
                     if self.options.verbose:
                         print ' ' + modulepath, 
                     new.write(replacement)
