@@ -54,7 +54,7 @@ MyPLC-SVNPATH                   := http://svn.planet-lab.org/svn/MyPLC/tags/MyPL
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.onelab.eu/tests.git@master
+tests-GITPATH                   := git://git.onelab.eu/tests.git@tests-5.0-7
 
 ### temporary
 # nozomi not needed anymore for 2.6.27
