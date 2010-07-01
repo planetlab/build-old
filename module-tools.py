@@ -11,7 +11,8 @@ from optparse import OptionParser
 # Moving to git we decided to rename some of the repositories. Here is
 # a map of name changes applied in git repositories.
 RENAMED_SVN_MODULES = {
-    "PLEWWW": "plewww"
+    "PLEWWW": "plewww",
+    "PLCAPI": "plcapi"
     }
 
 def svn_to_git_name(module):
