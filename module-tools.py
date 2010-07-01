@@ -291,8 +291,9 @@ class GitRepository:
             return self.__run_in_repo(c.run_fatal)
 
     def update(self, subdir=None, recursive=None):
-        self.__run_command_in_repo("git fetch --tags")
-        self.__run_command_in_repo("git pull")
+        self.__run_command_in_repo("git fetch origin --tags")
+        self.__run_command_in_repo("git fetch origin")
+        self.__run_command_in_repo("git merge --ff origin/master")
 
     def to_branch(self, branch, remote=True):
         if remote:
