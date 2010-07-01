@@ -291,8 +291,9 @@ class GitRepository:
             return self.__run_in_repo(c.run_fatal)
 
     def update(self, subdir=None, recursive=None):
-        self.__run_command_in_repo("git fetch --tags")
-        self.__run_command_in_repo("git pull")
+        self.__run_command_in_repo("git fetch origin --tags")
+        self.__run_command_in_repo("git fetch origin")
+        self.__run_command_in_repo("git merge --ff origin/master")
 
     def to_branch(self, branch, remote=True):
         if remote:
@@ -353,9 +354,14 @@ class Repository:
                 break
 
     @classmethod
-    def has_moved_to_git(cls, module, svnpath):
+    def has_moved_to_git(cls, module, config):
         module = git_to_svn_name(module)
-        return SvnRepository.remote_exists("%s/%s/aaaa-has-moved-to-git" % (svnpath, module))
+        ret = SvnRepository.remote_exists("%s/%s/aaaa-has-moved-to-git" % (config['svnpath'], module))
+        if not ret:
+            # check if the module is already in Git
+            return GitRepository.remote_exists(Module.git_remote_dir(module))
+        return ret
+
 
     @classmethod
     def remote_exists(cls, remote):
@@ -568,7 +574,7 @@ that for other purposes than tagging""" % options.workdir
             print 'Checking for',self.module_dir
 
         if not os.path.isdir (self.module_dir):
-            if Repository.has_moved_to_git(self.name, Module.config['svnpath']):
+            if Repository.has_moved_to_git(self.name, Module.config):
                 self.repository = GitRepository.checkout(self.git_remote_dir(self.name),
                                                          self.module_dir,
                                                          self.options)
@@ -581,7 +587,7 @@ that for other purposes than tagging""" % options.workdir
         self.repository = Repository(self.module_dir, self.options)
         if self.repository.type == "svn":
             # check if module has moved to git    
-            if Repository.has_moved_to_git(self.name, Module.config['svnpath']):
+            if Repository.has_moved_to_git(self.name, Module.config):
                 Command("rm -rf %s" % self.module_dir, self.options).run_silent()
                 self.init_module_dir()
             # check if we have the required branch/tag
