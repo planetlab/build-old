@@ -356,11 +356,9 @@ class Repository:
     @classmethod
     def has_moved_to_git(cls, module, config):
         module = git_to_svn_name(module)
-        ret = SvnRepository.remote_exists("%s/%s/aaaa-has-moved-to-git" % (config['svnpath'], module))
-        if not ret:
-            # check if the module is already in Git
-            return GitRepository.remote_exists(Module.git_remote_dir(module))
-        return ret
+        # check if the module is already in Git
+#        return SvnRepository.remote_exists("%s/%s/aaaa-has-moved-to-git" % (config['svnpath'], module))
+        return GitRepository.remote_exists(Module.git_remote_dir(module))
 
 
     @classmethod
