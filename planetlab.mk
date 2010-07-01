@@ -222,10 +222,10 @@ ALL += vsys-scripts
 #
 # PLCAPI
 #
-PLCAPI-MODULES := PLCAPI
-PLCAPI-SPEC := PLCAPI.spec
-ALL += PLCAPI
-IN_MYPLC += PLCAPI
+plcapi-MODULES := plcapi
+plcapi-SPEC := PLCAPI.spec
+ALL += plcapi
+IN_MYPLC += plcapi
 
 #
 # drupal
@@ -239,7 +239,7 @@ IN_MYPLC += drupal
 #
 # use the plewww module instead
 #
-plewww-MODULES := PLEWWW
+plewww-MODULES := plewww
 plewww-SPEC := plewww.spec
 ALL += plewww
 IN_MYPLC += plewww
@@ -435,7 +435,7 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := MyPLC PLCAPI NodeManager Monitor
+myplc-docs-MODULES := MyPLC plcapi NodeManager Monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 

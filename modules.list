@@ -8,9 +8,7 @@ Monitor
 MyPLC
 NodeManager
 NodeUpdate
-PLCAPI
 PLCRT
-PLEWWW
 PingOfDeath
 VserverReference
 comgt
@@ -34,6 +32,8 @@ pcucontrol
 pf2slice
 pl_sshd
 planetlab-umts-tools
+plcapi
+plewww
 pyaspects
 pyopenssl
 pypcilib

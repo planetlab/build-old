@@ -771,8 +771,8 @@ module-tools:
 	@$(foreach module,$(ALL.modules), \
 	 $(if $($(module)-GITPATH), \
 	  $(if $($(module)-BRANCH), \
-	     echo git:$(module):$($(module)-BRANCH); , \
-	     echo git:$(module); ), \
+	     echo $(module):$($(module)-BRANCH); , \
+	     echo $(module); ), \
 	  $(if $($(module)-BRANCH), \
 	     echo $(module):$($(module)-BRANCH); , \
 	     echo $(module); )))
