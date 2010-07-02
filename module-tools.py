@@ -184,7 +184,7 @@ class SvnRepository:
         url = "%s/tags/%s" % (self.repo_root(), tagname)
         return SvnRepository.remote_exists(url)
 
-    def update(self, subdir="", recursive=True):
+    def update(self, subdir="", recursive=True, branch=None):
         path = os.path.join(self.path, subdir)
         if recursive:
             svncommand = "svn up %s" % path
@@ -290,10 +290,10 @@ class GitRepository:
         else:
             return self.__run_in_repo(c.run_fatal)
 
-    def update(self, subdir=None, recursive=None):
+    def update(self, subdir=None, recursive=None, branch="master"):
         self.__run_command_in_repo("git fetch origin --tags")
         self.__run_command_in_repo("git fetch origin")
-        self.__run_command_in_repo("git merge --ff origin/master")
+        self.__run_command_in_repo("git merge --ff origin/%s" % branch)
 
     def to_branch(self, branch, remote=True):
         if remote:
@@ -619,7 +619,11 @@ that for other purposes than tagging""" % options.workdir
             return
         if self.options.verbose:
             print 'Updating', self.module_dir
-        self.repository.update()
+
+        if hasattr(self,'branch'):
+            self.repository.update(branch=self.branch)
+        elif hasattr(self,'tagname'):
+            self.repository.update(branch=self.tagname)
 
     def main_specname (self):
         attempt="%s/%s.spec"%(self.module_dir,self.name)
