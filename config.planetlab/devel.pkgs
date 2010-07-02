@@ -85,7 +85,7 @@ package: PyXML
 package: pciutils-devel
 ##########
 # for vsys - same as for php-devel above
-package: ocaml.@arch@ ocaml-docs 
+package: ocaml.@arch@ ocaml-ocamldoc
 # use local inotify-tools on centos
 package>=f8:inotify-tools-devel 
 ##########
