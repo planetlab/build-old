@@ -781,6 +781,9 @@ info: info-packages info-modules info-branches
 
 .PHONY: info info-packages info-modules info-branches module-tools
 
+show-multi-modules:
+	@$(foreach package,$(ALL),$(if $(subst x1,,x$(words $($(package)-MODULES))), echo p=$(package) mods=$($(package)-MODULES) ;))
+.PHONY: show-multi-modules
 ####################
 help:
 	@echo "********** Run make in two stages:"
