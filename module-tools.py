@@ -291,6 +291,10 @@ class GitRepository:
             return self.__run_in_repo(c.run_fatal)
 
     def update(self, subdir=None, recursive=None, branch="master"):
+        if branch == "master":
+            self.__run_command_in_repo("git checkout %s" % branch)
+        else:
+            self.__run_command_in_repo("git checkout origin/%s" % branch)
         self.__run_command_in_repo("git fetch origin --tags")
         self.__run_command_in_repo("git fetch origin")
         self.__run_command_in_repo("git merge --ff origin/%s" % branch)
@@ -624,6 +628,8 @@ that for other purposes than tagging""" % options.workdir
             self.repository.update(branch=self.branch)
         elif hasattr(self,'tagname'):
             self.repository.update(branch=self.tagname)
+        else:
+            self.repository.update()
 
     def main_specname (self):
         attempt="%s/%s.spec"%(self.module_dir,self.name)
