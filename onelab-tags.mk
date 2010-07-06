@@ -11,7 +11,7 @@ iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16
 ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-17
 nozomi-GITPATH			:= git://git.onelab.eu/nozomi@nozomi-2.21-1
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
-planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-4
+planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
 ###
 util-vserver-BRANCH		:= scholz
 util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
