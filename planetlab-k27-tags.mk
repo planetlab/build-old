@@ -34,7 +34,8 @@ Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
-pyaspects-SVNPATH		:= http://svn.planet-lab.org/svn/pyaspects/tags/pyaspects-0.3-2
+pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@pyaspects-0.3-2
+ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
 omf-GITPATH			:= git://git.onelab.eu/omf@omf-5.3-5
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-14
@@ -43,7 +44,6 @@ pypcilib-SVNPATH		:= http://svn.planet-lab.org/svn/pypcilib/tags/pypcilib-0.2-9
 pyplnet-SVNPATH			:= http://svn.planet-lab.org/svn/pyplnet/tags/pyplnet-4.3-6
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-7
-ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@BootManager-5.0-6
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@BootCD-5.0-4
 vserverreference-GITPATH        := git://git.onelab.eu/vserverreference.git@VserverReference-5.0-3
