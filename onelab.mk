@@ -207,7 +207,7 @@ IN_BOOTSTRAPFS += sshd
 #
 # codemux: Port 80 demux
 #
-codemux-MODULES := CoDemux
+codemux-MODULES := codemux
 codemux-SPEC   := codemux.spec
 #codemux-RPMBUILD := bash ./rpmbuild.sh
 ALL += codemux
