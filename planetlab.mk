@@ -111,7 +111,7 @@ IN_BOOTSTRAPFS += ipod
 #
 # NodeManager
 #
-nodemanager-MODULES := NodeManager
+nodemanager-MODULES := nodemanager
 nodemanager-SPEC := NodeManager.spec
 ALL += nodemanager
 IN_BOOTSTRAPFS += nodemanager
@@ -328,7 +328,7 @@ IN_MYPLC += nodeconfig
 #
 # bootmanager
 #
-bootmanager-MODULES := BootManager
+bootmanager-MODULES := bootmanager
 bootmanager-SPEC := bootmanager.spec
 ALL += bootmanager
 IN_MYPLC += bootmanager
@@ -371,7 +371,7 @@ ALL += omf-expctl
 #
 # bootcd
 #
-bootcd-MODULES := BootCD build
+bootcd-MODULES := bootcd build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
@@ -383,7 +383,7 @@ IN_MYPLC += bootcd
 #
 # vserver : reference image for slices
 #
-vserver-MODULES := VserverReference build
+vserver-MODULES := vserverreference build
 vserver-SPEC := vserver-reference.spec
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
@@ -394,7 +394,7 @@ IN_BOOTSTRAPFS += vserver
 #
 # bootstrapfs
 #
-bootstrapfs-MODULES := BootstrapFS build
+bootstrapfs-MODULES := bootstrapfs build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
@@ -412,7 +412,7 @@ NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_NODEREPO) $(IN_VSERVER)
 SPACE=$(subst x, ,x)
 NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
 
-noderepo-MODULES := BootstrapFS 
+noderepo-MODULES := bootstrapfs
 noderepo-SPEC := noderepo.spec
 noderepo-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
@@ -435,7 +435,7 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := MyPLC plcapi NodeManager Monitor
+myplc-docs-MODULES := MyPLC plcapi nodemanager Monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
