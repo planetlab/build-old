@@ -12,7 +12,12 @@ from optparse import OptionParser
 # a map of name changes applied in git repositories.
 RENAMED_SVN_MODULES = {
     "PLEWWW": "plewww",
-    "PLCAPI": "plcapi"
+    "PLCAPI": "plcapi",
+    "BootManager": "bootmanager",
+    "BootCD": "bootcd",
+    "VserverReference": "vserverreference",
+    "BootstrapFS": "bootstrapfs",
+    "MyPLC": "myplc"
     }
 
 def svn_to_git_name(module):
