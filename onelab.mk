@@ -191,7 +191,7 @@ IN_BOOTSTRAPFS += ipod
 #
 # NodeManager
 #
-nodemanager-MODULES := NodeManager
+nodemanager-MODULES := nodemanager
 nodemanager-SPEC := NodeManager.spec
 ALL += nodemanager
 IN_BOOTSTRAPFS += nodemanager
