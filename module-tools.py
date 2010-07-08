@@ -18,6 +18,7 @@ RENAMED_SVN_MODULES = {
     "VserverReference": "vserver-reference",
     "BootstrapFS": "bootstrapfs",
     "MyPLC": "myplc",
+    "CoDemux": "codemux",
     "NodeManager": "nodemanager"
     }
 
