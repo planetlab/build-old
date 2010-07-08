@@ -10,7 +10,7 @@ nodemanager
 NodeUpdate
 PLCRT
 PingOfDeath
-vserverreference
+vserver-reference
 comgt
 drupal
 ejabberd

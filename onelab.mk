@@ -447,7 +447,7 @@ IN_MYPLC += bootcd
 #
 # vserver : reference image for slices
 #
-vserver-MODULES := vserverreference build
+vserver-MODULES := vserver-reference build
 vserver-SPEC := vserver-reference.spec
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml

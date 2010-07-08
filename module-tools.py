@@ -15,7 +15,7 @@ RENAMED_SVN_MODULES = {
     "PLCAPI": "plcapi",
     "BootManager": "bootmanager",
     "BootCD": "bootcd",
-    "VserverReference": "vserverreference",
+    "VserverReference": "vserver-reference",
     "BootstrapFS": "bootstrapfs",
     "MyPLC": "myplc",
     "NodeManager": "nodemanager"

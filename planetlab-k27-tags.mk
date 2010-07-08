@@ -46,7 +46,7 @@ DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRate
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-8
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@BootManager-5.0-6
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@BootCD-5.0-4
-vserverreference-GITPATH        := git://git.onelab.eu/vserverreference.git@VserverReference-5.0-3
+vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@VserverReference-5.0-3
 bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@BootstrapFS-2.0-6
 myplc-GITPATH                   := git://git.onelab.eu/myplc.git@MyPLC-5.0-7
 # locating the right test directory - see make tests_gitpath
