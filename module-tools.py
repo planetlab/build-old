@@ -17,7 +17,8 @@ RENAMED_SVN_MODULES = {
     "BootCD": "bootcd",
     "VserverReference": "vserverreference",
     "BootstrapFS": "bootstrapfs",
-    "MyPLC": "myplc"
+    "MyPLC": "myplc",
+    "NodeManager": "nodemanager"
     }
 
 def svn_to_git_name(module):
