@@ -524,7 +524,7 @@ myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
 # using some other name than myplc-release, as this is a make target already
-release-MODULES := MyPLC
+release-MODULES := myplc
 release-SPEC := myplc-release.spec
 release-RPMDATE := yes
 ALL += release
