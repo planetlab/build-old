@@ -435,12 +435,12 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := MyPLC plcapi nodemanager Monitor
+myplc-docs-MODULES := myplc plcapi nodemanager Monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
 # using some other name than myplc-release, as this is a make target already
-release-MODULES := MyPLC
+release-MODULES := myplc
 release-SPEC := myplc-release.spec
 release-RPMDATE := yes
 ALL += release
