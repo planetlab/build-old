@@ -31,7 +31,7 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 vsys-BRANCH			:= 0.9
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.9-5
 vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@vsys-scripts-0.95-19
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi@PLCAPI-5.0-12
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi@master
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-13
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-47
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-3
@@ -40,7 +40,7 @@ Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
-pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@pyaspects-0.3-2
+pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@master
 ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
 omf-GITPATH                     := git://git.onelab.eu/omf.git@master
 ###
