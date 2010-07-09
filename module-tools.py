@@ -20,6 +20,7 @@ RENAMED_SVN_MODULES = {
     "MyPLC": "myplc",
     "CoDemux": "codemux",
     "NodeManager": "nodemanager"
+    "NodeUpdate": "nodeupdate"
     }
 
 def svn_to_git_name(module):
