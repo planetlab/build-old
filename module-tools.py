@@ -19,7 +19,7 @@ RENAMED_SVN_MODULES = {
     "BootstrapFS": "bootstrapfs",
     "MyPLC": "myplc",
     "CoDemux": "codemux",
-    "NodeManager": "nodemanager"
+    "NodeManager": "nodemanager",
     "NodeUpdate": "nodeupdate"
     }
 
