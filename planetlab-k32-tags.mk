@@ -1,6 +1,6 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-SVNPATH		:= http://svn.planet-lab.org/svn/linux-2.6/branches/rhel6
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@rhel6
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.4.8-0
 iptables-BUILD-FROM-SRPM := yes	# tmp
