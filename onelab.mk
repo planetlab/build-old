@@ -175,7 +175,7 @@ IN_BOOTSTRAPFS += util-vserver-pl
 #
 # NodeUpdate
 #
-nodeupdate-MODULES := NodeUpdate
+nodeupdate-MODULES := nodeupdate
 nodeupdate-SPEC := NodeUpdate.spec
 ALL += nodeupdate
 IN_BOOTSTRAPFS += nodeupdate

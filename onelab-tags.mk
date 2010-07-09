@@ -5,8 +5,8 @@ linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-22-48
 madwifi-BRANCH			:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 iptables-BRANCH			:= 1.3.8
-iptables-SVNPATH		:= http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-12
-iproute2-SVNPATH		:= http://svn.planet-lab.org/svn/iproute2/tags/iproute2-2.6.16-2
+iptables-GITPATH		:= git://git.planet-lab.org/iptables.git@iptables-1.3.8-12
+iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.16-2
 ###
 ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-17
 nozomi-GITPATH			:= git://git.onelab.eu/nozomi@nozomi-2.21-1
@@ -14,12 +14,12 @@ comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
 ###
 util-vserver-BRANCH		:= scholz
-util-vserver-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
+util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.215-6
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # 2.6.22 kernels need 0.3 branch and 2.6.27 need 0.4 (trunk).
 util-vserver-pl-BRANCH		:= 0.3
-util-vserver-pl-SVNPATH		:= http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-31
-NodeUpdate-SVNPATH		:= http://svn.planet-lab.org/svn/NodeUpdate/tags/NodeUpdate-0.5-6
+util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.3-31
+nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@nodemanager-2.0-16
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
