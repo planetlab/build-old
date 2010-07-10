@@ -5,7 +5,7 @@ linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-22-49
 madwifi-BRANCH			:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 iptables-BRANCH			:= 1.3.8
-iptables-GITPATH		:= git://git.onelab.eu/iptables.git@iptables-1.3.8-12
+iptables-SVNPATH                := http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-12
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.16-2
 ###
 ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-17
