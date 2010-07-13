@@ -42,7 +42,7 @@ pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9
 ###
 pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@master
 ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
-omf-GITPATH                     := git://git.onelab.eu/omf.git@master
+omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-7
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-14
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
