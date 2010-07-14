@@ -74,7 +74,7 @@ function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
 	f*)
-	    echo 'kernel kernel-PAE kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
+	    echo 'kernel kernel-PAE kernel-debug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
 	centos5)
 	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	*)
