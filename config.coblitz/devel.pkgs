@@ -94,6 +94,5 @@ package: python-cherrypy
 ##########
 # for sfa : rebuilding wsdl index at build-time
 package: python-uuid pyOpenSSL m2crypto
-##########
-# for comon
-package: libpng-devel freetype freetype-devel libart_lgpl-devel gd-devel db4 db4-devel
+# for git
+package: make git
