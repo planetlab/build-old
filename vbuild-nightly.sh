@@ -121,7 +121,7 @@ function webpublish_append_stdin_to_file () { ssh root@${WEBHOST} cat \>\> $1; }
 function failure() {
     set -x
     # early stage ? - let's not create /build/@PLDISTRO@
-    if webpublish_misses_dir $WEBPATH ; then
+    if test -z "$WEBLOG" ; then
 	WEBHOST=localhost
 	WEBPATH=/tmp
 	WEBBASE=/tmp/vbuild-early-$(date +%Y-%m-%d)
@@ -149,7 +149,7 @@ function failure() {
 function success () {
     set -x
     # early stage ? - let's not create /build/@PLDISTRO@
-    if webpublish_misses_dir ${WEBPATH} ; then
+    if test -z "$WEBLOG" ; then
 	WEBHOST=localhost
 	WEBPATH=/tmp
 	WEBLOG=/tmp/vbuild-early-$(date +%Y-%m-%d).log.txt
