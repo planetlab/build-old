@@ -9,10 +9,10 @@ iproute-BUILD-FROM-SRPM := yes	# tmp
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-3
 util-vserver-BUILD-FROM-SRPM := yes	# tmp
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
-util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-15
+util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-16
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-16
+nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-17
 # Trellis-specific NodeManager plugins
 NodeManager-topo-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
 NodeManager-optin-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-optin/trunk
@@ -24,8 +24,8 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
 vsys-BRANCH			:= 0.9
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.9-5
-vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-19
-plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-13
+vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-20
+plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-14
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-47
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-3
@@ -50,4 +50,4 @@ myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-10
+tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-12

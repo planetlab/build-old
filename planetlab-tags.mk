@@ -16,7 +16,7 @@ util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vs
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
-nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-16
+nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-17
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 codemux-GITPATH			:= git://git.planet-lab.org/codemux.git@CoDemux-0.1-14
 fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.3-2
@@ -25,8 +25,8 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
 vsys-BRANCH			:= 0.9
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.9-5
-vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-19
-plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-13
+vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-20
+plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-14
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-47
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-3
@@ -51,4 +51,4 @@ myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-
 DistributedRateLimiting-SVNPATH			:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-10
+tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-12
