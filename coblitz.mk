@@ -243,8 +243,8 @@ plewww-SPEC := plewww.spec
 #
 www-register-wizard-MODULES := www-register-wizard
 www-register-wizard-SPEC := www-register-wizard.spec
-#ALL += www-register-wizard
-#IN_MYPLC += www-register-wizard
+ALL += www-register-wizard
+IN_MYPLC += www-register-wizard
 
 #
 # pcucontrol
