@@ -74,9 +74,9 @@ function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
 	f*)
-	    echo 'kernel kernel-PAE kernel-debug kernel-PAEdebug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
+	    echo 'kernel-PAE kernel-debug kernel-PAEdebug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
 	centos5)
-	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
+	    echo 'kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	*)
 	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh" ; exit 1 ;;
     esac
@@ -428,6 +428,15 @@ fi
 
     # Clean up
     mkfedora_cleanup
+
+    # link to our version of kernel/initrd
+    pushd $vroot/boot/
+    rm -rf kernel-boot kernel-bootsmp initrd-boot initrd-bootsmp
+    ln -s vmlinuz-*${pldistro}* kernel-boot
+    ln -s vmlinuz-*${pldistro}* kernel-bootsmp
+    ln -s initrd-*${pldistro}* initrd-boot
+    ln -s initrd-*${pldistro}* initrd-bootsmp
+    popd
 
     return 0
 }

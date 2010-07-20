@@ -69,6 +69,7 @@ junk: usr/lib/locale
 junk: usr/lib/sasl*
 junk: usr/lib/gconv
 junk: usr/lib/tls
+junk: usr/boot
 #
 precious: usr/share/i18n/locales/en_US
 precious: usr/share/i18n/charmaps/UTF-8.gz
@@ -77,4 +78,9 @@ precious: usr/share/terminfo/l/linux
 precious: usr/share/terminfo/v/vt100
 precious: usr/share/terminfo/x/xterm
 precious: usr/share/zoneinfo/UTC
+precious: boot/*@pldistro@*
+precious: boot/config*
+precious: boot/initrd-boot*
+precious: boot/kernel-boot*
+precious: boot/grub
 precious<=f8 precious<=centos5: usr/lib/locale/en_US.utf8

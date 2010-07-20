@@ -121,3 +121,12 @@ package: vsys-scripts
 package: monitor-client
 package: monitor-runlevelagent
 package: pyplnet
+
+#################### formerly in prep.sh
+junk: usr/boot
+#
+precious: boot/*@pldistro@*
+precious: boot/config*
+precious: boot/initrd-boot*
+precious: boot/kernel-boot*
+precious: boot/grub
