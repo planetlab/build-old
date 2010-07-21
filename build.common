@@ -74,7 +74,7 @@ function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
 	f*)
-	    echo 'kernel kernel-debug kernel-PAEdebug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
+	    echo 'kernel kernel-PAE kernel-PAEdebug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
 	centos5)
 	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	*)
@@ -436,6 +436,8 @@ fi
     ln -s vmlinuz-*${pldistro}* kernel-bootsmp
     ln -s initrd-*${pldistro}* initrd-boot
     ln -s initrd-*${pldistro}* initrd-bootsmp
+    # we let kernel-debug to be installed to satisfy dependencies. it's time to clean up.
+    rpm -e --nodeps --root $vroot kernel-debug
     popd
 
     return 0
