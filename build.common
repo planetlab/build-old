@@ -437,7 +437,8 @@ fi
     ln -s initrd-*${pldistro}* initrd-boot
     ln -s initrd-*${pldistro}* initrd-bootsmp
     # we let kernel-debug to be installed to satisfy dependencies. it's time to clean up.
-    rpm -e --nodeps --root $vroot kernel-debug
+    rpm --root $vroot -q kernel-debug >& /dev/null
+    if [ $? -eq 0 ]; then rpm -e --nodeps --root $vroot kernel-debug; fi
     popd
 
     return 0
