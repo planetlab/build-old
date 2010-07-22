@@ -414,23 +414,21 @@ fi
     # Clean yum cache
     echo "* Cleaning up"
 
-    # NOTE: this hack is for Fedora >= 12. we'll let kernel-debug
-    # package satisfy dependencies to install a base system. Then
-    # we'll link to our version of kernel/initrd and clean up
+    # NOTE: this hack is for Fedora >= 12.
+    # if kernel-debug is installed, clean it up
+    # we link to our version of kernel/initrd and clean up
     # kernel-debug manually
-#    set -x
-    pushd $vroot/boot/
-    # we let kernel-debug to be installed to satisfy dependencies. it's time to clean up.
     if rpm --root $vroot --quiet -q kernel-debug ; then
 	echo "* Cleaning up kernel-debug - (workaround for f12)"
+	pushd $vroot/boot/
         rm -rf kernel-boot kernel-bootsmp initrd-boot initrd-bootsmp
         ln -s vmlinuz-*${pldistro}* kernel-boot
         ln -s vmlinuz-*${pldistro}* kernel-bootsmp
         ln -s initrd-*${pldistro}* initrd-boot
         ln -s initrd-*${pldistro}* initrd-bootsmp
         rpm --root $vroot --nodeps -e kernel-debug || :
+	popd
     fi
-    popd
 
     # ignore yum's return code that is basically undefined
     yum $yum_options clean all || :
