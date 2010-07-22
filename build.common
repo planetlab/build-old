@@ -73,6 +73,11 @@ function pl_getReleaseName () {
 function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
+	### there is an ugly hack going on around here
+	# with f12, the dependencies somehow require kernel 2.6.29 but our own kernel is 2.6.27
+	# so the ugly workaround here is to let 'kernel-debug' get installed from the stock repos
+	# we then remove it manually after the image is done, look for kernel-debug below
+	# relyong on kernel-PAE for this trick won't work, as 64 bits distros don't have PAE of course
 	f*)
 	    echo 'kernel kernel-PAE kernel-PAEdebug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
 	centos5)
@@ -410,19 +415,20 @@ fi
     echo "* Cleaning up"
 
     # NOTE: this hack is for Fedora >= 12. we'll let kernel-debug
-    # pakcage satisfy dependencies to install a base system. Then
+    # package satisfy dependencies to install a base system. Then
     # we'll link to our version of kernel/initrd and clean up
-    # kernel-debug.
+    # kernel-debug manually
+#    set -x
     pushd $vroot/boot/
     # we let kernel-debug to be installed to satisfy dependencies. it's time to clean up.
-    rpm --root $vroot -q kernel-debug >& /dev/null
-    if [ $? -eq 0 ]; then 
+    if rpm --root $vroot --quiet -q kernel-debug ; then
+	echo "* Cleaning up kernel-debug - (workaround for f12)"
         rm -rf kernel-boot kernel-bootsmp initrd-boot initrd-bootsmp
         ln -s vmlinuz-*${pldistro}* kernel-boot
         ln -s vmlinuz-*${pldistro}* kernel-bootsmp
         ln -s initrd-*${pldistro}* initrd-boot
         ln -s initrd-*${pldistro}* initrd-bootsmp
-        rpm -e --nodeps --root $vroot kernel-debug
+        rpm --root $vroot --nodeps -e kernel-debug || :
     fi
     popd
 
