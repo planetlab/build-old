@@ -51,4 +51,4 @@ myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-
 DistributedRateLimiting-SVNPATH			:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-13
+tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-14
