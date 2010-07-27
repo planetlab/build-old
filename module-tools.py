@@ -309,7 +309,9 @@ class GitRepository:
 
     def to_branch(self, branch, remote=True):
         if remote:
-            branch = "origin/%s" % branch
+            command = "git branch --track %s origin/%s" % (branch, branch)
+            c = Command(command, self.options)
+            self.__run_in_repo(c.output_of, with_stderr=True)
         return self.__run_command_in_repo("git checkout %s" % branch)
 
     def to_tag(self, tag):
@@ -327,11 +329,14 @@ class GitRepository:
         c = Command("git diff %s" % tagname, self.options)
         return self.__run_in_repo(c.output_of, with_stderr=True)
 
-    def commit(self, logfile):
+    def commit(self, logfile, branch="master"):
         self.__run_command_in_repo("git add .", ignore_errors=True)
         self.__run_command_in_repo("git add -u", ignore_errors=True)
         self.__run_command_in_repo("git commit -F  %s" % logfile, ignore_errors=True)
-        self.__run_command_in_repo("git push")
+        if branch == "master":
+            self.__run_command_in_repo("git push")
+        else:
+            self.__run_command_in_repo("git push %s:%s" % (branch, branch))
         self.__run_command_in_repo("git push --tags")
 
     def revert(self, f=""):
@@ -997,7 +1002,10 @@ n: move to next file"""%locals()
             print self.repository.diff()
 
         def commit_all_changes(log):
-            self.repository.commit(log)
+            if hasattr(self,'branch'):
+                self.repository.commit(log, branch=self.branch)
+            else:
+                self.repository.commit(log)
             build.commit(log)
 
         self.run_prompt("Review module and build", diff_all_changes)
