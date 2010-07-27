@@ -308,6 +308,7 @@ class GitRepository:
         self.__run_command_in_repo("git merge --ff origin/%s" % branch)
 
     def to_branch(self, branch, remote=True):
+        self.revert()
         if remote:
             command = "git branch --track %s origin/%s" % (branch, branch)
             c = Command(command, self.options)
@@ -315,6 +316,7 @@ class GitRepository:
         return self.__run_command_in_repo("git checkout %s" % branch)
 
     def to_tag(self, tag):
+        self.revert()
         return self.__run_command_in_repo("git checkout %s" % tag)
 
     def tag(self, tagname, logfile):
