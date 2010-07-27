@@ -302,7 +302,7 @@ class GitRepository:
         if branch == "master":
             self.__run_command_in_repo("git checkout %s" % branch)
         else:
-            self.__run_command_in_repo("git checkout origin/%s" % branch)
+            self.to_branch(branch, remote=True)
         self.__run_command_in_repo("git fetch origin --tags")
         self.__run_command_in_repo("git fetch origin")
         self.__run_command_in_repo("git merge --ff origin/%s" % branch)
@@ -338,7 +338,7 @@ class GitRepository:
         if branch == "master":
             self.__run_command_in_repo("git push")
         else:
-            self.__run_command_in_repo("git push %s:%s" % (branch, branch))
+            self.__run_command_in_repo("git push origin %s:%s" % (branch, branch))
         self.__run_command_in_repo("git push --tags")
 
     def revert(self, f=""):
