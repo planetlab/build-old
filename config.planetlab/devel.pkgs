@@ -106,6 +106,7 @@ package: libxml2-python libxslt-python
 package: python-ZSI 
 package: python-psycopg2
 package: python-setuptools
+package: python-dateutil
 # DistributedRateLimiting
 package: libxml2-devel
 # for ejabberd
