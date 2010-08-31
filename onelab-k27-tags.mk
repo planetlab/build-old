@@ -1,7 +1,7 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 ###
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-24
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-26
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
@@ -32,7 +32,7 @@ vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@vsys-scripts-0.95-20
 plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-15
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@master
-www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-3
+www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/trunk
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-8
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
@@ -40,11 +40,11 @@ pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9
 ###
 pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@pyaspects-0.4.1-0
 ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
-omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-7
+omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-14
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
-bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-11
+bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-12
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-6
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@BootCD-5.0-4
