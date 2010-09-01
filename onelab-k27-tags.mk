@@ -43,7 +43,7 @@ ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-14
-nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-2
+nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-12
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-6
