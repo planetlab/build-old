@@ -4,6 +4,7 @@ linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@rhel6
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM := yes	# tmp
+iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.33-2
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-7
 util-vserver-BUILD-FROM-SRPM := yes	# tmp
