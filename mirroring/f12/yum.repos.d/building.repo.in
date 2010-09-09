@@ -1,7 +1,3 @@
-#
-# $Id$
-# $URL$
-#
 [fedora]
 name=Fedora 12 - $basearch
 baseurl=@MIRRORURL@/fedora/releases/12/Everything/$basearch/os/

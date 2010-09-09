@@ -1,14 +1,10 @@
-#
-# $Id: building.repo.in 18191 2010-06-03 20:35:36Z caglar $
-# $URL: https://svn.planet-lab.org/svn/build/trunk/mirroring/f13/yum.repos.d/building.repo.in $
-#
 [fedora]
 name=Fedora 13 - $basearch
 baseurl=@MIRRORURL@/fedora/releases/13/Everything/$basearch/os/
 enabled=1
 metadata_expire=7d
 gpgcheck=1
-gpgkey=http://build.planet-lab.org/keys/RPM-GPG-KEY-fedora-13-primary
+gpgkey=http://build.onelab.eu/keys/RPM-GPG-KEY-fedora-13-primary
 
 [updates]
 name=Fedora 13 - $basearch - Updates
