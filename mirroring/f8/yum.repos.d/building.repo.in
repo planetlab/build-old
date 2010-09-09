@@ -3,7 +3,7 @@ name=Fedora 8 - $basearch
 baseurl=@MIRRORURL@/fedora/releases/8/Everything/$basearch/os/
 enabled=1
 gpgcheck=1
-gpgkey=http://build.onelab.eu/fedora/releases/8/Everything/$basearch/os/RPM-GPG-KEY-fedora http://build.onelab.eu/fedora/releases/8/Everything/$basearch/os/RPM-GPG-KEY
+gpgkey=http://mirror.onelab.eu/fedora/releases/8/Everything/$basearch/os/RPM-GPG-KEY-fedora http://build.onelab.eu/fedora/releases/8/Everything/$basearch/os/RPM-GPG-KEY
 
 [updates]
 name=Fedora 8 - $basearch - Updates
