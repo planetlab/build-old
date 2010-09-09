@@ -18,7 +18,7 @@ function check_distro () {
 
 function do_repo () {
     local distro=$1; shift
-    sedargs="-e s,@MIRRORURL@,$URL,"
+    sedargs="-e s,@MIRRORURL@,$URL,g"
     [ -n "$GPGOFF" ] && sedargs="$sedargs -e "'s,gpgcheck\W*=\W*1,gpgcheck=0,'
     sed $sedargs $DIRNAME/$distro/yum.repos.d/building.repo.in
 }
