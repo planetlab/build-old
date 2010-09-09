@@ -5,7 +5,8 @@ linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-26
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
-iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.16-2
+iproute-BUILD-FROM-SRPM := yes	
+iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.33-2
 ###
 ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-17
 ###
@@ -31,7 +32,7 @@ vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.9-5
 vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@vsys-scripts-0.95-20
 plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-16
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
-plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-49
+plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-50
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-8
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35

@@ -12,7 +12,7 @@ util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # 2.6.22 kernels need 0.3 branch and 2.6.27 need 0.4 (trunk).
 util-vserver-pl-BRANCH		:= 0.3
-util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.3-31
+util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.3-32
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
@@ -28,7 +28,7 @@ vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.9-5
 vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-20
 plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-16
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
-plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-49
+plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-50
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 pcucontrol-GITPATH              := git://git.planet-lab.org/pcucontrol.git@pcucontrol-1.0-8
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
@@ -39,7 +39,7 @@ pyaspects-GITPATH		:= git://git.planet-lab.org/pyaspects.git@pyaspects-0.4.1-0
 ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-1
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
-sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-15
+sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-16
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
 bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-12
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
