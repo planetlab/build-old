@@ -83,7 +83,7 @@ package: PyXML
 # used to reference SOAPpy as well
 # for pypcilib
 package: pciutils-devel
-package: simplejson
+package: python-simplejson
 ##########
 # for vsys - same as for php-devel above
 package: ocaml.@arch@ ocaml-ocamldoc
