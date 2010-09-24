@@ -385,7 +385,7 @@ endif
 
 sface-MODULES := sface
 sface-SPEC := sface.spec
-ALL := sface
+ALL += sface
 
 #
 # nodeconfig
