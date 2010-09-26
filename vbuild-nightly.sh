@@ -17,7 +17,7 @@ DEFAULT_GPGPATH="/etc/planetlab"
 # default email to use in gpg secring
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
-DEFAULT_TESTCONFIG="default"
+DEFAULT_TESTCONFIG="dual"
 
 # for publishing results, and the tests settings
 x=$(hostname)
