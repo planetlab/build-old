@@ -44,7 +44,7 @@ pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@pyaspects-0.4.1-0
 ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-1
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
-sfa-GITPATH			:= git://git.onelab.eu/sfa.git@sfa-0.9-19
+sfa-GITPATH			:= git://git.onelab.eu/sfa.git@master
 sface-GITPATH			:= git://git.onelab.eu/sface.git@master
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-12
