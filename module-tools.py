@@ -269,7 +269,7 @@ class GitRepository:
                 repo = line.split()[2]
 
     @classmethod
-    def checkout(cls, remote, local, options, depth=1):
+    def checkout(cls, remote, local, options, depth=0):
         Command("rm -rf %s" % local, options).run_silent()
         Command("git clone --depth %d %s %s" % (depth, remote, local), options).run_fatal()
         return GitRepository(local, options)
@@ -298,6 +298,13 @@ class GitRepository:
         else:
             return self.__run_in_repo(c.run_fatal)
 
+    def __is_commit_id(self, id):
+        c = Command("git show %s | grep commit | awk '{print $2;}'" % id, self.options)
+        ret = self.__run_in_repo(c.output_of, with_stderr=False)
+        if ret.strip() == id:
+            return True
+        return False
+
     def update(self, subdir=None, recursive=None, branch="master"):
         if branch == "master":
             self.__run_command_in_repo("git checkout %s" % branch)
@@ -305,7 +312,9 @@ class GitRepository:
             self.to_branch(branch, remote=True)
         self.__run_command_in_repo("git fetch origin --tags")
         self.__run_command_in_repo("git fetch origin")
-        self.__run_command_in_repo("git merge --ff origin/%s" % branch)
+        if not self.__is_commit_id(branch):
+            # we don't need to merge anythign for commit ids.
+            self.__run_command_in_repo("git merge --ff origin/%s" % branch)
 
     def to_branch(self, branch, remote=True):
         self.revert()
