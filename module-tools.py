@@ -344,7 +344,7 @@ class GitRepository:
         self.__run_command_in_repo("git add .", ignore_errors=True)
         self.__run_command_in_repo("git add -u", ignore_errors=True)
         self.__run_command_in_repo("git commit -F  %s" % logfile, ignore_errors=True)
-        if branch == "master":
+        if branch == "master" or self.__is_commit_id(branch):
             self.__run_command_in_repo("git push")
         else:
             self.__run_command_in_repo("git push origin %s:%s" % (branch, branch))
