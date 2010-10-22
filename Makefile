@@ -293,8 +293,10 @@ ALL.modules:=$(sort $(ALL.modules))
 define stage1_module_vars
 ifneq "$($(1)-SVNPATH)" ""
 $(1)-SVNPATH := $(strip $($(1)-SVNPATH))
+$(1)-SCMPATH := $(strip $($(1)-SVNPATH))
 else
 $(1)-GITPATH := $$(strip $$($(1)-GITPATH))
+$(1)-SCMPATH := $$(strip $$($(1)-GITPATH))
 $(1).gitrepo := $$(firstword $$(subst @, ,$$($(1)-GITPATH)))
 $(1).gittag := $$(word 2,$$(subst @, ,$$($(1)-GITPATH)))
 $(1).gittag := $$(if $$($(1).gittag),$$($(1).gittag),master)
@@ -342,6 +344,7 @@ define target_spec
 $($(1).specpath): header.spec $($(1).codespec)
 	mkdir -p SPECS
 	cat header.spec > $($(1).specpath)
+	echo "%define SCMURL $($($(1).module)-SCMPATH)" >> $($(1).specpath)
 	$(if $($(1).has-date),echo "%define date $(shell date +%Y.%m.%d)" >> $($(1).specpath),)
 	$(if $($(1)-SPECVARS), \
 	  $(foreach line,$($(1)-SPECVARS), \
