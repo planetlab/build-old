@@ -1,4 +1,4 @@
 # define here the ordered set of mirrors that you'd like to use when running mkfedora
 # used to be hard-wired in build.common / mkfedora
 # see http://svn.planet-lab.org/wiki/VserverCentos for howto setup local mirroring
-mirror: http://build.planet-lab.org/
+mirror: http://repo.verivue.com/repo/
