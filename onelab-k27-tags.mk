@@ -1,7 +1,7 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 ###
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-29
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-30
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
@@ -14,7 +14,7 @@ comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
 ###
 util-vserver-BUILD-FROM-SRPM := yes # tmp
-util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-7
+util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-8
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # as per http://svn.planet-lab.org/changeset/17973, 2.6.22 kernels shall use 0.3 branch and 2.6.27 need 0.4 (trunk).
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-20

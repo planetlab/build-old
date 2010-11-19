@@ -14,14 +14,14 @@ comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
 ###
 util-vserver-BUILD-FROM-SRPM := yes # tmp
-util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-7
+util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-8
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # 2.6.22 kernels need 0.3 branch and 2.6.27 need 0.4 (trunk).
 util-vserver-pl-BRANCH		:= 0.3
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.3-32
 nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@nodemanager-2.0-21
+nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@master
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 codemux-GITPATH			:= git://git.onelab.eu/codemux.git@CoDemux-0.1-14
 fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.3-2
@@ -31,7 +31,7 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 vsys-BRANCH			:= 0.9
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.9-5
 vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@vsys-scripts-0.95-25
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-18
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@master
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@master
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
@@ -53,7 +53,7 @@ pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-6
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-5
 vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@VserverReference-5.0-3
 bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@BootstrapFS-2.0-6
-myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-11
+myplc-GITPATH                   := git://git.onelab.eu/myplc.git@master
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath

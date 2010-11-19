@@ -1,0 +1,16 @@
+[fedora]
+name=Fedora 14 - $basearch
+baseurl=@MIRRORURL@/fedora/releases/14/Everything/$basearch/os/
+enabled=1
+metadata_expire=7d
+gpgcheck=1
+gpgkey=http://mirror.onelab.eu/keys/RPM-GPG-KEY-fedora-14-primary
+
+[updates]
+name=Fedora 14 - $basearch - Updates
+baseurl=@MIRRORURL@/fedora/updates/14/$basearch/
+enabled=1
+metadata_expire=7d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora
+
