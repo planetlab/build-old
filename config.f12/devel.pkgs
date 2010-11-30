@@ -20,6 +20,7 @@ package: beecrypt-devel
 package: tetex-latex
 package: gcc-c++ 
 package: createrepo
+package: git
 # kernel
 package: xmlto asciidoc binutils-devel
 # util-vserver
