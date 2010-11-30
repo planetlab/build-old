@@ -1,6 +1,5 @@
 #!/bin/bash
 # -*-shell-*-
-# $Id$
 
 #shopt -s huponexit
 
