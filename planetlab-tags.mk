@@ -36,7 +36,7 @@ PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
 pyaspects-GITPATH		:= git://git.planet-lab.org/pyaspects.git@pyaspects-0.4.1-0
-ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-1
+ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-8
@@ -44,7 +44,7 @@ nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-
 bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-12
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-6
-bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-5
+bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-6
 vserver-reference-GITPATH        := git://git.planet-lab.org/vserver-reference.git@VserverReference-5.0-3
 bootstrapfs-GITPATH             := git://git.planet-lab.org/bootstrapfs.git@BootstrapFS-2.0-6
 myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-12
