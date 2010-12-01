@@ -28,7 +28,7 @@ vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.9-5
 vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-25
 plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-19
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
-plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-54
+plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-55
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
@@ -48,6 +48,6 @@ bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@boot
 bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-5
 vserver-reference-GITPATH        := git://git.planet-lab.org/vserver-reference.git@VserverReference-5.0-3
 bootstrapfs-GITPATH             := git://git.planet-lab.org/bootstrapfs.git@BootstrapFS-2.0-6
-myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-11
+myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-12
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-19
+tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-20
