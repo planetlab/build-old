@@ -177,9 +177,9 @@ function setup_vserver () {
     echo persistent,lback_allow > /etc/vservers/$vserver/nflags
 
     # Set the init style of your vserver to plain for f13
-    if [ "$fcdistro" == "f13" ] ; then
-    	echo plain > /etc/vservers/$vserver/apps/init/style
-    fi
+    case $fcdistro in 
+	f13|f14) echo plain > /etc/vservers/$vserver/apps/init/style ;;
+    esac
 
     if [ "$pkg_method" = "yum" ] ; then
 	$personality vyum $vserver -- -y install yum
