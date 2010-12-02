@@ -24,5 +24,6 @@ package: xmlto asciidoc binutils-devel
 # util-vserver
 package: vconfig wget which e2fsprogs-devel doxygen graphviz rsync dump dietlibc python-devel ctags
 package: autoconf automake libtool
+package: e2fsprogs
 # yum
 package: gettext intltool
