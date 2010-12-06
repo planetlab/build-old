@@ -259,14 +259,14 @@ class GitRepository:
         return os.path.basename(self.path)
 
     def url(self):
-        self.repo_root()
+        return self.repo_root()
 
     def repo_root(self):
         c = Command("git remote show origin", self.options)
         out = self.__run_in_repo(c.output_of)
         for line in out.split('\n'):
             if line.strip().startswith("Fetch URL:"):
-                repo = line.split()[2]
+                return line.split()[2]
 
     @classmethod
     def checkout(cls, remote, local, options, depth=0):
@@ -1045,6 +1045,7 @@ n: move to next file"""%locals()
                 return
             else:
                 self.html_print ("%-16s %s"%(varname,spec_dict[varname]))
+        self.html_print ("%-16s %s"%('url',self.repository.url()))
         if self.options.verbose:
             self.html_print ("%-16s %s"%('main specfile:',self.main_specname()))
             self.html_print ("%-16s %s"%('specfiles:',self.all_specnames()))
