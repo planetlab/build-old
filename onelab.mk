@@ -366,7 +366,10 @@ ALL += pyaspects
 ejabberd-MODULES := ejabberd
 ejabberd-SPEC := ejabberd.spec
 ejabberd-BUILD-FROM-SRPM := yes
+# tmp - skip on f14 for now
+ifneq ($(DISTRONAME),f14)
 ALL += ejabberd
+endif
 
 # sfa now uses the with statement that's not supported on python-2.4 - not even through __future__
 build_sfa=true
