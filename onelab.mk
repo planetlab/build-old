@@ -68,8 +68,10 @@ madwifi-DEPEND-DEVEL-RPMS := kernel-devel
 madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_release=$(kernel.rpm-release) \
 	kernel_arch=$(kernel.rpm-arch)
+ifneq ($(DISTRONAME),f14)
 ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
+endif
 
 # 
 # nozomi
