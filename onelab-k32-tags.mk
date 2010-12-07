@@ -8,7 +8,7 @@ iptables-BUILD-FROM-SRPM        := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.33-2
 ###
-ipfw-GITPATH			:= git://git.onelab.eu/ipfw@master
+ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-18
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
