@@ -2,7 +2,7 @@
 
 ###
 linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@rhel6
-madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/trunk
+madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4132-0
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
