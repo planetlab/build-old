@@ -38,7 +38,7 @@ pyaspects-GITPATH		:= git://git.planet-lab.org/pyaspects.git@pyaspects-0.4.1-0
 ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-2
 omf-GITPATH                     := git://git.planet-lab.org/omf.git@omf-5.3-8
 ###
-sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-8
+sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-9
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
 bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-12
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
