@@ -838,17 +838,17 @@ that for other purposes than tagging""" % options.workdir
         else:
             if self.options.verbose:
                 print 'Searching for -SVNPATH or -GITPATH lines referring to /%s/\n\tin %s .. '%(self.name,tagsfile),
-            pattern="\A\s*(?P<make_name>[^\s]+)-(SVNPATH|GITPATH)\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s[^\s]+"\
-                                          %(self.name)
+            pattern="\A\s*%s-(SVNPATH|GITPATH)\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s[^\s]+"\
+                                          %(self.name,self.name)
             matcher_module=re.compile(pattern)
             for line in tags.readlines():
                 attempt=matcher_module.match(line)
                 if attempt:
                     if line.find("-GITPATH") >= 0:
-                        modulepath = "%s-GITPATH"%(attempt.group('make_name'))
+                        modulepath = "%s-GITPATH"%self.name
                         replacement = "%-32s:= %s/%s.git@%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
                     else:
-                        modulepath = "%s-SVNPATH"%(attempt.group('make_name'))
+                        modulepath = "%s-SVNPATH"%self.name
                         replacement = "%-32s:= %s/%s/tags/%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
                     if self.options.verbose:
                         print ' ' + modulepath, 
@@ -988,7 +988,7 @@ Please write a changelog for this new tag in the section above
                     elif choice == 'f':
                         self.patch_tags_file(tagsfile,old_tag_name,new_tag_name,fine_grain=False)
                     elif choice == 'd':
-                        print build.diff(f=tagsfile)
+                        print build.diff(f=os.path.basename(tagsfile))
                     elif choice == 'r':
                         build.revert(f=tagsfile)
                     elif choice == 'c':
