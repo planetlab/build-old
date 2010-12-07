@@ -46,10 +46,8 @@ ipfwroot-DEPEND-DEVEL-RPMS := kernel-devel
 ipfwroot-SPECVARS = kernel_version=$(kernel.rpm-version) \
         kernel_release=$(kernel.rpm-release) \
         kernel_arch=$(kernel.rpm-arch)
-ifneq ($(DISTRONAME),f14)
 ALL += ipfwroot
 IN_BOOTSTRAPFS += ipfwroot
-endif
 
 ipfwslice-MODULES := ipfw
 ipfwslice-SPEC := planetlab/ipfwslice.spec
