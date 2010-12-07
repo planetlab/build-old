@@ -51,7 +51,7 @@ package: wget
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
-package>=f14: binutils-devel
+package>=f12: binutils-devel
 # iptables
 package: linuxdoc-tools 
 package: sudo 
