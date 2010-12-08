@@ -16,7 +16,7 @@ planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetl
 util-vserver-BUILD-FROM-SRPM := yes # tmp
 util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-10
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
-# 2.6.22 kernels need 0.3 branch and 2.6.27 need 0.4 (trunk).
+# 2.6.22 kernels need 0.3 branch and 2.6.27 need 0.4
 util-vserver-pl-BRANCH		:= 0.3
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.3-32
 nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@NodeUpdate-0.5-6
