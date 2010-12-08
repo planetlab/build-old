@@ -41,7 +41,7 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-9
 nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
-bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-12
+bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-13
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-6
 bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-6
