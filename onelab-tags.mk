@@ -3,7 +3,7 @@
 linux-2.6-BRANCH		:= 22
 linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-22-49
 madwifi-BRANCH			:= 0.9.4
-madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
+madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@madwifi-0.9.4-3
 iptables-BRANCH			:= 1.3.8
 iptables-SVNPATH                := http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-12
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.16-2
@@ -46,7 +46,7 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-9
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-3
-nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
+nodeconfig-GITPATH		:= git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-3
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@master
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-6

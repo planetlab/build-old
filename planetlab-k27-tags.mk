@@ -1,7 +1,7 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-27-32
-madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-4099-0
+madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@madwifi-4099-0
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
@@ -39,7 +39,7 @@ ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-9
-nodeconfig-SVNPATH		:= http://svn.planet-lab.org/svn/nodeconfig/tags/nodeconfig-5.0-3
+nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-3
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-6
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
