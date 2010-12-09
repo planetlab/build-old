@@ -2,8 +2,10 @@
 
 ###
 linux-2.6-BRANCH		:= rhel6
-# freezing temporarily
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@rhel6
+# caglar has reached a point beyond tag 1 where the kernel builds 
+# but it looks like gcc-4.5 in f14 is more picky and that breaks on this platform
+# reverting to tag 0 which is very rough but at least lets us check the rest of the system
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-0
 madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@madwifi-4132-1
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
@@ -50,7 +52,7 @@ sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-3
 nodeconfig-GITPATH		:= git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-3
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-13
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
-pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-6
+pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-7
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-6
 vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-4
 bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@BootstrapFS-2.0-6
