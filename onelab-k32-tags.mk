@@ -6,13 +6,13 @@ linux-2.6-BRANCH		:= rhel6
 # but it looks like gcc-4.5 in f14 is more picky and that breaks on this platform
 # reverting to tag 0 which is very rough but at least lets us check the rest of the system
 linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-0
-madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@madwifi-4132-1
+madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@master
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.33-2
 ###
-ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-19
+ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@master
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
