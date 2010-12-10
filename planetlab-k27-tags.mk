@@ -1,6 +1,6 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-27-32
+linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-27-33
 madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@madwifi-4099-0
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM := yes	# tmp
@@ -44,7 +44,7 @@ pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-6
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 pcucontrol-GITPATH              := git://git.planet-lab.org/pcucontrol.git@pcucontrol-1.0-9
-bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-14
+bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-15
 bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-6
 vserver-reference-GITPATH        := git://git.planet-lab.org/vserver-reference.git@vserver-reference-5.0-4
 bootstrapfs-GITPATH             := git://git.planet-lab.org/bootstrapfs.git@BootstrapFS-2.0-6
