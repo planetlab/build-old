@@ -5,7 +5,7 @@ linux-2.6-BRANCH		:= rhel6
 # caglar has reached a point beyond tag 1 where the kernel builds 
 # but it looks like gcc-4.5 in f14 is more picky and that breaks on this platform
 # reverting to tag 0 which is very rough but at least lets us check the rest of the system
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-2
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-4
 madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@master
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
