@@ -1,7 +1,7 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-4
-madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@madwifi-4099-0
+madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@master
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	

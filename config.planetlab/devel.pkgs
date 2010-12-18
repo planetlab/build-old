@@ -87,7 +87,7 @@ package: pciutils-devel
 package: python-simplejson
 ##########
 # for vsys - same as for php-devel above
-package: ocaml.@arch@ ocaml-ocamldoc
+package: ocaml.@arch@ ocaml-docs
 # use local inotify-tools on centos
 package>=f8:inotify-tools-devel 
 ##########
