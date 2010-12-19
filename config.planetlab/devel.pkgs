@@ -1,8 +1,7 @@
-# $Id$
-# $URL$
 #
 groupname: PlanetLabDevel
 groupdesc: Building PlanetLab
+#
 # general utilities
 package: sendmail sendmail-cf mailx 
 package: make git
@@ -87,7 +86,7 @@ package: pciutils-devel
 package: python-simplejson
 ##########
 # for vsys - same as for php-devel above
-package: ocaml.@arch@ ocaml-docs
+package: ocaml.@arch@ ocaml-ocamldoc ocaml-docs 
 # use local inotify-tools on centos
 package>=f8:inotify-tools-devel 
 ##########
