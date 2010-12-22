@@ -305,8 +305,11 @@ ALL += pyaspects
 ejabberd-MODULES := ejabberd
 ejabberd-SPEC := ejabberd.spec
 ejabberd-BUILD-FROM-SRPM := yes
+# not needed anymore on f12 and above, that come with 2.1.5, and we had 2.1.3
+# so, this is relevant on f8 and centos5 only
+ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
 ALL += ejabberd
-
+endif
 
 #
 # sfa - Slice Facility Architecture
