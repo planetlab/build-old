@@ -176,6 +176,9 @@ function setup_vserver () {
     # Set persistent for the network context
     echo persistent,lback_allow > /etc/vservers/$vserver/nflags
 
+    # Enable cgroup
+    mkdir /etc/vservers/$vserver/cgroup
+
     # Set the init style of your vserver to plain for f13
     case $fcdistro in 
 	f13|f14) echo plain > /etc/vservers/$vserver/apps/init/style ;;
