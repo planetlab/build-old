@@ -1249,8 +1249,17 @@ def modules_diff(first, second):
 
     return diff, new_modules, removed_modules
 
-def release_changelog(options, buildtag_old, buildtag_new, tagfile):
+def release_changelog(options, buildtag_old, buildtag_new):
+
+    tagfile = options.distrotags[0]
+    if not tagfile:
+        print "ERROR: provide a tagfile name (eg. onelab, onelab-k27, planetlab)"
+        return
+    tagfile = "%s-tags.mk" % tagfile
     
+    print '----'
+    print '----'
+    print '----'
     print '= build tag %s to %s =' % (buildtag_old, buildtag_new)
     print '== distro %s (%s to %s) ==' % (tagfile, buildtag_old, buildtag_new)
 
@@ -1258,19 +1267,18 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
     build.init_module_dir()
     first = build.get_modules(tagfile)
 
-    print '* from', buildtag_old, build.repository.gitweb()
+    print ' * from', buildtag_old, build.repository.gitweb()
 
     build = Build("build@%s" % buildtag_new, options)
     build.init_module_dir()
     second = build.get_modules(tagfile)
 
-    print '* to', buildtag_new, build.repository.gitweb()
+    print ' * to', buildtag_new, build.repository.gitweb()
 
     diff, new_modules, removed_modules = modules_diff(first, second)
 
 
     def get_module(name, tag):
-        print name, tag
         if not tag or  tag == "trunk":
             return Module("%s" % (module), options)
         else:
@@ -1286,9 +1294,9 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
         m.init_module_dir()
 
         if m.repository.type == "svn":
-            print '* from', first, m.repository.url()
+            print ' * from', first, m.repository.url()
         else:
-            print '* from', first, m.repository.gitweb()
+            print ' * from', first, m.repository.gitweb()
 
         specfile = m.main_specname()
         (tmpfd, tmpfile) = tempfile.mkstemp()
@@ -1299,9 +1307,9 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
         specfile = m.main_specname()
 
         if m.repository.type == "svn":
-            print '* to', second, m.repository.url()
+            print ' * to', second, m.repository.url()
         else:
-            print '* to', second, m.repository.gitweb()
+            print ' * to', second, m.repository.gitweb()
 
         print '{{{'
         os.system("diff -u %s %s" % (tmpfile, specfile))
