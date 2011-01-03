@@ -446,7 +446,7 @@ class Module:
     # for parsing module spec name:branch
     matcher_branch_spec=re.compile("\A(?P<name>[\w\.-]+):(?P<branch>[\w\.-]+)\Z")
     # special form for tagged module - for Build
-    matcher_tag_spec=re.compile("\A(?P<name>[\w-]+)@(?P<tagname>[\w\.-]+)\Z")
+    matcher_tag_spec=re.compile("\A(?P<name>[\w\.-]+)@(?P<tagname>[\w\.-]+)\Z")
     # parsing specfiles
     matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
