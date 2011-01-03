@@ -1,6 +1,3 @@
-# $Id$
-# $URL$
-#
 groupname: PlanetLabBootcd
 groupdesc: PlanetLab BootCD
 # packages to exclude from stock repositories
@@ -8,6 +5,7 @@ kexclude: @KEXCLUDE@
 # define packages
 package: filesystem
 package: udev
+package>=f14: mdadm
 package: dhclient
 package: bash
 package: coreutils
