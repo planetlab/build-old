@@ -180,7 +180,7 @@ function pl_root_makedevs() {
     mknod -m 600 $vroot/dev/net/tun c 10 200
 
     # For mkinitrd (in case a kernel is being installed)
-    # As well for loop back mounting within a vserver. 
+    # As well as for loop back mounting within a vserver. 
     for i in $(seq 0 255) ; do
 	mknod -m 640 $vroot/dev/loop$i b 7 $i
     done

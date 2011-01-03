@@ -12,7 +12,7 @@ iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.33-2
 ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@master
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
-planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
+planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@master
 ###
 util-vserver-BUILD-FROM-SRPM := yes # tmp
 util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-10
@@ -47,11 +47,11 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-3
 nodeconfig-GITPATH		:= git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-3
-bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-15
+bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@master
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-7
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-6
-vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-4
+vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-5
 bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@BootstrapFS-2.0-6
 myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-12
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
