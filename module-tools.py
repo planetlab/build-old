@@ -437,7 +437,6 @@ class Module:
             while not cls.config[key]:
                 cls.prompt_config_option(key, message, default)
 
-
     # for parsing module spec name:branch
     matcher_branch_spec=re.compile("\A(?P<name>[\w\.-]+):(?P<branch>[\w\.-]+)\Z")
     # special form for tagged module - for Build
@@ -445,19 +444,34 @@ class Module:
     # parsing specfiles
     matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
-    def __init__ (self,module_spec,options):
-        # parse module spec
+    @classmethod
+    def parse_module_spec(cls, module_spec):
+        name = branch_or_tagname = module_type = ""
+
         attempt=Module.matcher_branch_spec.match(module_spec)
         if attempt:
-            self.name=attempt.group('name')
-            self.branch=attempt.group('branch')
+            module_type = "branch"
+            name=attempt.group('name')
+            branch_or_tagname=attempt.group('branch')
         else:
             attempt=Module.matcher_tag_spec.match(module_spec)
             if attempt:
-                self.name=attempt.group('name')
-                self.tagname=attempt.group('tagname')
+                module_type = "tag"
+                name=attempt.group('name')
+                branch_or_tagname=attempt.group('tagname')
             else:
-                self.name=module_spec
+                name=module_spec
+        return name, branch_or_tagname, module_type
+
+
+    def __init__ (self,module_spec,options):
+        # parse module spec
+        self.name, branch_or_tagname, module_type = self.parse_module_spec(module_spec)
+
+        if module_type == "branch":
+            self.branch=branch_or_tagname
+        elif module_type == "tag":
+            self.tagname=branch_or_tagname
 
         # when available prefer to use git module name internally
         self.name = svn_to_git_name(self.name)
@@ -623,8 +637,10 @@ that for other purposes than tagging""" % options.workdir
 
         elif self.repository.type == "git":
             if hasattr(self,'branch'):
+                print "to branch", self.branch
                 self.repository.to_branch(self.branch)
             elif hasattr(self,'tagname'):
+                print "to tag", self.tagname
                 self.repository.to_tag(self.tagname)
 
         else:
@@ -1171,6 +1187,29 @@ span.error {text-weight:bold; color: red; }
             print '<p class="top">',self.html_href('#','Back to top'),'</p>'            
 
 
+
+def release_changelog(options, buildtag1, buildtag2, tagfile):
+    build = Module("build@%s" % buildtag1, options)
+    build.init_module_dir()
+    
+#     tagfile = os.path.join(build.module_dir, tagfile)
+#     for line in open(tagfile):
+#         try:
+#             url = line.split(':=')[1]
+#             print build.parse_module_spec(url)
+#         except:
+#             pass
+
+    os.system("cp %s/%s /tmp" % (build.module_dir, tagfile))
+
+    build = Module("build@%s" % buildtag2, options)
+    build.init_module_dir()
+    
+    print os.system("diff -u /tmp/%s %s/%s" % (tagfile, build.module_dir, tagfile))
+
+
+
+
 ##############################
 class Main:
 
@@ -1315,42 +1354,46 @@ Branches:
         Module.init_homedir(options)
         
 
-        modules=[ Module(modname,options) for modname in args ]
-        # hack: create a dummy Module to store errors/warnings
-        error_module = Module('__errors__',options)
+        if mode not in Main.release_modes:
+            modules=[ Module(modname,options) for modname in args ]
+            # hack: create a dummy Module to store errors/warnings
+            error_module = Module('__errors__',options)
 
-        for module in modules:
-            if len(args)>1 and mode not in Main.silent_modes:
-                if not options.www:
-                    print '========================================',module.friendly_name()
-            # call the method called do_<mode>
-            method=Module.__dict__["do_%s"%mode]
-            try:
-                method(module)
-            except Exception,e:
-                if options.www:
-                    title='<span class="error"> Skipping module %s - failure: %s </span>'%\
-                        (module.friendly_name(), str(e))
-                    error_module.html_store_title(title)
-                else:
-                    import traceback
-                    traceback.print_exc()
-                    print 'Skipping module %s: '%modname,e
-
-        if options.www:
-            if mode == "diff":
-                modetitle="Changes to tag in %s"%options.www
-            elif mode == "version":
-                modetitle="Latest tags in %s"%options.www
-            modules.append(error_module)
-            error_module.html_dump_header(modetitle)
             for module in modules:
-                module.html_dump_toc()
-            Module.html_dump_middle()
-            for module in modules:
-                module.html_dump_body()
-            Module.html_dump_footer()
-
+                if len(args)>1 and mode not in Main.silent_modes:
+                    if not options.www:
+                        print '========================================',module.friendly_name()
+                # call the method called do_<mode>
+                method=Module.__dict__["do_%s"%mode]
+                try:
+                    method(module)
+                except Exception,e:
+                    if options.www:
+                        title='<span class="error"> Skipping module %s - failure: %s </span>'%\
+                            (module.friendly_name(), str(e))
+                        error_module.html_store_title(title)
+                    else:
+                        import traceback
+                        traceback.print_exc()
+                        print 'Skipping module %s: '%modname,e
+    
+            if options.www:
+                if mode == "diff":
+                    modetitle="Changes to tag in %s"%options.www
+                elif mode == "version":
+                    modetitle="Latest tags in %s"%options.www
+                modules.append(error_module)
+                error_module.html_dump_header(modetitle)
+                for module in modules:
+                    module.html_dump_toc()
+                Module.html_dump_middle()
+                for module in modules:
+                    module.html_dump_body()
+                Module.html_dump_footer()
+        else:
+            release_changelog(options, *args)
+            
+    
 ####################
 if __name__ == "__main__" :
     try:
