@@ -12,7 +12,7 @@ iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.33-2
 ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@master
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
-planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
+planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@master
 ###
 util-vserver-BUILD-FROM-SRPM := yes # tmp
 util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-10
