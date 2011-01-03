@@ -1204,7 +1204,8 @@ class Build(Module):
             try:
                 name, url = line.split(':=')
                 name, git_or_svn_path = name.rsplit('-', 1)
-                modules[name.strip()] = (git_or_svn_path.strip(), url.strip())
+                name = svn_to_git_name(name.strip())
+                modules[name] = (git_or_svn_path.strip(), url.strip())
             except:
                 pass
         return modules
