@@ -1268,13 +1268,21 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
 
     diff, new_modules, removed_modules = modules_diff(first, second)
 
-    for module in diff:
 
+    def get_module(name, tag):
+        print name, tag
+        if not tag or  tag == "trunk":
+            return Module("%s" % (module), options)
+        else:
+            return Module("%s@%s" % (module, tag), options)
+
+
+    for module in diff:
         print '=== %s - %s to %s : package %s ===' % (tagfile, buildtag_old, buildtag_new, module)
 
         first, second = diff[module]
-        m = Module("%s@%s" % (module, first), options)
-        os.system('rm -rf %s' % m.module_dir)
+        m = get_module(module, first)
+        os.system('rm -rf %s' % m.module_dir) # cleanup module dir
         m.init_module_dir()
 
         if m.repository.type == "svn":
@@ -1286,7 +1294,7 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
         (tmpfd, tmpfile) = tempfile.mkstemp()
         os.system("cp -f /%s %s" % (specfile, tmpfile))
         
-        m = Module("%s@%s" % (module, second), options)
+        m = get_module(module, second)
         m.init_module_dir()
         specfile = m.main_specname()
 
