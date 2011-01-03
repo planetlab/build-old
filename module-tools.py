@@ -3,6 +3,7 @@
 import sys, os
 import re
 import time
+import tempfile
 from glob import glob
 from optparse import OptionParser
 
@@ -260,6 +261,11 @@ class GitRepository:
 
     def url(self):
         return self.repo_root()
+
+    def gitweb(self):
+        c = Command("git show | grep commit | awk '{print $2;}'", self.options)
+        out = self.__run_in_repo(c.output_of).strip()
+        return "http://git.onelab.eu/?p=%s.git;a=commit;h=%s" % (self.name(), out)
 
     def repo_root(self):
         c = Command("git remote show origin", self.options)
@@ -640,7 +646,6 @@ that for other purposes than tagging""" % options.workdir
                 print "to branch", self.branch
                 self.repository.to_branch(self.branch)
             elif hasattr(self,'tagname'):
-                print "to tag", self.tagname
                 self.repository.to_tag(self.tagname)
 
         else:
@@ -1188,26 +1193,112 @@ span.error {text-weight:bold; color: red; }
 
 
 
-def release_changelog(options, buildtag1, buildtag2, tagfile):
-    build = Module("build@%s" % buildtag1, options)
-    build.init_module_dir()
+class Build(Module):
     
-#     tagfile = os.path.join(build.module_dir, tagfile)
-#     for line in open(tagfile):
-#         try:
-#             url = line.split(':=')[1]
-#             print build.parse_module_spec(url)
-#         except:
-#             pass
+    def __get_modules(self, tagfile):
+        self.init_module_dir()
+        modules = {}
 
-    os.system("cp %s/%s /tmp" % (build.module_dir, tagfile))
+        tagfile = os.path.join(self.module_dir, tagfile)
+        for line in open(tagfile):
+            try:
+                name, url = line.split(':=')
+                name, git_or_svn_path = name.rsplit('-', 1)
+                modules[name.strip()] = (git_or_svn_path.strip(), url.strip())
+            except:
+                pass
+        return modules
 
-    build = Module("build@%s" % buildtag2, options)
-    build.init_module_dir()
+    def get_modules(self, tagfile):
+        modules = self.__get_modules(tagfile)
+        for module in modules:
+            module_type = tag_or_branch = ""
+
+            path_type, url = modules[module]
+            if path_type == "GITPATH":
+                module_spec = os.path.split(url)[-1].replace(".git","")
+                name, tag_or_branch, module_type = self.parse_module_spec(module_spec)
+            else:
+                tag_or_branch = os.path.split(url)[-1].strip()
+                if url.find('/tags/') >= 0:
+                    module_type = "tag"
+                elif url.find('/branches/') >= 0:
+                    module_type = "branch"
+            
+            modules[module] = {"module_type" : module_type,
+                               "path_type": path_type,
+                               "tag_or_branch": tag_or_branch,
+                               "url":url}
+        return modules
+                
+        
+
+def modules_diff(first, second):
+    diff = {}
+
+    for module in first:
+        if first[module]['tag_or_branch'] != second[module]['tag_or_branch']:
+            diff[module] = (first[module]['tag_or_branch'], second[module]['tag_or_branch'])
+
+    first_set = set(first.keys())
+    second_set = set(second.keys())
+
+    new_modules = list(second_set - first_set)
+    removed_modules = list(first_set - second_set)
+
+    return diff, new_modules, removed_modules
+
+def release_changelog(options, buildtag_old, buildtag_new, tagfile):
     
-    print os.system("diff -u /tmp/%s %s/%s" % (tagfile, build.module_dir, tagfile))
+    print '= build tag %s to %s =' % (buildtag_old, buildtag_new)
+    print '== distro %s (%s to %s) ==' % (tagfile, buildtag_old, buildtag_new)
 
+    build = Build("build@%s" % buildtag_old, options)
+    build.init_module_dir()
+    first = build.get_modules(tagfile)
 
+    print '* from', buildtag_old, build.repository.gitweb()
+
+    build = Build("build@%s" % buildtag_new, options)
+    build.init_module_dir()
+    second = build.get_modules(tagfile)
+
+    print '* to', buildtag_new, build.repository.gitweb()
+
+    diff, new_modules, removed_modules = modules_diff(first, second)
+
+    for module in diff:
+
+        print '=== %s - %s to %s : package %s ===' % (tagfile, buildtag_old, buildtag_new, module)
+
+        first, second = diff[module]
+        m = Module("%s@%s" % (module, first), options)
+        os.system('rm -rf %s' % m.module_dir)
+        m.init_module_dir()
+
+        print '* from', first, m.repository.gitweb()
+
+        specfile = m.main_specname()
+        (tmpfd, tmpfile) = tempfile.mkstemp()
+        os.system("cp -f /%s %s" % (specfile, tmpfile))
+        
+        m = Module("%s@%s" % (module, second), options)
+        m.init_module_dir()
+        specfile = m.main_specname()
+
+        print '* to', second, m.repository.gitweb()
+
+        print '{{{'
+        os.system("diff -u %s %s" % (tmpfile, specfile))
+        print '}}}'
+
+        os.unlink(tmpfile)
+
+    for module in new_modules:
+        print '=== %s : new package in build %s ===' % (tagfile, module)
+
+    for module in removed_modules:
+        print '=== %s : removed package from build %s ===' % (tagfile, module)
 
 
 ##############################
