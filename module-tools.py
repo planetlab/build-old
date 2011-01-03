@@ -1277,7 +1277,10 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
         os.system('rm -rf %s' % m.module_dir)
         m.init_module_dir()
 
-        print '* from', first, m.repository.gitweb()
+        if m.repository.type == "svn":
+            print '* from', first, m.repository.url()
+        else:
+            print '* from', first, m.repository.gitweb()
 
         specfile = m.main_specname()
         (tmpfd, tmpfile) = tempfile.mkstemp()
@@ -1287,7 +1290,10 @@ def release_changelog(options, buildtag_old, buildtag_new, tagfile):
         m.init_module_dir()
         specfile = m.main_specname()
 
-        print '* to', second, m.repository.gitweb()
+        if m.repository.type == "svn":
+            print '* to', second, m.repository.url()
+        else:
+            print '* to', second, m.repository.gitweb()
 
         print '{{{'
         os.system("diff -u %s %s" % (tmpfile, specfile))
