@@ -1249,7 +1249,13 @@ def modules_diff(first, second):
 
     return diff, new_modules, removed_modules
 
-def release_changelog(options, buildtag_old, buildtag_new, tagfile):
+def release_changelog(options, buildtag_old, buildtag_new):
+
+    tagfile = options.distrotags[0]
+    if not tagfile:
+        print "ERROR: provide a tagfile name (eg. onelab, onelab-k27, planetlab)"
+        return
+    tagfile = "%s-tags.mk" % tagfile
     
     print '= build tag %s to %s =' % (buildtag_old, buildtag_new)
     print '== distro %s (%s to %s) ==' % (tagfile, buildtag_old, buildtag_new)
