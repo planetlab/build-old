@@ -5,7 +5,6 @@ kexclude: @KEXCLUDE@
 # define packages
 package: filesystem
 package: udev
-package>=f14: mdadm
 package: dhclient
 package: bash
 package: coreutils
