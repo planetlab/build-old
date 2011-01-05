@@ -50,6 +50,8 @@ package: wget
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
+package: patchutils
+package: binutils-devel
 # iptables
 package: linuxdoc-tools 
 package: sudo 
