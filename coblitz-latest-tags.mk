@@ -1,7 +1,7 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-BRANCH                := rhel6
-linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-5
+linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-6
 madwifi-BRANCH			:= 0.9.4
 madwifi-SVNPATH			:= http://svn.planet-lab.org/svn/madwifi/tags/madwifi-0.9.4-3
 util-vserver-GITPATH            := git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-10
