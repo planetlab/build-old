@@ -2,16 +2,16 @@
 
 ###
 linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-33
-madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@madwifi-4132-1
+madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@master
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.33-2
 ###
-ipfw-GITPATH			:= git://git.onelab.eu/ipfw@ipfw-0.9-19
+ipfw-GITPATH			:= git://git.onelab.eu/ipfw@master
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
-planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@planetlab-umts-tools-0.6-5
+planetlab-umts-tools-GITPATH	:= git://git.onelab.eu/planetlab-umts-tools@master
 ###
 util-vserver-BUILD-FROM-SRPM := yes # tmp
 util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-10
@@ -27,12 +27,11 @@ fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tag
 pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
-vsys-BRANCH			:= 0.9
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.99-0
-vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@vsys-scripts-0.95-25
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-24
+vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@master
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@master
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
-plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-57
+plewww-GITPATH                  := git://git.onelab.eu/plewww.git@master
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-9
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
@@ -45,8 +44,8 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
 sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-3
-nodeconfig-GITPATH		:= git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-3
-bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-15
+nodeconfig-GITPATH		:= git://git.onelab.eu/nodeconfig.git@master
+bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@master
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-7
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-6
