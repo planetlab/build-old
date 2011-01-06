@@ -98,7 +98,7 @@ IN_BOOTSTRAPFS += util-vserver-pl
 # NodeUpdate
 #
 nodeupdate-MODULES := nodeupdate
-nodeupdate-SPEC := nodeupdate.spec
+nodeupdate-SPEC := NodeUpdate.spec
 ALL += nodeupdate
 IN_BOOTSTRAPFS += nodeupdate
 
@@ -341,7 +341,7 @@ IN_MYPLC += bootcd
 #
 # vserver : reference image for slices
 #
-vserver-MODULES := vserverreference build
+vserver-MODULES := vserver-reference build
 vserver-SPEC := vserver-reference.spec
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
