@@ -2,7 +2,7 @@
 
 ###
 linux-2.6-BRANCH		:= rhel6
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-6
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-7
 madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@master
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM        := yes	# tmp
