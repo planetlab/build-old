@@ -97,8 +97,8 @@ IN_BOOTSTRAPFS += util-vserver-pl
 #
 # NodeUpdate
 #
-nodeupdate-MODULES := NodeUpdate
-nodeupdate-SPEC := NodeUpdate.spec
+nodeupdate-MODULES := nodeupdate
+nodeupdate-SPEC := nodeupdate.spec
 ALL += nodeupdate
 IN_BOOTSTRAPFS += nodeupdate
 
@@ -113,7 +113,7 @@ IN_BOOTSTRAPFS += ipod
 #
 # NodeManager
 #
-nodemanager-MODULES := NodeManager
+nodemanager-MODULES := nodemanager
 nodemanager-SPEC := NodeManager.spec
 ALL += nodemanager
 IN_BOOTSTRAPFS += nodemanager
@@ -129,7 +129,7 @@ IN_BOOTSTRAPFS += sshd
 #
 # codemux: Port 80 demux
 #
-codemux-MODULES := CoDemux
+codemux-MODULES := codemux
 codemux-SPEC   := codemux.spec
 codemux-RPMBUILD := sudo bash ./rpmbuild.sh
 #ALL += codemux
@@ -216,7 +216,7 @@ ALL += vsys-scripts
 #
 # PLCAPI
 #
-PLCAPI-MODULES := PLCAPI
+PLCAPI-MODULES := plcapi
 PLCAPI-SPEC := PLCAPI.spec
 ALL += PLCAPI
 IN_MYPLC += PLCAPI
@@ -233,7 +233,7 @@ IN_MYPLC += drupal
 #
 # use the plewww module instead
 #
-plewww-MODULES := PLEWWW
+plewww-MODULES := plewww
 plewww-SPEC := plewww.spec
 #ALL += plewww
 #IN_MYPLC += plewww
@@ -303,7 +303,7 @@ IN_MYPLC += nodeconfig
 #
 # bootmanager
 #
-bootmanager-MODULES := BootManager
+bootmanager-MODULES := bootmanager
 bootmanager-SPEC := bootmanager.spec
 ALL += bootmanager
 IN_MYPLC += bootmanager
@@ -329,7 +329,7 @@ IN_BOOTCD += pyplnet
 #
 # bootcd
 #
-bootcd-MODULES := BootCD build
+bootcd-MODULES := bootcd build
 bootcd-SPEC := bootcd.spec
 bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
@@ -341,7 +341,7 @@ IN_MYPLC += bootcd
 #
 # vserver : reference image for slices
 #
-vserver-MODULES := VserverReference build
+vserver-MODULES := vserverreference build
 vserver-SPEC := vserver-reference.spec
 vserver-DEPEND-PACKAGES := $(IN_VSERVER)
 vserver-DEPEND-FILES := RPMS/yumgroups.xml
@@ -352,7 +352,7 @@ IN_BOOTSTRAPFS += vserver
 #
 # bootstrapfs
 #
-bootstrapfs-MODULES := BootstrapFS build
+bootstrapfs-MODULES := bootstrapfs build
 bootstrapfs-SPEC := bootstrapfs.spec
 bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
@@ -370,7 +370,7 @@ NODEREPO_RPMS = $(foreach package,$(IN_BOOTSTRAPFS) $(IN_VSERVER),$($(package).r
 SPACE=$(subst x, ,x)
 NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
 
-noderepo-MODULES := BootstrapFS 
+noderepo-MODULES := bootstrapfs 
 noderepo-SPEC := noderepo.spec
 noderepo-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
@@ -385,7 +385,7 @@ IN_MYPLC += noderepo
 #
 # MyPLC : lightweight packaging, dependencies are yum-installed in a vserver
 #
-myplc-MODULES := MyPLC build 
+myplc-MODULES := myplc build 
 myplc-SPEC := myplc.spec
 myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc
@@ -393,12 +393,12 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := MyPLC PLCAPI NodeManager Monitor
+myplc-docs-MODULES := myplc plcapi nodemanager Monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
 # using some other name than myplc-release, as this is a make target already
-release-MODULES := MyPLC
+release-MODULES := myplc
 release-SPEC := myplc-release.spec
 release-RPMDATE := yes
 ALL += release
