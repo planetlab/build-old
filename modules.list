@@ -45,6 +45,6 @@ util-vserver
 util-vserver-pl
 util-vserver-pl:0.3
 vserver-reference
+vsys
 vsys-scripts
-vsys:0.9
 www-register-wizard

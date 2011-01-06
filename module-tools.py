@@ -643,7 +643,6 @@ that for other purposes than tagging""" % options.workdir
 
         elif self.repository.type == "git":
             if hasattr(self,'branch'):
-                print "to branch", self.branch
                 self.repository.to_branch(self.branch)
             elif hasattr(self,'tagname'):
                 self.repository.to_tag(self.tagname)

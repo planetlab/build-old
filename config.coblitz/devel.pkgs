@@ -50,6 +50,8 @@ package: wget
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
+package: patchutils
+package: binutils-devel
 # iptables
 package: linuxdoc-tools 
 package: sudo 
@@ -83,6 +85,8 @@ package: pciutils-devel
 package: ocaml.@arch@ ocaml-docs 
 # use local inotify-tools on centos
 package>=f8:inotify-tools-devel 
+# for util-vserver
+package: ctags
 ##########
 ## for util-vserver-pl
 # use local libnl on centos

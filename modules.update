@@ -3,15 +3,17 @@
 # redirect this into modules.list to get it refreshed
 #
 
-# keep centos5 as the default target rather than - more accurate - f8 b/c we need more of our modules on centos
-fcdistro=centos5
+# run on several distros as we filter out duplicates anyways
+# centos5 has more of our modules, but skips sfa
+fcdistros="centos5 f12"
 
-( \
-  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
-  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ; \
-  make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k32-tags.mk DISTRONAME=${fcdistro} module-tools ; \
-  make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-tags.mk DISTRONAME=${fcdistro} module-tools ; \
-  make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ; \
-  make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k32-tags.mk DISTRONAME=${fcdistro} module-tools ; \
+( for fcdistro in $fcdistros; do 
+    make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-tags.mk DISTRONAME=${fcdistro} module-tools ;
+    make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ;
+    make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k32-tags.mk DISTRONAME=${fcdistro} module-tools ;
+    make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-tags.mk DISTRONAME=${fcdistro} module-tools ;
+    make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ;
+    make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k32-tags.mk DISTRONAME=${fcdistro} module-tools ;
+  done 2>/dev/null ;
   echo tests
 ) | sort -uf | grep -v '^build$' 

@@ -1,19 +1,19 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 linux-2.6-BRANCH		:= rhel6
-linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-5
+linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-6
 madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@master
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-0
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
-iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.33-2
+iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.35-0
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-10
 util-vserver-BUILD-FROM-SRPM := yes	# tmp
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-21
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-24
+nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-25
 # Trellis-specific NodeManager plugins
 NodeManager-topo-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
 NodeManager-optin-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-optin/trunk
@@ -24,7 +24,6 @@ fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tag
 pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
-vsys-BRANCH			:= 0.9
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.99-0
 vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-25
 plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-24
