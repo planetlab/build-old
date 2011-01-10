@@ -2,7 +2,7 @@
 
 mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@trunk
 linux-2.6-BRANCH                := rhel6
-linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-6
+linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-7
 madwifi-BRANCH			:= 0.9.4
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-0.9.4-3
 util-vserver-GITPATH            := git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-10
@@ -34,7 +34,7 @@ Monitor-SVNPATH			:= http://svn.planet-lab.org/svn//Monitor/tags/Monitor-3.0-30/
 pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/tags/pcucontrol-1.0-2/
 nodeconfig-GITPATH              := git://git.planet-lab.org/nodeconfig.git@nodeconfig-4.3-7
 BootManager-BRANCH		:= 4.3
-bootmanager-GITPATH		:= git://git.planet-lab.org/bootmanager@bootmanager-4.3-19
+bootmanager-GITPATH		:= git://git.planet-lab.org/bootmanager@bootmanager-4.3-20
 pypcilib-GITPATH                := git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
 bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-4.2-18
 vserver-reference-GITPATH	:= git://git.planet-lab.org/vserver-reference@vserver-reference-5.0-5
