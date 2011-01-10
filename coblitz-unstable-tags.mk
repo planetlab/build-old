@@ -1,12 +1,13 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-BRANCH                := coblitz2
-linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-22-49.3.coblitz
+mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@master
+linux-2.6-BRANCH                := rhel6
+linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-7
 madwifi-BRANCH			:= 0.9.4
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-0.9.4-3
-util-vserver-BRANCH             := scholz
-util-vserver-SVNPATH            := http://svn.planet-lab.org/svn/util-vserver/tags/util-vserver-0.30.215-6
-util-vserver-pl-SVNPATH         := http://svn.planet-lab.org/svn/util-vserver-pl/tags/util-vserver-pl-0.3-27
+util-vserver-GITPATH            := git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-10
+util-vserver-BUILD-FROM-SRPM	:= yes     # tmp
+util-vserver-pl-GITPATH         := git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-21
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@nodeupdate-0.5-7
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
