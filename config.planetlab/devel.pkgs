@@ -116,3 +116,5 @@ package: libxml2-devel
 package: erlang
 package: pam-devel
 package: hevea
+# for mkinitrd
+package=centos5: parted-devel glib2-devel libdhcp4client-devel libdhcp6client-devel libdhcp-devel device-mapper libselinux-devel libsepol-devel libnl-devel 

@@ -12,6 +12,18 @@
 # see doc in Makefile  
 #
 
+# mkinitrd
+#
+ifeq "$(DISTRONAME)" "centos5"
+mkinitrd-MODULES := mkinitrd
+mkinitrd-SPEC := mkinitrd.spec
+ALL += mkinitrd
+IN_BOOTCD += mkinitrd
+IN_VSERVER += mkinitrd 
+IN_BOOTSTRAPFS += mkinitrd
+IN_MYPLC += mkinitrd
+endif
+
 #
 # kernel
 #
@@ -21,6 +33,9 @@
 
 kernel-MODULES := linux-2.6
 kernel-SPEC := kernel-2.6.spec
+ifeq "$(DISTRONAME)" "centos5"
+kernel-DEPEND-DEVEL-RPMS: mkinitrd
+endif
 kernel-BUILD-FROM-SRPM := yes
 ifeq "$(HOSTARCH)" "i386"
 kernel-RPMFLAGS:= --target i686
