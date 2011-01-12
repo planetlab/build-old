@@ -1,5 +1,6 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
+mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@master
 linux-2.6-BRANCH		:= rhel6
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-8
 madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@master

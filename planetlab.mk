@@ -10,6 +10,20 @@
 # see doc in Makefile  
 #
 
+# mkinitrd
+#
+ifeq "$(PLDISTROTAGS)" "planetlab-k32-tags.mk"
+ifeq "$(DISTRONAME)" "centos5"
+mkinitrd-MODULES := mkinitrd
+mkinitrd-SPEC := mkinitrd.spec
+mkinitrd-BUILD-FROM-SRPM := yes
+ALL += mkinitrd
+IN_BOOTCD += mkinitrd
+IN_VSERVER += mkinitrd 
+IN_BOOTSTRAPFS += mkinitrd
+IN_MYPLC += mkinitrd
+endif
+endif
 #
 # kernel
 #
