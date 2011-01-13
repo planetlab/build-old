@@ -100,3 +100,5 @@ package: python-cherrypy
 package: python-uuid pyOpenSSL m2crypto
 # for git
 package: make git
+# for mkinitrd
+package=centos5: parted-devel glib2-devel libdhcp4client-devel libdhcp6client-devel libdhcp-devel device-mapper libselinux-devel libsepol-devel libnl-devel
