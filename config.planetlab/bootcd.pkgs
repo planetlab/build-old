@@ -49,6 +49,8 @@ package: pypcilib
 package: openvpn
 # make this explicit for f14 as we need mkfs.ext2 in bm
 package: e2fsprogs
+# used to be installed until f12, make it explicit for f14, might come in handy
+package>=f14: rsyslog 
 #################### formerly in prep.sh
 junk: lib/obsolete
 junk: lib/tls
