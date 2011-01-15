@@ -215,6 +215,14 @@ ALL += inotify-tools
 endif
 
 #
+# openvswitch
+#
+openvswitch-MODULES := openvswitch
+openvswitch-SPEC := openvswitch.spec
+IN_BOOTSTRAPFS += openvswitch
+ALL += openvswitch
+
+#
 # vsys
 #
 vsys-MODULES := vsys
