@@ -29,6 +29,12 @@ echo > ${vdir}/etc/sysconfig/crontab
 # Add site_admin account
 chroot ${vdir} /usr/sbin/useradd -p "" -u 502 -m site_admin
 
+# Remove 32bit packages from 64bit system (http://wiki.centos.org/FAQ/General#head-357346ff0bf7c14b0849c3bcce39677aaca528e9) 
+# use rpm instead of yum as /proc is not mounted at that poing 
+if echo ${vdir} | grep -q x86_64 ; then
+    chroot ${vdir} rpm -qa --qf '%{name}.%{arch}\n' | grep 'i[36]86$' | xargs chroot ${vdir} rpm -e
+fi
+
 # NOTE:  This is added to relieve one site's Cisco router configuration that
 # fails to recognize the host once the arping is sent out.
 # NOTE: this is pretty fragile, and fails on fedora 10 that as of today (oct. 20 2009) 
