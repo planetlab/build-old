@@ -55,6 +55,9 @@ IN_MYPLC += $(KERNELS)
 #
 # madwifi
 #
+
+ifeq "$(PLDISTROTAGS)" "planetlab-k32-tags.mk"
+ifneq "$(DISTRONAME)" "f8"
 madwifi-MODULES := madwifi
 madwifi-SPEC := madwifi.spec
 madwifi-BUILD-FROM-SRPM := yes
@@ -64,6 +67,8 @@ madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_arch=$(kernel.rpm-arch)
 ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
+endif
+endif
 
 #
 # util-vserver
