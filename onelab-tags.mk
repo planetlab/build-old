@@ -28,7 +28,7 @@ fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tag
 pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
-openvswitch-GITPATH			:= git://git.planet-lab.org/openvswitch.git
+openvswitch-GITPATH		:= git://git.planet-lab.org/openvswitch.git
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.99-0
 vsys-scripts-GITPATH		:= git://git.onelab.eu/vsys-scripts@master
 plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@master
@@ -44,7 +44,7 @@ pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@pyaspects-0.4.1-0
 ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-8
 ###
-sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
+sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-11
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-3
 nodeconfig-GITPATH		:= git://git.onelab.eu/nodeconfig.git@master
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@master
