@@ -263,6 +263,7 @@ endif
 #
 openvswitch-MODULES := openvswitch
 openvswitch-SPEC := openvswitch.spec
+openvswitch-DEPEND-DEVEL-RPMS := kernel-devel
 IN_BOOTSTRAPFS += openvswitch
 ALL += openvswitch
 
