@@ -264,7 +264,7 @@ endif
 openvswitch-MODULES := openvswitch
 openvswitch-SPEC := openvswitch.spec
 IN_BOOTSTRAPFS += openvswitch
-ALL += openvswitch
+# ALL += openvswitch
 
 #
 # vsys
