@@ -19,9 +19,13 @@ done
 
 # Remove unneeded services
 # turn off firstboot if present, might cause the node to hang
-for service in vprocunhide vservers-default firstboot; do
-    chroot ${vdir} /sbin/chkconfig $service off || :
-done
+chroot ${vdir} /sbin/chkconfig firstboot off || :
+# this is to automatically restart vservers, let nm do that
+chroot ${vdir} /sbin/chkconfig vservers-default off || :
+# vprocunhide is required with kernels that have CONFIG_VSERVER_PROC_SECURE enabled
+# which is the case for our k32 kernel
+chroot ${vdir} /sbin/chkconfig vprocunhide on || :
+
 
 # Disable splaying of cron.
 echo > ${vdir}/etc/sysconfig/crontab
