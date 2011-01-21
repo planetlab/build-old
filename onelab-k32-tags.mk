@@ -3,7 +3,8 @@
 ###
 linux-2.6-BRANCH		:= rhel6
 linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-9
-kernel-RPMFLAGS			+= --without debug
+# spec2make does not know how to interpret that
+#kernel-RPMFLAGS			+= --without debug
 madwifi-GITPATH			:= git://git.onelab.eu/madwifi.git@master
 iptables-BUILD-FROM-SRPM        := yes	# tmp
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@master
