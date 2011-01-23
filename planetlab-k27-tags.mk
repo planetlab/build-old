@@ -2,7 +2,7 @@
 
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-27-33
 madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@madwifi-4132-1
-iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-0
+iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.9-1
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.35-0
