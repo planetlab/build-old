@@ -52,7 +52,7 @@ pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-7
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-7
 vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-5
 bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@bootstrapfs-2.0-7
-myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-12
+myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-13
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
