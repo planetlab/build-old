@@ -6,7 +6,6 @@
  * Mark Huang <mlhuang@cs.princeton.edu>
  * Copyright (C) 2006 The Trustees of Princeton University
  *
- * $Id$
  */
 
 #include <stdio.h>
@@ -33,6 +32,10 @@ extern size_t strnlen(const char *s, size_t maxlen);
 
 /* the structure describing the options we take and the defaults */
 static struct poptOption optionsTable[] = {
+  { NULL, '\0', POPT_ARG_INCLUDE_TABLE, rpmBuildPoptTable, 0,
+    "Build options with [ <specfile> | <tarball> | <source package> ]:",
+    NULL },
+ 
   { NULL, '\0', POPT_ARG_INCLUDE_TABLE, rpmcliAllPoptTable, 0,
     "Common options for all rpm modes and executables:",
     NULL },
