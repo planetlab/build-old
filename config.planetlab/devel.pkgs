@@ -55,9 +55,9 @@ package: binutils-devel
 package: linuxdoc-tools 
 package: sudo 
 package: yum createrepo 
-# mysql
-package: gperf 
-package: time 
+## mysql
+#package: gperf 
+#package: time 
 # bootmanager
 package: sharutils 
 # bootcd
@@ -86,7 +86,7 @@ package: pciutils-devel
 package: python-simplejson
 ##########
 # for vsys - same as for php-devel above
-package: ocaml.@arch@ ocaml-ocamldoc ocaml-docs 
+package: ocaml.@arch@ ocaml-ocamldoc
 # use local inotify-tools on centos
 package>=f8:inotify-tools-devel 
 ##########
@@ -98,9 +98,7 @@ package: ctags
 package>=f12: e2fsprogs-devel
 package>=f14: e2fsprogs nss-devel
 # zabbix/monitor
-package: net-snmp net-snmp-devel
 package=centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
-package: python-cherrypy
 ##########
 # for sfa : rebuilding wsdl index at build-time
 package: python-uuid pyOpenSSL m2crypto
@@ -112,9 +110,3 @@ package: python-dateutil
 package: python-lxml
 # DistributedRateLimiting
 package: libxml2-devel
-# for ejabberd
-package: erlang
-package: pam-devel
-package: hevea
-# for mkinitrd
-package=centos5: parted-devel glib2-devel libdhcp4client-devel libdhcp6client-devel libdhcp-devel device-mapper libselinux-devel libsepol-devel libnl-devel 

@@ -1,5 +1,3 @@
-# $Id$
-# $URL$
 #
 # declare the packages to be built and their dependencies
 # initial version from Mark Huang
@@ -17,6 +15,8 @@ ifeq "$(DISTRONAME)" "centos5"
 mkinitrd-MODULES := mkinitrd
 mkinitrd-SPEC := mkinitrd.spec
 mkinitrd-BUILD-FROM-SRPM := yes
+mkinitrd-DEVEL-RPMS += parted-devel glib2-devel libdhcp4client-devel libdhcp6client-devel libdhcp-devel 
+mkinitrd-DEVEL-RPMS += device-mapper libselinux-devel libsepol-devel libnl-devel
 ALL += mkinitrd
 IN_BOOTCD += mkinitrd
 IN_VSERVER += mkinitrd 
@@ -61,7 +61,7 @@ ifneq "$(DISTRONAME)" "f8"
 madwifi-MODULES := madwifi
 madwifi-SPEC := madwifi.spec
 madwifi-BUILD-FROM-SRPM := yes
-madwifi-DEPEND-DEVEL-RPMS := kernel-devel
+madwifi-DEPEND-DEVEL-RPMS += kernel-devel
 madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 	kernel_release=$(kernel.rpm-release) \
 	kernel_arch=$(kernel.rpm-arch)
@@ -94,7 +94,7 @@ libnl-MODULES := libnl
 libnl-SPEC := libnl.spec
 libnl-BUILD-FROM-SRPM := yes
 # this sounds like the thing to do, but in fact linux/if_vlan.h comes with kernel-headers
-libnl-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
+libnl-DEPEND-DEVEL-RPMS += kernel-devel kernel-headers
 ALL += libnl
 IN_BOOTSTRAPFS += libnl
 endif
@@ -104,7 +104,7 @@ endif
 #
 util-vserver-pl-MODULES := util-vserver-pl
 util-vserver-pl-SPEC := util-vserver-pl.spec
-util-vserver-pl-DEPEND-DEVEL-RPMS := util-vserver-lib util-vserver-devel util-vserver-core 
+util-vserver-pl-DEPEND-DEVEL-RPMS += util-vserver-lib util-vserver-devel util-vserver-core 
 ifeq "$(local_libnl)" "true"
 util-vserver-pl-DEPEND-DEVEL-RPMS += libnl libnl-devel
 endif
@@ -187,7 +187,7 @@ IN_BOOTSTRAPFS += mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-iptables-DEPEND-DEVEL-RPMS := kernel-devel kernel-headers
+iptables-DEPEND-DEVEL-RPMS += kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
 
@@ -232,7 +232,7 @@ ALL += openvswitch
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
 ifeq "$(local_inotify_tools)" "true"
-vsys-DEPEND-DEVEL-RPMS := inotify-tools inotify-tools-devel
+vsys-DEPEND-DEVEL-RPMS += inotify-tools inotify-tools-devel
 endif
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
@@ -290,6 +290,7 @@ ALL += pcucontrol
 #
 monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
+monitor-DEVEL-RPMS += net-snmp net-snmp-devel
 ALL += monitor
 IN_BOOTSTRAPFS += monitor
 
@@ -306,6 +307,7 @@ ALL += plcrt
 zabbix-MODULES := Monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
+zabbix-DEVEL-RPMS += python-cherrypy
 ALL += zabbix
 
 #
@@ -331,6 +333,7 @@ ALL += pyaspects
 ejabberd-MODULES := ejabberd
 ejabberd-SPEC := ejabberd.spec
 ejabberd-BUILD-FROM-SRPM := yes
+ejabberd-DEVEL-RPMS += erlang pam-devel hevea
 # not needed anymore on f12 and above, that come with 2.1.5, and we had 2.1.3
 # so, this is relevant on f8 and centos5 only
 ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
