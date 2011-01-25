@@ -28,47 +28,62 @@
 # 
 # (*) packages are named upon the RPM name; they are mostly lowercase
 #     Add a package to ALL if you want it built as part of the default set.
-# (*) modules are named after the subversion tree; as of this writing their names 
-#     are mostly mixed case like MyPLC or VserverReference
-#     (this is something we'll fix while moving to git)
+# (*) modules are named after the subversion or git tree; we would wish to keep
+#     these names lowercase as far as possible
 # (*) rpms are named in the spec files. A package typically defines several rpms;
 #     rpms are used for defining DEPEND-DEVEL-RPMS. See also package.rpmnames
 # 
+# in simple cases, one package uses one module (in which case using the same name sounds right)
+# but others might need several modules (e.g. image-creation packages like bootstrapfs need 
+# bootstrapfs and build); in this case the FIRST ONE is used for locating the specfile 
+#
 #################### packages
-# basics: how to build a package - you need/may define the following variables
+# basics: how to build a package - you need to define the following variables
 # 
 # (*) package-MODULES
-#     a package needs one or several modules to build. 
-#     to this end, define 
+#     a package needs one or several modules to build; the first one is used for 
+#     some special purposes, like locating the specfile
 # (*) package-SPEC
 #     the package's specfile; this is relative to the FIRST module in package-MODULES
 #
 # Optional:
 #
-# (*) package-SPECVARS
-#     space-separated list of spec variable definitions, where you can reference make variable that relate to 
-#     packages defined BEFORE the current one (note: you should use = - as opposed to := - to define these)
-#     e.g. mydriver-SPECVARS = foo=$(kernel-rpm-release) 
-#     would let you use the %release from the kernel's package when rpmbuild'ing mydriver - see automatic below
 # (*) package-DEPEND-PACKAGES
-#     a set of *packages* that this package depends on
+#     a set of (obviously local) *packages* that this package depends on, e.g.
+#     bootstrapfs-DEPEND-PACKAGES += kernel
+#     this impacts the order of the build
+# (*) package-DEVEL-RPMS
+#     a set of stock rpms that this package needs at build-time
+#     this can also be set in config.<distro>/devel.pkgs or config.planetlab/devel.pkgs as appropriate
+# (*) package-EXCLUDE-DEVEL-RPMS
+#     a set of stock *rpms* that the build will rpm-uninstall before building <package>
+#     this is intended to denote stock rpms, and the build will attempt to yum-install them
+#     back after the package is rebuilt
+#     This feature is not used at the moment and kept only just in case
 # (*) package-DEPEND-DEVEL-RPMS
-#     a set of *rpms* that the build will rpm-install before building <package>
+#     a set of local *rpms* that the build will rpm-install before building <package>
 #     the build will attempt to uninstall those once the package is built, this is not fatal though
 #     this is intended to denote local rpms, i.e. ones that are results of our own build
-#     stock rpms should be mentioned in config.planetlab/devel.pkgs
+#     stock rpms should be mentioned in DEVEL-RPMS or in devel.pkgs as described above
 # (*) package-DEPEND-FILES
 #     a set of files that the package depends on - and that make needs to know about
 #     if this contains RPMS/yumgroups.xml, then the toplevel RPMS's index 
 #     is refreshed with createrepo prior to running rpmbuild
-# (*) package-EXCLUDE-DEVEL-RPMS
-#     a set of *rpms* that the build will rpm-uninstall before building <package>
-#     this is intended to denote stock rpms, and the build will attempt to yum-install them
-#     back after the package is rebuilt
+# (*) package-SPECVARS
+#     space-separated list of spec variable definitions, where you can reference make variables that 
+#     belong to packages defined BEFORE the current one 
+#     note: you should use = to define these (as opposed to :=)
+#     e.g. mydriver-SPECVARS = foo=$(kernel-rpm-release) 
+#     would let you use the %release from the kernel's package when rpmbuild'ing mydriver 
+#     see automatic below
 # (*) package-RPMFLAGS: Miscellaneous RPM flags
-# (*) package-RPMBUILD: If not rpmbuild - mostly used for sudo'ing rpmbuild
-# (*) package-BUILD-FROM-SRPM: set this to any non-empty value, if your package is able to produce 
-#     a source rpms by running 'make srpm'
+#     this is passed to rpmbuild, as well as to spec2make for "exporting" various rpm variable
+#     to make; beware that some features, like --with=debug or --define 'foo bar' are not
+#     well handled by spec2make as of this writing, which can cause issues.
+#     hopefully this will be fixed...
+# (*) package-BUILD-FROM-SRPM: set this to any non-empty value, 
+#     if your package is able to produce a source rpm. 
+#     In this case the build will first invoke 'make srpm', and then rebuild binaries from that 
 # (*) package-RPMDATE: set this to any non-empty value to get the rpm package's release field hold the current date
 #     this is useful for container packages, like e.g. bootstrapfs or vserver, that contains much more than the
 #     correspondng module
@@ -88,7 +103,7 @@
 #################### automatic variables
 #
 # the build defines some make variables that are extracted from spec files
-# see for example
+# to inspect those, see for example
 # (*)  $ make ulogd-pkginfo
 #        to see the list f variables attached to a given package
 # (*)  $ make kernel-devel-rpminfo
@@ -442,7 +457,7 @@ all: savedpldistro
 
 define stage2_variables
 ### devel dependencies
-$(1).rpmbuild = $(if $($(1)-RPMBUILD),$($(1)-RPMBUILD),$(RPMBUILD)) $($(1)-RPMFLAGS)
+$(1).rpmbuild = $(RPMBUILD) $($(1)-RPMFLAGS)
 $(1).all-devel-rpm-paths := $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).rpm-path))
 $(1).depend-devel-packages := $(sort $(foreach rpm,$($(1)-DEPEND-DEVEL-RPMS),$($(rpm).package)))
 ALL-DEVEL-RPMS += $($(1)-DEPEND-DEVEL-RPMS)

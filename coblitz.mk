@@ -146,7 +146,6 @@ IN_BOOTSTRAPFS += sshd
 #
 codemux-MODULES := codemux
 codemux-SPEC   := codemux.spec
-codemux-RPMBUILD := sudo bash ./rpmbuild.sh
 #ALL += codemux
 #IN_BOOTSTRAPFS += codemux
 
@@ -346,7 +345,6 @@ IN_BOOTCD += pyplnet
 #
 bootcd-MODULES := bootcd build
 bootcd-SPEC := bootcd.spec
-bootcd-RPMBUILD := sudo bash ./rpmbuild.sh
 bootcd-DEPEND-PACKAGES := $(IN_BOOTCD)
 bootcd-DEPEND-FILES := RPMS/yumgroups.xml
 bootcd-RPMDATE := yes
@@ -369,7 +367,6 @@ IN_BOOTSTRAPFS += vserver
 #
 bootstrapfs-MODULES := bootstrapfs build
 bootstrapfs-SPEC := bootstrapfs.spec
-bootstrapfs-RPMBUILD := sudo bash ./rpmbuild.sh
 bootstrapfs-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS)
 bootstrapfs-DEPEND-FILES := RPMS/yumgroups.xml
 bootstrapfs-RPMDATE := yes
@@ -387,7 +384,6 @@ NODEREPO_RPMS_3PLUS = $(subst $(SPACE),+++,$(NODEREPO_RPMS))
 
 noderepo-MODULES := bootstrapfs 
 noderepo-SPEC := noderepo.spec
-noderepo-RPMBUILD := sudo bash ./rpmbuild.sh
 # package requires all regular packages
 noderepo-DEPEND-PACKAGES := $(IN_BOOTSTRAPFS) $(IN_VSERVER)
 noderepo-DEPEND-FILES := RPMS/yumgroups.xml
