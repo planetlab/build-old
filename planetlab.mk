@@ -231,6 +231,8 @@ ALL += openvswitch
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+# ocaml-docs is not needed anymore but keep it on a tmp basis as some tags may still have it
+vsys-DEVEL-RPMS += ocaml-ocamldoc ocaml-docs
 ifeq "$(local_inotify_tools)" "true"
 vsys-DEPEND-DEVEL-RPMS += inotify-tools inotify-tools-devel
 endif
