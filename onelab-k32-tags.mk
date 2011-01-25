@@ -2,7 +2,7 @@
 
 ###
 linux-2.6-BRANCH		:= rhel6
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-32-9
+linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@rhel6
 # spec2make does not know how to interpret that
 #kernel-RPMFLAGS			+= --without debug
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
