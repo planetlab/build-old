@@ -524,14 +524,20 @@ srpms: $(ALLSRPMS)
 	@echo $(words $(ALLSRPMS)) source rpms OK
 .PHONY: srpms
 
+
+# install the DEVEL-RPMS rpms if defined
+define handle_stock_devel_rpms_pre 
+	$(if $($(1)-DEVEL-RPMS), echo "Installing for $(1)-DEVEL-RPMS" ; $(YUM-INSTALL-DEVEL) $($(1)-DEVEL-RPMS))
+endef
+
 ### these macro handles the DEPEND-DEVEL-RPMS and EXCLUDE-DEVEL-RPMS tags for a hiven package
 # before building : rpm-install DEPEND-DEVEL-RPMS and rpm-uninstall EXCLUDE
-define handle_devel_rpms_pre 
+define handle_local_devel_rpms_pre 
 	$(if $($(1).all-devel-rpm-paths), echo "Installing for $(1)-DEPEND-DEVEL-RPMS" ; $(RPM-INSTALL-DEVEL) $($(1).all-devel-rpm-paths)) 
 	$(if $($(1)-EXCLUDE-DEVEL-RPMS), echo "Uninstalling for $(1)-EXCLUDE-DEVEL-RPMS" ; $(RPM-UNINSTALL-DEVEL) $($(1)-EXCLUDE-DEVEL-RPMS))
 endef
 
-define handle_devel_rpms_post
+define handle_local_devel_rpms_post
 	-$(if $($(1)-DEPEND-DEVEL-RPMS), echo "Unstalling for $(1)-DEPEND-DEVEL-RPMS" ; $(RPM-UNINSTALL-DEVEL) $($(1)-DEPEND-DEVEL-RPMS))
 	$(if $($(1)-EXCLUDE-DEVEL-RPMS), "Reinstalling for $(1)-EXCLUDE-DEVEL-RPMS" ; $(YUM-INSTALL-DEVEL) $($(1)-EXCLUDE-DEVEL-RPMS) )
 endef
@@ -542,19 +548,21 @@ ifeq "$($(1)-BUILD-FROM-SRPM)" ""
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).tarballs) 
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using SOURCES) " ; date)
-	$(call handle_devel_rpms_pre,$(1))
+	$(call handle_stock_devel_rpms_pre,$(1))
+	$(call handle_local_devel_rpms_pre,$(1))
 	$($(1).rpmbuild) -bs $($(1).specpath)
-	$(call handle_devel_rpms_post,$(1))
+	$(call handle_local_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 else
 $($(1).srpm): $($(1).specpath) .rpmmacros $($(1).source)
 	mkdir -p BUILD SRPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG SRPM $(1) (using make srpm) " ; date)
-	$(call handle_devel_rpms_pre,$(1))
+	$(call handle_stock_devel_rpms_pre,$(1))
+	$(call handle_local_devel_rpms_pre,$(1))
 	make -C $($(1).source) srpm SPECFILE=$(HOME)/$($(1).specpath) EXPECTED_SRPM=$(notdir $($(1).srpm)) && \
            rm -f SRPMS/$(notdir $($(1).srpm)) && \
            ln $($(1).source)/$(notdir $($(1).srpm)) SRPMS/$(notdir $($(1).srpm)) 
-	$(call handle_devel_rpms_post,$(1))
+	$(call handle_local_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END SRPM $(1) " ; date)
 endif
 endef
@@ -580,18 +588,20 @@ $($(1).rpms): $($(1).srpm)
 	mkdir -p RPMS tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG RPM $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
-	$(call handle_devel_rpms_pre,$(1))
+	$(call handle_stock_devel_rpms_pre,$(1))
+	$(call handle_local_devel_rpms_pre,$(1))
 	$($(1).rpmbuild) --rebuild $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	$(call handle_devel_rpms_post,$(1))
+	$(call handle_local_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END RPM $(1) " ; date)
 # for manual use only - in case we need to investigate the results of an rpmbuild
 $(1)-compile: $($(1).srpm)
 	mkdir -p COMPILE tmp
 	@(echo -n "XXXXXXXXXXXXXXX -- BEG compile $(1) " ; date)
 	$(if $(findstring RPMS/yumgroups.xml,$($(1)-DEPEND-FILES)), $(createrepo) , )
-	$(call handle_devel_rpms_pre,$(1))
+	$(call handle_stock_devel_rpms_pre,$(1))
+	$(call handle_local_devel_rpms_pre,$(1))
 	$($(1).rpmbuild) --recompile $(RPM-USE-TMP-DIRS) $($(1).srpm)
-	$(call handle_devel_rpms_post,$(1))
+	$(call handle_local_devel_rpms_post,$(1))
 	@(echo -n "XXXXXXXXXXXXXXX -- END compile $(1) " ; date)
 .PHONY: $(1)-compile
 endef
