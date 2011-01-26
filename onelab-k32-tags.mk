@@ -8,7 +8,7 @@ linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@rhel6
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-BUILD-FROM-SRPM        := yes	# tmp
-iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-0
+iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.9-1
 iproute-BUILD-FROM-SRPM		:= yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.35-0
 ###
