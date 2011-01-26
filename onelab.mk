@@ -110,9 +110,6 @@ ALL += umts-frontend
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
-ifeq "$(PLDISTROTAGS)" "onelab-k27-tags.mk"
-iptables-BUILD-FROM-SRPM := yes
-endif
 iptables-DEPEND-DEVEL-RPMS += kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
