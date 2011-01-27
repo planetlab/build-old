@@ -11,6 +11,7 @@ package: kernel
 package: udev
 package: basesystem
 package: filesystem
+package>=f14: lvm2
 package: bash
 package: coreutils
 package: python
@@ -33,7 +34,9 @@ package: setserial
 package: setup
 package: vim-minimal
 package: shadow-utils
-package: anacron
+package>=centos5: anacron
+package<=f10: anacron
+package>=f12: cronie-anacron
 package: at
 package: authconfig
 package: bc
@@ -69,7 +72,9 @@ package: yum
 package: curl
 package: gzip
 package: iptables
-package: mkinitrd
+package>=centos5: mkinitrd
+package<=f12: mkinitrd
+package>=f14: dracut
 package: ntp
 package: perl
 package: python
