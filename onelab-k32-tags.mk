@@ -49,7 +49,7 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-9
 ###
 sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-12
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-4
-nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-4
+nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@master
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-16
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-8
