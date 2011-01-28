@@ -51,7 +51,7 @@ package: openvpn
 package: e2fsprogs
 # used to be installed until f12, make it explicit for f14, might come in handy
 package>=f14: rsyslog 
-package: strace
+package: strace lsof
 #################### formerly in prep.sh
 junk: lib/obsolete
 junk: lib/tls
