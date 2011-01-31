@@ -26,15 +26,17 @@ chroot ${vdir} /sbin/chkconfig vservers-default off || :
 chroot ${vdir} /sbin/chkconfig vprocunhide on || :
 
 # turn OFF selinux if set
-if [ -f ${vdir}/etc/sysconfig/selinux ] ; then
-    selinuxrpm=$(chroot ${vdir} rpm -qf /etc/sysconfig/selinux)
+# this may happen accidentally if you mention too much stuff in bootstrapfs.pkgs
+for file in /etc/sysconfig/selinux /sbin/load_policy; do
+    [ -f ${vdir}/${file} ] || { echo "$file not found in $vdir - fine" ; continue; }
+    selinuxrpm=$(chroot ${vdir} rpm -qf ${file})
     if [ -z "$selinuxrpm" ] ; then 
-	echo WARNING : could not turn off SElinux
+	echo "SElinux: warning : could not rpm for file $file"
     else
 	echo "Force-removing package ${selinuxrpm}" 
 	chroot ${vdir} rpm -e --nodeps ${selinuxrpm}
     fi
-fi
+done
 
 # Disable splaying of cron.
 echo > ${vdir}/etc/sysconfig/crontab
