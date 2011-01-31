@@ -26,8 +26,10 @@ chroot ${vdir} /sbin/chkconfig vservers-default off || :
 chroot ${vdir} /sbin/chkconfig vprocunhide on || :
 
 # turn OFF selinux if set
-selinuxconf=${vdir}/etc/sysconfig/selinux
-[ -f ${selinuxconf} ] && sed -i -e 's,^SELINUX[ \t]*=.*$,SELINUX=disabled,' ${selinuxconf}
+if [ -f ${vdir}/etc/sysconfig/selinux ] ; then
+    selinuxrpm=$(chroot ${vdir} rpm -qf /etc/sysconfig/selinux)
+    chroot ${vdir} rpm -e --nodeps ${rpm}
+fi
 
 # Disable splaying of cron.
 echo > ${vdir}/etc/sysconfig/crontab
