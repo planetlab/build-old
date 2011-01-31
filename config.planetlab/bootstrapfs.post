@@ -28,7 +28,12 @@ chroot ${vdir} /sbin/chkconfig vprocunhide on || :
 # turn OFF selinux if set
 if [ -f ${vdir}/etc/sysconfig/selinux ] ; then
     selinuxrpm=$(chroot ${vdir} rpm -qf /etc/sysconfig/selinux)
-    chroot ${vdir} rpm -e --nodeps ${rpm}
+    if [ -z "$selinuxrpm" ] ; then 
+	echo WARNING : could not turn off SElinux
+    else
+	echo "Force-removing package ${selinuxrpm}" 
+	chroot ${vdir} rpm -e --nodeps ${selinuxrpm}
+    fi
 fi
 
 # Disable splaying of cron.
