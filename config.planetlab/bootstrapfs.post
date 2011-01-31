@@ -10,22 +10,24 @@ fi
 # Cleanup yum config entirely, waiting for the config files to populate this
 rm -rf ${vdir}/etc/yum.conf ${vdir}/etc/yum.repos.d
 
+# Tweaking services
 # NOTE: we're enabling util-vserver to allow it to help shutdown all slices
-# before rebooting.  This has been problematic in the past.
-# Thierry : I'm enabling network since, for some reason, it ends up turned off on fedora9
-for service in network util-vserver; do
-    chroot ${vdir} /sbin/chkconfig $service on
-done
+# before rebooting.  This has been problematic in the past
+chroot ${vdir} /sbin/chkconfig util-vserver on
+# enabling network; it ends up turned off starting with fedora9, probably related to NetworkManager
+chroot ${vdir} /sbin/chkconfig network on
 
-# Remove unneeded services
-# turn off firstboot if present, might cause the node to hang
+# turn OFF firstboot if present, might cause the node to hang
 chroot ${vdir} /sbin/chkconfig firstboot off || :
-# this is to automatically restart vservers, let nm do that
+# turn OFF vservers-default ; this is to automatically restart vservers, let nm do that
 chroot ${vdir} /sbin/chkconfig vservers-default off || :
-# vprocunhide is required with kernels that have CONFIG_VSERVER_PROC_SECURE enabled
+# turn ON vprocunhide ; is required with kernels that have CONFIG_VSERVER_PROC_SECURE enabled
 # which is the case for our k32 kernel
 chroot ${vdir} /sbin/chkconfig vprocunhide on || :
 
+# turn OFF selinux if set
+selinuxconf=${vdir}/etc/sysconfig/selinux
+[ -f ${selinuxconf} ] && sed -i -e 's,^SELINUX[ \t]*=.*$,SELINUX=disabled,' ${selinuxconf}
 
 # Disable splaying of cron.
 echo > ${vdir}/etc/sysconfig/crontab
@@ -43,6 +45,8 @@ fi
 # fails to recognize the host once the arping is sent out.
 # NOTE: this is pretty fragile, and fails on fedora 10 that as of today (oct. 20 2009) 
 # has initscripts-8.86.3-1.i386 which reads almost identical but with /sbin/arping instead
+# NOTE: this might work with fedora8 and centos5
+# the other distros will probably just fail to add this patch
 cat <<\EOF | patch -d ${vdir}/etc/sysconfig/network-scripts/
 --- ifup-eth	2008-07-08 13:19:49.000000000 -0400
 +++ ifup-eth-orig	2008-07-08 13:20:02.000000000 -0400
