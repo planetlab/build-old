@@ -18,6 +18,7 @@ linux-2.6:22
 linux-2.6:rhel6
 madwifi
 madwifi:0.9.4
+mkinitrd
 Mom
 Monitor
 myplc
@@ -26,6 +27,8 @@ nodemanager
 nodeupdate
 nozomi
 omf
+oml
+openvswitch
 pcucontrol
 pf2slice
 PingOfDeath
