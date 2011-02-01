@@ -447,6 +447,14 @@ omf-expctl-SPEC := omf-expctl.spec
 ALL += omf-expctl
 
 #
+# OML measurement library
+#
+oml-MODULES := oml
+oml-DEVEL-RPMS += sqlite-devel libpcap-devel check
+oml-SPEC := liboml.spec
+ALL += oml
+
+#
 # bootcd
 #
 bootcd-MODULES := bootcd build
