@@ -9,11 +9,11 @@ iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptable
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.35-0
-util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-11
+util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-12
 util-vserver-BUILD-FROM-SRPM := yes	# tmp
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-21
-nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
+nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@nodeupdate-0.5-7
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-26
 # Trellis-specific NodeManager plugins

@@ -8,12 +8,12 @@ iptables-BRANCH		:= 1.3.8
 iptables-SVNPATH                := http://svn.planet-lab.org/svn/iptables/tags/iptables-1.3.8-12
 iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.16-2
 util-vserver-BUILD-FROM-SRPM := yes # tmp
-util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-11
+util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-12
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # 2.6.22 kernels need 0.3 branch and 2.6.27 need 0.4 (trunk).
 util-vserver-pl-BRANCH		:= 0.3
 util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.3-32
-nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@NodeUpdate-0.5-6
+nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@nodeupdate-0.5-7
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 nodemanager-GITPATH             := git://git.planet-lab.org/nodemanager.git@nodemanager-2.0-26
