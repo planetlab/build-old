@@ -2,7 +2,7 @@
 
 ###
 linux-2.6-BRANCH		:= rhel6
-linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-10
+linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
 # spec2make does not know how to interpret that
 #kernel-RPMFLAGS			+= --without debug
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
