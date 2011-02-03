@@ -1237,6 +1237,9 @@ def modules_diff(first, second):
     diff = {}
 
     for module in first:
+        if module not in second: 
+            print "=== module %s missing in right-hand side ==="%module
+            continue
         if first[module]['tag_or_branch'] != second[module]['tag_or_branch']:
             diff[module] = (first[module]['tag_or_branch'], second[module]['tag_or_branch'])
 
