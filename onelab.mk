@@ -531,7 +531,6 @@ ALL += slicerepo
 #
 myplc-MODULES := myplc
 myplc-SPEC := myplc.spec
-myplc-DEPEND-FILES := myplc-release RPMS/yumgroups.xml
 ALL += myplc
 
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
