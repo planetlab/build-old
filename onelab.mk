@@ -450,7 +450,7 @@ ALL += omf-expctl
 # OML measurement library
 #
 oml-MODULES := oml
-oml-DEVEL-RPMS += sqlite-devel libpcap-devel check
+oml-DEVEL-RPMS += sqlite-devel 
 oml-SPEC := liboml.spec
 ALL += oml
 
