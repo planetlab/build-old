@@ -8,7 +8,7 @@ linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-BUILD-FROM-SRPM        := yes	# tmp
-iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-2
+iptables-GITPATH                := git://git.onelab.eu/iptables.git@master
 iproute-BUILD-FROM-SRPM		:= yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.35-0
 ###
@@ -18,7 +18,7 @@ comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
 ###
 util-vserver-BUILD-FROM-SRPM	:= yes # tmp
-util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-12
+util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@master
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # as per http://svn.planet-lab.org/changeset/17973, 2.6.22 kernels shall use 0.3 branch and 2.6.27 need 0.4
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-22
@@ -34,9 +34,9 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 openvswitch-GITPATH		:= git://git.onelab.eu/openvswitch.git@openvswitch-1.1.0pre2-1
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.99-1
 vsys-scripts-GITPATH            := git://git.onelab.eu/vsys-scripts.git@vsys-scripts-0.95-27
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-28
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@master
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
-plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-59
+plewww-GITPATH                  := git://git.onelab.eu/plewww.git@master
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-10
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
@@ -56,7 +56,7 @@ pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@master
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-8
 vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-6
-bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@bootstrapfs-2.0-9
+bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@master
 myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-15
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
