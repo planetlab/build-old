@@ -17,7 +17,7 @@ NodeManager-SVNPATH             := http://svn.planet-lab.org/svn/NodeManager/tag
 # Trellis-specific NodeManager plugins 
 NodeManager-topo-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
 NodeManager-optin-SVNPATH	:= http://svn.planet-lab.org/svn/NodeManager-optin/trunk
-pyplnet-SVNPATH                 := http://svn.planet-lab.org/svn/pyplnet/tags/pyplnet/tags/pyplnet-4.3-8
+pyplnet-SVNPATH                 := http://svn.planet-lab.org/svn/pyplnet/tags/pyplnet/tags/pyplnet-4.3-9
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 CoDemux-SVNPATH			:= http://svn.planet-lab.org/svn/CoDemux/tags/codemux-0.1-15
 fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.3-2
