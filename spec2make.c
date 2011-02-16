@@ -176,20 +176,25 @@ main(int argc, char *argv[])
 	  arch=target;
 	}
       }
-      /* skip empty packages */
-      if (pkg->fileList) {
-	/* attach (add) rpm path to package */
-	printf("%s.rpms += RPMS/%s/%s-%s-%s.%s.rpm\n",
-	       package_name, arch, name, version, release, arch);
-	/* convenience */
-	printf("%s.rpmnames += %s\n",
-	       package_name, name);
-	/* attach path to rpm name */
-	printf("%s.rpm-path := RPMS/%s/%s-%s-%s.%s.rpm\n",
-	       name,arch, name, version, release, arch);
-	/* attach package to rpm name for backward resolution - should be unique */
-	printf("%s.package := %s\n",
-	       name,package_name);
+      /* skip empty packages 
+       *
+       * Unfortunately, f8 + the RHEL kernel break this bit of cleverness. The following
+       * line returns false for the kernel-devel package even though it is not empty thereby breaking the build.
+       * Rather than unfolding the kernel package macros in the current specfile, this hack should work till f8 dies its natural death. */
+
+      if (pkg->fileList || !strncmp(name,"kernel",sizeof("kernel")-1)) {
+        /* attach (add) rpm path to package */
+        printf("%s.rpms += RPMS/%s/%s-%s-%s.%s.rpm\n",
+               package_name, arch, name, version, release, arch);
+        /* convenience */
+        printf("%s.rpmnames += %s\n",
+               package_name, name);
+        /* attach path to rpm name */
+        printf("%s.rpm-path := RPMS/%s/%s-%s-%s.%s.rpm\n",
+               name,arch, name, version, release, arch);
+        /* attach package to rpm name for backward resolution - should be unique */
+        printf("%s.package := %s\n",
+               name,package_name);
       }
     }
   }
