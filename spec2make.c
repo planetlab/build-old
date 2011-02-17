@@ -94,47 +94,47 @@ main(int argc, char *argv[])
 
   /* walk argv list looking for options */
   while ((args+1)<argc) {
-    /* whitelist-rpms are packages that need to be considered even if the parsing logic of spec2make (second half of this file) concludes otherwise */
-    if (strcmp(argv[args],"--whitelist-rpms")==0) {
-	/* Split "whitelist-rpms" which is a comma-separated list, remove --whitelist-rpms <option> from argv */
+      /* whitelist-rpms are packages that need to be considered even if the parsing logic of spec2make (second half of this file) concludes otherwise */
+      if (strcmp(argv[args],"--whitelist-rpms")==0) {
+          /* Split "whitelist-rpms" which is a comma-separated list, remove --whitelist-rpms <option> from argv */
 
-	int option_offset = 1; 
-	char *whitelist_str = argv[args+1];
-	if (whitelist_str != NULL) {
-		char *saveptr = NULL, *str;
-		option_offset = 2;
-		for (str = whitelist_str; ; str = NULL) {
-		   char *token;
-                   token = strtok_r(str, "," , &saveptr);
-		   if (token == NULL) break;
-		   package_whitelist[whitelist_size++] = token;
-               }	
-	}
-	for (i=args;i<argc-2+option_offset;i++) argv[i]=argv[i+option_offset];
-	argc-=option_offset;
-	
-    } else if (strcmp(argv[args],"--target")==0) {
-      char **dash;
+          int option_offset = 1; 
+          char *whitelist_str = argv[args+1];
+          if (whitelist_str != NULL) {
+              char *saveptr = NULL, *str;
+              option_offset = 2;
+              for (str = whitelist_str; ; str = NULL) {
+                  char *token;
+                  token = strtok_r(str, "," , &saveptr);
+                  if (token == NULL) break;
+                  package_whitelist[whitelist_size++] = token;
+              }	
+          }
+          for (i=args;i<argc-2+option_offset;i++) argv[i]=argv[i+option_offset];
+          argc-=option_offset;
 
-      /* get arch component of the --target option */
-      dash = (char**)strchr(argv[args+1],'-');
-      if (dash != NULL) *dash=NULL;
+      } else if (strcmp(argv[args],"--target")==0) {
+          char **dash;
 
-      /* copy arch component of --target option to target */
-      alen = strnlen(argv[args+1],32);
-      target = (char*)malloc(alen+1);
-      if (target == NULL) return errno;
-      strncpy(target,argv[args+1],alen);
-      target[alen]='\0';
+          /* get arch component of the --target option */
+          dash = (char**)strchr(argv[args+1],'-');
+          if (dash != NULL) *dash=NULL;
 
-      /* change argc, argv to take out the "--target xxx" */
-      for (i=args;i<argc;i++) argv[i]=argv[i+2];
-      argc-=2;
+          /* copy arch component of --target option to target */
+          alen = strnlen(argv[args+1],32);
+          target = (char*)malloc(alen+1);
+          if (target == NULL) return errno;
+          strncpy(target,argv[args+1],alen);
+          target[alen]='\0';
 
-      break;
-    }
+          /* change argc, argv to take out the "--target xxx" */
+          for (i=args;i<argc;i++) argv[i]=argv[i+2];
+          argc-=2;
 
-    args++;
+          break;
+      }
+      else
+          args++;
   }
   argv[1]=argv[argc-2];
   argv[2]=argv[argc-1];
