@@ -27,7 +27,6 @@
 #ifndef PATH_MAX
 #include <linux/limits.h>
 #endif
-
 extern size_t strnlen(const char *s, size_t maxlen);
 
 /* the structure describing the options we take and the defaults */
@@ -81,12 +80,13 @@ main(int argc, char *argv[])
   int  alen, i;
   char *target = NULL;
   int args = 1;
-  int tlen = strlen("--target");
-
+  int hack=0;
 
   /* walk argv list looking for --target */
   while ((args+1)<argc) {
-    if(strncmp(argv[args],"--target",tlen)==0){
+    if (strcmp(argv[args],"--hack")==0) {
+      hack=1;
+    } else if (strcmp(argv[args],"--target")==0) {
       char **dash;
 
       /* get arch component of the --target option */
@@ -180,9 +180,12 @@ main(int argc, char *argv[])
        *
        * Unfortunately, f8 + the RHEL kernel break this bit of cleverness. The following
        * line returns false for the kernel-devel package even though it is not empty thereby breaking the build.
-       * Rather than unfolding the kernel package macros in the current specfile, this hack should work till f8 dies its natural death. */
+       * Rather than unfolding the kernel package macros in the current specfile, 
+       * this hack should work till f8 dies its natural death. 
+       * Thierry : trigerring this based on the package's NEEDSPEC2MAKEHACK instead of hard-wiring it for kernel here
+       */
 
-      if (pkg->fileList || !strncmp(name,"kernel",sizeof("kernel")-1)) {
+      if (pkg->fileList || hack) {
         /* attach (add) rpm path to package */
         printf("%s.rpms += RPMS/%s/%s-%s-%s.%s.rpm\n",
                package_name, arch, name, version, release, arch);
