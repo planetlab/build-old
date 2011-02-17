@@ -3,8 +3,10 @@
 mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@mkinitrd-5.1.19.6-0
 linux-2.6-BRANCH		:= rhel6
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
-# enable hack in spec2make on f8 and centos5
-kernel-WHITELIST-RPMS	:= kernel-devel
+# help out spec2make on f8 and centos5, due to a bug in rpm
+ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
+kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
+endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-2

@@ -3,8 +3,10 @@
 ###
 linux-2.6-BRANCH		:= rhel6
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
-# enable hack in spec2make on f8 and centos5
-kernel-WHITELIST-RPMS	:= kernel-devel
+# help out spec2make on f8 and centos5, due to a bug in rpm
+ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
+kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
+endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-BUILD-FROM-SRPM        := yes	# tmp
