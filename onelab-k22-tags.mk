@@ -53,7 +53,7 @@ pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH			:= git://git.onelab.eu/pyplnet.git@pyplnet-4.3-9
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-8
 vserver-reference-GITPATH       := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-6
-bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@bootstrapfs-2.0-9
+bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@bootstrapfs-2.0-10
 myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-15
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
