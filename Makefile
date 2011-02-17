@@ -295,7 +295,7 @@ $(1).module := $(firstword $($(1)-MODULES))
 $(1).specpath := SPECS/$(notdir $($(1)-SPEC))
 $(1).moduledir := MODULES/$$($(1).module)
 $(1).codespec := MODULES/$$($(1).module)/$($(1)-SPEC)
-$(1).spec2makeflags := $(if $($(1)-NEEDSPEC2MAKEHACK),$(if $(filter $(DISTRONAME),f8 centos5),--hack,),)
+$(1).spec2makeflags := $(if $($(1)-WHITELIST-RPMS),--whitelist-rpms $($(1)-WHITELIST-RPMS),)
 endef
 
 $(foreach package, $(ALL), $(eval $(call stage1_package_vars,$(package))))

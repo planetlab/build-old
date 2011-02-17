@@ -24,6 +24,8 @@
 #define rpmSpec Spec
 #endif
 
+#define 	MAX_WHITELIST_SIZE 	16
+
 #ifndef PATH_MAX
 #include <linux/limits.h>
 #endif
@@ -76,16 +78,41 @@ main(int argc, char *argv[])
   const char *name, *version, *release, *arch, *unused;
   const char *package_name;
 
+  char **package_whitelist;
+
   /* BEGIN: support to pull out --target from the args list */
   int  alen, i;
   char *target = NULL;
   int args = 1;
-  int hack=0;
+  int whitelist_size=0;
+  package_whitelist = (char **) malloc(MAX_WHITELIST_SIZE * sizeof(char *));
 
-  /* walk argv list looking for --target */
+  if (!package_whitelist) {
+    perror("Could not allocate package whitelist\n");
+    exit(1);
+  }
+
+  /* walk argv list looking for options */
   while ((args+1)<argc) {
-    if (strcmp(argv[args],"--hack")==0) {
-      hack=1;
+    /* whitelist-rpms are packages that need to be considered even if the parsing logic of spec2make (second half of this file) concludes otherwise */
+    if (strcmp(argv[args],"--whitelist-rpms")==0) {
+	/* Split "whitelist-rpms" which is a comma-separated list, remove --whitelist-rpms <option> from argv */
+
+	int option_offset = 1; 
+	char *whitelist_str = argv[args+1];
+	if (whitelist_str != NULL) {
+		char *saveptr = NULL, *str;
+		option_offset = 2;
+		for (str = whitelist_str; ; str = NULL) {
+		   char *token;
+                   token = strtok_r(str, "," , &saveptr);
+		   if (token == NULL) break;
+		   package_whitelist[whitelist_size++] = token;
+               }	
+	}
+	for (i=args;i<argc-2+option_offset;i++) argv[i]=argv[i+option_offset];
+	argc-=option_offset;
+	
     } else if (strcmp(argv[args],"--target")==0) {
       char **dash;
 
@@ -106,6 +133,7 @@ main(int argc, char *argv[])
 
       break;
     }
+
     args++;
   }
   argv[1]=argv[argc-2];
@@ -168,6 +196,7 @@ main(int argc, char *argv[])
 
   /* Print non-empty packages */
   for (pkg = spec->packages; pkg != NULL; pkg = pkg->next) {
+    int force = 0;
     name = version = release = arch = NULL;
     (void) headerNEVRA(pkg->header, &name, &unused, &version, &release, &arch);
     if (name && version && release && arch) {
@@ -182,10 +211,12 @@ main(int argc, char *argv[])
        * line returns false for the kernel-devel package even though it is not empty thereby breaking the build.
        * Rather than unfolding the kernel package macros in the current specfile, 
        * this hack should work till f8 dies its natural death. 
-       * Thierry : trigerring this based on the package's NEEDSPEC2MAKEHACK instead of hard-wiring it for kernel here
+       * To add rpms that are exempted in this way, add a "<package>-WHITELIST-RPMS" tag in the tags file.
        */
 
-      if (pkg->fileList || hack) {
+      for (i=0;i<whitelist_size;i++) if (strncmp(package_whitelist[i], name, strlen(name)) == 0) force = 1;
+      
+      if (pkg->fileList || force) {
         /* attach (add) rpm path to package */
         printf("%s.rpms += RPMS/%s/%s-%s-%s.%s.rpm\n",
                package_name, arch, name, version, release, arch);
