@@ -340,7 +340,8 @@ zabbix-MODULES := Monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
 zabbix-DEVEL-RPMS += python-cherrypy
-ALL += zabbix
+### turn this off as zabbix comes with stock fedora or epel
+###ALL += zabbix
 
 #
 # PLC RT
