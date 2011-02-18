@@ -24,7 +24,7 @@ util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@master
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # as per http://svn.planet-lab.org/changeset/17973, 2.6.22 kernels shall use 0.3 branch and 2.6.27 need 0.4
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-22
-nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-7
+nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-8
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
 nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@master
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
