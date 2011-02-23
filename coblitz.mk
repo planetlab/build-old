@@ -14,7 +14,7 @@
 
 # mkinitrd
 #
-ifeq "$(PLDISTROTAGS)" "coblitz-unstable-tags.mk"
+ifeq "$(PLDISTROTAGS)" "coblitz-latest-tags.mk"
 ifeq "$(DISTRONAME)" "centos5"
 mkinitrd-MODULES := mkinitrd
 mkinitrd-SPEC := mkinitrd.spec
