@@ -3,7 +3,7 @@
 mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@mkinitrd-5.1.19.6-2
 linux-2.6-BRANCH                := rhel6
 linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
-madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@master
+madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
 util-vserver-GITPATH            := git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-14
 util-vserver-BUILD-FROM-SRPM	:= yes     # tmp
 util-vserver-pl-GITPATH         := git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-22
