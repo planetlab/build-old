@@ -1,6 +1,6 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
-mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@mkinitrd-5.1.19.6-0
+mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@mkinitrd-5.1.19.6-2
 linux-2.6-BRANCH		:= rhel6
 linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
 # help out spec2make on f8 and centos5, due to a bug in rpm
@@ -32,7 +32,7 @@ Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
 openvswitch-GITPATH			:= git://git.planet-lab.org/openvswitch.git
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.99-1
-vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-27
+vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-28
 plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-29
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-61
@@ -52,7 +52,7 @@ pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH                 := git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-9
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 pcucontrol-GITPATH              := git://git.planet-lab.org/pcucontrol.git@pcucontrol-1.0-10
-bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-8
+bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-5.0-9
 vserver-reference-GITPATH       := git://git.planet-lab.org/vserver-reference.git@vserver-reference-5.0-6
 bootstrapfs-GITPATH             := git://git.planet-lab.org/bootstrapfs.git@bootstrapfs-2.0-10
 myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-15
