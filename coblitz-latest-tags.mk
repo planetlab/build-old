@@ -2,7 +2,7 @@
 
 mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@mkinitrd-5.1.19.6-2
 linux-2.6-BRANCH                := rhel6
-linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-11
+linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-12
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
 util-vserver-GITPATH            := git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-14
 util-vserver-BUILD-FROM-SRPM	:= yes     # tmp
@@ -18,7 +18,7 @@ fprobe-ulog-SVNPATH		:= http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ul
 pf2slice-SVNPATH		:= http://svn.planet-lab.org/svn/pf2slice/tags/pf2slice-1.0-2
 Mom-SVNPATH			:= http://svn.planet-lab.org/svn/Mom/tags/Mom-2.3-2
 iptables-BUILD-FROM-SRPM        := yes # tmp
-iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-2
+iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-3
 iproute-BUILD-FROM-SRPM         := yes # tmp
 iproute2-GITPATH                := git://git.planet-lab.org/iproute2.git@iproute2-2.6.35-0
 inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inotify-tools-3.13-2
