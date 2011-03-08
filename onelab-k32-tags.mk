@@ -10,7 +10,7 @@ endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-BUILD-FROM-SRPM        := yes	# tmp
-iptables-GITPATH                := git://git.onelab.eu/iptables.git@master
+iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-3
 iproute-BUILD-FROM-SRPM		:= yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.35-0
 ###
@@ -20,13 +20,13 @@ comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
 ###
 util-vserver-BUILD-FROM-SRPM	:= yes # tmp
-util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@master
+util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-4
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 # as per http://svn.planet-lab.org/changeset/17973, 2.6.22 kernels shall use 0.3 branch and 2.6.27 need 0.4
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-23
 nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-8
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@master
+nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@nodemanager-2.0-29
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 codemux-GITPATH			:= git://git.onelab.eu/codemux.git@codemux-0.1-15
 fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.3-2
@@ -36,9 +36,9 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 openvswitch-GITPATH		:= git://git.onelab.eu/openvswitch.git@openvswitch-1.1.0pre2-1
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.99-1
 vsys-scripts-GITPATH            := git://git.onelab.eu/vsys-scripts.git@vsys-scripts-0.95-28
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@master
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-29
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
-plewww-GITPATH                  := git://git.onelab.eu/plewww.git@master
+plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-61
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-10
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
@@ -53,17 +53,17 @@ oml-GITPATH                     := git://git.onelab.eu/oml.git@oml-2.5.1-1
 sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-5
 nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-5
-bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@master
+bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-17
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-9
 pyplnet-GITPATH                 := git://git.onelab.eu/pyplnet.git@pyplnet-4.3-9
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-9
 vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-6
-bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@master
+bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@bootstrapfs-2.0-10
 myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-15
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.onelab.eu/tests.git@master
+tests-GITPATH                   := git://git.onelab.eu/tests.git@tests-5.0-24
 
 ### temporary
 # nozomi not needed anymore for 2.6.27
