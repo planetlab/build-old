@@ -25,7 +25,7 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 openvswitch-GITPATH			:= git://git.planet-lab.org/openvswitch.git
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.99-1
 vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-28
-plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-29
+plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-30
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-61
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
@@ -38,7 +38,7 @@ pyaspects-GITPATH		:= git://git.planet-lab.org/pyaspects.git@pyaspects-0.4.1-1
 ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-9
 ###
-sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-16
+sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-18
 nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-17
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9

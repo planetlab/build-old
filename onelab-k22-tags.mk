@@ -31,7 +31,7 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 openvswitch-GITPATH		:= git://git.onelab.eu/openvswitch.git@openvswitch-1.1.0pre2-1
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.99-1
 vsys-scripts-GITPATH            := git://git.onelab.eu/vsys-scripts.git@vsys-scripts-0.95-28
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-29
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-30
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-61
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
@@ -45,7 +45,7 @@ ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-10
 oml-GITPATH                     := git://git.onelab.eu/oml.git@oml-2.5.1-1
 ###
-sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-16
+sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-18
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-5
 nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-17
