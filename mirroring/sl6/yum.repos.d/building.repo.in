@@ -1,0 +1,13 @@
+[base]
+name=Scientific Linux $releasever - $basearch
+baseurl=@MIRRORURL@/linux/scientific/$releasever/$basearch/os/
+enabled=1
+gpgcheck=1
+gpgkey=http://ftp.scientificlinux.org/linux/scientific/6.0/x86_64/os/RPM-GPG-KEY-sl6 http://www.scientificlinux.org/documentation/gpg/RPM-GPG-KEY-dawson
+
+[updates]
+name=Scientific Linux $releasever - $basearch - security updates
+baseurl=@MIRRORURL@/linux/scientific/$releasever/$basearch/updates/security/
+enabled=1
+gpgcheck=1
+gpgkey=http://www.scientificlinux.org/documentation/gpg/RPM-GPG-KEY-sl http://www.scientificlinux.org/documentation/gpg/RPM-GPG-KEY-dawson
