@@ -35,7 +35,7 @@ jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname="centos5.5"
-all_distronames="f14 f12 centos5.4 centos5.5 epel5"
+all_distronames="f14 f12 centos5.4 centos5.5 epel5 epel6"
 default_arch="i386"
 all_archs="i386 x86_64"
 
@@ -71,8 +71,8 @@ function mirror_distro_arch () {
 	    distro="CentOS"
 	    rsyncurl=$centos_url
 	    ;;
-	epel5)
-	    distroindex=5
+	epel[5-6])
+	    distroindex=$(echo $distroname | sed -e "s,epel,,g")
 	    distro=epel
 	    rsyncurl=$epel_url
 	    ;;
@@ -133,7 +133,7 @@ function mirror_distro_arch () {
 
 	epel*)
 	    case $distroindex in
-		5)
+		5|6)
 		    paths="$paths $distroindex/$arch/"
 		    RES=0
 		    ;;
