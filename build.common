@@ -55,7 +55,7 @@ function pl_getReleaseName () {
 	    IFS="$old_IFS"
 	    releasename=centos$1
 	    ;;
-	[Ss]cientific*)
+	[Ss]L*)
 	    releasename=sl$release
 	    ;;
 	*)
