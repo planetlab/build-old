@@ -384,6 +384,7 @@ fi
     if [ -n "$pkgs_packages" ] ; then
 	echo "* Installing optional packages" $pkgs_packages
         # ignore yum's return code that is basically undefined
+        echo "* Install options" $vroot $yum_options 
 	yum $yum_options install $pkgs_packages || :
 	if ! rpm --root $vroot -q $pkgs_packages >/dev/null ; then
 	    echo "* Warning: Missing packages"
