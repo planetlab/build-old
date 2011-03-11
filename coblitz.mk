@@ -200,6 +200,10 @@ ifeq "$(DISTRONAME)" "centos5"
 local_inotify_tools=true
 endif
 
+ifeq "$(DISTRONAME)" "sl6"
+local_inotify_tools=true
+endif
+
 ifeq "$(local_inotify_tools)" "true"
 inotify-tools-MODULES := inotify-tools
 inotify-tools-SPEC := inotify-tools.spec
