@@ -320,6 +320,8 @@ EOF
     mkdir -p $vroot/var/lib/rpm
     rpm --root $vroot --initdb
     rpm --root $vroot --import $public_gpg_key
+    echo "DEBUG"
+    echo "rpm --root $vroot --import $public_gpg_key"
 
     # Initialize yum in reference image
     mkdir -p $vroot/var/cache/yum $vroot/var/log
