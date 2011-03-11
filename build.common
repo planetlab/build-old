@@ -320,8 +320,6 @@ EOF
     mkdir -p $vroot/var/lib/rpm
     rpm --root $vroot --initdb
     rpm --root $vroot --import $public_gpg_key
-    echo "DEBUG"
-    echo "rpm --root $vroot --import $public_gpg_key"
 
     # Initialize yum in reference image
     mkdir -p $vroot/var/cache/yum $vroot/var/log
@@ -749,13 +747,11 @@ $kexclude_line" $template > $dest_yumconf
     return 0
 }
 
-# from a yum.conf as generated above, computes the (first) gpgkey url
+# from a yum.conf as generated above, computes the gpgkey urls
 function yumconf_gpgkey () {
     dest_yumconf=$1; shift
 
-    first_line=$(grep '^gpgkey=' $dest_yumconf | head -1)
-    values=$(echo $first_line | sed -e s,gpgkey=,,)
-    value=$(echo $values | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g)
+    values=$(grep -h '^gpgkey=' $dest_yumconf | sed -e s,gpgkey=,, | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g | xargs)
     [ -n "$value" ] || return 1
     echo $value
     return 0
