@@ -751,7 +751,7 @@ $kexclude_line" $template > $dest_yumconf
 function yumconf_gpgkey () {
     dest_yumconf=$1; shift
 
-    values=$(grep -h '^gpgkey=' $dest_yumconf | sed -e s,gpgkey=,, | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g | xargs)
+    values=$(grep -h '^gpgkey=' $dest_yumconf | sed -e s,gpgkey=,, | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g | sort | uniq | xargs)
     [ -n "$values" ] || return 1
     echo $values
     return 0
