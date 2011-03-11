@@ -40,7 +40,7 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-9
 ###
 sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-20
 nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-5
-pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-9
+pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-10
 pyplnet-GITPATH                 := git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-9
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 pcucontrol-GITPATH              := git://git.planet-lab.org/pcucontrol.git@pcucontrol-1.0-10
