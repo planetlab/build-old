@@ -752,8 +752,8 @@ function yumconf_gpgkey () {
     dest_yumconf=$1; shift
 
     values=$(grep -h '^gpgkey=' $dest_yumconf | sed -e s,gpgkey=,, | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g | xargs)
-    [ -n "$value" ] || return 1
-    echo $value
+    [ -n "$values" ] || return 1
+    echo $values
     return 0
 }
 
