@@ -46,7 +46,8 @@ package: gnupg
 package: diffutils 
 package: vconfig 
 package: iptables 
-package: wget 
+package: wget
+package>=sl6: epel-release 
 package: beecrypt-devel 
 package: tetex-latex
 package: gcc-c++ 
