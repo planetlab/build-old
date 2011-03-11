@@ -32,7 +32,8 @@ package: authconfig
 package: hdparm
 package: lvm2
 package: kexec-tools
-package: gnupg
+package-sl6: gnupg
+package>=sl6: gnupg2
 package: nano
 package: parted
 package: pyparted
