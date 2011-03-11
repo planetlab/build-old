@@ -753,7 +753,7 @@ function yumconf_gpgkey () {
 
     first_line=$(grep '^gpgkey=' $dest_yumconf | head -1)
     values=$(echo $first_line | sed -e s,gpgkey=,,)
-    value=$(echo $values | awk '{print $1;}' | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g)
+    value=$(echo $values | sed -e 's,$basearch,'"$pl_DISTRO_ARCH",g)
     [ -n "$value" ] || return 1
     echo $value
     return 0
