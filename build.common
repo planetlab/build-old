@@ -83,7 +83,7 @@ function pl_getKexcludes () {
 	centos5)
 	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	sl*)
-	    echo 'kernel kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-firmware kernel-headers iptables iproute inotify-tools* libnl' ;;
+	    echo 'kernel kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-firmware kernel-headers iptables iproute' ;;
 	*)
 	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh" ; exit 1 ;;
     esac

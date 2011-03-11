@@ -35,7 +35,8 @@ package: setserial
 package: setup
 package: vim-minimal
 package: shadow-utils
-package: anacron
+package>=centos5: anacron
+package>=sl6: cronie-anacron
 package: at
 package: authconfig
 package: bc
@@ -71,7 +72,8 @@ package: yum
 package: curl
 package: gzip
 package: iptables
-package: mkinitrd
+package>=centos5: mkinitrd
+package>=sl6: dracut
 package: ntp
 package: perl
 package: python
@@ -84,10 +86,10 @@ package: PyXML
 #
 # platform-dependent
 #
-package>=f8: rsyslog
+package>=f8 package=sl6: rsyslog
 package=centos5: sysklogd
 
-package>=f8: util-linux-ng
+package>=f8 package>=sl6: util-linux-ng
 package=centos5: util-linux
 
 package<=f8 package=centos5: termcap libtermcap vixie-cron
