@@ -32,7 +32,7 @@ package: authconfig
 package: hdparm
 package: lvm2
 package: kexec-tools
-package-sl6: gnupg
+package>=f8 package>=centos5: gnupg
 package>=sl6: gnupg2
 package: nano
 package: parted
