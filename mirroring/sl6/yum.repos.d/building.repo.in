@@ -11,3 +11,10 @@ baseurl=@MIRRORURL@/linux/scientific/6/$basearch/updates/security/
 enabled=1
 gpgcheck=1
 gpgkey=http://www.scientificlinux.org/documentation/gpg/RPM-GPG-KEY-sl http://www.scientificlinux.org/documentation/gpg/RPM-GPG-KEY-dawson
+
+[epel]
+name=Extra Packages for Enterprise Linux 6 - $basearch
+baseurl=@MIRRORURL@/epel/6/$basearch/
+enabled=1
+gpgcheck=1
+gpgkey=http://download.fedora.redhat.com/pub/epel/RPM-GPG-KEY-EPEL-6
