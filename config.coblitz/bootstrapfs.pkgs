@@ -13,6 +13,7 @@ package: kernel
 package: udev
 package: basesystem
 package: filesystem
+package>=sl6: lvm2
 package: bash
 package: coreutils
 package: python
