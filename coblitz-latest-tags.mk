@@ -2,7 +2,7 @@
 
 mkinitrd-GITPATH		:= git://git.planet-lab.org/mkinitrd.git@mkinitrd-5.1.19.6-2
 linux-2.6-BRANCH                := rhel6
-linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-13
+linux-2.6-GITPATH               := git://git.planet-lab.org/linux-2.6.git@linux-2.6-32-14
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
 util-vserver-GITPATH            := git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-15
 util-vserver-BUILD-FROM-SRPM	:= yes     # tmp
@@ -31,14 +31,14 @@ plewww-GITPATH                  := git://git.planet-lab.org/plewww@PLEWWW-4.3-53
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 Monitor-SVNPATH			:= http://svn.planet-lab.org/svn//Monitor/tags/Monitor-3.0-30/
 pcucontrol-SVNPATH		:= http://svn.planet-lab.org/svn/pcucontrol/tags/pcucontrol-1.0-2/
-nodeconfig-GITPATH              := git://git.planet-lab.org/nodeconfig.git@nodeconfig-4.3-8
+nodeconfig-GITPATH              := git://git.planet-lab.org/nodeconfig.git@nodeconfig-4.3-9
 bootmanager-BRANCH		:= 4.3
 bootmanager-GITPATH		:= git://git.planet-lab.org/bootmanager@bootmanager-4.3-24
 pypcilib-GITPATH                := git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-10
 bootcd-GITPATH                  := git://git.planet-lab.org/bootcd.git@bootcd-4.2-24
 vserver-reference-GITPATH	:= git://git.planet-lab.org/vserver-reference@vserver-reference-4.2-18
 bootstrapfs-GITPATH             := git://git.planet-lab.org/bootstrapfs.git@BootstrapFS-1.0-12
-myplc-GITPATH                   := git://git.planet-lab.org/myplc@myplc-4.3-45
+myplc-GITPATH                   := git://git.planet-lab.org/myplc@myplc-4.3-46
 sfa-SVNPATH			:= http://svn.planet-lab.org/svn/sfa/tags/sfa-0.9-14
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
