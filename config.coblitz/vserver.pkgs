@@ -41,3 +41,4 @@ package>=f10: cronie
 package: log4c 
 package: log4cpp 
 package: log4j
+package: erlang-log4erl
