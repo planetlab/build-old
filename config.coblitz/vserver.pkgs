@@ -42,3 +42,5 @@ package: log4c
 package: log4cpp 
 package: log4j
 package: erlang-log4erl
+
+package=sl6: puppet
