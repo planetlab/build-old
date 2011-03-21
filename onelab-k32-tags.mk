@@ -26,7 +26,7 @@ libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 util-vserver-pl-GITPATH		:= git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-24
 nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-8
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
-nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@nodemanager-2.0-30
+nodemanager-GITPATH             := git://git.onelab.eu/nodemanager.git@master
 pl_sshd-SVNPATH			:= http://svn.planet-lab.org/svn/pl_sshd/tags/pl_sshd-1.0-11
 codemux-GITPATH			:= git://git.onelab.eu/codemux.git@codemux-0.1-15
 fprobe-ulog-SVNPATH             := http://svn.planet-lab.org/svn/fprobe-ulog/tags/fprobe-ulog-1.1.3-2
@@ -36,7 +36,7 @@ inotify-tools-SVNPATH		:= http://svn.planet-lab.org/svn/inotify-tools/tags/inoti
 openvswitch-GITPATH		:= git://git.onelab.eu/openvswitch.git@openvswitch-1.1.0pre2-1
 vsys-GITPATH			:= git://git.onelab.eu/vsys.git@vsys-0.99-1
 vsys-scripts-GITPATH            := git://git.onelab.eu/vsys-scripts.git@vsys-scripts-0.95-28
-plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-31
+plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@master
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@master
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
@@ -59,11 +59,11 @@ pyplnet-GITPATH                 := git://git.onelab.eu/pyplnet.git@pyplnet-4.3-9
 bootcd-GITPATH                  := git://git.onelab.eu/bootcd.git@bootcd-5.0-10
 vserver-reference-GITPATH        := git://git.onelab.eu/vserver-reference.git@vserver-reference-5.0-6
 bootstrapfs-GITPATH             := git://git.onelab.eu/bootstrapfs.git@bootstrapfs-2.0-10
-myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-16
+myplc-GITPATH                   := git://git.onelab.eu/myplc.git@master
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.onelab.eu/tests.git@tests-5.0-25
+tests-GITPATH                   := git://git.onelab.eu/tests.git@master
 
 ### temporary
 # nozomi not needed anymore for 2.6.27
