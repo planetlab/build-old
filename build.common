@@ -550,6 +550,7 @@ function pl_parsePkgs () {
     fcdistro=$1; shift
     pldistro=$1; shift
 
+    echo 1>&2 "pl_parsePkgs: using -a $target_arch -f $fcdistro -d $pldistro $keyword $@"
     pkgs.py -a $target_arch -f $fcdistro -d $pldistro $keyword "$@" 
 }
 # usage: pl_getPackages [-a arch] fcdistro pldistro pkg-file[..s]
