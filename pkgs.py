@@ -208,9 +208,10 @@ def main ():
 
     pkgs = PkgsParser (options.arch,options.fcdistro,options.pldistro,keyword,inputs,options)
 
-    pkgs.run()
-
-    sys.exit(0)
+    if pkgs.run():
+        sys.exit(0)
+    else:
+        sys.exit(1)
 
 if __name__ == '__main__':
     if main():
