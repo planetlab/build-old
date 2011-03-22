@@ -50,4 +50,4 @@ vserver-reference-GITPATH       := git://git.planet-lab.org/vserver-reference.gi
 bootstrapfs-GITPATH             := git://git.planet-lab.org/bootstrapfs.git@bootstrapfs-2.0-10
 myplc-GITPATH                   := git://git.planet-lab.org/myplc.git@myplc-5.0-17
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-25
+tests-GITPATH                   := git://git.planet-lab.org/tests.git@tests-5.0-26
