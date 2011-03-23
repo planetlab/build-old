@@ -45,7 +45,7 @@ ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-10
 oml-GITPATH                     := git://git.onelab.eu/oml.git@oml-2.5.1-1
 ###
-sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-21
+sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-9
 nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-17
@@ -58,4 +58,4 @@ myplc-GITPATH                   := git://git.onelab.eu/myplc.git@myplc-5.0-17
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
 
 # locating the right test directory - see make tests_gitpath
-tests-GITPATH                   := git://git.onelab.eu/tests.git@tests-5.0-26
+tests-GITPATH                   := git://git.onelab.eu/tests.git@master
