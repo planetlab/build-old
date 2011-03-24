@@ -9,7 +9,7 @@ kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
 endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
-iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-3
+iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-4
 iptables-BUILD-FROM-SRPM := yes	# tmp
 iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH		:= git://git.planet-lab.org/iproute2.git@iproute2-2.6.35-0
