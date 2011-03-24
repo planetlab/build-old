@@ -10,7 +10,7 @@ endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-BUILD-FROM-SRPM        := yes	# tmp
-iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-3
+iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-4
 iproute-BUILD-FROM-SRPM		:= yes	
 iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.35-0
 ###
