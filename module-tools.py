@@ -1326,6 +1326,16 @@ def release_changelog(options, buildtag_old, buildtag_new):
         print '=== %s : removed package from build %s ===' % (tagfile, module)
 
 
+def adopt_master (options, args):
+    modules=[]
+    for module in options.modules:
+        modules += module.split()
+    for module in modules: 
+        modobj=Module(module,options)
+        for tags_file in args:
+            print 'module',module,'tags_file',tags_file
+            modobj.patch_tags_file(tags_file,'_unused_','master',fine_grain=False)
+
 ##############################
 class Main:
 
@@ -1352,6 +1362,12 @@ Branches:
   You can refer to the build trunk by just mentioning 'trunk', e.g.
       release-changelog -t coblitz-tags.mk coblitz-2.01-rc6 trunk
 """
+    master_usage="""Usage: %prog [options] tag-file[s]
+  With this command you can adopt one or several masters in your tag files
+    This should be run in your daily build workdir; no call of git nor svn is done
+  Examples:
+    module-master -m "plewww plcapi" -m Monitor onelab*tags.mk
+"""
     common_usage="""More help:
   see http://svn.planet-lab.org/wiki/ModuleTools"""
 
@@ -1368,10 +1384,13 @@ Branches:
                 this is a last resort option, mostly for repairs""",
         'changelog' : """extract changelog between build tags
                 expected arguments are a list of tags""",
+        'master' : """locally adopt master or trunk for some modules""",
         }
 
     silent_modes = ['list']
-    release_modes = ['changelog']
+    # 'changelog' is for release-changelog
+    # 'master' is for 'adopt-master'
+    regular_modes = set(modes.keys()).difference(set(['changelog','master']))
 
     @staticmethod
     def optparse_list (option, opt, value, parser):
@@ -1392,16 +1411,35 @@ Branches:
             print "Supported commands:" + " ".join(Main.modes.keys())
             sys.exit(1)
 
-        if mode not in Main.release_modes:
+        usage='undefined usage, mode=%s'%mode
+        if mode in Main.regular_modes:
             usage = Main.module_usage
             usage += Main.common_usage
             usage += "\nmodule-%s : %s"%(mode,Main.modes[mode])
-        else:
+        elif mode=='changelog':
             usage = Main.release_usage
+            usage += Main.common_usage
+        elif mode=='master':
+            usage = Main.master_usage
             usage += Main.common_usage
 
         parser=OptionParser(usage=usage)
         
+        # the 'master' mode is really special and doesn't share any option
+        if mode=='master':
+            parser.add_option("-m","--module",action="append",dest="modules",default=[],
+                              help="modules, can be used several times or with quotes")
+            parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
+                              help="run in verbose mode")
+            (options, args) = parser.parse_args()
+            options.workdir='unused'
+            if len(args)==0 or len(options.modules)==0:
+                parser.print_help()
+                sys.exit(1)
+            adopt_master (options,args)
+            return 
+
+        # the other commands (module-* and release-changelog) share the same skeleton
         if mode == "tag" or mode == 'branch':
             parser.add_option("-s","--set-version",action="store",dest="new_version",default=None,
                               help="set new version and reset taglevel to 0")
@@ -1458,6 +1496,8 @@ Branches:
             options.www=False
         options.debug=False
 
+        
+
         ########## module-*
         if len(args) == 0:
             if options.all_modules:
@@ -1470,7 +1510,7 @@ Branches:
         Module.init_homedir(options)
         
 
-        if mode not in Main.release_modes:
+        if mode in Main.regular_modes:
             modules=[ Module(modname,options) for modname in args ]
             # hack: create a dummy Module to store errors/warnings
             error_module = Module('__errors__',options)
