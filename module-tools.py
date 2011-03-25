@@ -1333,8 +1333,11 @@ def adopt_master (options, args):
     for module in modules: 
         modobj=Module(module,options)
         for tags_file in args:
-            print 'module',module,'tags_file',tags_file
+            if options.verbose:
+                print 'adopting master for',module,'in',tags_file
             modobj.patch_tags_file(tags_file,'_unused_','master',fine_grain=False)
+    if options.verbose:
+        Command("git diff %s"%" ".join(args),options).run()
 
 ##############################
 class Main:
@@ -1433,6 +1436,8 @@ Branches:
                               help="run in verbose mode")
             (options, args) = parser.parse_args()
             options.workdir='unused'
+            options.dry_run=False
+            options.mode='master'
             if len(args)==0 or len(options.modules)==0:
                 parser.print_help()
                 sys.exit(1)
