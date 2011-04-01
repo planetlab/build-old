@@ -52,6 +52,19 @@ if echo ${vdir} | grep -q x86_64 ; then
     chroot ${vdir} rpm -qa --qf '%{name}.%{arch}\n' | grep 'i[36]86$' | xargs chroot ${vdir} rpm -e
 fi
 
+# Add a logrotate script for btmp, which logs failed ssh logins, which can
+# grow unbounded on public plnodes and fill the root fs.
+cat <<EOF > ${vdir}/etc/logrotate.d/btmp
+/var/log/btmp {
+    weekly
+    minsize 1M
+    create 0600 root utmp
+    rotate 2
+    compress
+    notifempty
+}
+EOF
+
 # NOTE:  This is added to relieve one site's Cisco router configuration that
 # fails to recognize the host once the arping is sent out.
 # NOTE: this is pretty fragile, and fails on fedora 10 that as of today (oct. 20 2009) 
