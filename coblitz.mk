@@ -118,28 +118,12 @@ ALL += nodeupdate
 IN_BOOTSTRAPFS += nodeupdate
 
 #
-# ipod
-#
-ipod-MODULES := PingOfDeath
-ipod-SPEC := ipod.spec
-ALL += ipod
-IN_BOOTSTRAPFS += ipod
-
-#
 # NodeManager
 #
 nodemanager-MODULES := nodemanager
 nodemanager-SPEC := NodeManager.spec
 ALL += nodemanager
 IN_BOOTSTRAPFS += nodemanager
-
-#
-# pl_sshd
-#
-sshd-MODULES := pl_sshd
-sshd-SPEC := pl_sshd.spec
-ALL += sshd
-IN_BOOTSTRAPFS += sshd
 
 #
 # codemux: Port 80 demux
@@ -217,8 +201,10 @@ endif
 #
 vsys-MODULES := vsys
 vsys-SPEC := vsys.spec
+# ocaml-docs is not needed anymore but keep it on a tmp basis as some tags may still have it
+vsys-DEVEL-RPMS += ocaml-ocamldoc ocaml-docs
 ifeq "$(local_inotify_tools)" "true"
-vsys-DEPEND-DEVEL-RPMS := inotify-tools inotify-tools-devel
+vsys-DEPEND-DEVEL-RPMS += inotify-tools inotify-tools-devel
 endif
 IN_BOOTSTRAPFS += vsys
 ALL += vsys
@@ -257,42 +243,11 @@ plewww-SPEC := plewww.spec
 #IN_MYPLC += plewww
 
 #
-# www-register-wizard
-#
-www-register-wizard-MODULES := www-register-wizard
-www-register-wizard-SPEC := www-register-wizard.spec
-ALL += www-register-wizard
-IN_MYPLC += www-register-wizard
-
-#
 # pcucontrol
 #
 pcucontrol-MODULES := pcucontrol
 pcucontrol-SPEC := pcucontrol.spec
 ALL += pcucontrol
-
-#
-# monitor
-#
-monitor-MODULES := Monitor
-monitor-SPEC := Monitor.spec
-ALL += monitor
-IN_BOOTSTRAPFS += monitor
-
-#
-# PLC RT
-#
-plcrt-MODULES := PLCRT
-plcrt-SPEC := plcrt.spec
-#ALL += plcrt
-
-#
-# zabbix
-#
-zabbix-MODULES := Monitor
-zabbix-SPEC := zabbix.spec
-zabbix-BUILD-FROM-SRPM := yes
-#ALL += zabbix
 
 #
 # pyopenssl
@@ -302,13 +257,6 @@ pyopenssl-SPEC := pyOpenSSL.spec
 pyopenssl-BUILD-FROM-SRPM := yes
 ALL += pyopenssl
 
-
-#
-# sfa - Slice Facility Architecture
-#
-# sfa-MODULES := sfa
-# sfa-SPEC := sfa.spec
-# ALL += sfa
 
 #
 # nodeconfig
@@ -408,7 +356,7 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := myplc plcapi nodemanager Monitor
+myplc-docs-MODULES := myplc plcapi nodemanager
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
