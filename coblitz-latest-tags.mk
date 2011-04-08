@@ -30,7 +30,7 @@ pypcilib-GITPATH                := git://git.verivue.com/planetlab/pypcilib.git@
 bootcd-GITPATH                  := git://git.verivue.com/planetlab/bootcd.git@bootcd-4.2-25
 vserver-reference-GITPATH	:= git://git.verivue.com/planetlab/vserver-reference@vserver-reference-4.2-18
 bootstrapfs-GITPATH             := git://git.verivue.com/planetlab/bootstrapfs.git@BootstrapFS-1.0-12
-myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4.3-49
+myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4.3-50
 pyopenssl-GITPATH		:= git://git.verivue.com/planetlab/pyopenssl.git@pyopenssl-0.9-1
 
 # locating the right test directory - see make tests_gitpath
