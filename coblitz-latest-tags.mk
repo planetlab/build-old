@@ -32,7 +32,7 @@ vserver-reference-GITPATH	:= git://git.verivue.com/planetlab/vserver-reference@v
 bootstrapfs-GITPATH             := git://git.verivue.com/planetlab/bootstrapfs.git@BootstrapFS-1.0-12
 myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4.3-50
 pyopenssl-GITPATH		:= git://git.verivue.com/planetlab/pyopenssl.git@pyopenssl-0.9-1
-Monitor-SVNPATH                 := http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-29
+monitor-GITPATH                 := git://git.verivue.com/planetlab/monitor.git@Monitor-3.0.29
 
 # locating the right test directory - see make tests_gitpath
 tests-GITPATH			:= git://git.verivue.com/tests.git@verivue
