@@ -249,6 +249,16 @@ pcucontrol-MODULES := pcucontrol
 pcucontrol-SPEC := pcucontrol.spec
 ALL += pcucontrol
 
+
+## monitor
+#
+#monitor-MODULES := Monitor
+monitor-SPEC := Monitor.spec
+monitor-DEVEL-RPMS += net-snmp net-snmp-devel
+ALL += monitor
+IN_BOOTSTRAPFS += monitor
+
+
 #
 # pyopenssl
 #
