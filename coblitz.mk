@@ -252,7 +252,7 @@ ALL += pcucontrol
 
 ## monitor
 #
-#monitor-MODULES := Monitor
+monitor-MODULES := Monitor
 monitor-SPEC := Monitor.spec
 monitor-DEVEL-RPMS += net-snmp net-snmp-devel
 ALL += monitor
