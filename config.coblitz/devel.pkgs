@@ -105,3 +105,5 @@ package: make git
 package=centos5: parted-devel glib2-devel libdhcp4client-devel libdhcp6client-devel libdhcp-devel device-mapper libselinux-devel libsepol-devel libnl-devel
 # for log4*
 package: log4c-devel log4cpp-devel log4j erlang-log4erl
+# for yum
+package:  gettext intltool

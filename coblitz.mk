@@ -375,3 +375,13 @@ release-MODULES := myplc
 release-SPEC := myplc-release.spec
 release-RPMDATE := yes
 ALL += release
+
+ifeq "$(PLDISTROTAGS)" "coblitz-latest-tags.mk"
+ifeq "$(DISTRONAME)" "centos5"
+# chroot supported yum
+yum-MODULES := yum
+yum-SPEC := yum.spec
+yum-BUILD-FROM-SRPM := yes
+ALL += yum
+endif
+endif
