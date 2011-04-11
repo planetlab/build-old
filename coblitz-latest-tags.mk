@@ -34,5 +34,12 @@ myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4
 pyopenssl-GITPATH		:= git://git.verivue.com/planetlab/pyopenssl.git@pyopenssl-0.9-1
 monitor-GITPATH                 := git://git.verivue.com/planetlab/monitor.git@Monitor-3.0-29
 
+ifeq "$(DISTRONAME)" "centos5"
+yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/centos5
+endif
+ifeq "$(DISTRONAME)" "sl6"
+yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/rhel6
+endif
+
 # locating the right test directory - see make tests_gitpath
 tests-GITPATH			:= git://git.verivue.com/tests.git@verivue
