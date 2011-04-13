@@ -136,6 +136,7 @@ function failure() {
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "Subject: Failures with $MAIL_SUBJECT $BASE on $(hostname)" ; \
+	    echo "To: $MAILTO" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "and tail version at $WEBBASE_URL.ko" ; \
 	    echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ; \
@@ -174,6 +175,7 @@ function success () {
     if [ -n "$MAILTO" ] ; then
 	( \
 	    echo "Subject: Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" ; \
+	    echo "To: $MAILTO" ; \
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
             [ -n "$DO_TEST" ] && echo "See complete set of testlogs at $WEBBASE_URL/testlogs" ) \
