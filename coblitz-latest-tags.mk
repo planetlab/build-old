@@ -22,7 +22,7 @@ vsys-scripts-GITPATH            := git://git.verivue.com/planetlab/vsys-scripts.
 plcapi-GITPATH			:= git://git.verivue.com/planetlab/plcapi@plcapi-4.3-38
 drupal-GITPATH			:= git://git.verivue.com/planetlab/drupal.git@drupal-4.7-14
 plewww-GITPATH                  := git://git.verivue.com/planetlab/plewww@PLEWWW-4.3-53
-pcucontrol-GITPATH              := git://git.verivue.com/planetlab/pcucontrol.git@pcucontrol-1.0-2
+pcucontrol-GITPATH              := git://git.verivue.com/planetlab/pcucontrol.git@pcucontrol-1.0-10
 nodeconfig-GITPATH              := git://git.verivue.com/planetlab/nodeconfig.git@nodeconfig-4.3-10
 bootmanager-BRANCH		:= 4.3
 bootmanager-GITPATH		:= git://git.verivue.com/planetlab/bootmanager@bootmanager-4.3-25
@@ -33,6 +33,7 @@ bootstrapfs-GITPATH             := git://git.verivue.com/planetlab/bootstrapfs.g
 myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4.3-50
 pyopenssl-GITPATH		:= git://git.verivue.com/planetlab/pyopenssl.git@pyopenssl-0.9-1
 monitor-GITPATH                 := git://git.verivue.com/planetlab/monitor.git@Monitor-3.0-29
+pyaspects-GITPATH		:= git://git.verivue.com/planetlab/pyaspects.git@pyaspects-0.4.1-1
 
 ifeq "$(DISTRONAME)" "centos5"
 yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/centos5
