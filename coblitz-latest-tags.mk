@@ -42,12 +42,5 @@ ifeq "$(DISTRONAME)" "sl6"
 yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/rhel6
 endif
 
-ifeq "$(DISTRONAME)" "centos5"
-yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/centos5
-endif
-ifeq "$(DISTRONAME)" "sl6"
-yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/rhel6
-endif
-
 # locating the right test directory - see make tests_gitpath
 tests-GITPATH			:= git://git.verivue.com/tests.git@verivue
