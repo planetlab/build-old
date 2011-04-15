@@ -36,10 +36,10 @@ monitor-GITPATH                 := git://git.verivue.com/planetlab/monitor.git@M
 pyaspects-GITPATH		:= git://git.verivue.com/planetlab/pyaspects.git@pyaspects-0.4.1-1
 
 ifeq "$(DISTRONAME)" "centos5"
-yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/centos5
+yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@centos5
 endif
 ifeq "$(DISTRONAME)" "sl6"
-yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/rhel6
+yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@rhel6
 endif
 
 # locating the right test directory - see make tests_gitpath
