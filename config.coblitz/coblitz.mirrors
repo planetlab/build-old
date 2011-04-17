@@ -1,6 +1,6 @@
 # define here the ordered set of mirrors that you'd like to use when running mkfedora
 # used to be hard-wired in build.common / mkfedora
 # see http://svn.planet-lab.org/wiki/VserverCentos for howto setup local mirroring
-mirrot: http://localhost/repo
+mirror: http://localhost/repo
 mirror: http://repo.verivue.com/repo/
 mirror: http://yoda.verivue.com/repo/
