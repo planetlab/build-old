@@ -39,8 +39,8 @@ yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@centos5
 endif
 ifeq "$(DISTRONAME)" "sl6"
 yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@rhel6
-certmaster-GITPAH		:= git://git.verivue.com/caglar10ur/certmaster.git
-func-GITPAH			:= git://git.verivue.com/caglar10ur/func.git
+certmaster-GITPATH		:= git://git.verivue.com/caglar10ur/certmaster@v0.28
+func-GITPATH			:= git://git.verivue.com/caglar10ur/func.git@0.28
 endif
 
 # locating the right test directory - see make tests_gitpath
