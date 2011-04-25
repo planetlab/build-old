@@ -3,7 +3,6 @@
 mkinitrd-GITPATH		:= git://git.verivue.com/planetlab/mkinitrd.git@mkinitrd-5.1.19.6-3
 linux-2.6-BRANCH                := rhel6
 linux-2.6-GITPATH               := git://git.verivue.com/planetlab/linux-2.6.git@linux-2.6-32-16
-madwifi-GITPATH                 := git://git.verivue.com/planetlab/madwifi.git@madwifi-4132-2
 util-vserver-GITPATH            := git://git.verivue.com/planetlab/util-vserver.git@util-vserver-0.30.216-15
 util-vserver-BUILD-FROM-SRPM	:= yes     # tmp
 util-vserver-pl-GITPATH         := git://git.verivue.com/planetlab/util-vserver-pl.git@util-vserver-pl-0.4-25
@@ -40,6 +39,8 @@ yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@centos5
 endif
 ifeq "$(DISTRONAME)" "sl6"
 yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@rhel6
+certmaster-GITPAH		:= git://git.verivue.com/caglar10ur/certmaster.git
+func-GITPAH			:= git://git.verivue.com/caglar10ur/func.git
 endif
 
 # locating the right test directory - see make tests_gitpath

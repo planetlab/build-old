@@ -11,7 +11,31 @@
 #
 # see doc in Makefile  
 #
+#
+# certmaster & func
+# 
+ifeq "$(PLDISTROTAGS)" "coblitz-latest-tags.mk"
+ifeq "$(DISTRONAME)" "sl6"
 
+certmaster-MODULES := certmaster
+certmaster-SPEC := certmaster.spec
+certmaster-BUILD-FROM-SRPM := yes
+ALL += certmaster
+IN_BOOTSTRAPFS += certmaster
+IN_MYPLC += certmaster
+
+#func
+func-MODULES := func
+func-SPEC := func.spec
+func-BUILD-FROM-SRPM := yes
+ALL += func
+IN_BOOTSTRAPFS += func
+IN_MYPLC += func
+
+endif
+endif
+
+#
 # mkinitrd
 #
 ifeq "$(PLDISTROTAGS)" "coblitz-latest-tags.mk"
@@ -54,19 +78,6 @@ IN_VSERVER += $(KERNELS)
 IN_BOOTSTRAPFS += $(KERNELS)
 # turns out myplc installs kernel-vserver
 IN_MYPLC += $(KERNELS)
-
-#
-# madwifi
-#
-madwifi-MODULES := madwifi
-madwifi-SPEC := madwifi.spec
-madwifi-BUILD-FROM-SRPM := yes
-madwifi-DEPEND-DEVEL-RPMS := kernel-devel
-madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
-#ALL += madwifi
-#IN_BOOTSTRAPFS += madwifi
 
 #
 # util-vserver
