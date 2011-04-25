@@ -107,3 +107,5 @@ package=centos5: parted-devel glib2-devel libdhcp4client-devel libdhcp6client-de
 package: log4c-devel log4cpp-devel log4j erlang-log4erl
 # for yum
 package:  gettext intltool
+# for certmaster/func
+package>=sl6: python-setuptools

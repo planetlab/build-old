@@ -19,7 +19,6 @@ ifeq "$(DISTRONAME)" "sl6"
 
 certmaster-MODULES := certmaster
 certmaster-SPEC := certmaster.spec
-certmaster-BUILD-FROM-SRPM := yes
 ALL += certmaster
 IN_BOOTSTRAPFS += certmaster
 IN_MYPLC += certmaster
@@ -27,7 +26,6 @@ IN_MYPLC += certmaster
 #func
 func-MODULES := func
 func-SPEC := func.spec
-func-BUILD-FROM-SRPM := yes
 ALL += func
 IN_BOOTSTRAPFS += func
 IN_MYPLC += func
