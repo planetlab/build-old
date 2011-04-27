@@ -124,3 +124,4 @@ package: monitor-runlevelagent
 #package: madwifi
 #package: wireless-tools
 
+package=sl6 package=centos5: puppet
