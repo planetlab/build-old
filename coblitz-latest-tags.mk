@@ -39,7 +39,7 @@ yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@centos5
 endif
 ifeq "$(DISTRONAME)" "sl6"
 yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@rhel6
-certmaster-GITPATH		:= git://git.verivue.com/certmaster.git@certmaster-0.28-0
+certmaster-GITPATH		:= git://git.verivue.com/certmaster.git@certmaster-0.28-1
 func-GITPATH			:= git://git.verivue.com/func.git@func-0.28-0
 endif
 
