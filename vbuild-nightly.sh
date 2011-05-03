@@ -428,6 +428,7 @@ function usage () {
     echo " -v - be verbose"
     echo " -7 - uses weekday-@FCDISTRO@ as base"
     echo " -i ifname - defaults to $DEFAULT_IFNAME - used to determine local IP"
+    echo " --build-branch branch - build using the branch from build module"
     exit 1
 }
 
@@ -444,35 +445,48 @@ function main () {
     PUBLISH_SRPMS=true
     SSH_KEY=""
     SIGNYUMREPO=""
-    while getopts "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:K:SBTnv7i:" opt ; do
-	case $opt in
-	    f) FCDISTRO=$OPTARG ;;
-	    d) PLDISTRO=$OPTARG ;;
-	    p) PERSONALITY=$OPTARG ;;
-	    m) MAILTO=$OPTARG ;;
-	    s) BUILD_SCM_URL=$OPTARG ;;
-	    t) PLDISTROTAGS=$OPTARG ;;
-	    b) BASE=$OPTARG ;;
-	    o) OVERBASE=$OPTARG ;;
-	    c) TESTCONFIG="$TESTCONFIG $OPTARG" ;;
-	    w) WEBPATH=$OPTARG ;;
-	    W) TESTBUILDURL=$OPTARG ;;
-	    r) WEBROOT=$OPTARG ;;
-	    M) TESTMASTER=$OPTARG ;;
-            y) SIGNYUMREPO=true ;;
-            g) GPGPATH=$OPTARG ;;
-            u) GPGUID=$OPTARG ;;
-	    K) SSH_KEY=$OPTARG ;;
-	    S) PUBLISH_SRPMS="" ;;
-	    B) DO_TEST= ;;
-	    T) DO_BUILD= ;;
-	    n) DRY_RUN="-n" ;;
-	    v) set -x ; VERBOSE="-v" ;;
-	    7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ;;
-	    i) IFNAME=$OPTARG ;;
-	    h|*) usage ;;
+    DEFULT_BUILD_BRANCH="master"
+    BUILD_BRANCH=$DEFULT_BUILD_BRANCH
+
+    OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
+    if [ $? != 0 ]
+    then
+        usage
+        echo "lala"
+    fi
+    eval set -- "$OPTS"
+    while true; do
+	case $1 in
+	    -f) FCDISTRO=$2; shift 2 ;;
+	    -d) PLDISTRO=$2; shift 2 ;;
+	    -p) PERSONALITY=$2; shift 2 ;;
+	    -m) MAILTO=$2; shift 2 ;;
+	    -s) BUILD_SCM_URL=$2; shift 2 ;;
+	    -t) PLDISTROTAGS=$2; shift 2 ;;
+	    -b) BASE=$2; shift 2 ;;
+	    -o) OVERBASE=$2; shift 2 ;;
+	    -c) TESTCONFIG="$TESTCONFIG $2"; shift 2 ;;
+	    -w) WEBPATH=$2; shift 2 ;;
+	    -W) TESTBUILDURL=$2; shift 2 ;;
+	    -r) WEBROOT=$2; shift 2 ;;
+	    -M) TESTMASTER=$2; shift 2 ;;
+            -y) SIGNYUMREPO=true; shift ;;
+            -g) GPGPATH=$2; shift 2 ;;
+            -u) GPGUID=$2; shift 2 ;;
+	    -K) SSH_KEY=$2; shift 2 ;;
+	    -S) PUBLISH_SRPMS="" ; shift ;;
+	    -B) DO_TEST= ; shift ;;
+	    -T) DO_BUILD= ; shift;;
+	    -n) DRY_RUN="-n" ; shift ;;
+	    -v) set -x ; VERBOSE="-v" ; shift ;;
+	    -7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ; shift ;;
+	    -i) IFNAME=$2; shift 2 ;;
+	    -h) usage ; shift ;;
+            --build-branch) BUILD_BRANCH=$2; shift 2 ;;
+            --) shift; break ;;
 	esac
     done
+
 	
     # preserve options for passing them again later, together with expanded base
     declare -a options
@@ -628,9 +642,13 @@ function main () {
 	    # Extract build again - in the vserver
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    if echo $BUILD_SCM_URL | grep -q git ; then
-		vserver $BASE exec bash -c "git clone $GIT_REPO /build; cd /build; git checkout $GIT_TAG"
+		vserver $BASE exec bash -c "git clone --branch $BUILD_BRANCH $GIT_REPO /build; cd /build; git checkout $GIT_TAG"
 	    else
-		vserver $BASE exec svn checkout ${BUILD_SCM_URL} /build
+                if [ "x$BUILD_BRANCH" != "x$DEFAULT_BUILD_BRANCH" ]; then
+		    vserver $BASE exec svn checkout ${BUILD_SCM_URL} /build
+                else
+                    vserver $BASE exec svn checkout ${BUILD_SCM_URL}/branches/$BUILD_BRANCH /build
+                fi
 	    fi
 	fi
 	# install ssh key in vserver
