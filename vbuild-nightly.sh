@@ -448,6 +448,7 @@ function main () {
     SSH_KEY=""
     SIGNYUMREPO=""
 
+    OPTS_ORIG=$@
     OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
     if [ $? != 0 ]
     then
@@ -485,6 +486,8 @@ function main () {
             --) shift; break ;;
 	esac
     done
+
+    eval set -- "$OPTS_ORIG"
 
 	
     # preserve options for passing them again later, together with expanded base
