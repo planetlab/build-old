@@ -11,7 +11,6 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_BUILD_SCM_URL="git://git.onelab.eu/build"
 DEFAULT_IFNAME=eth0
-DEFAULT_BUILD_BRANCH="master"
 
 # default gpg path used in signing yum repo
 DEFAULT_GPGPATH="/etc/planetlab"
@@ -360,7 +359,6 @@ function show_env () {
     echo PERSONALITY=$PERSONALITY
     echo BASE=$BASE
     echo BUILD_SCM_URL=$BUILD_SCM_URL
-    echo BUILD_BRANCH=$BUILD_BRANCH
     echo MAKEVARS="${MAKEVARS[@]}"
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
@@ -409,6 +407,7 @@ function usage () {
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -m mailto - no default"
     echo " -s build_scm_url - git or svn URL where to fetch the build module - defaults to $DEFAULT_BUILD_SCM_URL"
+    echo "    define GIT tag or branch name appending @tagname to url"
     echo " -t pldistrotags - defaults to \${PLDISTRO}-tags.mk"
     echo " -b base - defaults to $DEFAULT_BASE"
     echo "    @NAME@ replaced as appropriate"
@@ -482,7 +481,6 @@ function main () {
 	    -7) BASE="$(date +%a|tr A-Z a-z)-@FCDISTRO@" ; shift ;;
 	    -i) IFNAME=$2; shift 2 ;;
 	    -h) usage ; shift ;;
-            --build-branch) BUILD_BRANCH=$2; shift 2 ;;
             --) shift; break ;;
 	esac
     done
@@ -519,7 +517,6 @@ function main () {
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$BUILD_SCM_URL" ] && BUILD_SCM_URL="$DEFAULT_BUILD_SCM_URL"
-    [ -z "$BUILD_BRANCH" ] && BUILD_BRANCH="$DEFAULT_BUILD_BRANCH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
     [ -z "$TESTMASTER" ] && TESTMASTER="$DEFAULT_TESTMASTER"
 
@@ -645,13 +642,9 @@ function main () {
 	    # Extract build again - in the vserver
 	    [ -n "$SSH_KEY" ] && setupssh ${BASE} ${SSH_KEY}
 	    if echo $BUILD_SCM_URL | grep -q git ; then
-		vserver $BASE exec bash -c "git clone --branch $BUILD_BRANCH $GIT_REPO /build; cd /build; git checkout $GIT_TAG"
+		vserver $BASE exec bash -c "git clone $GIT_REPO /build; cd /build; git checkout $GIT_TAG"
 	    else
-                if [ "x$BUILD_BRANCH" != "x$DEFAULT_BUILD_BRANCH" ]; then
-		    vserver $BASE exec svn checkout ${BUILD_SCM_URL} /build
-                else
-                    vserver $BASE exec svn checkout ${BUILD_SCM_URL}/branches/$BUILD_BRANCH /build
-                fi
+		vserver $BASE exec svn checkout ${BUILD_SCM_URL} /build
 	    fi
 	fi
 	# install ssh key in vserver
