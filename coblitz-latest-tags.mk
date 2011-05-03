@@ -24,12 +24,12 @@ plewww-GITPATH                  := git://git.verivue.com/planetlab/plewww@PLEWWW
 pcucontrol-GITPATH              := git://git.verivue.com/planetlab/pcucontrol.git@pcucontrol-1.0-10
 nodeconfig-GITPATH              := git://git.verivue.com/planetlab/nodeconfig.git@nodeconfig-4.3-10
 bootmanager-BRANCH		:= 4.3
-bootmanager-GITPATH		:= git://git.verivue.com/planetlab/bootmanager@bootmanager-4.3-25
+bootmanager-GITPATH		:= git://git.verivue.com/planetlab/bootmanager@bootmanager-4.3-27
 pypcilib-GITPATH                := git://git.verivue.com/planetlab/pypcilib.git@pypcilib-0.2-10
 bootcd-GITPATH                  := git://git.verivue.com/planetlab/bootcd.git@bootcd-4.2-25
 vserver-reference-GITPATH	:= git://git.verivue.com/planetlab/vserver-reference@vserver-reference-4.2-18
 bootstrapfs-GITPATH             := git://git.verivue.com/planetlab/bootstrapfs.git@BootstrapFS-1.0-12
-myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4.3-50
+myplc-GITPATH                   := git://git.verivue.com/planetlab/myplc@myplc-4.3-51
 pyopenssl-GITPATH		:= git://git.verivue.com/planetlab/pyopenssl.git@pyopenssl-0.9-1
 monitor-GITPATH                 := git://git.verivue.com/planetlab/monitor.git@Monitor-3.0-29
 pyaspects-GITPATH		:= git://git.verivue.com/planetlab/pyaspects.git@pyaspects-0.4.1-1
@@ -39,8 +39,8 @@ yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@centos5
 endif
 ifeq "$(DISTRONAME)" "sl6"
 yum-GITPATH			:= git://git.verivue.com/planetlab/yum.git@rhel6
-certmaster-GITPATH		:= git://git.verivue.com/certmaster.git@certmaster-0.28-0
-func-GITPATH			:= git://git.verivue.com/func.git@func-0.28-0
+certmaster-GITPATH		:= git://git.verivue.com/certmaster.git@certmaster-0.28-1
+func-GITPATH			:= git://git.verivue.com/func.git@func-0.28-1
 endif
 
 # locating the right test directory - see make tests_gitpath
