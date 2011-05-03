@@ -11,6 +11,7 @@ DEFAULT_PERSONALITY=linux32
 DEFAULT_BASE="@DATE@--@PLDISTRO@-@FCDISTRO@-@PERSONALITY@"
 DEFAULT_BUILD_SCM_URL="git://git.onelab.eu/build"
 DEFAULT_IFNAME=eth0
+DEFAULT_BUILD_BRANCH="master"
 
 # default gpg path used in signing yum repo
 DEFAULT_GPGPATH="/etc/planetlab"
@@ -359,6 +360,7 @@ function show_env () {
     echo PERSONALITY=$PERSONALITY
     echo BASE=$BASE
     echo BUILD_SCM_URL=$BUILD_SCM_URL
+    echo BUILD_BRANCH=$BUILD_BRANCH
     echo MAKEVARS="${MAKEVARS[@]}"
     echo DRY_RUN="$DRY_RUN"
     echo PLDISTROTAGS="$PLDISTROTAGS"
@@ -445,14 +447,11 @@ function main () {
     PUBLISH_SRPMS=true
     SSH_KEY=""
     SIGNYUMREPO=""
-    DEFULT_BUILD_BRANCH="master"
-    BUILD_BRANCH=$DEFULT_BUILD_BRANCH
 
     OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
     if [ $? != 0 ]
     then
         usage
-        echo "lala"
     fi
     eval set -- "$OPTS"
     while true; do
@@ -517,6 +516,7 @@ function main () {
     [ -z "$GPGUID" ] && GPGUID="$DEFAULT_GPGUID"
     [ -z "$IFNAME" ] && IFNAME="$DEFAULT_IFNAME"
     [ -z "$BUILD_SCM_URL" ] && BUILD_SCM_URL="$DEFAULT_BUILD_SCM_URL"
+    [ -z "$BUILD_BRANCH" ] && BUILD_BRANCH="$DEFAULT_BUILD_BRANCH"
     [ -z "$TESTCONFIG" ] && TESTCONFIG="$DEFAULT_TESTCONFIG"
     [ -z "$TESTMASTER" ] && TESTMASTER="$DEFAULT_TESTMASTER"
 
