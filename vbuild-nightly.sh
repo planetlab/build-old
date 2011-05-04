@@ -485,13 +485,8 @@ function main () {
 	esac
     done
 
-    eval set -- "$OPTS_ORIG"
-
-	
     # preserve options for passing them again later, together with expanded base
-    declare -a options
-    toshift=$(($OPTIND - 1))
-    arg=1; while [ $arg -le $toshift ] ; do options=(${options[@]} "$1") ; shift; arg=$(($arg+1)) ; done
+    options=$OPTS_ORIG
 
     # allow var=value stuff; 
     for target in "$@" ; do
