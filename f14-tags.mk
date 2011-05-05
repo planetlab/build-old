@@ -12,3 +12,5 @@ util-vserver-DEVEL-RPMS		+= dietlibc
 # but use latest stuff for f12 that has 3.2.28
 yum-BRANCH			:= f12
 yum-GITPATH			:= git://git.onelab.eu/yum.git@3.2.28-5-f1x
+yum-DEVEL-RPMS			+= gettext
+yum-DEVEL-RPMS			+= intltool
