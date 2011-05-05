@@ -1,9 +1,5 @@
 #
-# $Id$
-# $URL$
-#
-# the f12 pldistro is to rebuild a fedora 12 vserver-capable kernel + out-to-date util-vserver
-# it is intended to be used in conjunction with the stock f12 distribution
+# mostly same as f12.mk - purpose is to build a minimal env. for f14-based infrastructure 
 #
 
 #

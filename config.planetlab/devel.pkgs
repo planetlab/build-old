@@ -110,9 +110,3 @@ package: python-dateutil
 package: python-lxml
 # DistributedRateLimiting
 package: libxml2-devel
-##########
-# this is to rebuild a kernel for a stock fedora install 
-# for the kernel (from the f12/ branch of linux-2.6)
-package>=f14: elfutils-libelf-devel e2fsprogs 
-# for util-vserver
-package>=f14: nss nss-devel
