@@ -4,5 +4,7 @@ kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 kernel-DEVEL-RPMS		+= e2fsprogs 
 util-vserver-BRANCH		:= f12
 util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@f12-bbox-f14
+util-vserver-DEVEL-RPMS		+= nss nss-devel
+#util-vserver-DEVEL-RPMS		+= dietlibc
 yum-BRANCH			:= f12
 yum-SVNPATH			:= http://svn.planet-lab.org/svn/yum/branches/f12@16162
