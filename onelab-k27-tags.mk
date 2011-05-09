@@ -63,3 +63,9 @@ tests-GITPATH                   := git://git.onelab.eu/tests.git@master
 # nozomi not needed anymore for 2.6.27
 ALL:=$(subst nozomi,,$(ALL))
 IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
+
+#################### tmp - build the vini nm plugin
+NodeManager-topo-MODULES := NodeManager-topo                                                                                                           
+NodeManager-topo-SPEC := NodeManager-topo.spec                                                                                                         
+NodeManager-topo-SVNPATH        := http://svn.planet-lab.org/svn/NodeManager-topo/trunk
+ALL := NodeManager-topo                                                                                                                                
