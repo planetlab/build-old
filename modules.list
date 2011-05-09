@@ -24,6 +24,7 @@ Monitor
 myplc
 nodeconfig
 nodemanager
+NodeManager-topo
 nodeupdate
 nozomi
 omf
