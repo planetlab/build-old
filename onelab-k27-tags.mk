@@ -65,7 +65,8 @@ ALL:=$(subst nozomi,,$(ALL))
 IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
 
 #################### tmp - build the vini nm plugin
-NodeManager-topo-MODULES := NodeManager-topo                                                                                                           
-NodeManager-topo-SPEC := NodeManager-topo.spec                                                                                                         
-NodeManager-topo-SVNPATH        := http://svn.planet-lab.org/svn/NodeManager-topo/trunk
+NodeManager-topo-MODULES		:= NodeManager-topo
+NodeManager-topo-SPEC			:= NodeManager-topo.spec
+NodeManager-topo-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
+NodeManager-topo-BUILD-FROM-SRPM	:= yes
 ALL := NodeManager-topo                                                                                                                                
