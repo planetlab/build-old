@@ -69,4 +69,6 @@ NodeManager-topo-MODULES		:= NodeManager-topo
 NodeManager-topo-SPEC			:= NodeManager-topo.spec
 NodeManager-topo-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
 NodeManager-topo-BUILD-FROM-SRPM	:= yes
+# can't be figured from the specfile
+NodeManager-topo.source			: nodemanager-topo
 ALL := NodeManager-topo                                                                                                                                
