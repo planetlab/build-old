@@ -71,4 +71,5 @@ NodeManager-topo-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager-topo/trun
 NodeManager-topo-BUILD-FROM-SRPM	:= yes
 # can't be figured from the specfile
 NodeManager-topo.source			:= nodemanager-topo
-ALL := NodeManager-topo                                                                                                                                
+# build this package but do not ship
+ALL += NodeManager-topo                                                                                                                                
