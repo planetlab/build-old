@@ -579,6 +579,10 @@ that for other purposes than tagging""" % options.workdir
                 Module.config[key]=value                
             f.close()
 
+            # owerride config variables using options.
+            if options.build_module:
+                Module.config['build'] = options.build_module
+
         if not os.path.isdir (options.workdir):
             print "Cannot find",options.workdir,"let's create it"
             Command("mkdir -p %s" % options.workdir, options).run_silent()
@@ -1485,6 +1489,8 @@ Branches:
 ** THIS MUST NOT ** be your usual working directory""")
         parser.add_option("-F","--fast-checks",action="store_true",dest="fast_checks",default=False,
                           help="skip safety checks, such as svn updates -- use with care")
+        parser.add_option("-B","--build-module",action="store",dest="build_module",default=None,
+                          help="specify a build module to owerride the one in the CONFIG")
 
         # default verbosity depending on function - temp
         verbose_modes= ['tag', 'sync', 'branch']
