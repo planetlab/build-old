@@ -22,7 +22,20 @@ RENAMED_SVN_MODULES = {
     "CoDemux": "codemux",
     "NodeManager": "nodemanager",
     "NodeUpdate": "nodeupdate",
-    "Monitor": "monitor"
+    "Monitor": "monitor",
+
+    #we keep planetlab modules in a sub-directory
+    "planetlab/PLEWWW": "planetlab/plewww",
+    "planetlab/PLCAPI": "planetlab/plcapi",
+    "planetlab/BootManager": "planetlab/bootmanager",
+    "planetlab/BootCD": "planetlab/bootcd",
+    "planetlab/VserverReference": "planetlab/vserver-reference",
+    "planetlab/BootstrapFS": "planetlab/bootstrapfs",
+    "planetlab/MyPLC": "planetlab/myplc",
+    "planetlab/CoDemux": "planetlab/codemux",
+    "planetlab/NodeManager": "planetlab/nodemanager",
+    "planetlab/NodeUpdate": "planetlab/nodeupdate"
+
     }
 
 def svn_to_git_name(module):
@@ -445,9 +458,9 @@ class Module:
                 cls.prompt_config_option(key, message, default)
 
     # for parsing module spec name:branch
-    matcher_branch_spec=re.compile("\A(?P<name>[\w\.-]+):(?P<branch>[\w\.-]+)\Z")
+    matcher_branch_spec=re.compile("\A(?P<name>[\w\.-\/]+):(?P<branch>[\w\.-]+)\Z")
     # special form for tagged module - for Build
-    matcher_tag_spec=re.compile("\A(?P<name>[\w\.-]+)@(?P<tagname>[\w\.-]+)\Z")
+    matcher_tag_spec=re.compile("\A(?P<name>[\w\.-\/]+)@(?P<tagname>[\w\.-]+)\Z")
     # parsing specfiles
     matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
