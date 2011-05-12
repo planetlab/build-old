@@ -3,7 +3,7 @@
 mkinitrd-GITPATH		:= git://git.verivue.com/planetlab/mkinitrd.git@mkinitrd-5.1.19.6-3
 linux-2.6-BRANCH                := rhel6
 linux-2.6-GITPATH               := git://git.verivue.com/planetlab/linux-2.6.git@linux-2.6-32-16
-util-vserver-GITPATH            := git://git.verivue.com/planetlab/planetlab/util-vserver.git@util-vserver-0.30.216-16
+util-vserver-GITPATH            := git://git.verivue.com/planetlab/util-vserver.git@util-vserver-0.30.216-16
 util-vserver-BUILD-FROM-SRPM	:= yes     # tmp
 util-vserver-pl-GITPATH         := git://git.verivue.com/planetlab/util-vserver-pl.git@util-vserver-pl-0.4-25
 libnl-GITPATH			:= git://git.verivue.com/planetlab/libnl.git@libnl-1.1-2
