@@ -295,7 +295,7 @@ ALL += pcucontrol
 #
 # monitor
 #
-monitor-MODULES := Monitor
+monitor-MODULES := monitor
 monitor-SPEC := Monitor.spec
 monitor-DEVEL-RPMS += net-snmp net-snmp-devel
 ALL += monitor
@@ -307,15 +307,6 @@ IN_BOOTSTRAPFS += monitor
 plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
 ALL += plcrt
-
-#
-# zabbix
-#
-zabbix-MODULES := Monitor
-zabbix-SPEC := zabbix.spec
-zabbix-BUILD-FROM-SRPM := yes
-zabbix-DEVEL-RPMS += python-cherrypy
-ALL += zabbix
 
 #
 # pyopenssl
@@ -479,7 +470,7 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := myplc plcapi nodemanager Monitor
+myplc-docs-MODULES := myplc plcapi nodemanager monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 
