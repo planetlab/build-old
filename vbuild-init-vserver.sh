@@ -178,7 +178,7 @@ function setup_vserver () {
     echo "persistent,lback_allow,~single_ip" > /etc/vservers/$vserver/nflags
 
     # Set cflags
-    echo "persistent,~info_init" > /etc/vservers/$vserver/cflags
+    echo -e "persistent\n~info_init" > /etc/vservers/$vserver/cflags
 
     # Enable cgroup
     mkdir /etc/vservers/$vserver/cgroup
