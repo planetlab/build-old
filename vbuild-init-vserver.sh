@@ -174,10 +174,11 @@ function setup_vserver () {
     fi
 
     # Set persistent for the network context
-    echo persistent,lback_allow > /etc/vservers/$vserver/nflags
+    # Thierry: Daniel's kernels come with single_ip turned off by default, let's make this explicit 
+    echo "persistent,lback_allow,~single_ip" > /etc/vservers/$vserver/nflags
 
     # Set cflags
-    echo -e "persistent\n~info_init" > /etc/vservers/$vserver/cflags
+    echo "persistent,~info_init" > /etc/vservers/$vserver/cflags
 
     # Enable cgroup
     mkdir /etc/vservers/$vserver/cgroup
