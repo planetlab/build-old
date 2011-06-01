@@ -34,7 +34,7 @@ import re
 default_arch='x86_64'
 known_arch = ['i386','x86_64']
 default_fcdistro='f12'
-known_fcdistros = [ 'centos5','centos6','f8', 'f9','f10','f11','f12', 'f13', 'f14', 'sl6']
+known_fcdistros = [ 'centos5','centos6','f8', 'f9','f10','f11','f12', 'f13', 'f14', 'f15', 'sl6']
 default_pldistro='onelab'
 
 known_keywords=['groupname', 'groupdesc', 'kexclude', 'package', 'group', 'precious', 'junk', 'mirror', ]
