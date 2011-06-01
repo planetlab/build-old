@@ -186,9 +186,9 @@ function setup_vserver () {
     # Start Vserver automatically on boot
     echo "default" > /etc/vservers/$vserver/apps/init/mark
 
-    # Set the init style of your vserver to plain for f13
+    # Set the init style of your vserver to plain for f13 and higher
     case $fcdistro in 
-	f13|f14) echo plain > /etc/vservers/$vserver/apps/init/style ;;
+	f1[3-9]) echo plain > /etc/vservers/$vserver/apps/init/style ;;
     esac
 
     if [ "$pkg_method" = "yum" ] ; then
