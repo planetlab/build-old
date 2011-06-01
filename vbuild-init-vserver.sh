@@ -154,18 +154,22 @@ function setup_vserver () {
     fi
 
     BCAPFILE=/etc/vservers/$vserver/bcapabilities
+    touch $BCAPFILE
     if [ -n "$VBUILD_MODE" ] ; then 
 	### capabilities required for a build vserver
         # set up appropriate vserver capabilities to mount, mknod and IPC_LOCK
-	touch $BCAPFILE
 	grep -q ^CAP_SYS_ADMIN $BCAPFILE || echo CAP_SYS_ADMIN >> $BCAPFILE
 	grep -q ^CAP_MKNOD $BCAPFILE || echo CAP_MKNOD >> $BCAPFILE
 	grep -q ^CAP_IPC_LOCK $BCAPFILE || echo CAP_IPC_LOCK >> $BCAPFILE
+	# useful for f15 guests that use set_cap_file 
+	grep -q ^CAP_SETFCAP $BCAPFILE || echo CAP_SETFCAP >> $BCAPFILE
     else
 	### capabilities required for a myplc vserver
 	# for /etc/plc.d/gpg - need to init /dev/random
 	grep -q ^CAP_MKNOD $BCAPFILE || echo CAP_MKNOD >> $BCAPFILE
 	grep -q ^CAP_NET_BIND_SERVICE $BCAPFILE || echo CAP_NET_BIND_SERVICE >> $BCAPFILE
+	# useful for f15 guests that use set_cap_file 
+	grep -q ^CAP_SETFCAP $BCAPFILE || echo CAP_SETFCAP >> $BCAPFILE
     fi
 
     # Set persistent for the network context
