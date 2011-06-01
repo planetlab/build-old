@@ -35,7 +35,7 @@ jp_centos_url="jp_centos_url-needs-to-be-defined"
 jp_epel_url="jp_epel_url-needs-to-be-defined"
 
 default_distroname="centos5.6"
-all_distronames="f14 centos5.6 epel5 epel6"
+all_distronames="f14 f15 centos5.6 epel5 epel6"
 default_arch="i386"
 all_archs="i386 x86_64"
 
