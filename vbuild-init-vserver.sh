@@ -153,24 +153,19 @@ function setup_vserver () {
 	fi
     fi
 
+    BCAPFILE=/etc/vservers/$vserver/bcapabilities
     if [ -n "$VBUILD_MODE" ] ; then 
 	### capabilities required for a build vserver
         # set up appropriate vserver capabilities to mount, mknod and IPC_LOCK
-	BCAPFILE=/etc/vservers/$vserver/bcapabilities
 	touch $BCAPFILE
-	cap=$(grep ^CAP_SYS_ADMIN /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_SYS_ADMIN' >> /etc/vservers/$vserver/bcapabilities
-	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
-	cap=$(grep ^CAP_IPC_LOCK /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_IPC_LOCK' >> /etc/vservers/$vserver/bcapabilities
+	grep -q ^CAP_SYS_ADMIN $BCAPFILE || echo CAP_SYS_ADMIN >> $BCAPFILE
+	grep -q ^CAP_MKNOD $BCAPFILE || echo CAP_MKNOD >> $BCAPFILE
+	grep -q ^CAP_IPC_LOCK $BCAPFILE || echo CAP_IPC_LOCK >> $BCAPFILE
     else
 	### capabilities required for a myplc vserver
 	# for /etc/plc.d/gpg - need to init /dev/random
-	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
-	cap=$(grep ^CAP_NET_BIND_SERVICE /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
+	grep -q ^CAP_MKNOD $BCAPFILE || echo CAP_MKNOD >> $BCAPFILE
+	grep -q ^CAP_NET_BIND_SERVICE $BCAPFILE || echo CAP_NET_BIND_SERVICE >> $BCAPFILE
     fi
 
     # Set persistent for the network context
