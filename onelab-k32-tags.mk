@@ -12,7 +12,7 @@ madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-
 iptables-BUILD-FROM-SRPM        := yes	# tmp
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-4
 iproute-BUILD-FROM-SRPM		:= yes	
-iproute2-GITPATH		:= git://git.onelab.eu/iproute2.git@iproute2-2.6.35-0
+iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@master
 ###
 ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-20
 ###
