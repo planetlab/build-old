@@ -53,7 +53,7 @@ package: gcc-c++
 package: binutils-devel
 # required for perf
 package: xmlto asciidoc newt-devel
-package>=sl6: perl-ExtUtils-Embed
+package: perl-ExtUtils-Embed
 # iptables
 package: linuxdoc-tools 
 package: sudo 
