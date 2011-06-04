@@ -217,7 +217,7 @@ function build () {
     MAKEVARS=("BASE=${BASE}" "${MAKEVARS[@]}")
 
     # initialize latex
-    /build/latex-first-run.sh
+    /build/latex-first-run.sh || :
 
     # stage1
     make -C /build $DRY_RUN "${MAKEVARS[@]}" stage1=true 

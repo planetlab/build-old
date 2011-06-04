@@ -10,4 +10,4 @@ I can't find the format file pdflatex.fmt!
 EOF
 latex latex-dummy < /dev/null >& /dev/null
 pdflatex latex-dummy < /dev/null >& /dev/null
-
+exit 0
