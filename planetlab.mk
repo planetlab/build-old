@@ -75,7 +75,7 @@ endif
 #
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
-util-vserver-RPMFLAGS:= --without dietlibc
+util-vserver-RPMFLAGS:= --without dietlibc --without doc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
 
