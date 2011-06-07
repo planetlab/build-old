@@ -328,7 +328,7 @@ IN_BOOTSTRAPFS += monitor
 #
 # zabbix
 #
-zabbix-MODULES := Monitor
+zabbix-MODULES := monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
 zabbix-DEVEL-RPMS += python-cherrypy
