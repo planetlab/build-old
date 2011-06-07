@@ -54,17 +54,3 @@ DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRate
 # locating the right test directory - see make tests_gitpath
 tests-GITPATH                   := git://git.onelab.eu/tests.git@tests-5.0-27
 
-### temporary
-# nozomi not needed anymore for 2.6.27
-ALL:=$(subst nozomi,,$(ALL))
-IN_BOOTSTRAPFS:=$(subst nozomi,,$(IN_BOOTSTRAPFS))
-
-#################### tmp - build the vini nm plugin
-NodeManager-topo-MODULES		:= NodeManager-topo
-NodeManager-topo-SPEC			:= NodeManager-topo.spec
-NodeManager-topo-SVNPATH		:= http://svn.planet-lab.org/svn/NodeManager-topo/trunk
-NodeManager-topo-BUILD-FROM-SRPM	:= yes
-# can't be figured from the specfile
-NodeManager-topo.source			:= nodemanager-topo
-# build this package but do not ship
-ALL += NodeManager-topo                                                                                                                                
