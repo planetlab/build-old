@@ -7,7 +7,7 @@
 ### kernel-DEVEL-RPMS		+= asciidoc
 #util-vserver-BRANCH		:= f12
 #util-vserver-GITPATH		:= git://git.onelab.eu/util-vserver.git@f12-bbox-f14
-util-vserver-GITPATH		:= git://git.planet-lab.eu/util-vserver.git@util-vserver-0.30.216-15
+util-vserver-GITPATH		:= git://git.planet-lab.eu/util-vserver.git@util-vserver-0.30.216-16
 util-vserver-DEVEL-RPMS		+= nss nss-devel
 util-vserver-DEVEL-RPMS		+= dietlibc
 # but use latest stuff for f12 that has 3.2.28
