@@ -110,6 +110,7 @@ ALL += umts-frontend
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
+iptables-BUILD-FROM-SRPM := yes
 iptables-DEPEND-DEVEL-RPMS += kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
@@ -119,6 +120,7 @@ IN_BOOTSTRAPFS += iptables
 #
 iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
+iproute-BUILD-FROM-SRPM	:= yes	
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
 IN_VSERVER += iproute
@@ -129,6 +131,8 @@ IN_BOOTCD += iproute
 #
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
+# starting with 0.4
+util-vserver-BUILD-FROM-SRPM := yes
 util-vserver-RPMFLAGS:= --without dietlibc --without doc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver

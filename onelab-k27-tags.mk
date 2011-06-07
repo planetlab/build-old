@@ -4,19 +4,14 @@
 linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-35
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-4
-iptables-BUILD-FROM-SRPM        := yes	# tmp
-iproute-BUILD-FROM-SRPM := yes	
 iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@master
 ###
 ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-20
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
-###
-util-vserver-BUILD-FROM-SRPM := yes # tmp
 util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-16
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
-# as per http://svn.planet-lab.org/changeset/17973, 2.6.22 kernels shall use 0.3 branch and 2.6.27 need 0.4
 util-vserver-pl-GITPATH         := git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-26
 nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-8
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
@@ -40,7 +35,7 @@ PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
 pyaspects-GITPATH		:= git://git.onelab.eu/pyaspects.git@pyaspects-0.4.1-1
-ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.3-2
+ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-10
 oml-GITPATH                     := git://git.onelab.eu/oml.git@oml-2.5.1-1
 ###
