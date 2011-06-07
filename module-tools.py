@@ -987,7 +987,7 @@ Please write a changelog for this new tag in the section above
         if not build.is_clean():
             build.revert()
 
-        tagsfiles=glob(build.path+"/*-tags*.mk")
+        tagsfiles=glob(build.path+"/*-tags.mk")
         tagsdict=dict( [ (x,'todo') for x in tagsfiles ] )
         default_answer = 'y'
         tagsfiles.sort()
@@ -1380,7 +1380,7 @@ Branches:
         'version' : "check latest specfile and print out details",
         'diff' : "show difference between module (trunk or branch) and latest tag",
         'tag'  : """increment taglevel in specfile, insert changelog in specfile,
-                create new tag and and monitor its adoption in build/*-tags*.mk""",
+                create new tag and and monitor its adoption in build/*-tags.mk""",
         'branch' : """create a branch for this module, from the latest tag on the trunk, 
                   and change trunk's version number to reflect the new branch name;
                   you can specify the new branch name by using module:branch""",
