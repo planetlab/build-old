@@ -424,7 +424,7 @@ endif
 ### this utility allows to extract various info from a spec file
 ### and to define them in makefiles
 spec2make: spec2make.c
-	$(CC) -g -Wall $< -o $@ -lrpm -lrpmbuild -lrpmio -lpopt
+	$(CC) -g -Wall $< -o $@ -lrpm -lrpmbuild -lrpmio -lpopt || ln -s spec2make.py spec2make
 
 ### run spec2make on the spec file and include the result
 # usage: spec2make package
