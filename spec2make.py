@@ -13,6 +13,12 @@ def main ():
                       help='specify target arch')
     parser.add_option('-w','--whitelist-rpms',action='store',dest='whitelist',default='',
                       help='comma separated list of rpms to expose in makefile')
+    parser.add_option('-1','--with',action='store',dest='with',default='',
+                      help='accept but ignore --with option')
+    parser.add_option('-0','--without',action='store',dest='without',default='',
+                      help='accept but ignore --without option')
+    parser.add_option('-d','--define',action='store',dest='define',default='',
+                      help='accept but ignore --define option')
     (options,args) = parser.parse_args()
 
     try:
