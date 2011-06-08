@@ -47,7 +47,7 @@ omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-9
 ###
 sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-21
 nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-5
-bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-17
+bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-18
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-10
 pyplnet-GITPATH                 := git://git.planet-lab.org/pyplnet.git@pyplnet-4.3-9
 DistributedRateLimiting-SVNPATH	:= http://svn.planet-lab.org/svn/DistributedRateLimiting/tags/DistributedRateLimiting-0.1-1
