@@ -75,8 +75,7 @@ class TagsFile:
 # basic usage for now 
 # $0 tagsfile1 tagsfile2
 def main ():
-    parser=ArgumentParser(description="Compare 2 tags files",
-                          epilog="Create a normalized (.norm) file for each input and runs diff on them")
+    parser=ArgumentParser(description="Create a normalized (.norm) file for each input, may run diff on them")
     parser.add_argument('tagsnames',
                         metavar='tagsfile',
                         nargs='+',
