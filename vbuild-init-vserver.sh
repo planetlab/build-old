@@ -282,17 +282,28 @@ function devel_or_vtest_tools () {
     packages=$(pl_getPackages -a $vserver_arch $fcdistro $pldistro $pkgsfile)
     groups=$(pl_getGroups -a $vserver_arch $fcdistro $pldistro $pkgsfile)
 
-    [ "$pkg_method" = yum ] && [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
-    [ "$pkg_method" = yum ] && for group_plus in $groups; do
-	group=$(echo $group_plus | sed -e "s,+++, ,g")
-        $personality vserver $vserver exec yum -y groupinstall "$group"
-    done
+    case "$pkg_method" in
+	yum)
+	    [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
+	    for group_plus in $groups; do
+		group=$(echo $group_plus | sed -e "s,+++, ,g")
+		$personality vserver $vserver exec yum -y groupinstall "$group"
+	    done
+	    # store current rpm list in /init-vserver.rpms in case we need to check the contents
+	    $personality vserver $vserver exec rpm -aq > /vservers/$vserver/init-vserver.rpms
+	    ;;
+	debootstrap)
+	    $personality vserver $vserver exec apt-get update
+	    for package in $packages ; do 
+		$personality vserver $vserver exec apt-get install -y $package 
+	    done
+	    ### xxx todo install groups with apt..
+	    ;;
+	*)
+	    echo "unknown pkg_method $pkg_method"
+	    ;;
+    esac
 
-    [ "$pkg_method" = debootstrap ] && $personality vserver $vserver exec apt-get update
-    [ "$pkg_method" = debootstrap ] && for package in $packages ; do 
-	$personality vserver $vserver exec apt-get install -y $package 
-    done
-    
     return 0
 }
 
