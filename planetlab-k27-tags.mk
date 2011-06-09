@@ -30,13 +30,13 @@ plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-33
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-65
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
-Monitor-SVNPATH			:= http://svn.planet-lab.org/svn/Monitor/tags/Monitor-3.0-35
+monitor-GITPATH			:= git://git.planet-lab.eu/monitor@monitor-3.1-4
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
 pyaspects-GITPATH		:= git://git.planet-lab.org/pyaspects.git@pyaspects-0.4.1-1
-ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.3-2
-omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-9
+ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.6-2
+omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-10
 ###
 sfa-GITPATH			:= git://git.planet-lab.org/sfa.git@sfa-1.0-21
 nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-5
