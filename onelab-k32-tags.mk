@@ -3,8 +3,9 @@
 ###
 linux-2.6-BRANCH		:= rhel6
 linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@rhel6
-# help out spec2make on f8 and centos5, due to a bug in rpm
-ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
+# help out spec2make on f8 and centos5, due to a bug in rpm 
+# ditto on f15 for spec2make.py - tmp hopefully
+ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 f15 centos5)"
 kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
 endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel

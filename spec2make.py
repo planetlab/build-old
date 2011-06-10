@@ -50,7 +50,9 @@ def main ():
     target = options.target
     whitelist=options.whitelist.split(',')
     # Print non-empty packages
+    counter=0
     for package in specobj.packages:
+        counter += 1
         header=package.header
         name=header.format('%{name}')
         version=header.format('%{version}')
@@ -60,9 +62,18 @@ def main ():
         # skip dummy entries
         if not (name and version and release and arch) : continue
 
-        whitelisted = name in whitelist
+        # select relevant packages
+        # could not find the magic recipe to do this properly yet
+        # so ugly temporary hack :
+        # when whitelisted, we expose the first package plus the white-listed ones
+        # otherwise we expose everything
+        relevant=False
+        if not whitelist: relevant=True
+        else:
+            if counter==1: relevant=True
+            else: relevant=name in whitelist
 
-        if header.fullFilelist or whitelisted:
+        if relevant:
             # attach (add) rpm path to package
             print "%s.rpms += RPMS/%s/%s-%s-%s.%s.rpm"%\
                 (package_name, arch, name, version, release, arch)
