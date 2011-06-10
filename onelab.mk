@@ -343,6 +343,8 @@ plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
 ALL += plcrt
 
+# f12 has 0.9-1 already
+ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
 #
 # pyopenssl
 #
@@ -350,6 +352,7 @@ pyopenssl-MODULES := pyopenssl
 pyopenssl-SPEC := pyOpenSSL.spec
 pyopenssl-BUILD-FROM-SRPM := yes
 ALL += pyopenssl
+endif
 
 #
 # pyaspects
