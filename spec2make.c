@@ -171,7 +171,7 @@ main(int argc, char *argv[])
       char *suffix_index;
 		  
       for (suffix=suffixes ; *suffix ; suffix++) {
-	printf("# trying %s\n",*suffix);
+	/*printf("# trying %s\n",*suffix);*/
 	suffix_index=strstr(fullSource,*suffix);
 	if (suffix_index) {
 	  char sourcename[PATH_MAX];
