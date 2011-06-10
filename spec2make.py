@@ -48,7 +48,7 @@ def main ():
     print "%s.srpm := SRPMS/%s-%s-%s.src.rpm"%(package_name, name, version, release)
 
     target = options.target
-    whitelist=options.whitelist.split(',')
+    whitelist=[ x for x in options.whitelist.split(',') if x]
     # Print non-empty packages
     counter=0
     for package in specobj.packages:
