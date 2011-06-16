@@ -18,7 +18,7 @@ ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-21
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
-util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-16
+util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@master
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 util-vserver-pl-GITPATH         := git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-26
 nodeupdate-GITPATH		:= git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-8
