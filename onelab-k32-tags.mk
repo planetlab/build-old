@@ -9,7 +9,6 @@ ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 f15 centos5)"
 kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
 endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
-kernel-RPMFLAGS			+= --without firmware
 
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-4
