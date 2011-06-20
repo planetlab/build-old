@@ -2,7 +2,7 @@
 
 ###
 linux-2.6-BRANCH		:= rhel6
-linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@master
+linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@rhel6
 # help out spec2make on f8 and centos5, due to a bug in rpm 
 # ditto on f15 for spec2make.py - tmp hopefully
 ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 f15 centos5)"
@@ -48,8 +48,8 @@ ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-10
 oml-GITPATH                     := git://git.onelab.eu/oml.git@oml-2.5.1-1
 ###
-sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-25
-sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-14
+sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
+sface-GITPATH                   := git://git.onelab.eu/sface.git@master
 nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-19
 pypcilib-GITPATH		:= git://git.onelab.eu/pypcilib.git@pypcilib-0.2-10
