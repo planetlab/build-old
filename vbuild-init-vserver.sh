@@ -185,9 +185,10 @@ function setup_vserver () {
     # Start Vserver automatically on boot
     echo "default" > /etc/vservers/$vserver/apps/init/mark
 
-    # Set the init style of your vserver to plain for f13 and higher
+    # Set the init style of your vserver to plain for f15 and higher
+    # not working with f15 anyways, systemd requires 2.6.36 to work
     case $fcdistro in 
-	f1[3-9]) echo plain > /etc/vservers/$vserver/apps/init/style ;;
+	f1[5-9]) echo plain > /etc/vservers/$vserver/apps/init/style ;;
     esac
 
     if [ "$pkg_method" = "yum" ] ; then
