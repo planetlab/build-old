@@ -23,8 +23,6 @@ kernel-RPMFLAGS:= --target i686
 else
 kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
-# this is useful for 2.6.22 but will not be needed anymore with 2.6.27
-kernel-SPECVARS += iwlwifi=1 
 kernel-SPECVARS += kernelconfig=planetlab
 KERNELS += kernel
 
@@ -69,18 +67,6 @@ madwifi-SPECVARS = kernel_version=$(kernel.rpm-version) \
 ALL += madwifi
 IN_BOOTSTRAPFS += madwifi
 
-# 
-# nozomi
-# 
-nozomi-MODULES := nozomi
-nozomi-SPEC := nozomi.spec
-nozomi-DEPEND-DEVEL-RPMS += kernel-devel
-nozomi-SPECVARS = kernel_version=$(kernel.rpm-version) \
-	kernel_release=$(kernel.rpm-release) \
-	kernel_arch=$(kernel.rpm-arch)
-IN_BOOTSTRAPFS += nozomi
-ALL += nozomi
-
 #
 # comgt
 # 
@@ -110,6 +96,7 @@ ALL += umts-frontend
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
+iptables-BUILD-FROM-SRPM := yes
 iptables-DEPEND-DEVEL-RPMS += kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
@@ -119,6 +106,7 @@ IN_BOOTSTRAPFS += iptables
 #
 iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
+iproute-BUILD-FROM-SRPM	:= yes	
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
 IN_VSERVER += iproute
@@ -129,7 +117,9 @@ IN_BOOTCD += iproute
 #
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
-util-vserver-RPMFLAGS:= --without dietlibc
+# starting with 0.4
+util-vserver-BUILD-FROM-SRPM := yes
+util-vserver-RPMFLAGS:= --without dietlibc --without doc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
 
@@ -260,7 +250,8 @@ endif
 openvswitch-MODULES := openvswitch
 openvswitch-SPEC := openvswitch.spec
 openvswitch-DEPEND-DEVEL-RPMS += kernel-devel
-IN_BOOTSTRAPFS += openvswitch
+# maybe not in production yet
+#IN_BOOTSTRAPFS += openvswitch
 ALL += openvswitch
 
 #
@@ -327,7 +318,7 @@ ALL += pcucontrol
 #
 # monitor
 #
-monitor-MODULES := Monitor
+monitor-MODULES := monitor
 monitor-SPEC := Monitor.spec
 monitor-DEVEL-RPMS += net-snmp net-snmp-devel
 ALL += monitor
@@ -336,7 +327,7 @@ IN_BOOTSTRAPFS += monitor
 #
 # zabbix
 #
-zabbix-MODULES := Monitor
+zabbix-MODULES := monitor
 zabbix-SPEC := zabbix.spec
 zabbix-BUILD-FROM-SRPM := yes
 zabbix-DEVEL-RPMS += python-cherrypy
@@ -350,6 +341,8 @@ plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
 ALL += plcrt
 
+# f12 has 0.9-1 already
+ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
 #
 # pyopenssl
 #
@@ -357,6 +350,7 @@ pyopenssl-MODULES := pyopenssl
 pyopenssl-SPEC := pyOpenSSL.spec
 pyopenssl-BUILD-FROM-SRPM := yes
 ALL += pyopenssl
+endif
 
 #
 # pyaspects
@@ -537,7 +531,7 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := myplc plcapi nodemanager Monitor
+myplc-docs-MODULES := myplc plcapi nodemanager monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 

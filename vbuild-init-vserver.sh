@@ -153,28 +153,28 @@ function setup_vserver () {
 	fi
     fi
 
+    BCAPFILE=/etc/vservers/$vserver/bcapabilities
+    touch $BCAPFILE
     if [ -n "$VBUILD_MODE" ] ; then 
 	### capabilities required for a build vserver
         # set up appropriate vserver capabilities to mount, mknod and IPC_LOCK
-	BCAPFILE=/etc/vservers/$vserver/bcapabilities
-	touch $BCAPFILE
-	cap=$(grep ^CAP_SYS_ADMIN /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_SYS_ADMIN' >> /etc/vservers/$vserver/bcapabilities
-	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
-	cap=$(grep ^CAP_IPC_LOCK /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_IPC_LOCK' >> /etc/vservers/$vserver/bcapabilities
+	grep -q ^CAP_SYS_ADMIN $BCAPFILE || echo CAP_SYS_ADMIN >> $BCAPFILE
+	grep -q ^CAP_MKNOD $BCAPFILE || echo CAP_MKNOD >> $BCAPFILE
+	grep -q ^CAP_IPC_LOCK $BCAPFILE || echo CAP_IPC_LOCK >> $BCAPFILE
+	# useful for f15 guests that use set_cap_file 
+	grep -q ^CAP_SETFCAP $BCAPFILE || echo CAP_SETFCAP >> $BCAPFILE
     else
 	### capabilities required for a myplc vserver
 	# for /etc/plc.d/gpg - need to init /dev/random
-	cap=$(grep ^CAP_MKNOD /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_MKNOD' >> /etc/vservers/$vserver/bcapabilities
-	cap=$(grep ^CAP_NET_BIND_SERVICE /etc/vservers/$vserver/bcapabilities | wc -l)
-	[ $cap -eq 0 ] && echo 'CAP_NET_BIND_SERVICE' >> /etc/vservers/$vserver/bcapabilities
+	grep -q ^CAP_MKNOD $BCAPFILE || echo CAP_MKNOD >> $BCAPFILE
+	grep -q ^CAP_NET_BIND_SERVICE $BCAPFILE || echo CAP_NET_BIND_SERVICE >> $BCAPFILE
+	# useful for f15 guests that use set_cap_file 
+	grep -q ^CAP_SETFCAP $BCAPFILE || echo CAP_SETFCAP >> $BCAPFILE
     fi
 
     # Set persistent for the network context
-    echo persistent,lback_allow > /etc/vservers/$vserver/nflags
+    # Thierry: Daniel's kernels come with single_ip turned off by default, let's make this explicit 
+    echo "persistent,lback_allow,~single_ip" > /etc/vservers/$vserver/nflags
 
     # Set cflags
     echo -e "persistent\n~info_init" > /etc/vservers/$vserver/cflags
@@ -185,9 +185,10 @@ function setup_vserver () {
     # Start Vserver automatically on boot
     echo "default" > /etc/vservers/$vserver/apps/init/mark
 
-    # Set the init style of your vserver to plain for f13
+    # Set the init style of your vserver to plain for f15 and higher
+    # not working with f15 anyways, systemd requires 2.6.36 to work
     case $fcdistro in 
-	f13|f14) echo plain > /etc/vservers/$vserver/apps/init/style ;;
+	f1[5-9]) echo plain > /etc/vservers/$vserver/apps/init/style ;;
     esac
 
     if [ "$pkg_method" = "yum" ] ; then
@@ -282,17 +283,28 @@ function devel_or_vtest_tools () {
     packages=$(pl_getPackages -a $vserver_arch $fcdistro $pldistro $pkgsfile)
     groups=$(pl_getGroups -a $vserver_arch $fcdistro $pldistro $pkgsfile)
 
-    [ "$pkg_method" = yum ] && [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
-    [ "$pkg_method" = yum ] && for group_plus in $groups; do
-	group=$(echo $group_plus | sed -e "s,+++, ,g")
-        $personality vserver $vserver exec yum -y groupinstall "$group"
-    done
+    case "$pkg_method" in
+	yum)
+	    [ -n "$packages" ] && $personality vserver $vserver exec yum -y install $packages
+	    for group_plus in $groups; do
+		group=$(echo $group_plus | sed -e "s,+++, ,g")
+		$personality vserver $vserver exec yum -y groupinstall "$group"
+	    done
+	    # store current rpm list in /init-vserver.rpms in case we need to check the contents
+	    $personality vserver $vserver exec rpm -aq > /vservers/$vserver/init-vserver.rpms
+	    ;;
+	debootstrap)
+	    $personality vserver $vserver exec apt-get update
+	    for package in $packages ; do 
+		$personality vserver $vserver exec apt-get install -y $package 
+	    done
+	    ### xxx todo install groups with apt..
+	    ;;
+	*)
+	    echo "unknown pkg_method $pkg_method"
+	    ;;
+    esac
 
-    [ "$pkg_method" = debootstrap ] && $personality vserver $vserver exec apt-get update
-    [ "$pkg_method" = debootstrap ] && for package in $packages ; do 
-	$personality vserver $vserver exec apt-get install -y $package 
-    done
-    
     return 0
 }
 

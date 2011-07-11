@@ -15,7 +15,8 @@ kernel-RPMFLAGS:= --target $(HOSTARCH)
 endif
 # the defaults below are built into the specfile
 #kernel-RPMFLAGS += --with firmware --without doc --without-debug
-ALL += kernel
+# do not rebuild on f14, as this crashes, use the one built on f12 instead (go figure)
+###ALL += kernel
 
 #
 # util-vserver

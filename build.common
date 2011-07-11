@@ -73,13 +73,9 @@ function pl_getReleaseName () {
 function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
-	### there is an ugly hack going on around here
-	# with f12, the dependencies somehow require kernel 2.6.29 but our own kernel is 2.6.27
-	# so the ugly workaround here is to let 'kernel-debug' get installed from the stock repos
-	# we then remove it manually after the image is done, look for kernel-debug below
-	# relyong on kernel-PAE for this trick won't work, as 64 bits distros don't have PAE of course
+	### assuming all distros run at least 2.6.32
 	f*)
-	    echo 'kernel kernel-PAE kernel-PAEdebug kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iptables-ipv6 iproute drupal' ;;
+	    echo 'kernel* util-vserver* iptables iptables-ipv6 iproute drupal' ;;
 	centos5)
 	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	sl*)

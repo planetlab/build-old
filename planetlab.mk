@@ -75,7 +75,8 @@ endif
 #
 util-vserver-MODULES := util-vserver
 util-vserver-SPEC := util-vserver.spec
-util-vserver-RPMFLAGS:= --without dietlibc
+util-vserver-BUILD-FROM-SRPM := yes
+util-vserver-RPMFLAGS:= --without dietlibc --without doc
 ALL += util-vserver
 IN_BOOTSTRAPFS += util-vserver
 
@@ -187,6 +188,7 @@ IN_BOOTSTRAPFS += mom
 #
 iptables-MODULES := iptables
 iptables-SPEC := iptables.spec
+iptables-BUILD-FROM-SRPM := yes	
 iptables-DEPEND-DEVEL-RPMS += kernel-devel kernel-headers
 ALL += iptables
 IN_BOOTSTRAPFS += iptables
@@ -196,6 +198,7 @@ IN_BOOTSTRAPFS += iptables
 #
 iproute-MODULES := iproute2
 iproute-SPEC := iproute.spec
+iproute-BUILD-FROM-SRPM := yes	
 ALL += iproute
 IN_BOOTSTRAPFS += iproute
 IN_VSERVER += iproute
@@ -295,7 +298,7 @@ ALL += pcucontrol
 #
 # monitor
 #
-monitor-MODULES := Monitor
+monitor-MODULES := monitor
 monitor-SPEC := Monitor.spec
 monitor-DEVEL-RPMS += net-snmp net-snmp-devel
 ALL += monitor
@@ -307,15 +310,6 @@ IN_BOOTSTRAPFS += monitor
 plcrt-MODULES := PLCRT
 plcrt-SPEC := plcrt.spec
 ALL += plcrt
-
-#
-# zabbix
-#
-zabbix-MODULES := Monitor
-zabbix-SPEC := zabbix.spec
-zabbix-BUILD-FROM-SRPM := yes
-zabbix-DEVEL-RPMS += python-cherrypy
-ALL += zabbix
 
 #
 # pyopenssl
@@ -479,7 +473,7 @@ ALL += myplc
 # myplc-docs only contains docs for PLCAPI and NMAPI, but
 # we still need to pull MyPLC, as it is where the specfile lies, 
 # together with the utility script docbook2drupal.sh
-myplc-docs-MODULES := myplc plcapi nodemanager Monitor
+myplc-docs-MODULES := myplc plcapi nodemanager monitor
 myplc-docs-SPEC := myplc-docs.spec
 ALL += myplc-docs
 

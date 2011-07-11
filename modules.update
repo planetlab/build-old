@@ -11,7 +11,6 @@ fcdistros="centos5 f12"
     make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-tags.mk DISTRONAME=${fcdistro} module-tools ;
     make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ;
     make stage1=true PLDISTRO=planetlab PLDISTROTAGS=planetlab-k32-tags.mk DISTRONAME=${fcdistro} module-tools ;
-    make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k22-tags.mk DISTRONAME=${fcdistro} module-tools ;
     make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k27-tags.mk DISTRONAME=${fcdistro} module-tools ;
     make stage1=true PLDISTRO=onelab PLDISTROTAGS=onelab-k32-tags.mk DISTRONAME=${fcdistro} module-tools ;
   done 2>/dev/null ;
