@@ -9,7 +9,7 @@ kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
 endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
-iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-4
+iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-5
 iproute2-GITPATH                := git://git.planet-lab.org/iproute2.git@iproute2-2.6.37-2
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-17
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
