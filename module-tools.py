@@ -22,7 +22,8 @@ RENAMED_SVN_MODULES = {
     "CoDemux": "codemux",
     "NodeManager": "nodemanager",
     "NodeUpdate": "nodeupdate",
-    "Monitor": "monitor"
+    "Monitor": "monitor",
+
     }
 
 def svn_to_git_name(module):
@@ -173,7 +174,7 @@ class SvnRepository:
         for line in out.split('\n'):
             if line.startswith("Repository Root:"):
                 root = line.split()[2].strip()
-                return "%s/%s" % (root, self.name())
+                return "%s/%s" % (root, self.pathname())
 
     @classmethod
     def checkout(cls, remote, local, options, recursive=False):
@@ -266,7 +267,7 @@ class GitRepository:
     def gitweb(self):
         c = Command("git show | grep commit | awk '{print $2;}'", self.options)
         out = self.__run_in_repo(c.output_of).strip()
-        return "http://git.onelab.eu/?p=%s.git;a=commit;h=%s" % (self.name(), out)
+        return "http://git.onelab.eu/?p=%s.git;a=commit;h=%s" % (self.pathname(), out)
 
     def repo_root(self):
         c = Command("git remote show origin", self.options)
@@ -444,10 +445,10 @@ class Module:
             while not cls.config[key]:
                 cls.prompt_config_option(key, message, default)
 
-    # for parsing module spec name:branch
-    matcher_branch_spec=re.compile("\A(?P<name>[\w\.-]+):(?P<branch>[\w\.-]+)\Z")
-    # special form for tagged module - for Build
-    matcher_tag_spec=re.compile("\A(?P<name>[\w\.-]+)@(?P<tagname>[\w\.-]+)\Z")
+    # for parsing module spec name:branch                                                                                                                                                                     
+    matcher_branch_spec=re.compile("\A(?P<name>[\w\.\-\/]+):(?P<branch>[\w\.\-]+)\Z")                                                                                                                         
+    # special form for tagged module - for Build                                                                                                                                                              
+    matcher_tag_spec=re.compile("\A(?P<name>[\w\.\-\/]+)@(?P<tagname>[\w\.\-]+)\Z")
     # parsing specfiles
     matcher_rpm_define=re.compile("%(define|global)\s+(\S+)\s+(\S*)\s*")
 
@@ -473,7 +474,8 @@ class Module:
 
     def __init__ (self,module_spec,options):
         # parse module spec
-        self.name, branch_or_tagname, module_type = self.parse_module_spec(module_spec)
+        self.pathname, branch_or_tagname, module_type = self.parse_module_spec(module_spec)
+        self.name = os.path.basename(self.pathname)
 
         if module_type == "branch":
             self.branch=branch_or_tagname
@@ -484,7 +486,7 @@ class Module:
         self.name = svn_to_git_name(self.name)
 
         self.options=options
-        self.module_dir="%s/%s"%(options.workdir,self.name)
+        self.module_dir="%s/%s"%(options.workdir,self.pathname)
         self.repository = None
         self.build = None
 
@@ -509,11 +511,11 @@ class Module:
 
     def friendly_name (self):
         if hasattr(self,'branch'):
-            return "%s:%s"%(self.name,self.branch)
+            return "%s:%s"%(self.pathname,self.branch)
         elif hasattr(self,'tagname'):
-            return "%s@%s"%(self.name,self.tagname)
+            return "%s@%s"%(self.pathname,self.tagname)
         else:
-            return self.name
+            return self.pathname
 
     @classmethod
     def git_remote_dir (cls, name):
@@ -578,6 +580,10 @@ that for other purposes than tagging""" % options.workdir
                 Module.config[key]=value                
             f.close()
 
+            # owerride config variables using options.
+            if options.build_module:
+                Module.config['build'] = options.build_module
+
         if not os.path.isdir (options.workdir):
             print "Cannot find",options.workdir,"let's create it"
             Command("mkdir -p %s" % options.workdir, options).run_silent()
@@ -621,8 +627,8 @@ that for other purposes than tagging""" % options.workdir
             print 'Checking for',self.module_dir
 
         if not os.path.isdir (self.module_dir):
-            if Repository.has_moved_to_git(self.name, Module.config):
-                self.repository = GitRepository.checkout(self.git_remote_dir(self.name),
+            if Repository.has_moved_to_git(self.pathname, Module.config):
+                self.repository = GitRepository.checkout(self.git_remote_dir(self.pathname),
                                                          self.module_dir,
                                                          self.options)
             else:
@@ -634,7 +640,7 @@ that for other purposes than tagging""" % options.workdir
         self.repository = Repository(self.module_dir, self.options)
         if self.repository.type == "svn":
             # check if module has moved to git    
-            if Repository.has_moved_to_git(self.name, Module.config):
+            if Repository.has_moved_to_git(self.pathname, Module.config):
                 Command("rm -rf %s" % self.module_dir, self.options).run_silent()
                 self.init_module_dir()
             # check if we have the required branch/tag
@@ -689,7 +695,7 @@ that for other purposes than tagging""" % options.workdir
 
         if level2:
             return level2[0]
-        raise Exception, 'Cannot guess specfile for module %s -- patterns were %s or %s'%(self.name,pattern1,pattern2)
+        raise Exception, 'Cannot guess specfile for module %s -- patterns were %s or %s'%(self.pathname,pattern1,pattern2)
 
     def all_specnames (self):
         level1=glob("%s/*.spec" % self.module_dir)
@@ -858,7 +864,7 @@ that for other purposes than tagging""" % options.workdir
         # brute-force : change uncommented lines that define <module>-SVNPATH
         else:
             if self.options.verbose:
-                print 'Searching for -SVNPATH or -GITPATH lines referring to /%s/\n\tin %s .. '%(self.name,tagsfile),
+                print 'Searching for -SVNPATH or -GITPATH lines referring to /%s/\n\tin %s .. '%(self.pathname,tagsfile),
             pattern="\A\s*%s-(SVNPATH|GITPATH)\s*(=|:=)\s*(?P<url_main>[^\s]+)/%s[^\s]+"\
                                           %(self.name,self.name)
             matcher_module=re.compile(pattern)
@@ -867,7 +873,7 @@ that for other purposes than tagging""" % options.workdir
                 if attempt:
                     if line.find("-GITPATH") >= 0:
                         modulepath = "%s-GITPATH"%self.name
-                        replacement = "%-32s:= %s/%s.git@%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
+                        replacement = "%-32s:= %s/%s.git@%s\n"%(modulepath,attempt.group('url_main'),self.pathname,newname)
                     else:
                         modulepath = "%s-SVNPATH"%self.name
                         replacement = "%-32s:= %s/%s/tags/%s\n"%(modulepath,attempt.group('url_main'),self.name,newname)
@@ -944,7 +950,7 @@ that for other purposes than tagging""" % options.workdir
         # checking for diffs
         diff_output = self.repository.diff_with_tag(old_tag_name)
         if len(diff_output) == 0:
-            if not prompt ("No pending difference in module %s, want to tag anyway"%self.name,False):
+            if not prompt ("No pending difference in module %s, want to tag anyway"%self.pathname,False):
                 return
 
         # side effect in trunk's specfile
@@ -987,7 +993,7 @@ Please write a changelog for this new tag in the section above
         if not build.is_clean():
             build.revert()
 
-        tagsfiles=glob(build.path+"/*-tags.mk")
+        tagsfiles=glob(build.path+"/*-tags*.mk")
         tagsdict=dict( [ (x,'todo') for x in tagsfiles ] )
         default_answer = 'y'
         tagsfiles.sort()
@@ -1094,7 +1100,7 @@ n: move to next file"""%locals()
 
         if self.options.list:
             if diff_output:
-                print self.name
+                print self.pathname
         else:
             thename=self.friendly_name()
             do_print=False
@@ -1380,7 +1386,7 @@ Branches:
         'version' : "check latest specfile and print out details",
         'diff' : "show difference between module (trunk or branch) and latest tag",
         'tag'  : """increment taglevel in specfile, insert changelog in specfile,
-                create new tag and and monitor its adoption in build/*-tags.mk""",
+                create new tag and and monitor its adoption in build/*-tags*.mk""",
         'branch' : """create a branch for this module, from the latest tag on the trunk, 
                   and change trunk's version number to reflect the new branch name;
                   you can specify the new branch name by using module:branch""",
@@ -1484,6 +1490,8 @@ Branches:
 ** THIS MUST NOT ** be your usual working directory""")
         parser.add_option("-F","--fast-checks",action="store_true",dest="fast_checks",default=False,
                           help="skip safety checks, such as svn updates -- use with care")
+        parser.add_option("-B","--build-module",action="store",dest="build_module",default=None,
+                          help="specify a build module to owerride the one in the CONFIG")
 
         # default verbosity depending on function - temp
         verbose_modes= ['tag', 'sync', 'branch']
