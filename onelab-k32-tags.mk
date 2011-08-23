@@ -12,7 +12,9 @@ kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-5
-iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@iproute2-2.6.37-2
+# we use the stock iproute2 with 2.6.32, since our gre patch is not needed
+#iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@iproute2-2.6.37-2
+ALL := $(subst iproute,,$(ALL))
 ###
 ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-21
 ###

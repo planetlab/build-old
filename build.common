@@ -1,8 +1,5 @@
 # -*-Shell-script-*-
 #
-# $Id$
-# $URL$
-#
 # Common functions for build scripts used by various packages
 # incorporated (e.g., build, myplc, myplc-devel, vserver-reference)
 #
@@ -73,9 +70,11 @@ function pl_getReleaseName () {
 function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
-	### assuming all distros run at least 2.6.32
-	f*)
+	### we need our own cooked iproute only with 2.6.27
+	f8)
 	    echo 'kernel* util-vserver* iptables iptables-ipv6 iproute drupal' ;;
+	f*)
+	    echo 'kernel* util-vserver* iptables iptables-ipv6 drupal' ;;
 	centos5)
 	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
 	sl*)
