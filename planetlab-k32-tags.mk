@@ -10,7 +10,9 @@ endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-5
-iproute2-GITPATH                := git://git.planet-lab.org/iproute2.git@iproute2-2.6.37-2
+# we use the stock iproute2 with 2.6.32, since our gre patch is not needed anymore with that kernel
+# note that this should be consistently reflected in pl_getKexcludes in build.common
+ALL := $(filter-out iproute,$(ALL))
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-17
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-26
