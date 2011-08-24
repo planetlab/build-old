@@ -163,6 +163,11 @@ class SvnRepository:
     def name(self):
         return os.path.basename(self.path)
 
+    def pathname(self):
+        # for svn modules pathname is just the name of the module as
+        # all modules are at the root
+        return self.name()
+
     def url(self):
         out = Command("svn info %s" % self.path, self.options).output_of()
         for line in out.split('\n'):
