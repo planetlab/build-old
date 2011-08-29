@@ -1338,7 +1338,7 @@ def release_changelog(options, buildtag_old, buildtag_new):
         print '=== %s : removed package from build %s ===' % (tagfile, module)
 
 
-def adopt_master (options, args):
+def adopt_tag (options, args):
     modules=[]
     for module in options.modules:
         modules += module.split()
@@ -1346,8 +1346,8 @@ def adopt_master (options, args):
         modobj=Module(module,options)
         for tags_file in args:
             if options.verbose:
-                print 'adopting master for',module,'in',tags_file
-            modobj.patch_tags_file(tags_file,'_unused_','master',fine_grain=False)
+                print 'adopting tag %s for %s in %s'%(options.tag,module,tags_file)
+            modobj.patch_tags_file(tags_file,'_unused_',options.tag,fine_grain=False)
     if options.verbose:
         Command("git diff %s"%" ".join(args),options).run()
 
@@ -1377,11 +1377,12 @@ Branches:
   You can refer to the build trunk by just mentioning 'trunk', e.g.
       release-changelog -t coblitz-tags.mk coblitz-2.01-rc6 trunk
 """
-    master_usage="""Usage: %prog [options] tag-file[s]
-  With this command you can adopt one or several masters in your tag files
+    adopt_usage="""Usage: %prog [options] tag-file[s]
+  With this command you can adopt a specifi tag or branch in your tag files
     This should be run in your daily build workdir; no call of git nor svn is done
   Examples:
-    module-master -m "plewww plcapi" -m Monitor onelab*tags.mk
+    adopt-tag -m "plewww plcapi" -m Monitor onelab*tags.mk
+    adopt-tag -m sfa -t sfa-1.0-33 *tags.mk
 """
     common_usage="""More help:
   see http://svn.planet-lab.org/wiki/ModuleTools"""
@@ -1399,13 +1400,13 @@ Branches:
                 this is a last resort option, mostly for repairs""",
         'changelog' : """extract changelog between build tags
                 expected arguments are a list of tags""",
-        'master' : """locally adopt master or trunk for some modules""",
+        'adopt' : """locally adopt a specific tag""",
         }
 
     silent_modes = ['list']
     # 'changelog' is for release-changelog
-    # 'master' is for 'adopt-master'
-    regular_modes = set(modes.keys()).difference(set(['changelog','master']))
+    # 'adopt' is for 'adopt-tag'
+    regular_modes = set(modes.keys()).difference(set(['changelog','adopt']))
 
     @staticmethod
     def optparse_list (option, opt, value, parser):
@@ -1417,7 +1418,8 @@ Branches:
     def run(self):
 
         mode=None
-        for function in Main.modes.keys():
+        # hack - need to check for adopt first as 'adopt-tag' contains tag..
+        for function in [ 'adopt' ] + Main.modes.keys():
             if sys.argv[0].find(function) >= 0:
                 mode = function
                 break
@@ -1434,26 +1436,28 @@ Branches:
         elif mode=='changelog':
             usage = Main.release_usage
             usage += Main.common_usage
-        elif mode=='master':
-            usage = Main.master_usage
+        elif mode=='adopt':
+            usage = Main.adopt_usage
             usage += Main.common_usage
 
         parser=OptionParser(usage=usage)
         
-        # the 'master' mode is really special and doesn't share any option
-        if mode=='master':
+        # the 'adopt' mode is really special and doesn't share any option
+        if mode=='adopt':
             parser.add_option("-m","--module",action="append",dest="modules",default=[],
                               help="modules, can be used several times or with quotes")
+            parser.add_option("-t","--tag",action="store", dest="tag", default='master',
+                              help="specify the tag to adopt, default is 'master'")
             parser.add_option("-v","--verbose", action="store_true", dest="verbose", default=False, 
                               help="run in verbose mode")
             (options, args) = parser.parse_args()
             options.workdir='unused'
             options.dry_run=False
-            options.mode='master'
+            options.mode='adopt'
             if len(args)==0 or len(options.modules)==0:
                 parser.print_help()
                 sys.exit(1)
-            adopt_master (options,args)
+            adopt_tag (options,args)
             return 
 
         # the other commands (module-* and release-changelog) share the same skeleton
