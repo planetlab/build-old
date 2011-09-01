@@ -39,8 +39,8 @@ plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-34
 drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-14
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-66
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
-pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@master
-monitor-GITPATH                 := git://git.planet-lab.eu/monitor.git@master
+pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@monitor-3.1-5
+monitor-GITPATH                 := git://git.planet-lab.eu/monitor.git@monitor-3.1-6
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
 pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-1
 ###
