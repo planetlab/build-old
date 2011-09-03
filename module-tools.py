@@ -272,7 +272,7 @@ class GitRepository:
     def gitweb(self):
         c = Command("git show | grep commit | awk '{print $2;}'", self.options)
         out = self.__run_in_repo(c.output_of).strip()
-        return "http://git.onelab.eu/?p=%s.git;a=commit;h=%s" % (self.pathname(), out)
+        return "http://git.onelab.eu/?p=%s.git;a=commit;h=%s" % (self.name(), out)
 
     def repo_root(self):
         c = Command("git remote show origin", self.options)
@@ -1265,8 +1265,10 @@ def modules_diff(first, second):
 
 def release_changelog(options, buildtag_old, buildtag_new):
 
-    tagfile = options.distrotags[0]
-    if not tagfile:
+    try:
+        tagfile = options.distrotags[0]
+        if not tagfile: raise 
+    except:
         print "ERROR: provide a tagfile name (eg. onelab, onelab-k27, planetlab)"
         return
     tagfile = "%s-tags.mk" % tagfile
@@ -1570,7 +1572,9 @@ Branches:
                     module.html_dump_body()
                 Module.html_dump_footer()
         else:
-            release_changelog(options, *args)
+            # if we provide, say a b c d, we want to build (a,b) (b,c) and (c,d)
+            for (f,t) in zip ( args[:-1], args [1:]):
+                release_changelog(options, f,t)
             
     
 ####################
