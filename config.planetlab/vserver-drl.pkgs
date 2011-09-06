@@ -1,5 +1,3 @@
-# $Id$
-# $URL$
 #
 groupname: drl
 groupdesc: Distributed Rate Limiting
