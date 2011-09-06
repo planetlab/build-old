@@ -49,7 +49,7 @@ ejabberd-GITPATH		:= git://git.onelab.eu/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-11
 oml-GITPATH                     := git://git.onelab.eu/oml.git@oml-2.6.1-1
 ###
-sfa-GITPATH                     := git://git.onelab.eu/sfa.git@sfa-1.0-35
+sfa-GITPATH                     := git://git.onelab.eu/sfa.git@master
 sface-GITPATH                   := git://git.onelab.eu/sface.git@sface-0.1-18
 nodeconfig-GITPATH              := git://git.onelab.eu/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.onelab.eu/bootmanager.git@bootmanager-5.0-20
