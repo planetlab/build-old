@@ -1,7 +1,7 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
 ###
-linux-2.6-GITPATH		:= git://git.onelab.eu/linux-2.6.git@linux-2.6-27-37
+linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@master
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-5
 iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@iproute2-2.6.37-2
