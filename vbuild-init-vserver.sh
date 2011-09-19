@@ -192,9 +192,6 @@ function setup_vserver () {
     # Enable cgroup
     mkdir /etc/vservers/$vserver/cgroup
 
-    # Start Vserver automatically on boot
-    echo "default" > /etc/vservers/$vserver/apps/init/mark
-
     # Set the init style of your vserver to plain for f15 and higher
     # not working with f15 anyways, systemd requires 2.6.36 to work
     case $fcdistro in 
@@ -461,6 +458,7 @@ function usage () {
     echo " -d pldistro - defaults to $DEFAULT_PLDISTRO"
     echo " -p personality - defaults to $DEFAULT_PERSONALITY"
     echo " -i ifname: determines ip and netmask attached to ifname, and passes it to the vserver"
+    echo " -r : set apps/init/mark to default so the vserver restart upon reboot"
     echo " -v : verbose - passes -v to calls to vserver"
     echo "vserver-options"
     echo "  all args after the optional -- are passed to vserver <name> build <options>"
@@ -486,14 +484,16 @@ function main () {
     esac
 
     VERBOSE=
+    RESISTANT=""
     IFNAME=""
     VSERVER_OPTIONS=""
-    while getopts "f:d:p:i:v" opt ; do
+    while getopts "f:d:p:i:rv" opt ; do
 	case $opt in
 	    f) fcdistro=$OPTARG;;
 	    d) pldistro=$OPTARG;;
 	    p) personality=$OPTARG;;
 	    i) IFNAME=$OPTARG;;
+	    r) RESISTANT="true";;
 	    v) VERBOSE="-v" ;;
 	    *) usage ;;
 	esac
@@ -536,6 +536,10 @@ function main () {
     devel_or_vtest_tools $vserver $fcdistro $pldistro $personality
     post_install $vserver $personality
 
+    # Start Vserver automatically on boot
+    [ -n "$RESISTANt" ] && echo "default" > /etc/vservers/$vserver/apps/init/mark
+
+    echo $COMMAND Done
 }
 
 main "$@"
