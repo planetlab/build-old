@@ -102,6 +102,15 @@ function canonical_arch () {
     esac
 }
 
+# the new test framework creates /timestamp in /vservers/<name> *before* populating it
+function almost_empty () { 
+    dir="$1"; shift ; 
+    # non existing is fine
+    [ ! -d $dir ] && return 0; 
+    # need to have at most one file
+    count=$(cd $dir; ls | wc -l); [ $count -le 1 ]; 
+}
+
 function setup_vserver () {
 
     set -x
@@ -112,10 +121,11 @@ function setup_vserver () {
     fcdistro=$1; shift
     personality=$1; shift
 
-    if [ -d /vservers/$vserver ] ; then
+    # check that this is a new one - see above
+    almost_empty /vservers/$vserver || { 	
 	echo "$COMMAND : vserver $vserver seems to exist - bailing out"
 	exit 1
-    fi
+	}
 
     pkg_method=$(package_method $fcdistro)
     case $pkg_method in
