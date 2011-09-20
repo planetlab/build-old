@@ -268,6 +268,14 @@ IN_BOOTSTRAPFS += vsys
 ALL += vsys
 
 #
+# vsyssh : installed in slivers
+#
+vsyssh-MODULES := vsys
+vsyssh-SPEC := vsyssh.spec
+IN_SLIVER += vsyssh
+ALL += vsyssh
+
+#
 # vsys-scripts
 #
 vsys-scripts-MODULES := vsys-scripts
