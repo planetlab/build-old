@@ -22,7 +22,7 @@ for repo in "$@" ; do
     cd $repo
     echo "==================== Dealing with repo $repo"
     mkdir -p PARTIAL-RPMS
-    rsync --archive --verbose $(find RPMS -type f | egrep '/(bootcd|bootstrapfs|noderepo)-.*-.*-.*-.*rpm') PARTIAL-RPMS/
+    rsync --archive --verbose $(find RPMS -type f | egrep '/(bootcd|bootstrapfs|noderepo|slicerepo)-.*-.*-.*-.*rpm') PARTIAL-RPMS/
     echo "==================== building packages index in $repo .."
     createrepo PARTIAL-RPMS
     echo '==================== DONE'
