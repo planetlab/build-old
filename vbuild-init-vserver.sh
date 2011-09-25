@@ -149,8 +149,8 @@ function setup_vserver () {
 	echo "* ${i}-th attempt to 'vserver build' failed - waiting for 3 seconds"
 	sleep 3
     done
-    # check success
-    [ -d /vservers/$vserver ] 
+    # check success - not enough to check for the directory, let's assume /etc/ in image
+    [ -d /vservers/$vserver/etc ] 
 
     if [ ! -z "$personality" ] ; then
 	if [ -f "/etc/vservers/$vserver/personality" ] ; then
