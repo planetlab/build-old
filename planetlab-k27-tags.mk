@@ -1,6 +1,6 @@
 # build-GITPATH is now set by vbuild-nightly.sh to avoid duplication
 
-linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-27-37
+linux-2.6-GITPATH		:= git://git.planet-lab.org/linux-2.6.git@linux-2.6-27-38
 madwifi-GITPATH			:= git://git.planet-lab.org/madwifi.git@madwifi-4132-2
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-5
 iproute2-GITPATH                := git://git.planet-lab.org/iproute2.git@iproute2-2.6.37-2
