@@ -16,7 +16,7 @@ iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4
 # note that this should be consistently reflected in pl_getKexcludes in build.common
 ALL := $(filter-out iproute,$(ALL))
 ###
-ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-21
+ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@master
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
