@@ -45,6 +45,7 @@ ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-11
 ###
 sfa-GITPATH                     := git://git.planet-lab.org/sfa.git@sfa-1.0-35
+sface-GITPATH                   := git://git.onelab.org/sface.git@master
 nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-20
 pypcilib-GITPATH		:= git://git.planet-lab.org/pypcilib.git@pypcilib-0.2-10

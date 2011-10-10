@@ -356,6 +356,10 @@ sfa-SPEC := sfa.spec
 ALL += sfa
 endif
 
+sface-MODULES := sface
+sface-SPEC := sface.spec
+ALL += sface
+
 #
 # nodeconfig
 #
