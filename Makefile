@@ -439,15 +439,19 @@ endef
 
 $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 
-# stores PLDISTRO in a file
+# stores env variables in a file
 # this is done at stage1. later run wont get confused
 SAVED_VARS=PLDISTRO PLDISTROTAGS build-SVNPATH PERSONALITY MAILTO BASE WEBPATH TESTBUILDURL WEBROOT
+# also remember variable settings in alias, like sfa-GITPATH=git://git.f-lab.fr/sfa.git@generic
+# but don't save stage1
+ASSIGNS=$(foreach chunk,$(MAKEFLAGS),$(if $(findstring =,$(chunk)),$(chunk),))
 savedpldistro.mk:
 	@echo "# do not edit" > $@
 	@$(foreach var,$(SAVED_VARS),echo "$(var):=$($(var))" >> $@ ;)
 	@echo "# do not edit" > aliases
 	@echo -n "alias m=\"make " >> aliases
 	@$(foreach var,$(SAVED_VARS),echo -n " $(var)=$($(var))" >> aliases ;)
+	@echo -n $(ASSIGNS) >> aliases
 	@echo "\"" >> aliases
 	@echo "alias m1=\"m stage1=true\"" >> aliases
 
