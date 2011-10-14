@@ -4,7 +4,7 @@
 linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@linux-2.6-27-38
 madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-3
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-5
-iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@iproute2-2.6.38-0
+iproute2-GITPATH                := git://git.onelab.eu/iproute2.git@iproute2-2.6.38-1
 ###
 ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-22
 ###
