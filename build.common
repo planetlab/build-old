@@ -70,15 +70,16 @@ function pl_getReleaseName () {
 function pl_getKexcludes () {
     distroname=$1; shift
     case $distroname in
-	### we need our own cooked iproute only with 2.6.27
+	# when using k27, we need our own flavour of iproute
+	# for now we build only for k32, regardless of fcdistro
 	f8)
-	    echo 'kernel* util-vserver* iptables iptables-ipv6 iproute drupal' ;;
+	    echo 'kernel* util-vserver* iptables iptables-ipv6 drupal' ;;
 	f*)
 	    echo 'kernel* util-vserver* iptables iptables-ipv6 drupal' ;;
 	centos5)
-	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables iproute drupal inotify-tools* libnl' ;;
+	    echo 'kernel kernel-vserver kernel-devel kernel-headers kernel-debuginfo util-vserver* iptables drupal inotify-tools* libnl' ;;
 	sl*)
-	    echo 'kernel kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-firmware kernel-headers iptables iproute' ;;
+	    echo 'kernel kernel-debug kernel-debug-devel kernel-devel kernel-doc kernel-firmware kernel-headers iptables' ;;
 	*)
 	    echo "pl_DISTRO_NAME=$pl_DISTRO_NAME not supported in getexcludes.sh" ; exit 1 ;;
     esac
