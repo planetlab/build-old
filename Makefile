@@ -444,7 +444,7 @@ $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 SAVED_VARS=PLDISTRO PLDISTROTAGS build-SVNPATH PERSONALITY MAILTO BASE WEBPATH TESTBUILDURL WEBROOT
 # also remember variable settings in alias, like sfa-GITPATH=git://git.f-lab.fr/sfa.git@generic
 # but don't save stage1
-ASSIGNS=$(foreach chunk,$(MAKEFLAGS),$(if $(findstring =,$(chunk)),$(chunk),))
+ASSIGNS=$(foreach chunk,$(MAKEFLAGS),$(if $(findstring =,$(chunk)),$(if $(findstring stage1,$(chunk)),,$(chunk)),,))
 savedpldistro.mk:
 	@echo "# do not edit" > $@
 	@$(foreach var,$(SAVED_VARS),echo "$(var):=$($(var))" >> $@ ;)
