@@ -10,13 +10,13 @@ kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
 endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
 
-madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@madwifi-4132-3
+madwifi-GITPATH                 := git://git.onelab.eu/madwifi.git@master
 iptables-GITPATH                := git://git.onelab.eu/iptables.git@iptables-1.4.10-5
 # we use the stock iproute2 with 2.6.32, since our gre patch is not needed anymore with that kernel
 # note that this should be consistently reflected in pl_getKexcludes in build.common
 ALL := $(filter-out iproute,$(ALL))
 ###
-ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-22
+ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@master
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
