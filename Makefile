@@ -163,14 +163,9 @@ include $(PLDISTROTAGS)
 # this used to be set in the -tags.mk files, but that turned out to require
 # error-prone duplicate changes 
 # so now the nightly build script sets this to what it is currently using
-# in case we run this manually, i.e. if neither build-SVNPATH nor build-GITPATH is set
-ifeq "$(build-SVNPATH)$(build-GITPATH)" ""
-build-GITPATH-local := $(shell git config remote.origin.url)
-ifneq "$(build-GITPATH-local)" ""
-build-GITPATH := $(build-GITPATH-local)
-else
-build-SVNPATH := $(lastword $(shell svn info 2> /dev/null | grep URL:))
-endif
+# in case we run this manually, i.e. if build-GITPATH is not set
+ifeq "$(build-GITPATH)" ""
+build-GITPATH := $(shell git config remote.origin.url)
 endif
 
 #################### pldistros that are defined remotely
@@ -441,7 +436,7 @@ $(foreach package,$(ALL),$(eval $(call target_mk,$(package))))
 
 # stores env variables in a file
 # this is done at stage1. later run wont get confused
-SAVED_VARS=PLDISTRO PLDISTROTAGS build-SVNPATH PERSONALITY MAILTO BASE WEBPATH TESTBUILDURL WEBROOT
+SAVED_VARS=PLDISTRO PLDISTROTAGS build-GITPATH PERSONALITY MAILTO BASE WEBPATH TESTBUILDURL WEBROOT
 # also remember variable settings in alias, like sfa-GITPATH=git://git.f-lab.fr/sfa.git@generic
 # but don't save stage1
 ASSIGNS=$(foreach chunk,$(MAKEFLAGS),$(if $(findstring =,$(chunk)),$(if $(findstring stage1,$(chunk)),,$(chunk)),,))
