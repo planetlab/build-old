@@ -98,7 +98,9 @@ package>=f8:inotify-tools-devel
 package>=f8: libnl-devel
 # for util-vserver
 package: ctags
-package>=f12: e2fsprogs-devel
+#
+package=f8: e2fsprogs-devel.@arch@
+package=f12: e2fsprogs-devel
 package>=f14: e2fsprogs nss-devel
 # zabbix/monitor
 package=centos5: krb5-devel.@arch@ e2fsprogs-devel.@arch@ libidn-devel.@arch@
