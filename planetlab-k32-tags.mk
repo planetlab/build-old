@@ -8,7 +8,7 @@ ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 centos5)"
 kernel-WHITELIST-RPMS	:= kernel-devel,kernel-headers
 endif
 kernel-DEVEL-RPMS		+= elfutils-libelf-devel
-madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-3
+madwifi-GITPATH                 := git://git.planet-lab.org/madwifi.git@madwifi-4132-4
 iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptables-1.4.10-5
 # we use the stock iproute2 with 2.6.32, since our gre patch is not needed anymore with that kernel
 # note that this should be consistently reflected in pl_getKexcludes in build.common
