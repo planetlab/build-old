@@ -135,7 +135,7 @@ function failure() {
 	webpublish_cp_stdin_to_file $WEBBASE.ko ||:
     if [ -n "$MAILTO" ] ; then
 	( \
-	    echo "Subject: Failures with $MAIL_SUBJECT $BASE on $(hostname)" ; \
+	    echo "Subject: KO ${BASE} ${MAIL_SUBJECT}" ; \
 	    echo "To: $MAILTO" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
 	    echo "and tail version at $WEBBASE_URL.ko" ; \
@@ -174,7 +174,7 @@ function success () {
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
-	    echo "Subject: Success with ${MAIL_SUBJECT} ${BASE} on $(hostname)" ; \
+	    echo "Subject: OK ${BASE} ${MAIL_SUBJECT}" ; \
 	    echo "To: $MAILTO" ; \
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
@@ -530,17 +530,19 @@ function main () {
 
     ### elaborate mail subject
     if [ -n "$DO_BUILD" -a -n "$DO_TEST" ] ; then
-	MAIL_SUBJECT="complete"
+	MAIL_SUBJECT="full"
     elif [ -n "$DO_BUILD" ] ; then
-	MAIL_SUBJECT="package-only"
+	MAIL_SUBJECT="pkg-only"
     elif [ -n "$DO_TEST" ] ; then
 	MAIL_SUBJECT="test-only"
     fi
     if [ -n "$OVERBASE" ] ; then
-	MAIL_SUBJECT="$MAIL_SUBJECT incremental run on"
+	MAIL_SUBJECT="${MAIL_SUBJECT} rerun"
     else
-	MAIL_SUBJECT="$MAIL_SUBJECT fresh build"
+	MAIL_SUBJECT="${MAIL_SUBJECT} fresh"
     fi
+    short_hostname=$(hostname | cut -d1 -f1)
+    MAIL_SUBJECT="on ${short_hostname} - ${MAIL_SUBJECT}"
 
     ### compute WEBHOST from TESTBUILDURL 
     # this is to avoid having to change the builds configs everywhere
