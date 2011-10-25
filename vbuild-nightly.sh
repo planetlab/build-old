@@ -174,7 +174,7 @@ function success () {
     fi
     if [ -n "$MAILTO" ] ; then
 	( \
-	    echo "Subject: OK ${BASE} ${MAIL_SUBJECT}" ; \
+	    echo "Subject: PASS ${BASE} ${MAIL_SUBJECT}" ; \
 	    echo "To: $MAILTO" ; \
 	    echo "$PLDISTRO ($BASE) build for $FCDISTRO completed on $(date)" ; \
 	    echo "See full build log at $WEBBASE_URL/log.txt" ; \
@@ -541,7 +541,7 @@ function main () {
     else
 	MAIL_SUBJECT="${MAIL_SUBJECT} fresh"
     fi
-    short_hostname=$(hostname | cut -d1 -f1)
+    short_hostname=$(hostname | cut -d. -f1)
     MAIL_SUBJECT="on ${short_hostname} - ${MAIL_SUBJECT}"
 
     ### compute WEBHOST from TESTBUILDURL 
