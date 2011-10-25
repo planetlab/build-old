@@ -443,7 +443,7 @@ ASSIGNS=$(foreach chunk,$(MAKEFLAGS),$(if $(findstring =,$(chunk)),$(if $(findst
 envfrompreviousrun.mk:
 	@echo "# do not edit" > $@
 	@$(foreach var,$(SAVED_VARS),echo "$(var):=$($(var))" >> $@ ;)
-	@$(foreach chunk,$(ASSIGNS),echo "$(chunk)" | sed -e s,=,:=, >> $@;)
+	@$(foreach chunk,$(ASSIGNS),echo "override $(chunk)" | sed -e s,=,:=, >> $@;)
 	@echo "# do not edit" > aliases
 	@echo -n "alias m=\"make " >> aliases
 	@$(foreach var,$(SAVED_VARS),echo -n " $(var)=$($(var))" >> aliases ;)
