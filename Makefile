@@ -137,15 +137,15 @@ all:
 PLDISTRO := planetlab
 RPMBUILD := rpmbuild
 
-########## savedpldistro.mk holds PLDISTRO - it is generated at stage1 (see below)
+########## envfrompreviousrun.mk holds PLDISTRO and others - it is generated at stage1 (see below)
 ifeq "$(stage1)" ""
-include savedpldistro.mk
+include envfrompreviousrun.mk
 endif
 
 # when re-running the nightly build after failure, we need to gather the former values
 # do this by running make stage1=skip +PLDISTRO
 ifeq "$(stage1)" "skip"
-include savedpldistro.mk
+include envfrompreviousrun.mk
 endif
 
 #################### include onelab.mk
@@ -440,9 +440,10 @@ SAVED_VARS=PLDISTRO PLDISTROTAGS build-GITPATH PERSONALITY MAILTO BASE WEBPATH T
 # also remember variable settings in alias, like sfa-GITPATH=git://git.f-lab.fr/sfa.git@generic
 # but don't save stage1
 ASSIGNS=$(foreach chunk,$(MAKEFLAGS),$(if $(findstring =,$(chunk)),$(if $(findstring stage1,$(chunk)),,$(chunk)),))
-savedpldistro.mk:
+envfrompreviousrun.mk:
 	@echo "# do not edit" > $@
 	@$(foreach var,$(SAVED_VARS),echo "$(var):=$($(var))" >> $@ ;)
+	@$(foreach chunk,$(ASSIGNS),echo "$(chunk)" | sed -e s,=,:=, >> $@;)
 	@echo "# do not edit" > aliases
 	@echo -n "alias m=\"make " >> aliases
 	@$(foreach var,$(SAVED_VARS),echo -n " $(var)=$($(var))" >> aliases ;)
@@ -450,11 +451,11 @@ savedpldistro.mk:
 	@echo "\"" >> aliases
 	@echo "alias m1=\"m stage1=true\"" >> aliases
 
-savedpldistro: savedpldistro.mk
-.PHONY: savedpldistro
+envfrompreviousrun: envfrompreviousrun.mk
+.PHONY: envfrompreviousrun
 
 # always refresh this
-all: savedpldistro
+all: envfrompreviousrun
 
 #################### regular make
 
@@ -711,7 +712,7 @@ clean-help:
 
 ### brute force clean
 distclean1:
-	rm -rf savedpldistro.mk .rpmmacros spec2make header.spec SPECS MAKE $(DISTCLEANS)
+	rm -rf envfrompreviousrun.mk .rpmmacros spec2make header.spec SPECS MAKE $(DISTCLEANS)
 distclean2:
 	rm -rf MODULES SOURCES BUILD BUILDROOT RPMS SRPMS tmp
 distclean: distclean1 distclean2
