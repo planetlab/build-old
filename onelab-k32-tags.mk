@@ -2,7 +2,7 @@
 
 ###
 linux-2.6-BRANCH		:= rhel6
-linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@linux-2.6-32-26
+linux-2.6-GITPATH               := git://git.onelab.eu/linux-2.6.git@master
 # help out spec2make on f8 and centos5, due to a bug in rpm 
 # ditto on f15 for spec2make.py - tmp hopefully
 ifeq "$(DISTRONAME)" "$(filter $(DISTRONAME),f8 f15 centos5)"
@@ -20,7 +20,7 @@ ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-23
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
-util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-17
+util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@master
 libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
 util-vserver-pl-GITPATH         := git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-26
 nodeupdate-GITPATH              := git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-9
