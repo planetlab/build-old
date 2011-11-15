@@ -18,6 +18,8 @@ DEFAULT_GPGPATH="/etc/planetlab"
 DEFAULT_GPGUID="root@$( /bin/hostname )"
 
 DEFAULT_TESTCONFIG="default"
+# for passing args to run_log
+RUN_LOG_EXTRAS=""
 
 # for publishing results, and the tests settings
 x=$(hostname)
@@ -273,16 +275,12 @@ function run_log () {
     rsync --verbose --archive /vservers/$BASE/build/MODULES/build ${testmaster_ssh}:${BASE}/
 
     # invoke test on testbox - pass url and build url - so the tests can use vtest-init-vserver.sh
-    configs=""
-    for config in ${TESTCONFIG} ; do
-	configs="$configs --config $config"
-    done
-    test_env="-p $PERSONALITY -d $PLDISTRO -f $FCDISTRO"
+    run_log_env="-p $PERSONALITY -d $PLDISTRO -f $FCDISTRO"
 
     # need to proceed despite of set -e
     success=true
     # passing the build_scm_url should not be needed anymore
-    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${BUILD_SCM_URL} --url ${url} $configs $test_env $VERBOSE --all || success=
+    ssh 2>&1 -n ${testmaster_ssh} ${testdir}/run_log --build ${BUILD_SCM_URL} --url ${url} $run_log_env $RUN_LOG_EXTRAS $VERBOSE --all || success=
 
     # gather logs in the build vserver
     mkdir -p /vservers/$BASE/build/testlogs
@@ -417,11 +415,12 @@ function usage () {
     echo " -o base: (overwrite) do not re-create vserver, re-use base instead"
     echo "    the -f/-d/-p/-m/-s/-t options are uneffective in this case"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
+    echo " -y {pl,pg} - passed to run_log"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL; this is also used to get the hostname where to publish builds"
     echo " -r webroot - defaults to $DEFAULT_WEBROOT - the fs point where testbuildurl actually sits"
     echo " -M testmaster - defaults to $DEFAULT_TESTMASTER"
-    echo " -y - sign yum repo in webpath"
+    echo " -Y - sign yum repo in webpath"
     echo " -g gpg_path - to the gpg secring used to sign rpms.  Defaults to $DEFAULT_GPGPATH" 
     echo " -u gpg_uid - email used in secring. Defaults to $DEFAULT_GPGUID"
     echo " -K svnsshkey - specify key to use when svn+ssh:// URLs are used for SVNPATH"
@@ -451,7 +450,7 @@ function main () {
     SIGNYUMREPO=""
 
     OPTS_ORIG=$@
-    OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:w:W:r:M:yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
+    OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:y:w:W:r:M:Yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
     if [ $? != 0 ]
     then
         usage
@@ -468,11 +467,12 @@ function main () {
 	    -b) BASE=$2; shift 2 ;;
 	    -o) OVERBASE=$2; shift 2 ;;
 	    -c) TESTCONFIG="$TESTCONFIG $2"; shift 2 ;;
+	    -y) RUN_LOG_EXTRAS="$RUN_LOG_EXTRAS -y $2"; shift 2 ;;
 	    -w) WEBPATH=$2; shift 2 ;;
 	    -W) TESTBUILDURL=$2; shift 2 ;;
 	    -r) WEBROOT=$2; shift 2 ;;
 	    -M) TESTMASTER=$2; shift 2 ;;
-            -y) SIGNYUMREPO=true; shift ;;
+            -Y) SIGNYUMREPO=true; shift ;;
             -g) GPGPATH=$2; shift 2 ;;
             -u) GPGUID=$2; shift 2 ;;
 	    -K) SSH_KEY=$2; shift 2 ;;
@@ -519,6 +519,12 @@ function main () {
     [ -z "$TESTMASTER" ] && TESTMASTER="$DEFAULT_TESTMASTER"
 
     [ -n "$DRY_RUN" ] && MAILTO=""
+
+    # elaborate the extra args to be passed to run_log
+    for config in ${TESTCONFIG} ; do
+	RUN_LOG_EXTRAS="$RUN_LOG_EXTRAS --config $config"
+    done
+    
 	
     if [ -n "$OVERBASE" ] ; then
 	sedargs="-e s,@DATE@,${DATE},g"
