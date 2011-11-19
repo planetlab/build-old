@@ -416,6 +416,7 @@ function usage () {
     echo "    the -f/-d/-p/-m/-s/-t options are uneffective in this case"
     echo " -c testconfig - defaults to $DEFAULT_TESTCONFIG"
     echo " -y {pl,pg} - passed to run_log"
+    echo " -x <run_log_args> - a hook to pass arguments to run_log"
     echo " -w webpath - defaults to $DEFAULT_WEBPATH"
     echo " -W testbuildurl - defaults to $DEFAULT_TESTBUILDURL; this is also used to get the hostname where to publish builds"
     echo " -r webroot - defaults to $DEFAULT_WEBROOT - the fs point where testbuildurl actually sits"
@@ -450,7 +451,7 @@ function main () {
     SIGNYUMREPO=""
 
     OPTS_ORIG=$@
-    OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:y:w:W:r:M:Yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
+    OPTS=$(getopt -o "f:d:p:m:s:t:b:o:c:y:x:w:W:r:M:Yg:u:K:SBTnv7i:h" -l "build-branch:" -- $@)
     if [ $? != 0 ]
     then
         usage
@@ -468,6 +469,7 @@ function main () {
 	    -o) OVERBASE=$2; shift 2 ;;
 	    -c) TESTCONFIG="$TESTCONFIG $2"; shift 2 ;;
 	    -y) RUN_LOG_EXTRAS="$RUN_LOG_EXTRAS -y $2"; shift 2 ;;
+	    -x) RUN_LOG_EXTRAS="$RUN_LOG_EXTRAS $2"; shift 2;;
 	    -w) WEBPATH=$2; shift 2 ;;
 	    -W) TESTBUILDURL=$2; shift 2 ;;
 	    -r) WEBROOT=$2; shift 2 ;;
