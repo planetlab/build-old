@@ -20,7 +20,7 @@ ipfw-GITPATH                    := git://git.onelab.eu/ipfw.git@ipfw-0.9-23
 ###
 comgt-SVNPATH			:= http://svn.onelab.eu/comgt/imports/0.3
 planetlab-umts-tools-GITPATH    := git://git.onelab.eu/planetlab-umts-tools.git@planetlab-umts-tools-0.6-6
-util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@util-vserver-0.30.216-18
+util-vserver-GITPATH            := git://git.onelab.eu/util-vserver.git@master
 libnl-GITPATH			:= git://git.onelab.eu/libnl.git@libnl-1.1-2
 util-vserver-pl-GITPATH         := git://git.onelab.eu/util-vserver-pl.git@util-vserver-pl-0.4-26
 nodeupdate-GITPATH              := git://git.onelab.eu/nodeupdate.git@nodeupdate-0.5-9
@@ -36,7 +36,7 @@ openvswitch-GITPATH		:= git://git.onelab.eu/openvswitch.git@openvswitch-1.1.0pre
 vsys-GITPATH                    := git://git.onelab.eu/vsys.git@vsys-0.99-2
 vsys-scripts-GITPATH            := git://git.onelab.eu/vsys-scripts.git@vsys-scripts-0.95-33
 plcapi-GITPATH                  := git://git.onelab.eu/plcapi.git@plcapi-5.0-35
-drupal-GITPATH			:= git://git.onelab.eu/drupal.git@drupal-4.7-14
+drupal-GITPATH                  := git://git.onelab.eu/drupal.git@master
 plewww-GITPATH                  := git://git.onelab.eu/plewww.git@plewww-4.3-68
 www-register-wizard-SVNPATH     := http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 pcucontrol-GITPATH              := git://git.onelab.eu/pcucontrol.git@pcucontrol-1.0-12
