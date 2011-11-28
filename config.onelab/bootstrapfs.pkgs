@@ -84,6 +84,8 @@ package: nfs-utils
 package: openvpn
 package: vconfig
 package: PyXML
+# btrfs stuff
+package: btrfs-progs
 
 #
 # platform-dependent
