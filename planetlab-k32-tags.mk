@@ -14,7 +14,7 @@ iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptable
 # note that this should be consistently reflected in pl_getKexcludes in build.common
 ALL := $(filter-out iproute,$(ALL))
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-19
-libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
+libnl-GITPATH			:= git://git.planet-lab.org/libnl.git@libnl-1.1-2
 util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-26
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@nodeupdate-0.5-9
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
@@ -33,7 +33,7 @@ openvswitch-GITPATH			:= git://git.planet-lab.org/openvswitch.git
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.99-2
 vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-33
 plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-36
-drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-15
+drupal-GITPATH                  := git://git.planet-lab.org/drupal.git@drupal-4.7-15
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-69
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 monitor-GITPATH			:= git://git.planet-lab.org/monitor@monitor-3.1-6
