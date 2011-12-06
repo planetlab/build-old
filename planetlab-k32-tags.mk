@@ -14,7 +14,7 @@ iptables-GITPATH                := git://git.planet-lab.org/iptables.git@iptable
 # note that this should be consistently reflected in pl_getKexcludes in build.common
 ALL := $(filter-out iproute,$(ALL))
 util-vserver-GITPATH		:= git://git.planet-lab.org/util-vserver.git@util-vserver-0.30.216-19
-libnl-SVNPATH			:= http://svn.planet-lab.org/svn/libnl/tags/libnl-1.1-2
+libnl-GITPATH			:= git://git.planet-lab.org/libnl.git@libnl-1.1-2
 util-vserver-pl-GITPATH		:= git://git.planet-lab.org/util-vserver-pl.git@util-vserver-pl-0.4-26
 nodeupdate-GITPATH		:= git://git.planet-lab.org/nodeupdate.git@nodeupdate-0.5-9
 PingOfDeath-SVNPATH		:= http://svn.planet-lab.org/svn/PingOfDeath/tags/PingOfDeath-2.2-1
@@ -33,18 +33,18 @@ openvswitch-GITPATH			:= git://git.planet-lab.org/openvswitch.git
 vsys-GITPATH			:= git://git.planet-lab.org/vsys.git@vsys-0.99-2
 vsys-scripts-GITPATH		:= git://git.planet-lab.org/vsys-scripts@vsys-scripts-0.95-33
 plcapi-GITPATH                  := git://git.planet-lab.org/plcapi@plcapi-5.0-36
-drupal-SVNPATH			:= http://svn.planet-lab.org/svn/drupal/tags/drupal-4.7-15
+drupal-GITPATH                  := git://git.planet-lab.org/drupal.git@drupal-4.7-15
 plewww-GITPATH			:= git://git.planet-lab.org/plewww@plewww-4.3-69
 www-register-wizard-SVNPATH	:= http://svn.planet-lab.org/svn/www-register-wizard/tags/www-register-wizard-4.3-5
 monitor-GITPATH			:= git://git.planet-lab.org/monitor@monitor-3.1-6
 PLCRT-SVNPATH			:= http://svn.planet-lab.org/svn/PLCRT/tags/PLCRT-1.0-11
-pyopenssl-SVNPATH		:= http://svn.planet-lab.org/svn/pyopenssl/tags/pyopenssl-0.9-2
+pyopenssl-GITPATH               := git://git.planet-lab.org/pyopenssl.git@pyopenssl-0.9-2
 ###
 pyaspects-GITPATH		:= git://git.planet-lab.org/pyaspects.git@pyaspects-0.4.1-2
 ejabberd-GITPATH		:= git://git.planet-lab.org/ejabberd.git@ejabberd-2.1.6-2
 omf-GITPATH                     := git://git.onelab.eu/omf.git@omf-5.3-11
 ###
-sfa-GITPATH                     := git://git.planet-lab.org/sfa.git@sfa-1.1-5
+sfa-GITPATH                     := git://git.planet-lab.org/sfa.git@sfa-2.0-1
 sface-GITPATH                   := git://git.planet-lab.org/sface.git@master
 nodeconfig-GITPATH		:= git://git.planet-lab.org/nodeconfig.git@nodeconfig-5.0-5
 bootmanager-GITPATH             := git://git.planet-lab.org/bootmanager.git@bootmanager-5.0-20
