@@ -3,6 +3,7 @@ groupdesc: PlanetLab BootCD
 # packages to exclude from stock repositories
 kexclude: @KEXCLUDE@
 # define packages
+package: btrfs-progs
 package: filesystem
 package: udev
 package: dhclient

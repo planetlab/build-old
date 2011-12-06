@@ -7,6 +7,7 @@ groupdesc: PlanetLab Node Root
 kexclude: @KEXCLUDE@
 # fedora-release or centos-release are pulled from deps
 # define packages
+package: btrfs-progs
 package: kernel
 package: udev
 package: basesystem

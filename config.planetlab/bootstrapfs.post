@@ -15,7 +15,7 @@ rm -rf ${vdir}/etc/yum.conf ${vdir}/etc/yum.repos.d
 chroot ${vdir} /sbin/chkconfig firstboot off || :
 # NOTE: we're enabling util-vserver to allow it to help shutdown all slices
 # before rebooting.  This has been problematic in the past
-chroot ${vdir} /sbin/chkconfig util-vserver on || :
+chroot ${vdir} /sbin/chkconfig util-vserver off || :
 # enabling network as it ends up turned off on systems that come with NetworkManager, starting with fedora9
 chroot ${vdir} /sbin/chkconfig network on || :
 # and turn off NetworkManager if present, as it quite obviously messes with network
