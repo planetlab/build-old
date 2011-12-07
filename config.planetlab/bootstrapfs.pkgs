@@ -8,6 +8,9 @@ kexclude: @KEXCLUDE@
 # fedora-release or centos-release are pulled from deps
 # define packages
 package: btrfs-progs
+package: bridge-utils
+package: dnsmasq
+package: bash-completion
 package: kernel
 package: udev
 package: basesystem
