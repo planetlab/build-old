@@ -2,6 +2,7 @@
 # used to be hard-wired in build.common / mkfedora
 # see http://svn.planet-lab.org/wiki/VserverCentos for howto setup local mirroring
 mirror: http://localhost/mirror/
+mirror: http://mirror.onelab.eu/
 mirror: http://build.planet-lab.org/
 #mirror: file:///data/fedora
 #mirror: http://localhost/fedora
